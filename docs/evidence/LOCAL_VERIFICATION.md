@@ -90,4 +90,20 @@ Verified browser bundle digest:
 
 `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a`
 
-The identical bundle was consumed by the approved local private KORRHAUS bridge. See `KORRHAUS_LOCAL_BRIDGE.md` for its independent actual-browser, persistence, regression, boundary, and hash evidence. A clean-clone run including these new evidence files is still required before this documentation state is called reproducible.
+The identical bundle was consumed by the approved local private KORRHAUS bridge. See `KORRHAUS_LOCAL_BRIDGE.md` for its independent actual-browser, persistence, regression, boundary, and hash evidence.
+
+Evidence commit `f114581` was then cloned with `git clone --no-local` into `/private/tmp/codesign-commerce-clean.9Jftki`. From that clean clone:
+
+| Command | Outcome |
+|---|---|
+| `npm ci` | PASS — 128 packages installed from the committed lockfile |
+| `npm test` | PASS — 6 files, 45 tests |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `npm run check:public-boundary` | PASS — 66 tracked public candidates checked |
+| `npm run check:docs` | PASS — 22 Markdown files checked |
+| `npm run check:evals` | PASS — 20 cases across 6 categories |
+| `npm run verify:browser-bundle` | PASS — digest matched `78ece195…9819a` |
+| Clean-clone `git status --short` | PASS — empty |
+
+This establishes clean-clone reproducibility for the public source and the committed Phase 3 evidence state. It still does not substitute for hosted CI or deployed-surface evidence.
