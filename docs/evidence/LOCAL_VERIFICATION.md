@@ -182,3 +182,17 @@ build state:
 Actual-browser option discovery, five-tool proposal/creation/validation,
 zero-write Revert, coupled-rule failure, human editing, responsive comparison,
 and console evidence are in `STUDIO_TOTE_PORTABILITY.md`.
+
+## 26 August 2026 — anonymous judge walkthrough
+
+Commit `b3a7634` aligns the KORRHAUS development preview with the exact North
+Form brief, documents deterministic `?reset=true` entry points for both public
+examples, and adds the complete two-demo judge walkthrough and safety prompts.
+
+The root gate passed with 62 tests, strict typecheck, core and both public
+example builds, unchanged verified browser bundle
+`sha256:3723b4937086323c1536406f2072efbd54da702ec63d7c2f94d32ea768f101f6`,
+89 public candidates, 28 Markdown files, and 24 eval cases. The actual
+WebMCP-capable in-app browser independently opened the KORRHAUS reset URL,
+showed the one-design baseline with no review controls, and exposed exactly the
+five intended tools.

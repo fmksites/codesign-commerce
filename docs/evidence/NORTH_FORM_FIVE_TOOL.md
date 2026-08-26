@@ -82,3 +82,26 @@ The first mobile inspection found that a long cloned name was compressed into an
 | Browser-bundle verification | PASS — digest `3723b493…f101f6` |
 
 This closes the public five-tool and public-reference behavior, but not the private flagship five-tool upgrade, studio-tote portability proof, hosted CI, public deployment, production activation, or agent-selection evaluation gates.
+
+## Anonymous judge reset and prompt alignment
+
+Commit `b3a7634` adds the canonical `?reset=true` judge URL and the exact
+two-example walkthrough in `docs/JUDGE_GUIDE.md`. The KORRHAUS reference keeps
+no state between page loads; a fresh or reset URL begins at the same one-design,
+120-pair `reference-revision-1` fixture. The development-only visual proposal
+was also corrected to match the scored cream/navy and dusty-rose/berry brief.
+
+The actual WebMCP-capable in-app browser then opened
+`http://127.0.0.1:4174/?reset=true` and independently reported:
+
+- One visible `Design 1` tab and 120-pair cream/navy baseline.
+- No proposal review, Keep, or Revert control before an agent proposal.
+- Exactly the same five intended CoDesign tools.
+- No persistence, ordering, quote, upload, pricing, customer, or private-data
+  tool.
+
+At commit `b3a7634`, 62 tests, strict typecheck, both example builds, browser
+bundle verification, the public-boundary scan over 89 candidates, documentation
+links over 28 Markdown files, and all 24 eval-corpus entries passed. The public
+reference Phase 5 milestone is therefore locally reproducible and complete.
+Hosted CI, a public remote, and deployment remain separate gates.
