@@ -12,6 +12,7 @@ import type {
   ProposalExecutionOptions,
   ProposalResult,
   ProposalSessionStatus,
+  ProposalSessionSnapshot,
   ProposeResult,
 } from "./types.js";
 
@@ -59,6 +60,7 @@ export class ProposalSession<Snapshot = unknown> {
   #active: ActiveProposal<Snapshot> | null = null;
   #unsubscribe: (() => void) | null = null;
   #externalRevision: string | null = null;
+  #listeners = new Set<(snapshot: ProposalSessionSnapshot) => void>();
 
   constructor(manifest: ConfiguratorManifest, adapter: ConfiguratorAdapter<Snapshot>) {
     this.manifest = validateManifest(manifest);
@@ -84,8 +86,31 @@ export class ProposalSession<Snapshot = unknown> {
     return this.#active ? cloneState(this.#active.state) : null;
   }
 
+  get snapshot(): ProposalSessionSnapshot {
+    return {
+      status: this.#status,
+      proposalId: this.#active?.id ?? null,
+      proposalRevision: this.#active?.revision ?? null,
+      result: this.#active?.operationIds.length
+        ? cloneState(this.#active.resultsByOperation.get(this.#active.operationIds.at(-1)!) ?? null)
+        : null,
+    };
+  }
+
+  subscribe(listener: (snapshot: ProposalSessionSnapshot) => void): () => void {
+    this.#listeners.add(listener);
+    listener(this.snapshot);
+    return () => this.#listeners.delete(listener);
+  }
+
   async propose(input: ProposalInput, execution: ProposalExecutionOptions = {}): Promise<ProposeResult> {
     if (execution.signal?.aborted) return errorResult("CANCELLED", "The proposal was cancelled before it started", true);
+    if (this.#status === "applying" || this.#status === "committing" || this.#status === "reverting") {
+      return errorResult("OPERATION_IN_PROGRESS", "Another proposal operation is still in progress", true);
+    }
+    if (this.#status === "commit-retry") {
+      return errorResult("COMMIT_ALREADY_STARTED", "Retry the secure save before starting another proposal", false);
+    }
     if (!input.operationId || input.operationId.length > 80) {
       return errorResult("INVALID_VALUE", "operationId is required and must be at most 80 characters", false);
     }
@@ -107,7 +132,7 @@ export class ProposalSession<Snapshot = unknown> {
       }
     }
 
-    this.#status = "applying";
+    this.#setStatus("applying");
     let openedProposal = false;
     try {
       if (!this.#active) {
@@ -116,7 +141,7 @@ export class ProposalSession<Snapshot = unknown> {
         const committed = await this.adapter.readState();
         this.#throwIfCancelled(execution.signal);
         if (committed.revision !== input.baseRevision) {
-          this.#status = "idle";
+          this.#setStatus("idle");
           return errorResult("STALE_REVISION", "The visible configuration changed. Read it again before proposing.", true, [], committed.revision);
         }
         const snapshot = await this.adapter.captureSnapshot();
@@ -145,7 +170,7 @@ export class ProposalSession<Snapshot = unknown> {
       const validationError = this.#applyChanges(nextState, nextDiff, input.changes);
       if (validationError) {
         if (openedProposal) await this.#restoreAndClear();
-        else this.#status = "awaiting-human";
+        else this.#setStatus("awaiting-human");
         return validationError;
       }
 
@@ -160,7 +185,7 @@ export class ProposalSession<Snapshot = unknown> {
           this.#active.baseRevision,
         );
         if (openedProposal) await this.#restoreAndClear();
-        else this.#status = "awaiting-human";
+        else this.#setStatus("awaiting-human");
         return result;
       }
 
@@ -182,7 +207,7 @@ export class ProposalSession<Snapshot = unknown> {
         validation,
       };
       this.#active.resultsByOperation.set(input.operationId, cloneState(result));
-      this.#status = "awaiting-human";
+      this.#setStatus("awaiting-human");
       return result;
     } catch (error) {
       if (this.#active) {
@@ -192,7 +217,7 @@ export class ProposalSession<Snapshot = unknown> {
           this.#clear();
         }
       }
-      this.#status = "idle";
+      this.#setStatus("idle");
       if (error instanceof ProposalCancelledError) {
         return errorResult("CANCELLED", "The proposal was cancelled and the original configuration was restored", true);
       }
@@ -209,18 +234,26 @@ export class ProposalSession<Snapshot = unknown> {
         false,
       );
     }
+    if (this.#status !== "awaiting-human") {
+      return errorResult("OPERATION_IN_PROGRESS", "The proposal is not ready to revert", true);
+    }
+    this.#setStatus("reverting");
     try {
       await this.adapter.restoreSnapshot(this.#active.snapshot);
       this.#clear();
       return { reverted: true, persisted: false };
     } catch {
+      this.#setStatus("awaiting-human");
       return errorResult("ADAPTER_FAILURE", "The original configuration could not be restored", true);
     }
   }
 
   async keep(): Promise<CommitResult | ProposalErrorResult> {
     if (!this.#active) return errorResult("NO_PROPOSAL", "There is no proposal to keep", false);
-    this.#status = "committing";
+    if (this.#status !== "awaiting-human" && this.#status !== "commit-retry") {
+      return errorResult("OPERATION_IN_PROGRESS", "The proposal is not ready to keep", true);
+    }
+    this.#setStatus("committing");
     try {
       const result = await this.adapter.commitState(this.#active.state, {
         proposalId: this.#active.id,
@@ -230,7 +263,7 @@ export class ProposalSession<Snapshot = unknown> {
       this.#clear();
       return result;
     } catch {
-      this.#status = "commit-retry";
+      this.#setStatus("commit-retry");
       let currentRevision = this.#active.baseRevision;
       try {
         currentRevision = (await this.adapter.readState()).revision;
@@ -289,10 +322,22 @@ export class ProposalSession<Snapshot = unknown> {
   #clear(): void {
     this.#active = null;
     this.#externalRevision = null;
-    this.#status = "idle";
+    this.#setStatus("idle");
   }
 
   #throwIfCancelled(signal: AbortSignal | undefined): void {
     if (signal?.aborted) throw new ProposalCancelledError();
+  }
+
+  #setStatus(status: ProposalSessionStatus): void {
+    this.#status = status;
+    const snapshot = this.snapshot;
+    for (const listener of this.#listeners) {
+      try {
+        listener(snapshot);
+      } catch {
+        // Review listeners cannot break transaction safety.
+      }
+    }
   }
 }

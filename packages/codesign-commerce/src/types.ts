@@ -175,6 +175,7 @@ export type ProposalErrorCode =
   | "STALE_REVISION"
   | "STALE_PROPOSAL_REVISION"
   | "PROPOSAL_PENDING"
+  | "OPERATION_IN_PROGRESS"
   | "COMMIT_ALREADY_STARTED"
   | "CANCELLED"
   | "NO_PROPOSAL"
@@ -194,8 +195,15 @@ export interface ProposalErrorResult {
 
 export type ProposeResult = ProposalResult | ProposalErrorResult;
 
-export type ProposalSessionStatus = "idle" | "applying" | "awaiting-human" | "committing" | "commit-retry";
+export type ProposalSessionStatus = "idle" | "applying" | "awaiting-human" | "reverting" | "committing" | "commit-retry";
 
 export interface ProposalExecutionOptions {
   signal?: AbortSignal;
+}
+
+export interface ProposalSessionSnapshot {
+  status: ProposalSessionStatus;
+  proposalId: string | null;
+  proposalRevision: number | null;
+  result: ProposalResult | null;
 }
