@@ -2,9 +2,9 @@
 
 This document maps the private flagship integration without copying private state, commerce rules, credentials, or administrative behavior into the public package.
 
-## Current local spike
+## Pre-migration local spike
 
-Read-only inspection on 26 August 2026 found a feature-flagged, post-start safety spike already present in the private designer. It registers one direct tool for a temporary main-yarn, accent-yarn, and pattern proposal. It is useful evidence, but it is not the planned reusable CoDesign Commerce integration.
+Read-only inspection on 26 August 2026 found a feature-flagged, post-start safety spike already present in the private designer. It registered one direct tool for a temporary main-yarn, accent-yarn, and pattern proposal. It is useful baseline evidence, but it was not the reusable CoDesign Commerce integration.
 
 The spike already demonstrates several sound private-side techniques:
 
@@ -19,7 +19,7 @@ The spike already demonstrates several sound private-side techniques:
 
 It remains insufficient for the entry because it has one KORRHAUS-specific tool, one design, three fields, no reusable manifest/adapter, no revision/operation envelope, no structured validation, and no second-colourway path.
 
-The private application directory has no useful committed Git history: its files are currently untracked. The following local hashes preserve the inspected spike state but are not a substitute for immutable deployment or public Git evidence:
+The private application directory has no useful committed Git history: its relevant files are currently untracked. The following local hashes preserve the inspected pre-migration spike state but are not a substitute for immutable deployment or public Git evidence:
 
 | File role | Modified | SHA-256 |
 |---|---|---|
@@ -43,6 +43,22 @@ The eventual adapter can remain inside the existing browser closure and reuse th
 | Commit | Existing persist/save-server queue | Write locally once and invoke one secure save with `agent_proposal_keep`; model expected server failure explicitly. |
 | External change | Committed project fingerprint and server-project application path | Invalidate an open proposal and resynchronize; never Keep a stale draft. |
 | Lock controls | Existing root proposal-active marker and input/click guards | Preserve tab/preview inspection where safe; block all mutation and upload paths. |
+
+## Completed Phase 3 local bridge
+
+After explicit owner approval, the two-tool public vertical slice was connected to the private Designer locally behind its disabled-by-default feature flag. The old direct KORRHAUS-specific tool/session logic was replaced with the pinned public CoDesign Commerce browser bundle plus a narrow private adapter.
+
+The bridge now:
+
+- Registers the public `codesign_read_configuration` and `codesign_propose_configuration` tools.
+- Uses the public `ProposalSession`, `ProposalReviewController`, and tool-registration runtime.
+- Keeps the private canonical project clone, save queue, API routes, pricing, access state, and renderer implementation private.
+- Shows the review host only after an agent proposal succeeds.
+- Preserves zero-write staging/Revert and one deliberate Keep path.
+- Invalidates open proposals when canonical state changes externally.
+- Leaves the normal Designer unchanged when the feature flag is off or no agent proposal exists.
+
+The complete local evidence, final hashes, actual-browser result, and release-state limits are recorded in `evidence/KORRHAUS_LOCAL_BRIDGE.md`.
 
 ## Public canonical mapping
 
@@ -85,14 +101,12 @@ The public package now builds a browser IIFE at `packages/codesign-commerce/dist
 
 The generated asset must carry its public source commit and hash in integration evidence. The private app must not fork or reimplement the public transaction engine.
 
-## Required migration from the spike
+## Migration checklist result
 
-Once visual approval is granted:
-
-1. Preserve the current spike hashes and E2E evidence.
-2. Add the pinned public browser bundle to the private asset build.
-3. Replace only the direct tool/session logic with a narrow adapter over the existing safe seams.
-4. Bind the approved review view to `ProposalReviewController`.
-5. Retain and expand the existing Playwright storage/network assertions.
-6. Prove the two-tool public vertical slice before adding the remaining three tools.
-7. Do not enable production traffic; first produce local and no-traffic deployment evidence.
+1. Preserved the pre-migration spike hashes and E2E baseline: **done**.
+2. Added the pinned public browser bundle to the private asset build: **done locally**.
+3. Replaced the direct tool/session logic with a narrow adapter over the existing safe seams: **done locally**.
+4. Bound the approved review view to `ProposalReviewController`: **done locally**.
+5. Retained and expanded the existing Playwright storage/network assertions: **done**.
+6. Proved the two-tool public vertical slice in the real private preview before the remaining tools: **done**.
+7. Kept production traffic and deployment unchanged: **done; later deployment remains approval-gated**.

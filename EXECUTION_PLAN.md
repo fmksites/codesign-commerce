@@ -1561,10 +1561,10 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Plan approved | `PASS` | User authorization in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Local execution authorized; external gates remain binding. |
 | Persistent goal created | `PASS` | Active Codex goal in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Goal points to this plan. |
 | Baseline captured | `PASS` | Pre-start Cloud Run revision/digest and source separation recorded in `docs/evidence/PRE_CHALLENGE_BASELINE.md`; baseline commit `abf2a7829fdd188c2f2492e9c9d53a247a6ede7f` | Baseline commit timestamp is after written authorization. |
-| Public foundation | `IN_PROGRESS` | Clean clone of `98f347c` passed exact install, 44 tests, strict source/test typecheck, module/browser/reference build, public-boundary, docs, eval-corpus, and browser-bundle checks; Apache-2.0 is present; verified bundle `sha256:f4e5c0961e8d2289993ac5e228919d5cfc77cd6c0b6b1fa6b63f712ae9d3dd55` | Local foundation passes. Hosted CI and the public remote repository remain external gates. |
-| Transaction vertical slice | `PASS` | 44 deterministic tests; actual WebMCP discovery and proposal in the in-app browser; zero-write Revert and exactly-one-write-boundary Keep; native Chrome keyboard check; desktop/mobile visual comparison in `design-qa.md`; bundle `sha256:f4e5c0961e8d2289993ac5e228919d5cfc77cd6c0b6b1fa6b63f712ae9d3dd55` | The public adapter proves the complete Phase 2 transaction. The private KORRHAUS bridge must pass independently. |
-| KORRHAUS safety gate | `NOT_STARTED` | — | — |
-| Complete tool suite | `NOT_STARTED` | — | — |
+| Public foundation | `IN_PROGRESS` | Clean clone of `98f347c` passed exact install, 44 tests, strict source/test typecheck, module/browser/reference build, public-boundary, docs, eval-corpus, and browser-bundle checks; current local source at `a79cdbb` passes 45 tests and produces bundle `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a`; Apache-2.0 is present | A new clean-clone run for the current evidence commit remains. Hosted CI and the public remote repository remain external gates. |
+| Transaction vertical slice | `PASS` | 45 deterministic tests; actual WebMCP discovery and proposal in the in-app browser; zero-write Revert and exactly-one-write-boundary Keep; native Chrome keyboard check; desktop/mobile visual comparison in `design-qa.md`; bundle `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a` | The public adapter proves the complete Phase 2 transaction and hides the review surface until a proposal succeeds. |
+| KORRHAUS safety gate | `PASS` | `docs/evidence/KORRHAUS_LOCAL_BRIDGE.md`; actual WebMCP discovery/read/proposal/Revert in the private preview; exact zero-write Revert and one-write-boundary Keep assertions; private typecheck/build; 19 focused tests; 93 passed and 1 intentionally skipped full desktop/mobile E2E | Local and disabled by default. Nothing was deployed, published, enabled in production, or promoted. |
+| Complete tool suite | `IN_PROGRESS` | Phase 3 safety dependency is now closed | Next: option discovery, second-design creation, explicit validation, and complete North Form scenario. |
 | Public reference | `IN_PROGRESS` | Public KORRHAUS reference renders two synthetic colourways through the shared package and passed actual-browser proposal review | Complete tool suite, reset flow, and final reproducibility remain. |
 | Tote portability proof | `NOT_STARTED` | — | Conditional. |
 | Deterministic QA | `NOT_STARTED` | — | — |
@@ -1591,6 +1591,7 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | 26 Aug 2026 | Show the review UI only after an agent successfully creates a temporary proposal. | User | Normal human-only Designer use remains visually unchanged. |
 | 26 Aug 2026 | Permit local, disabled-by-default KORRHAUS integration and testing after the public visual slice passes. | User | No deployment, production activation, or public release is authorized by this decision. |
 | 26 Aug 2026 | Retain both the KORRHAUS flagship/reference and a materially different studio-tote example. | User | KORRHAUS proves real-business use; the tote proves adapter portability. |
+| 26 Aug 2026 | Close the local KORRHAUS safety gate after independent private-browser and full regression evidence. | Codex verification | Phase 4 and the studio-tote portability work may now proceed; all external release gates remain closed. |
 
 ---
 

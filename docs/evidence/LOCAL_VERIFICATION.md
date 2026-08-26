@@ -69,3 +69,25 @@ Verified browser bundle digest:
 `sha256:f4e5c0961e8d2289993ac5e228919d5cfc77cd6c0b6b1fa6b63f712ae9d3dd55`
 
 Browser details, counters, limitations, and screenshots are in `ACTUAL_BROWSER_REVIEW_UI.md`; the visual comparison is in the repository-root `design-qa.md`.
+
+## 26 August 2026 — proposal-success visibility invariant and local flagship bridge
+
+Source commit: `a79cdbb` (`fix: reveal review only after proposal succeeds`)
+
+The shared review controller now remains hidden throughout initial proposal quiescence and becomes visible only after the proposal has been applied successfully. This directly enforces the owner-approved rule that normal page use and failed proposals must not reveal the agent review panel.
+
+| Command or check | Outcome |
+|---|---|
+| `npm test` | PASS — 6 files, 45 tests |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `npm run check:public-boundary` | PASS — 65 tracked public candidates checked before adding this evidence file |
+| `npm run check:docs` | PASS — 21 Markdown files before adding this evidence file |
+| `npm run check:evals` | PASS — 20 corpus cases across 6 categories |
+| `npm run verify:browser-bundle` | PASS |
+
+Verified browser bundle digest:
+
+`sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a`
+
+The identical bundle was consumed by the approved local private KORRHAUS bridge. See `KORRHAUS_LOCAL_BRIDGE.md` for its independent actual-browser, persistence, regression, boundary, and hash evidence. A clean-clone run including these new evidence files is still required before this documentation state is called reproducible.
