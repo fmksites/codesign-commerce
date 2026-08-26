@@ -239,3 +239,10 @@ hidden pre-proposal review UI, completed the two-colourway temporary proposal,
 and human-Reverted to the exact fresh-origin `korrhaus-8a39d439` baseline with
 zero proposal/Revert server requests and a clean console. Full detail is in
 `FINAL_LOCAL_CONTRACT_QA.md`.
+
+Evidence commit `25e24a3` was then cloned without local-object shortcuts into
+`/private/tmp/codesign-final-clean.HDp0ka/repo`. The fresh clone installed 129
+packages and passed 90 tests, strict typecheck, all builds, bundle verification,
+the 102-file boundary check, the 36-file documentation check, and the eval
+policy/scorer check. The bundle hash matched `3ba5118e…f6db` and final Git status
+was empty.

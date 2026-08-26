@@ -13,7 +13,7 @@ proceed without the owner.
 - `PASS` — actual in-app-browser discovery and core flows on all three surfaces.
 - `PENDING` — complete private Designer E2E on the final bundle.
 - `PENDING` — independent model eval and scored result file.
-- `PENDING` — final clean-clone verification after documentation freeze.
+- `PASS` — clean clone of evidence commit `25e24a3` passes all local public gates.
 
 ## Public release
 

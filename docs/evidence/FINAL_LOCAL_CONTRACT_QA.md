@@ -25,6 +25,17 @@ and read-only validation of committed and proposed state.
 The model eval itself remains pending. The synthetic scorer self-test is not
 evaluation evidence.
 
+## Clean-clone reproducibility
+
+Evidence commit `25e24a35dc324c4f53c3c6f99dd2f0e8426824fa` was cloned with
+`git clone --no-local` into `/private/tmp/codesign-final-clean.HDp0ka/repo`.
+From an empty dependency/build state the clone installed 129 packages and
+passed 90 tests, strict typecheck, all three builds, browser-bundle verification,
+the 102-file public-boundary check, 36-file documentation check, and the
+24-case eval policy/scorer check. The rebuilt bundle matched
+`sha256:3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db`,
+and the final clean-clone Git status was empty.
+
 ## Private flagship refresh
 
 The same browser bundle bytes were synced into the approved local private
