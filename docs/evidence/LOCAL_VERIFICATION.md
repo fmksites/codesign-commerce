@@ -219,3 +219,23 @@ passed. An actual WebMCP-capable in-app-browser run confirmed five tools,
 hidden pre-proposal review UI, a visible zero-write proposal, conflict rejection
 for a reused operation ID, exact Revert to `korrhaus-e7beb274`, and no console
 errors or warnings. Full detail is in `SECURITY_HARDENING.md`.
+
+## 27 August 2026 — final contract limits and eval evidence tooling
+
+Public source commit `c47cee0` adds bounded dependency references, option/value
+collection limits, kind-specific manifest validation, the combined assumption
+limit, cancellation/concurrency/hostile-input coverage, and an evidence-grade
+model-eval result format and scorer.
+
+The public workspace passed 90 tests, strict typecheck, all builds, the
+public-boundary check, documentation-link check, 24-case eval corpus/policy
+validation, scorer self-test, and whitespace check. The browser bundle is
+`sha256:3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db`.
+
+The bundle was then pinned into the approved local private KORRHAUS bridge. Its
+13 focused tests, typecheck, and production build pass. The actual in-app
+browser found exactly five tools, confirmed dependency option references and
+hidden pre-proposal review UI, completed the two-colourway temporary proposal,
+and human-Reverted to the exact fresh-origin `korrhaus-8a39d439` baseline with
+zero proposal/Revert server requests and a clean console. Full detail is in
+`FINAL_LOCAL_CONTRACT_QA.md`.

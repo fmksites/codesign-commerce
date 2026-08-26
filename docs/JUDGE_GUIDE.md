@@ -132,3 +132,7 @@ outside the public model.
 
 The private flagship evidence is local and disabled by default. It is not a
 public deployment claim.
+
+The current model-evaluation status and evidence format are in
+[`EVALUATION_REPORT.md`](./EVALUATION_REPORT.md). Direct scripted tool calls and
+synthetic scorer fixtures must not be described as model-selection passes.

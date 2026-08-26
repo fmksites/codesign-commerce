@@ -20,6 +20,11 @@ CoDesign Commerce is designed around a narrow webpage capability boundary, not b
 
 Inputs use bounded JSON schemas with `additionalProperties: false`, semantic IDs, fixed counts and lengths, and prototype-pollution guards. Outputs and error messages are sanitized. Text that may originate with a user is marked untrusted.
 
+The public manifest is also bounded to 100 option groups, 200 values per option,
+and 100 dependency rules. Every dependency rule names one to 30 known option
+IDs. Enum/color, integer, and text bounds must be compatible with their option
+kind. Malformed or oversized manifests fail before any tool is registered.
+
 A pending proposal accepts at most 20 successful operations and 20 unique
 assumptions. Every operation ID is bound to the exact operation kind and
 payload that first used it; reusing the ID with different changes fails closed

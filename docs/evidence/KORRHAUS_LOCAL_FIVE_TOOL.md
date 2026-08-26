@@ -200,3 +200,14 @@ The full private Designer E2E result recorded above belongs to the earlier
 five-tool bundle. The final remediation bundle has focused private tests,
 typecheck, build, and actual-browser coverage here; the complete private E2E
 suite must be rerun before final Phase 6 closure.
+
+## Final contract refresh
+
+Public commit `c47cee0` is now pinned locally as
+`codesign-commerce.js?v=3ba5118e`, with bundle
+`sha256:3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db`.
+The private manifest supplies the new bounded option references for both public
+dependency rules. Thirteen focused tests, private typecheck, production build,
+exact five-tool discovery, hidden pre-proposal UI, two-colourway proposal,
+validation, exact human Revert, and a clean browser console pass. See
+`FINAL_LOCAL_CONTRACT_QA.md` for the full evidence and final private hashes.

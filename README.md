@@ -21,7 +21,11 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
   renderer, real product assets, coupled canvas/print rules, anonymous reset,
   and the same unchanged five-tool core and review UI.
 
-The repository is licensed under Apache-2.0 but is not published or submission-ready yet. Public hosting, production deployment or promotion, video publication, and Devpost submission remain approval-gated.
+The repository is licensed under Apache-2.0. The local implementation and
+submission drafts are advanced, but this is not yet a published or live
+submission: the independent model eval, public remote, public deployment,
+production deployment/promotion, video publication, and Devpost submission
+remain incomplete or approval-gated.
 
 ## Local verification
 
@@ -61,4 +65,14 @@ See:
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.
+- [docs/EVALUATION_REPORT.md](./docs/EVALUATION_REPORT.md) for the exact
+  distinction between deterministic checks and the pending model eval.
+- [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) for the gated public
+  and flagship release sequence.
+- [docs/SUBMISSION_COPY.md](./docs/SUBMISSION_COPY.md) for the English Devpost
+  draft.
+- [docs/VIDEO_SCRIPT.md](./docs/VIDEO_SCRIPT.md) for the human-owned recording
+  plan.
+- [docs/SUBMISSION_CHECKLIST.md](./docs/SUBMISSION_CHECKLIST.md) for the final
+  evidence and approval checklist.
 - [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md) for the repository boundary.

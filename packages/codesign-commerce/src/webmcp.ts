@@ -455,14 +455,14 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
   return [readTool, listOptionsTool, proposeTool, createDesignTool, validateTool];
 }
 
-export function registerCoDesignTools<Snapshot>(documentLike: DocumentWithModelContext, dependencies: CoDesignToolDependencies<Snapshot>): WebMcpRegistration {
+export function registerCoDesignTools<Snapshot>(document: DocumentWithModelContext, dependencies: CoDesignToolDependencies<Snapshot>): WebMcpRegistration {
   const controller = new AbortController();
   const tools = createCoDesignTools(dependencies);
-  if (!documentLike.modelContext?.registerTool) {
+  if (!document.modelContext?.registerTool) {
     return { supported: false, toolNames: [], unregister: () => controller.abort(), ready: Promise.resolve() };
   }
 
-  const ready = Promise.all(tools.map((tool) => documentLike.modelContext!.registerTool(tool, { signal: controller.signal }))).then(() => undefined);
+  const ready = Promise.all(tools.map((tool) => document.modelContext!.registerTool(tool, { signal: controller.signal }))).then(() => undefined);
   return {
     supported: true,
     toolNames: tools.map((tool) => tool.name),

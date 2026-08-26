@@ -3,7 +3,7 @@
 ## Document status
 
 - **Status:** Approved for local execution on 26 August 2026. External approval gates remain binding.
-- **Last updated:** 26 August 2026, Europe/Amsterdam.
+- **Last updated:** 27 August 2026, Europe/Amsterdam.
 - **Execution model:** GPT-5.6 Sol with Extra High reasoning.
 - **Challenge deadline:** 3 September 2026 at 13:00 PDT / 22:00 CEST.
 - **Internal freeze target:** 1 September 2026.
@@ -1567,13 +1567,13 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Complete tool suite | `PASS` | Public source commit `ea54e71` and private pinned bundle register exactly five tools; public and private actual-browser evidence covers discovery, option listing, proposal extension, design creation, validation, and Revert | The complete North Form behavior passes in the public reference and real private merchant configurator. |
 | Public reference | `PASS` | The public KORRHAUS reference completes the exact two-colourway scenario through five actual webpage calls; desktop/mobile evidence in `docs/evidence/NORTH_FORM_FIVE_TOOL.md`; clean clone of evidence commit `37682a2`; anonymous reset and exact two-demo judge guide in `b3a7634` | The local Phase 5 public-reference requirements are complete. Hosted CI, a public remote, and public deployment remain separate gates. |
 | Tote portability proof | `PASS` | `examples/studio-tote/` and `docs/evidence/STUDIO_TOTE_PORTABILITY.md`; unchanged core diff; actual five-tool browser flow; coupled-rule failure; zero-write Revert; human persistence; responsive product renderer; clean clone of `13a168d` | Fictional public reference, not claimed as a live merchant or universal renderer. Native-size desktop capture remains final QA. |
-| Deterministic QA | `IN_PROGRESS` | Clean remediation clone: 73 public tests, strict typecheck/build, boundary/docs gates, and byte-stable bundle pass; private final-bundle typecheck/build and 13 focused page tests pass; earlier full Designer E2E was 95-pass/1-skip | Final-bundle complete private E2E and remaining Phase 6 negative/property cases remain. |
-| WebMCP evals | `NOT_STARTED` | — | — |
-| Actual-browser verification | `IN_PROGRESS` | Public/private North Form and public tote five-tool scenarios pass in the actual WebMCP-capable in-app browser; final bundle `dc8d6180…ee1b` passes private discovery, hidden pre-proposal UI, visible proposal, operation-ID conflict rejection, exact Revert, and clean console | Native-size tote desktop, broader negative prompts, model-driven evaluation, final immutable public build, and deployed checks remain. |
+| Deterministic QA | `IN_PROGRESS` | Commit `c47cee0`: 90 public tests, strict typecheck/build, boundary/docs gates, 24-case eval policy/scorer self-test; final private bundle passes 13 focused tests, typecheck, and production build | Complete private Designer E2E on the final bundle remains. |
+| WebMCP evals | `IN_PROGRESS` | Fixed 24-case corpus, run policy, evidence format, result template, and fail-closed scorer in `evals/`; synthetic scorer self-test passes | Independent model runs and a scored `actual-model` result are still required; scripted calls are not counted. |
+| Actual-browser verification | `IN_PROGRESS` | Final built public KORRHAUS and tote artifacts both pass five-tool proposal/create/validate/Revert with clean consoles; final bundle `3ba5118e…f6db` passes fresh-origin private discovery, hidden pre-proposal UI, bounded dependencies, two-colourway proposal, zero-request Revert, and clean console | Native Chrome final-build pass, independent model evaluation, and deployed checks remain. |
 | Public deployment | `NOT_STARTED` | — | External approval may be required. |
 | KORRHAUS no-traffic proof | `NOT_STARTED` | — | — |
 | Production promotion | `NOT_STARTED` | — | Explicit approval required. |
-| Submission-ready handoff | `NOT_STARTED` | — | Final video and submission remain human-owned. |
+| Submission-ready handoff | `IN_PROGRESS` | English Devpost draft, deployment runbook, evaluation report, submission checklist, and human-owned 2:45 video script are present under `docs/` | Final URLs, model results, release evidence, human video, attestations, and submission remain. |
 
 ### Decision log
 
@@ -1596,6 +1596,8 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | 26 Aug 2026 | Accept the studio-tote reference as the materially different portability proof. | Codex verification | Tote-specific options, rules, persistence, assets, and renderer live entirely outside the unchanged core; clean-clone and actual-browser gates pass. |
 | 26 Aug 2026 | Close the local Phase 5 public-reference milestone. | Codex verification | Both examples have deterministic anonymous reset instructions, exact judge prompts, expected five-tool sequences, safety checks, and recovery guidance; KORRHAUS reset was reverified in the actual WebMCP browser. |
 | 26 Aug 2026 | Remediate both low-severity repository security findings before Phase 6 evaluation. | Codex verification | Runtime adapter outputs are reconstructed through the public allowlist, stale Keep is closed with core checks plus adapter CAS, retries are payload-bound, and cumulative proposal limits are enforced in `2f7235b`. |
+| 27 Aug 2026 | Use the binding earlier Devpost deadline when official pages disagree. | Codex verification | Devpost rules/overview say 3 Sep at 1 PM PT; internal materials use that rather than the OpenAI marketing page's later time. |
+| 27 Aug 2026 | Treat scripted tool calls and synthetic scorer fixtures as runtime/scorer evidence only. | Codex verification | Phase 6 model-selection thresholds remain open until an independent model run is recorded and scored. |
 
 ---
 
