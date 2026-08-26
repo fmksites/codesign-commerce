@@ -1,7 +1,8 @@
 # Studio-tote portability evidence
 
 Date: 26 August 2026  
-Implementation base: `cdbbdb7` (`docs: record private five-tool flagship evidence`)  
+Implementation commit: `9ab806c` (`feat: add studio tote portability proof`)
+Clean-clone fix: `13a168d` (`fix: resolve workspace source in clean-clone tests`)
 Accepted design reference: `../design/studio-tote-concept.png`
 
 ## What this proves
@@ -165,9 +166,27 @@ the source was still being corrected. After the local server settled, the
 complete five-tool sequence above passed without a reload. No interrupted run
 is counted as evidence.
 
-## Remaining gate
+## Clean-clone gate
 
-This evidence proves local portability, browser behavior, and responsive mobile
-quality. The implementation still needs the complete root gate, commit, and
-clean-clone run before the Phase 5 portability milestone may be marked PASS.
+The initial fresh clone correctly exposed that the new tote test imported the
+workspace package through its unbuilt `dist/`. That run failed and is not
+counted. Commit `13a168d` adds a root Vitest source alias so tests execute the
+public TypeScript source from an empty build state.
 
+A second `git clone --no-local` into
+`/private/tmp/codesign-tote-clean-final.9zavVo/repo` then passed:
+
+| Gate | Outcome |
+|---|---|
+| `npm ci` | PASS — 129 packages installed |
+| `npm test` | PASS — 7 files, 62 tests |
+| `npm run typecheck` | PASS — all three workspaces and strict core tests |
+| `npm run build` | PASS — core bundles, KORRHAUS reference, and tote example |
+| `npm run check:public-boundary` | PASS — 88 public candidates |
+| `npm run check:docs` | PASS — 27 Markdown files |
+| `npm run check:evals` | PASS — 24 cases across 6 categories |
+| `npm run verify:browser-bundle` | PASS — `sha256:3723b493…f101f6` |
+| Final `git status --short` | PASS — empty |
+
+This closes the local Phase 5 portability milestone. Hosted CI, public hosting,
+and native-size desktop capture remain later gates.

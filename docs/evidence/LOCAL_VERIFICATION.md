@@ -154,3 +154,31 @@ revision and removed the proposed second colourway.
 
 The full outputs, persistence assertions, source hashes, recovery observation,
 and screenshot are recorded in `KORRHAUS_LOCAL_FIVE_TOOL.md`.
+
+## 26 August 2026 — studio-tote portability clean clone
+
+Implementation commit `9ab806c` adds a materially different studio-tote
+manifest, adapter, renderer, real product assets, coupled rules, deterministic
+tests, browser evidence, and four tote eval cases without changing the core.
+
+The first fresh clone exposed a package-resolution dependency on a locally
+prebuilt core `dist/` and failed. Commit `13a168d` fixed that by resolving
+workspace tests directly to public source. A new clone at
+`/private/tmp/codesign-tote-clean-final.9zavVo/repo` then passed from an empty
+build state:
+
+| Command or check | Outcome |
+|---|---|
+| `npm ci` | PASS — 129 packages installed from the committed lockfile |
+| `npm test` | PASS — 7 files, 62 tests |
+| `npm run typecheck` | PASS — all workspaces and strict core tests |
+| `npm run build` | PASS — core module/browser bundles plus both examples |
+| `npm run check:public-boundary` | PASS — 88 tracked public candidates |
+| `npm run check:docs` | PASS — 27 Markdown files |
+| `npm run check:evals` | PASS — 24 cases across 6 categories |
+| `npm run verify:browser-bundle` | PASS — digest `3723b493…f101f6` unchanged |
+| Clean-clone `git status --short` | PASS — empty |
+
+Actual-browser option discovery, five-tool proposal/creation/validation,
+zero-write Revert, coupled-rule failure, human editing, responsive comparison,
+and console evidence are in `STUDIO_TOTE_PORTABILITY.md`.
