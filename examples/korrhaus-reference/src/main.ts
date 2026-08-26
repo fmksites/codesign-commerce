@@ -145,6 +145,9 @@ class KorrhausReferenceAdapter extends InMemoryConfiguratorAdapter {
 const app = document.querySelector<HTMLElement>("#app");
 if (!app) throw new Error("Reference app root is missing");
 
+const query = new URLSearchParams(window.location.search);
+if (query.has("reset")) document.documentElement.dataset.demoBaseline = "reset";
+
 app.innerHTML = `
   <div class="announcement">KORRHAUS public reference · powered by CoDesign Commerce</div>
   <header class="site-header">
@@ -312,17 +315,17 @@ renderPreview();
 renderDesignTabs();
 
 // Local visual-QA entry point only. Vite removes this branch from production builds.
-if (import.meta.env.DEV && new URLSearchParams(window.location.search).has("agent-preview")) {
+if (import.meta.env.DEV && query.has("agent-preview")) {
   void (async () => {
     const first = await session.propose({
       baseRevision: adapter.committedState.revision,
       operationId: "local-visual-qa-first-colourway",
       changes: [
         { designId: "design-1", optionId: "design.name", value: "North Form Cream" },
-        { designId: "design-1", optionId: "body.color", value: "navy" },
-        { designId: "design-1", optionId: "accent.color", value: "berry" },
+        { designId: "design-1", optionId: "body.color", value: "cream" },
+        { designId: "design-1", optionId: "accent.color", value: "navy" },
       ],
-      assumptions: ["Logo will be added later."],
+      assumptions: ["Split the 120 pairs evenly across two colourways.", "Final logo artwork will be added later."],
     });
     if (!first.ok) return;
     await session.createDesign({

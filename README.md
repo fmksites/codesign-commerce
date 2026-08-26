@@ -44,8 +44,9 @@ npm run dev --workspace @codesign-commerce/korrhaus-reference
 npm run dev --workspace @codesign-commerce/studio-tote
 ```
 
-The tote example accepts `?reset=true` for a deterministic anonymous baseline
-and `?reset=true&agent-preview=true` for its local visual-QA proposal.
+Both examples accept `?reset=true` for a deterministic anonymous baseline and
+`?reset=true&agent-preview=true` for a local visual-QA proposal. The preview
+query is development-only and is not the agent or judge path.
 
 ## Safety boundary
 
@@ -59,4 +60,5 @@ See:
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the read-only flagship integration map.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
+- [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.
 - [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md) for the repository boundary.
