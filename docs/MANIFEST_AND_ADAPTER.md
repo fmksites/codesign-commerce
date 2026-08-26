@@ -99,3 +99,21 @@ On retry with the same proposal ID, the adapter must not repeat the local write.
 ## KORRHAUS adapter rule
 
 The private KORRHAUS bridge must live inside the existing designer closure or receive an equivalently narrow internal interface. It must never give the generic package the broad boot/configuration object. DOM clicking is not an acceptable primary adapter because it cannot reliably quiesce or suppress the existing autosave paths.
+
+## Studio-tote portability proof
+
+`examples/studio-tote/` implements the same contract with a different product
+vocabulary and renderer:
+
+- `canvas.weight`, `bag.color`, and `handles.length` replace sock yarn and grip
+  options.
+- Print method, placement, reinforcement, and artwork status introduce tote
+  production dependencies.
+- The adapter rejects embroidery on 8 oz canvas, unreinforced 16 oz canvas, and
+  two-colour screen printing below 50 units per variant.
+- Real tote raster assets and a dynamic print layer replace the sock renderer.
+
+No tote branch or tote-specific rule exists in `packages/codesign-commerce/`.
+This is the intended portability model: reuse the transaction and tool surface,
+but keep product semantics, validation, preview, and persistence inside the
+merchant adapter.

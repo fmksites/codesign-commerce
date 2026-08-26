@@ -127,6 +127,15 @@ examples/korrhaus-reference/
   src/main.ts                public manifest, adapter, and renderer wiring
   src/styles.css             reproducible KORRHAUS reference surface
   public/                    KORRHAUS-owned public-safe visual assets
+
+examples/studio-tote/
+  src/configurator.ts        tote manifest, adapter, and production rules
+  src/main.ts                human UI, renderer, review, and WebMCP wiring
+  src/styles.css             distinct responsive tote visual system
+  public/                    generated public-safe tote product cutouts
 ```
 
-The public KORRHAUS reference consumes the package through its own adapter. The materially different studio-tote example will use the same package and review view. Merchant-specific mapping must not be added to the core.
+Both public examples consume the same package and review view. The tote adds no
+core condition, option ID, renderer behavior, or product rule: all tote-specific
+work stays under `examples/studio-tote/`. Merchant-specific mapping must not be
+added to the core.

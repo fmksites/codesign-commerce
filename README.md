@@ -17,6 +17,9 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 - Deterministic tests proving that proposal previews do not cross the persistence boundary.
 - A framework-neutral, accessible Keep/Revert review component.
 - A local public KORRHAUS reference surface that completes the 120-pair North Form scenario in an actual WebMCP-capable browser.
+- A materially different studio-tote example with its own manifest, adapter,
+  renderer, real product assets, coupled canvas/print rules, anonymous reset,
+  and the same unchanged five-tool core and review UI.
 
 The repository is licensed under Apache-2.0 but is not published or submission-ready yet. Public hosting, production deployment or promotion, video publication, and Devpost submission remain approval-gated.
 
@@ -30,7 +33,19 @@ npm test
 npm run typecheck
 npm run build
 npm run check:public-boundary
+npm run check:docs
+npm run check:evals
 ```
+
+Run either public example from the repository root:
+
+```bash
+npm run dev --workspace @codesign-commerce/korrhaus-reference
+npm run dev --workspace @codesign-commerce/studio-tote
+```
+
+The tote example accepts `?reset=true` for a deterministic anonymous baseline
+and `?reset=true&agent-preview=true` for its local visual-QA proposal.
 
 ## Safety boundary
 
@@ -42,5 +57,6 @@ See:
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for runtime, transaction, and trust boundaries.
 - [docs/MANIFEST_AND_ADAPTER.md](./docs/MANIFEST_AND_ADAPTER.md) for merchant integration obligations.
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the read-only flagship integration map.
+- [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md) for the repository boundary.

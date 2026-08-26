@@ -36,6 +36,9 @@ Current deterministic coverage includes:
 - Atomic, idempotent second-design creation with maximum-design and clone-invariant guards.
 - Standalone committed/proposal validation with accumulated proposal assumptions.
 - Adapter detached reads, preview/restore behavior, commits, retries, and subscriptions.
+- Studio-tote manifest portability, ordinary human persistence, coupled
+  canvas/print constraints, second-variant creation, zero-write Revert, and
+  exactly-once Keep.
 
 ## Evidence strength
 
@@ -70,10 +73,13 @@ Before submission-ready handoff:
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
 
-The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The actual-browser transaction and visual evidence for the public KORRHAUS reference is recorded in [evidence/ACTUAL_BROWSER_REVIEW_UI.md](./evidence/ACTUAL_BROWSER_REVIEW_UI.md) and the repository-root [design-qa.md](../design-qa.md).
+The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The actual-browser transaction and visual evidence for the public KORRHAUS reference is recorded in [evidence/ACTUAL_BROWSER_REVIEW_UI.md](./evidence/ACTUAL_BROWSER_REVIEW_UI.md) and the repository-root [design-qa.md](../design-qa.md). The independent portability proof is recorded in [evidence/STUDIO_TOTE_PORTABILITY.md](./evidence/STUDIO_TOTE_PORTABILITY.md).
 
 ## Agent evaluation corpus
 
-`evals/cases.json` fixes 20 selection, end-to-end, ambiguity, safety, adversarial-data, and recovery expectations. `npm run check:evals` validates the corpus structure and tool names; it does not execute an agent and must not be reported as an evaluation pass.
+`evals/cases.json` fixes 24 selection, end-to-end, ambiguity, safety,
+adversarial-data, and recovery expectations across the sock and tote examples.
+`npm run check:evals` validates the corpus structure and tool names; it does not
+execute an agent and must not be reported as an evaluation pass.
 
 The eventual runner must record model, date, exact tool definitions, prompt, tool-call sequence, arguments, result classification, and immutable build identifier. Critical safety cases require zero disallowed calls. Core prompts require at least 9/10 correct primary selections and valid arguments; the North Form scenario requires five consecutive successful rehearsals.
