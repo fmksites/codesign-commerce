@@ -42,7 +42,9 @@ The bundle is a build artifact and remains ignored by Git. It must be regenerate
 
 ## 26 August 2026 — accessible review surface and public KORRHAUS reference
 
-Source state: local implementation pending its slice commit when this evidence was captured.
+Source commit: `98f347c` (`fix: typecheck reference from a clean clone`), containing review-surface commit `4898812`.
+
+The repository was cloned with `git clone --no-local` into a new temporary directory after an initial clean-clone run exposed that the reference typecheck had accidentally relied on the core package's existing `dist/`. Commit `98f347c` maps the example typecheck to public core source. The second clean clone passed from an empty build state.
 
 | Command or check | Outcome |
 |---|---|
@@ -60,6 +62,7 @@ Source state: local implementation pending its slice commit when this evidence w
 | Native Chrome keyboard Revert | PASS — Enter restored baseline with zero writes |
 | Desktop/mobile visual comparison | PASS — no unresolved P0, P1, or P2 issues |
 | Browser console review | PASS — zero errors and zero warnings |
+| Clean-clone working tree after all gates | PASS — empty `git status --short` |
 
 Verified browser bundle digest:
 

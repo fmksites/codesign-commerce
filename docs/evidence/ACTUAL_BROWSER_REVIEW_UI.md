@@ -2,7 +2,7 @@
 
 Date: 26 August 2026
 
-Build: local source pending the slice commit; exact bundle digest is recorded in `LOCAL_VERIFICATION.md`
+Source: review implementation `4898812`, reproducibility fix `98f347c`; exact bundle digest is recorded in `LOCAL_VERIFICATION.md`
 
 ## Supported page-agent run
 
