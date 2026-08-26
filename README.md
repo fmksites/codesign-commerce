@@ -38,5 +38,6 @@ See:
 - [EXECUTION_PLAN.md](./EXECUTION_PLAN.md) for the approved plan and current evidence log.
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for runtime, transaction, and trust boundaries.
 - [docs/MANIFEST_AND_ADAPTER.md](./docs/MANIFEST_AND_ADAPTER.md) for merchant integration obligations.
+- [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the read-only flagship integration map.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md) for the repository boundary.

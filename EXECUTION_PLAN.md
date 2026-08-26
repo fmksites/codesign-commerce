@@ -1585,6 +1585,7 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | 26 Aug 2026 | Final video production is human-owned. | User | Codex supplies stable demo, script, shot list, and review only. |
 | 26 Aug 2026 | Use GPT-5.6 Sol Extra High for execution. | User / Codex | Ultra is not required for the sequential critical path. |
 | 26 Aug 2026 | Execute this plan under a persistent goal and stop only for genuine user input or defined approval gates. | User | Local implementation may begin. |
+| 26 Aug 2026 | Preserve the existing private one-tool proposal spike as post-start evidence, but migrate it to the public CoDesign package rather than treating it as the submission architecture. | Codex inspection | Exact seams and local hashes recorded in `docs/KORRHAUS_BRIDGE_MAPPING.md`; private files remain unchanged. |
 
 ---
 

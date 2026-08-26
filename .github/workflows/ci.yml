@@ -33,6 +33,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify browser bundle
+        run: npm run verify:browser-bundle
+
       - name: Check public boundary
         run: npm run check:public-boundary
 

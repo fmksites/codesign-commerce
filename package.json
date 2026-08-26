@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
+    "verify:browser-bundle": "node scripts/verify-browser-bundle.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -b && tsc -p packages/codesign-commerce/tsconfig.test.json",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.3.0",
+    "esbuild": "^0.28.2",
     "typescript": "^7.0.2",
     "vitest": "^4.1.11"
   }

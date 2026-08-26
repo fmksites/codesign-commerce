@@ -12,7 +12,9 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "npm run build:module && npm run build:browser",
+    "build:module": "tsc -p tsconfig.build.json",
+    "build:browser": "esbuild src/index.ts --bundle --format=iife --global-name=CoDesignCommerce --platform=browser --target=chrome149 --sourcemap --outfile=dist/browser/codesign-commerce.js",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   }
 }
