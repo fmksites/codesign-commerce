@@ -1,15 +1,14 @@
-# Proposed Public And Private Boundary
+# Public and private boundary
 
-This boundary is a proposal and requires approval before implementation.
+This boundary was approved for local implementation on 26 August 2026. Publication and production promotion remain separately approval-gated.
 
 ## Public Challenge Repository
 
-Proposed contents:
+Planned contents:
 
 ```text
 packages/
-  configurator-core/
-  shopify-adapter/
+  codesign-commerce/
 examples/
   grip-sock-designer/
   second-merch-example/
@@ -22,7 +21,7 @@ LICENSE
 README.md
 ```
 
-The public project should include:
+The public project includes or will include:
 
 - Generic WebMCP registration and tool schemas.
 - State-adapter interfaces.

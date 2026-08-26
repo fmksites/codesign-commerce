@@ -1,4 +1,4 @@
-import { validateManifest, validateOptionValue } from "./manifest.js";
+import { isSafeIdentifier, validateManifest, validateOptionValue } from "./manifest.js";
 import type {
   CommitResult,
   ConfigurationDiff,
@@ -43,10 +43,17 @@ function createProposalId(): string {
   return `proposal-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function errorResult(code: ProposalErrorCode, message: string, retryable: boolean, affectedOptions: string[] = [], currentRevision?: string): ProposalErrorResult {
+function errorResult(
+  code: ProposalErrorCode,
+  message: string,
+  retryable: boolean,
+  affectedOptions: string[] = [],
+  currentRevision?: string,
+  persisted: false | "unknown" = false,
+): ProposalErrorResult {
   return {
     ok: false,
-    persisted: false,
+    persisted,
     ...(currentRevision === undefined ? {} : { currentRevision }),
     error: { code, message, retryable, affectedOptions },
   };
@@ -67,6 +74,9 @@ export class ProposalSession<Snapshot = unknown> {
     this.adapter = adapter;
     this.#unsubscribe = adapter.subscribeToExternalChanges((revision) => {
       this.#externalRevision = revision;
+      if (this.#active && this.#status === "awaiting-human" && revision !== this.#active.baseRevision) {
+        this.#setStatus("invalidated");
+      }
     });
   }
 
@@ -105,14 +115,20 @@ export class ProposalSession<Snapshot = unknown> {
 
   async propose(input: ProposalInput, execution: ProposalExecutionOptions = {}): Promise<ProposeResult> {
     if (execution.signal?.aborted) return errorResult("CANCELLED", "The proposal was cancelled before it started", true);
+    if (this.#status === "invalidated") {
+      const currentRevision = this.#externalRevision ?? this.#active?.baseRevision;
+      const resynchronized = await this.resynchronize();
+      if ("ok" in resynchronized) return resynchronized;
+      return errorResult("STALE_REVISION", "The committed configuration changed while the proposal was open", true, [], currentRevision);
+    }
     if (this.#status === "applying" || this.#status === "committing" || this.#status === "reverting") {
       return errorResult("OPERATION_IN_PROGRESS", "Another proposal operation is still in progress", true);
     }
-    if (this.#status === "commit-retry") {
+    if (this.#status === "commit-retry" || this.#status === "commit-uncertain") {
       return errorResult("COMMIT_ALREADY_STARTED", "Retry the secure save before starting another proposal", false);
     }
-    if (!input.operationId || input.operationId.length > 80) {
-      return errorResult("INVALID_VALUE", "operationId is required and must be at most 80 characters", false);
+    if (!input.operationId || input.operationId.length > 80 || !isSafeIdentifier(input.operationId)) {
+      return errorResult("INVALID_VALUE", "operationId must be a safe identifier with at most 80 characters", false);
     }
     if (input.changes.length < 1 || input.changes.length > 40) {
       return errorResult("INVALID_VALUE", "A proposal must contain between 1 and 40 changes", false);
@@ -227,12 +243,17 @@ export class ProposalSession<Snapshot = unknown> {
 
   async revert(): Promise<{ reverted: true; persisted: false } | ProposalErrorResult> {
     if (!this.#active) return errorResult("NO_PROPOSAL", "There is no proposal to revert", false);
-    if (this.#status === "commit-retry" || this.#status === "committing") {
+    if (this.#status === "commit-retry" || this.#status === "commit-uncertain" || this.#status === "committing") {
       return errorResult(
         "COMMIT_ALREADY_STARTED",
         "The local commit boundary has been crossed; retry the secure save instead",
         false,
       );
+    }
+    if (this.#status === "invalidated") {
+      const result = await this.resynchronize();
+      if ("ok" in result) return result;
+      return { reverted: true, persisted: false };
     }
     if (this.#status !== "awaiting-human") {
       return errorResult("OPERATION_IN_PROGRESS", "The proposal is not ready to revert", true);
@@ -250,6 +271,15 @@ export class ProposalSession<Snapshot = unknown> {
 
   async keep(): Promise<CommitResult | ProposalErrorResult> {
     if (!this.#active) return errorResult("NO_PROPOSAL", "There is no proposal to keep", false);
+    if (this.#status === "invalidated") {
+      const currentRevision = this.#externalRevision ?? this.#active.baseRevision;
+      const result = await this.resynchronize();
+      if ("ok" in result) return result;
+      return errorResult("STALE_REVISION", "The proposal was discarded because the committed configuration changed", true, [], currentRevision);
+    }
+    if (this.#status === "commit-uncertain") {
+      return errorResult("COMMIT_STATUS_UNKNOWN", "Commit status is unknown. Reload before continuing.", false, [], undefined, "unknown");
+    }
     if (this.#status !== "awaiting-human" && this.#status !== "commit-retry") {
       return errorResult("OPERATION_IN_PROGRESS", "The proposal is not ready to keep", true);
     }
@@ -260,17 +290,43 @@ export class ProposalSession<Snapshot = unknown> {
         operationIds: [...this.#active.operationIds],
         trigger: "agent_proposal_keep",
       });
+      if (!result.serverPersisted) {
+        this.#setStatus("commit-retry");
+        return result;
+      }
       this.#clear();
       return result;
     } catch {
-      this.#setStatus("commit-retry");
+      this.#setStatus("commit-uncertain");
       let currentRevision = this.#active.baseRevision;
       try {
         currentRevision = (await this.adapter.readState()).revision;
       } catch {
         // The public error remains sanitized even if the adapter cannot report its local revision.
       }
-      return errorResult("ADAPTER_FAILURE", "The proposal was kept locally but the secure save did not complete", true, [], currentRevision);
+      return errorResult(
+        "COMMIT_STATUS_UNKNOWN",
+        "Commit status could not be verified. Reload before continuing.",
+        false,
+        [],
+        currentRevision,
+        "unknown",
+      );
+    }
+  }
+
+  async resynchronize(): Promise<{ resynchronized: true; persisted: false; revision: string } | ProposalErrorResult> {
+    if (!this.#active || this.#status !== "invalidated") {
+      return errorResult("NO_PROPOSAL", "There is no invalidated proposal to resynchronize", false);
+    }
+    try {
+      const committed = await this.adapter.readState();
+      await this.adapter.previewState(committed);
+      this.#clear();
+      return { resynchronized: true, persisted: false, revision: committed.revision };
+    } catch {
+      this.#setStatus("invalidated");
+      return errorResult("ADAPTER_FAILURE", "The latest committed configuration could not be restored", true);
     }
   }
 

@@ -156,13 +156,14 @@ describe("ProposalSession", () => {
       operationId: "commit-retry-1",
       changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
     });
-    adapter.failCommit = true;
+    adapter.failServerSave = true;
 
     const failed = await session.keep();
     expect(failed).toMatchObject({
-      ok: false,
-      currentRevision: "revision-2",
-      error: { code: "ADAPTER_FAILURE", retryable: true },
+      revision: "revision-2",
+      localPersisted: true,
+      serverPersisted: false,
+      errorCode: "SYNTHETIC_SERVER_SAVE_FAILED",
     });
     expect(session.status).toBe("commit-retry");
     expect(adapter.counters.localWrites).toBe(1);
@@ -172,7 +173,7 @@ describe("ProposalSession", () => {
     const revert = await session.revert();
     expect(revert).toMatchObject({ ok: false, error: { code: "COMMIT_ALREADY_STARTED" } });
 
-    adapter.failCommit = false;
+    adapter.failServerSave = false;
     const retried = await session.keep();
     expect("revision" in retried && retried.revision).toBe("revision-2");
     expect(session.status).toBe("idle");
@@ -191,17 +192,80 @@ describe("ProposalSession", () => {
     if (!first.ok) throw new Error("Expected successful proposal");
     adapter.simulateExternalRevision("revision-external");
 
-    const next = await session.propose({
-      baseRevision: first.baseRevision,
-      proposalId: first.proposalId,
-      proposalRevision: first.proposalRevision,
-      operationId: "external-change-second-1",
-      changes: [{ designId: "design-1", optionId: "accent.color", value: "berry" }],
-    });
-
-    expect(next).toMatchObject({ ok: false, error: { code: "STALE_REVISION" } });
+    expect(session.status).toBe("invalidated");
+    const kept = await session.keep();
+    expect(kept).toMatchObject({ ok: false, error: { code: "STALE_REVISION" } });
     expect(session.status).toBe("idle");
     expect(adapter.visibleState.designs[0]!.selections["body.color"]).toBe("cream");
-    expect(adapter.counters.restoreCalls).toBe(1);
+    expect(adapter.visibleState.revision).toBe("revision-external");
+    expect(adapter.counters.commitCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+  });
+
+  test("fails closed when an adapter throws before reporting commit status", async () => {
+    const { adapter, session } = setup();
+    await session.propose({
+      baseRevision: "revision-1",
+      operationId: "uncertain-commit-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    adapter.throwDuringCommit = true;
+
+    const result = await session.keep();
+    expect(result).toMatchObject({
+      ok: false,
+      persisted: "unknown",
+      error: { code: "COMMIT_STATUS_UNKNOWN", retryable: false },
+    });
+    expect(session.status).toBe("commit-uncertain");
+    expect((await session.revert())).toMatchObject({ ok: false, error: { code: "COMMIT_ALREADY_STARTED" } });
+    expect((await session.keep())).toMatchObject({ ok: false, error: { code: "COMMIT_STATUS_UNKNOWN" } });
+  });
+
+  test("serializes proposal operations while adapter validation is in flight", async () => {
+    const { adapter, session } = setup();
+    const originalValidation = adapter.validateState.bind(adapter);
+    let releaseValidation!: () => void;
+    let validationStarted!: () => void;
+    const started = new Promise<void>((resolve) => { validationStarted = resolve; });
+    const gate = new Promise<void>((resolve) => { releaseValidation = resolve; });
+    adapter.validateState = async (state) => {
+      validationStarted();
+      await gate;
+      return originalValidation(state);
+    };
+
+    const firstPromise = session.propose({
+      baseRevision: "revision-1",
+      operationId: "concurrent-first-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    await started;
+
+    const second = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "concurrent-second-1",
+      changes: [{ designId: "design-1", optionId: "accent.color", value: "berry" }],
+    });
+    const keep = await session.keep();
+    expect(second).toMatchObject({ ok: false, error: { code: "OPERATION_IN_PROGRESS" } });
+    expect(keep).toMatchObject({ ok: false, error: { code: "OPERATION_IN_PROGRESS" } });
+    expect(adapter.counters.previewCalls).toBe(0);
+
+    releaseValidation();
+    expect(await firstPromise).toMatchObject({ ok: true, proposalRevision: 1 });
+    expect(adapter.counters.previewCalls).toBe(1);
+  });
+
+  test("rejects unsafe operation identifiers before touching the adapter", async () => {
+    const { adapter, session } = setup();
+    const result = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "constructor",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: "INVALID_VALUE" } });
+    expect(adapter.counters.quiesceCalls).toBe(0);
   });
 });

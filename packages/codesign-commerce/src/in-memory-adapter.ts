@@ -41,7 +41,8 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
     commitCalls: 0,
   };
 
-  failCommit = false;
+  failServerSave = false;
+  throwDuringCommit = false;
 
   constructor(initialState: ConfigurationState) {
     this.#committed = clone(initialState);
@@ -102,6 +103,7 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
 
   async commitState(state: ConfigurationState, metadata: CommitMetadata): Promise<CommitResult> {
     this.counters.commitCalls += 1;
+    if (this.throwDuringCommit) throw new Error("Synthetic unknown commit failure");
     let commit = this.#commits.get(metadata.proposalId);
     if (!commit) {
       this.counters.localWrites += 1;
@@ -112,7 +114,14 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
       this.#visible = clone(this.#committed);
       for (const listener of this.#listeners) listener(commit.revision);
     }
-    if (this.failCommit) throw new Error("Synthetic server save failure");
+    if (this.failServerSave) {
+      return {
+        revision: commit.revision,
+        localPersisted: true,
+        serverPersisted: false,
+        errorCode: "SYNTHETIC_SERVER_SAVE_FAILED",
+      };
+    }
     if (!commit.serverPersisted) {
       this.counters.serverWrites += 1;
       commit.serverPersisted = true;

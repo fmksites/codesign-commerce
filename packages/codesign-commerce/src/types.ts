@@ -116,11 +116,18 @@ export interface CommitMetadata {
   trigger: "agent_proposal_keep";
 }
 
-export interface CommitResult {
-  revision: string;
-  localPersisted: boolean;
-  serverPersisted: boolean;
-}
+export type CommitResult =
+  | {
+      revision: string;
+      localPersisted: true;
+      serverPersisted: true;
+    }
+  | {
+      revision: string;
+      localPersisted: true;
+      serverPersisted: false;
+      errorCode: string;
+    };
 
 export interface ConfiguratorAdapter<Snapshot = unknown> {
   readState(): Promise<ConfigurationState>;
@@ -177,13 +184,14 @@ export type ProposalErrorCode =
   | "PROPOSAL_PENDING"
   | "OPERATION_IN_PROGRESS"
   | "COMMIT_ALREADY_STARTED"
+  | "COMMIT_STATUS_UNKNOWN"
   | "CANCELLED"
   | "NO_PROPOSAL"
   | "ADAPTER_FAILURE";
 
 export interface ProposalErrorResult {
   ok: false;
-  persisted: false;
+  persisted: false | "unknown";
   currentRevision?: string;
   error: {
     code: ProposalErrorCode;
@@ -195,7 +203,7 @@ export interface ProposalErrorResult {
 
 export type ProposeResult = ProposalResult | ProposalErrorResult;
 
-export type ProposalSessionStatus = "idle" | "applying" | "awaiting-human" | "reverting" | "committing" | "commit-retry";
+export type ProposalSessionStatus = "idle" | "applying" | "awaiting-human" | "invalidated" | "reverting" | "committing" | "commit-retry" | "commit-uncertain";
 
 export interface ProposalExecutionOptions {
   signal?: AbortSignal;

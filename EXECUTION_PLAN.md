@@ -1562,7 +1562,7 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Persistent goal created | `PASS` | Active Codex goal in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Goal points to this plan. |
 | Baseline captured | `PASS` | Pre-start Cloud Run revision/digest and source separation recorded in `docs/evidence/PRE_CHALLENGE_BASELINE.md`; baseline commit `abf2a7829fdd188c2f2492e9c9d53a247a6ede7f` | Baseline commit timestamp is after written authorization. |
 | Public foundation | `IN_PROGRESS` | Clean clone of `9ff2dfe` passed exact install, 19 tests, strict typecheck, build, and public-boundary scan; details in `docs/evidence/LOCAL_VERIFICATION.md` | Root license and hosted CI remain. |
-| Transaction vertical slice | `IN_PROGRESS` | 22 deterministic tests pass after framework-neutral review controller; `codesign_read_configuration` and `codesign_propose_configuration` implemented | Nonvisual transaction and human-action invariants pass. Visual review implementation and browser evidence remain before the gate can pass. |
+| Transaction vertical slice | `IN_PROGRESS` | 38 deterministic tests pass across manifest, transaction, review, WebMCP, and adapter contracts; source and tests typecheck strictly | Nonvisual transaction and human-action invariants pass. Visual review implementation and browser evidence remain before the gate can pass. |
 | KORRHAUS safety gate | `NOT_STARTED` | — | — |
 | Complete tool suite | `NOT_STARTED` | — | — |
 | Public reference | `NOT_STARTED` | — | — |

@@ -25,7 +25,9 @@ export type ReviewState =
       productionReady: boolean;
     }
   | { kind: "busy"; action: "applying" | "reverting" | "committing"; message: string }
+  | { kind: "invalidated"; message: "Configuration changed elsewhere. Discard this proposal and restore the latest version."; refreshLabel: "Restore latest" }
   | { kind: "commit-retry"; message: "Kept on this device; secure save failed."; retryLabel: "Retry save" }
+  | { kind: "commit-uncertain"; message: "Save status could not be verified. Reload before continuing." }
   | { kind: "committed"; message: "Agent proposal kept."; revision: string }
   | { kind: "reverted"; message: "Agent proposal reverted. Nothing was saved." };
 
@@ -78,7 +80,7 @@ export class ProposalReviewController<Snapshot = unknown> {
 
   async keep(): Promise<CommitResult | ProposalErrorResult> {
     const result = await this.session.keep();
-    if ("revision" in result) this.#publish({ kind: "committed", message: "Agent proposal kept.", revision: result.revision });
+    if ("revision" in result && result.serverPersisted) this.#publish({ kind: "committed", message: "Agent proposal kept.", revision: result.revision });
     return result;
   }
 
@@ -97,6 +99,10 @@ export class ProposalReviewController<Snapshot = unknown> {
     const result = await this.session.revert();
     if ("reverted" in result) this.#publish({ kind: "reverted", message: "Agent proposal reverted. Nothing was saved." });
     return result;
+  }
+
+  async restoreLatest(): Promise<{ resynchronized: true; persisted: false; revision: string } | ProposalErrorResult> {
+    return this.session.resynchronize();
   }
 
   dismissOutcome(): void {
@@ -123,6 +129,18 @@ export class ProposalReviewController<Snapshot = unknown> {
     }
     if (snapshot.status === "commit-retry") {
       this.#publish({ kind: "commit-retry", message: "Kept on this device; secure save failed.", retryLabel: "Retry save" });
+      return;
+    }
+    if (snapshot.status === "commit-uncertain") {
+      this.#publish({ kind: "commit-uncertain", message: "Save status could not be verified. Reload before continuing." });
+      return;
+    }
+    if (snapshot.status === "invalidated") {
+      this.#publish({
+        kind: "invalidated",
+        message: "Configuration changed elsewhere. Discard this proposal and restore the latest version.",
+        refreshLabel: "Restore latest",
+      });
       return;
     }
     if (snapshot.status === "awaiting-human" && snapshot.result) {

@@ -57,7 +57,7 @@ describe("ProposalReviewController", () => {
       operationId: "review-retry-1",
       changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
     });
-    adapter.failCommit = true;
+    adapter.failServerSave = true;
 
     await review.keep();
     expect(review.state).toEqual({
@@ -68,10 +68,41 @@ describe("ProposalReviewController", () => {
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(0);
 
-    adapter.failCommit = false;
+    adapter.failServerSave = false;
     await review.retrySave();
     expect(review.state).toMatchObject({ kind: "committed", revision: "revision-2" });
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(1);
+  });
+
+  test("shows an invalidation state and restores the latest committed revision", async () => {
+    const { adapter, session, review } = setup();
+    await session.propose({
+      baseRevision: "revision-1",
+      operationId: "review-invalidated-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    adapter.simulateExternalRevision("revision-external");
+
+    expect(review.state).toMatchObject({ kind: "invalidated", refreshLabel: "Restore latest" });
+    const restored = await review.restoreLatest();
+    expect(restored).toMatchObject({ resynchronized: true, revision: "revision-external" });
+    expect(review.state).toEqual({ kind: "hidden" });
+    expect(adapter.visibleState.revision).toBe("revision-external");
+  });
+
+  test("requires reload when commit status is unknown", async () => {
+    const { adapter, session, review } = setup();
+    await session.propose({
+      baseRevision: "revision-1",
+      operationId: "review-uncertain-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    adapter.throwDuringCommit = true;
+
+    await review.keep();
+    expect(review.state).toEqual({ kind: "commit-uncertain", message: "Save status could not be verified. Reload before continuing." });
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
   });
 });

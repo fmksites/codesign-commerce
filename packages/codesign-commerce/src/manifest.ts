@@ -2,6 +2,9 @@ import type { ConfiguratorManifest, JsonPrimitive, OptionGroup } from "./types.j
 
 const SAFE_ID = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/;
 const UNSAFE_SEGMENTS = new Set(["__proto__", "prototype", "constructor"]);
+const OPTION_SCOPES = new Set(["order", "design"]);
+const OPTION_KINDS = new Set(["enum", "color", "integer", "boolean", "text", "asset-status"]);
+const OPTION_ROLES = new Set(["selection", "design-quantity", "design-name", "order-total"]);
 
 export class ManifestValidationError extends Error {
   readonly issues: string[];
@@ -17,7 +20,107 @@ export function isSafeIdentifier(value: string): boolean {
   return SAFE_ID.test(value) && !value.split(".").some((segment) => UNSAFE_SEGMENTS.has(segment));
 }
 
-export function validateManifest(manifest: ConfiguratorManifest): ConfiguratorManifest {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function hasOnlyKeys(value: Record<string, unknown>, allowedKeys: readonly string[]): boolean {
+  const allowed = new Set(allowedKeys);
+  return Object.keys(value).every((key) => allowed.has(key));
+}
+
+function validateManifestStructure(input: unknown): string[] {
+  if (!isRecord(input)) return ["manifest must be a plain object"];
+  const issues: string[] = [];
+  if (!hasOnlyKeys(input, ["schemaVersion", "id", "version", "displayName", "productType", "capabilities", "optionGroups", "dependencyRules", "approval"])) {
+    issues.push("manifest contains unknown top-level fields");
+  }
+  for (const field of ["schemaVersion", "id", "version", "displayName", "productType"] as const) {
+    if (typeof input[field] !== "string") issues.push(`${field} must be a string`);
+  }
+
+  if (!isRecord(input.capabilities)) {
+    issues.push("capabilities must be an object");
+  } else {
+    if (!hasOnlyKeys(input.capabilities, ["multipleDesigns", "maximumDesigns", "cloning"])) issues.push("capabilities contains unknown fields");
+    if (typeof input.capabilities.multipleDesigns !== "boolean") issues.push("capabilities.multipleDesigns must be boolean");
+    if (!Number.isInteger(input.capabilities.maximumDesigns)) issues.push("capabilities.maximumDesigns must be an integer");
+    if (typeof input.capabilities.cloning !== "boolean") issues.push("capabilities.cloning must be boolean");
+  }
+
+  if (!Array.isArray(input.optionGroups)) {
+    issues.push("optionGroups must be an array");
+  } else {
+    for (const [index, value] of input.optionGroups.entries()) {
+      if (!isRecord(value)) {
+        issues.push(`optionGroups[${index}] must be an object`);
+        continue;
+      }
+      if (!hasOnlyKeys(value, ["id", "label", "agentDescription", "scope", "kind", "role", "agentWritable", "values", "minimum", "maximum", "maximumLength", "affectedPreviewRegion"])) {
+        issues.push(`optionGroups[${index}] contains unknown fields`);
+      }
+      if (typeof value.id !== "string") issues.push(`optionGroups[${index}].id must be a string`);
+      if (typeof value.label !== "string") issues.push(`optionGroups[${index}].label must be a string`);
+      if (typeof value.agentDescription !== "string") issues.push(`optionGroups[${index}].agentDescription must be a string`);
+      if (typeof value.scope !== "string" || !OPTION_SCOPES.has(value.scope)) issues.push(`optionGroups[${index}].scope is invalid`);
+      if (typeof value.kind !== "string" || !OPTION_KINDS.has(value.kind)) issues.push(`optionGroups[${index}].kind is invalid`);
+      if (value.role !== undefined && (typeof value.role !== "string" || !OPTION_ROLES.has(value.role))) issues.push(`optionGroups[${index}].role is invalid`);
+      if (typeof value.agentWritable !== "boolean") issues.push(`optionGroups[${index}].agentWritable must be boolean`);
+      for (const field of ["minimum", "maximum", "maximumLength"] as const) {
+        if (value[field] !== undefined && typeof value[field] !== "number") issues.push(`optionGroups[${index}].${field} must be numeric`);
+      }
+      if (value.affectedPreviewRegion !== undefined && typeof value.affectedPreviewRegion !== "string") {
+        issues.push(`optionGroups[${index}].affectedPreviewRegion must be a string`);
+      }
+      if (value.values !== undefined) {
+        if (!Array.isArray(value.values)) {
+          issues.push(`optionGroups[${index}].values must be an array`);
+        } else {
+          for (const [valueIndex, optionValue] of value.values.entries()) {
+            if (!isRecord(optionValue)) {
+              issues.push(`optionGroups[${index}].values[${valueIndex}] must be an object`);
+              continue;
+            }
+            if (!hasOnlyKeys(optionValue, ["id", "label", "description"])) issues.push(`optionGroups[${index}].values[${valueIndex}] contains unknown fields`);
+            if (typeof optionValue.id !== "string") issues.push(`optionGroups[${index}].values[${valueIndex}].id must be a string`);
+            if (typeof optionValue.label !== "string") issues.push(`optionGroups[${index}].values[${valueIndex}].label must be a string`);
+            if (optionValue.description !== undefined && typeof optionValue.description !== "string") issues.push(`optionGroups[${index}].values[${valueIndex}].description must be a string`);
+          }
+        }
+      }
+    }
+  }
+
+  if (!Array.isArray(input.dependencyRules)) {
+    issues.push("dependencyRules must be an array");
+  } else {
+    for (const [index, rule] of input.dependencyRules.entries()) {
+      if (!isRecord(rule)) {
+        issues.push(`dependencyRules[${index}] must be an object`);
+        continue;
+      }
+      if (!hasOnlyKeys(rule, ["id", "description"])) issues.push(`dependencyRules[${index}] contains unknown fields`);
+      if (typeof rule.id !== "string") issues.push(`dependencyRules[${index}].id must be a string`);
+      if (typeof rule.description !== "string") issues.push(`dependencyRules[${index}].description must be a string`);
+    }
+  }
+
+  if (!isRecord(input.approval)) {
+    issues.push("approval must be an object");
+  } else {
+    if (!hasOnlyKeys(input.approval, ["mode", "persistence"])) issues.push("approval contains unknown fields");
+    if (typeof input.approval.mode !== "string") issues.push("approval.mode must be a string");
+    if (typeof input.approval.persistence !== "string") issues.push("approval.persistence must be a string");
+  }
+  return issues;
+}
+
+export function validateManifest(input: unknown): ConfiguratorManifest {
+  const structureIssues = validateManifestStructure(input);
+  if (structureIssues.length > 0) throw new ManifestValidationError(structureIssues);
+  const manifest = input as ConfiguratorManifest;
   const issues: string[] = [];
 
   if (manifest.schemaVersion !== "1.0") issues.push("schemaVersion must be 1.0");
@@ -27,6 +130,12 @@ export function validateManifest(manifest: ConfiguratorManifest): ConfiguratorMa
   if (!manifest.productType.trim()) issues.push("productType is required");
   if (!Number.isInteger(manifest.capabilities.maximumDesigns) || manifest.capabilities.maximumDesigns < 1 || manifest.capabilities.maximumDesigns > 20) {
     issues.push("maximumDesigns must be an integer between 1 and 20");
+  }
+  if (!manifest.capabilities.multipleDesigns && manifest.capabilities.maximumDesigns !== 1) {
+    issues.push("maximumDesigns must be 1 when multipleDesigns is false");
+  }
+  if (!manifest.capabilities.multipleDesigns && manifest.capabilities.cloning) {
+    issues.push("cloning requires multipleDesigns");
   }
   if (manifest.approval.mode !== "explicit-human") issues.push("approval mode must be explicit-human");
   if (manifest.approval.persistence !== "keep-only") issues.push("persistence must be keep-only");
@@ -39,6 +148,18 @@ export function validateManifest(manifest: ConfiguratorManifest): ConfiguratorMa
     if (!option.label.trim()) issues.push(`option ${option.id} requires a label`);
     if (!option.agentDescription.trim()) issues.push(`option ${option.id} requires an agent description`);
     if (option.kind === "asset-status" && option.agentWritable) issues.push(`asset-status option ${option.id} cannot be agent-writable`);
+    if (option.role === "design-quantity" && (option.scope !== "design" || option.kind !== "integer")) {
+      issues.push(`design-quantity option ${option.id} must be a design-scoped integer`);
+    }
+    if (option.role === "design-name" && (option.scope !== "design" || option.kind !== "text")) {
+      issues.push(`design-name option ${option.id} must be design-scoped text`);
+    }
+    if (option.role === "order-total" && (option.scope !== "order" || option.kind !== "integer")) {
+      issues.push(`order-total option ${option.id} must be an order-scoped integer`);
+    }
+    if (option.scope === "order" && option.agentWritable && option.role !== "order-total") {
+      issues.push(`writable order option ${option.id} requires the order-total canonical role`);
+    }
     if ((option.kind === "enum" || option.kind === "color") && (!option.values || option.values.length === 0)) {
       issues.push(`option ${option.id} requires values`);
     }
@@ -55,6 +176,11 @@ export function validateManifest(manifest: ConfiguratorManifest): ConfiguratorMa
       issues.push(`option ${option.id} maximumLength must be between 1 and 1000`);
     }
   }
+
+  const orderTotals = manifest.optionGroups.filter((option) => option.role === "order-total");
+  if (orderTotals.length !== 1) issues.push("manifest requires exactly one order-total option");
+  const designQuantities = manifest.optionGroups.filter((option) => option.role === "design-quantity");
+  if (designQuantities.length !== 1) issues.push("manifest requires exactly one design-quantity option");
 
   const dependencyIds = new Set<string>();
   for (const rule of manifest.dependencyRules) {

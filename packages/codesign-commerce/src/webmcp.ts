@@ -71,7 +71,7 @@ function proposalInputSchema(manifest: ConfiguratorManifest): JsonSchema {
       baseRevision: { type: "string", minLength: 1, maxLength: 200 },
       proposalId: { type: "string", minLength: 1, maxLength: 200 },
       proposalRevision: { type: "integer", minimum: 1 },
-      operationId: { type: "string", minLength: 1, maxLength: 80 },
+      operationId: { type: "string", minLength: 1, maxLength: 80, pattern: "^[a-zA-Z0-9][a-zA-Z0-9._-]*$" },
       changes: {
         type: "array",
         minItems: 1,

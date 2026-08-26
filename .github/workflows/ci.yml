@@ -35,3 +35,6 @@ jobs:
 
       - name: Check public boundary
         run: npm run check:public-boundary
+
+      - name: Check documentation links
+        run: npm run check:docs

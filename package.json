@@ -14,8 +14,9 @@
     "build": "npm run build --workspaces --if-present",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b",
-    "check:public-boundary": "node scripts/check-public-boundary.mjs"
+    "typecheck": "tsc -b && tsc -p packages/codesign-commerce/tsconfig.test.json",
+    "check:public-boundary": "node scripts/check-public-boundary.mjs",
+    "check:docs": "node scripts/check-doc-links.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.3.0",
