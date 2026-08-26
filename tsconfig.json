@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/codesign-commerce/tsconfig.build.json"
+    }
+  ]
+}

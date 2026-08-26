@@ -1,17 +1,36 @@
-# KORRHAUS WebMCP Challenge Workspace
+# CoDesign Commerce
 
-This is a clean planning workspace for the 2026 WebMCP Devpost Challenge.
+CoDesign Commerce is an open-source WebMCP layer for existing complex product configurators. It lets an agent read an allowlisted configuration, propose coordinated changes in the merchant's own visible preview, and validate coupled product rules without silently saving anything. A person must explicitly Keep or Revert the temporary proposal.
 
-Start with:
+The 2026 WebMCP Challenge entry will use KORRHAUS's existing Custom Sock Designer as its flagship real-world proof. CoDesign Commerce is not the Sock Designer itself, and it does not replace a merchant's renderer or production rules.
 
-1. `AGENTS.md` - working rules and approval boundaries.
-2. `PROJECT_BRIEF.md` - current concept and questions still to resolve.
-3. `CHALLENGE_REQUIREMENTS.md` - verified challenge requirements.
-4. `CURRENT_KORRHAUS_CONTEXT.md` - existing designer and MCP context.
-5. `PUBLIC_PRIVATE_BOUNDARY.md` - proposed repository and data boundary.
-6. `SOURCE_LINKS.md` - official documentation and references.
-7. `NEW_THREAD_PROMPT.md` - clean kickoff prompt for a new Codex task.
+## Current status
 
-`START_HERE.md` is intentionally empty, as requested.
+Local implementation began on 26 August 2026 after explicit approval. The current vertical slice contains:
 
-No challenge implementation has been approved or started in this workspace.
+- A canonical, allowlisted configuration state.
+- A bounded manifest contract and validation.
+- An in-memory configurator adapter.
+- A proposal transaction with revisions, retry IDs, temporary preview, Revert, and human Keep.
+- `codesign_read_configuration` and `codesign_propose_configuration` registered through the current imperative WebMCP API.
+- Deterministic tests proving that proposal previews do not cross the persistence boundary.
+
+This repository is not published or submission-ready yet. Live deployment, production promotion, final license selection, video publication, and Devpost submission remain approval-gated.
+
+## Local verification
+
+Requirements: Node.js 22.12 or newer and npm.
+
+```bash
+npm ci
+npm test
+npm run typecheck
+npm run build
+npm run check:public-boundary
+```
+
+## Safety boundary
+
+WebMCP does not expose tools for Keep, Revert, saving, uploads, quotes, checkout, orders, payments, customer data, exact pricing, margins, suppliers, or internal workflows. Merchant-private state stays inside a narrow adapter and is reduced to the public canonical model through an allowlist.
+
+See [EXECUTION_PLAN.md](./EXECUTION_PLAN.md) for the approved plan and current evidence log, and [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md) for the repository boundary.
