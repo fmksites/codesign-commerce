@@ -196,3 +196,26 @@ example builds, unchanged verified browser bundle
 WebMCP-capable in-app browser independently opened the KORRHAUS reset URL,
 showed the one-design baseline with no review controls, and exposed exactly the
 five intended tools.
+
+## 26 August 2026 — security remediation clean clone
+
+The complete repository scan at `37b7dbc` reported two low-severity findings:
+runtime adapter output was not reconstructed at the public boundary, and an
+external revision during asynchronous proposal application could remain
+eligible for Keep. Remediation commit `2f7235b` fixes both and adds operation-ID
+payload binding plus cumulative proposal limits.
+
+A fresh `git clone --no-local` at
+`/private/tmp/codesign-security-clean.h0S6SB/repo` passed `npm ci`, 73 tests,
+strict typecheck, the core and both example builds, the 91-file public-boundary
+scan, the 28-file documentation check, the 24-case eval-corpus structural
+check, browser-bundle verification, and an empty final status. The reproducible
+bundle is
+`sha256:dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b`.
+
+The same bytes were pinned into the approved local private KORRHAUS bridge.
+Thirteen focused page tests, private typecheck, and private production build
+passed. An actual WebMCP-capable in-app-browser run confirmed five tools,
+hidden pre-proposal review UI, a visible zero-write proposal, conflict rejection
+for a reused operation ID, exact Revert to `korrhaus-e7beb274`, and no console
+errors or warnings. Full detail is in `SECURITY_HARDENING.md`.

@@ -160,3 +160,43 @@ identify the inspected local state; they are not public-source substitutes.
 This closes the complete local five-tool flagship milestone. It does not prove
 hosted CI, public deployment, a no-traffic KORRHAUS revision, production
 activation, live production verification, or challenge submission.
+
+## Final security-remediation refresh
+
+After the repository-wide security review, public remediation commit
+`2f7235b` was rebuilt and pinned locally as
+`codesign-commerce.js?v=dc8d6180`. The public and private browser bundles are
+byte-identical at
+`sha256:dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b`;
+their source maps are byte-identical at
+`sha256:05a189e528bf4c80067c53d8e45543cac5ddfe0f373c50dea5b6a9a02314e08f`.
+
+The refreshed private checks passed:
+
+| Gate | Result |
+|---|---|
+| Focused page/unit suite | PASS — 13 tests |
+| Private TypeScript typecheck | PASS |
+| Private production build | PASS |
+| Actual in-app-browser tool discovery | PASS — exactly five tools |
+| Review hidden before successful proposal | PASS |
+| Visible proposal and `persisted: false` | PASS |
+| Conflicting operation-ID payload | PASS — `OPERATION_ID_CONFLICT`, no second preview |
+| Human Revert | PASS — exact `korrhaus-e7beb274` baseline restored |
+| Browser errors/warnings | PASS — none |
+
+Current local private hashes after this refresh:
+
+| File | SHA-256 |
+|---|---|
+| `public/custom-socks/codesign-commerce.js` | `dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b` |
+| `public/custom-socks/codesign-commerce.js.map` | `05a189e528bf4c80067c53d8e45543cac5ddfe0f373c50dea5b6a9a02314e08f` |
+| `public/custom-socks/designer-claude.js` | `26df7140050b5e8dd53aaf486b62fb05eaeebf33024fc004a56eb84036c03e97` |
+| `public/custom-socks/designer-claude.min.js` | `ae3c04df76402ab603eb1981f2de16bc933fc2274b6bca3de5ddc666b083e8c9` |
+| `app/custom-socks/designer-page.server.ts` | `8f17e9b0dbb454e15a0c1a11f835893f6ec2734cd02fbf422147e2493f5264e7` |
+| `app/custom-socks/designer-page.test.ts` | `bb26ef87b358936e0b404794cf03f92109fc0de27aa238f30e11d12bfe93b2c9` |
+
+The full private Designer E2E result recorded above belongs to the earlier
+five-tool bundle. The final remediation bundle has focused private tests,
+typecheck, build, and actual-browser coverage here; the complete private E2E
+suite must be rerun before final Phase 6 closure.
