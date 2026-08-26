@@ -111,4 +111,8 @@ The pre-migration spike hashes remain recorded in `../KORRHAUS_BRIDGE_MAPPING.md
 
 ## Phase boundary
 
-This evidence closes the Phase 3 local KORRHAUS safety gate. It does not close the later gates for the five-tool North Form scenario, a no-traffic deployment, public hosting, production activation, or live verification.
+This historical evidence closes the Phase 3 two-tool local KORRHAUS safety
+gate. The later complete five-tool North Form upgrade is independently recorded
+in `KORRHAUS_LOCAL_FIVE_TOOL.md`. Neither local result closes the gates for a
+no-traffic deployment, public hosting, production activation, or live
+verification.

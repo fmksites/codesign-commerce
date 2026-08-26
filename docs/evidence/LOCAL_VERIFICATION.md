@@ -116,4 +116,41 @@ The core now registers exactly five tools, adds bounded option discovery, adapte
 
 Local source gates passed with 54 tests and browser bundle `sha256:3723b4937086323c1536406f2072efbd54da702ec63d7c2f94d32ea768f101f6`. The full actual-browser call sequence, outputs, Revert result, responsive correction, and screenshots are recorded in `NORTH_FORM_FIVE_TOOL.md`.
 
-A clean-clone run including the evidence commit remains required before this source state is recorded as reproducible.
+Evidence commit `37682a2` was cloned with `git clone --no-local` into
+`/private/tmp/codesign-five-tool-clean.NbzukR`. The clone had no access to the
+working repository's dependencies, ignored build output, or untracked files.
+
+| Command or check | Outcome |
+|---|---|
+| `npm ci` | PASS — 128 packages installed from the committed lockfile |
+| `npm test` | PASS — 7 files, 54 tests |
+| `npm run typecheck` | PASS — workspaces and strict core test project |
+| `npm run build` | PASS — core module/browser bundles and public reference |
+| `npm run check:public-boundary` | PASS — 69 tracked public candidates checked |
+| `npm run check:docs` | PASS — 23 Markdown files checked |
+| `npm run check:evals` | PASS — 20 cases across 6 categories |
+| `npm run verify:browser-bundle` | PASS — digest matched `3723b493…f101f6` |
+| Clean-clone `git status --short` | PASS — empty |
+
+This establishes clean-clone reproducibility for the complete public five-tool
+workflow and its recorded browser evidence. Hosted CI, a public remote, and a
+deployed judge surface remain separate approval-gated evidence.
+
+## 26 August 2026 — private KORRHAUS five-tool flagship
+
+The approved local, disabled-by-default private bridge consumed the public
+bundle from commit `ea54e71` and completed the same five-tool North Form flow.
+The private typecheck, production build, 12 focused page tests, focused
+desktop/mobile five-tool E2E, and complete 96-case Designer E2E all passed; the
+full result was 95 passed and 1 intentionally skipped.
+
+The actual WebMCP-capable in-app browser independently discovered exactly five
+tools on the private page. Before a successful proposal the review panel and
+its controls were not visible. The browser then created two temporary 60-pair
+colourways, reported the missing final artwork, exposed Keep/Revert, and
+confirmed that the committed read remained the original one-design 20-pair
+baseline with `persisted: false`. Selecting Revert restored that exact
+revision and removed the proposed second colourway.
+
+The full outputs, persistence assertions, source hashes, recovery observation,
+and screenshot are recorded in `KORRHAUS_LOCAL_FIVE_TOOL.md`.
