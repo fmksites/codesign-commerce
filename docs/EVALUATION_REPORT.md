@@ -6,9 +6,9 @@ been run and must not be described as passed.
 
 ## Deterministic evidence
 
-At public source commit `c47cee03b7bf8e63e9e46c3c15767092b7e448fa`:
+At public source commit `6fc792644a568d2dee318ad2457639911873cbfd`:
 
-- 90 tests pass across eight files.
+- 95 tests pass across eight files.
 - Strict source and test typechecking passes.
 - Core and both public examples build.
 - Public-boundary and documentation-link checks pass.
@@ -20,21 +20,35 @@ The tests cover manifest semantics and limits, adapter-output reconstruction,
 private-field dropping, atomic proposals, stale revisions, payload-bound
 operation IDs, cumulative proposal limits, cancellation, concurrent Keep,
 zero-write Revert, exactly-once Keep, WebMCP schemas, negative inputs, hostile
-URLs, and read-only validation.
+URLs, URL-like text values before adapter access, and read-only validation.
 
 ## Actual-browser evidence
 
 The public KORRHAUS reference, the studio-tote example, and the local private
 KORRHAUS bridge have each completed their five-tool flows in ChatGPT's WebMCP-
-capable in-app browser. The latest private bridge is pinned to bundle:
+capable in-app browser. The current private bridge is pinned to bundle:
 
-`sha256:3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db`
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
 
-The latest private run found exactly five tools, hid review controls before a
-successful agent proposal, returned dependency rules with bounded option IDs,
-created two temporary 60-pair colourways, reported the missing final artwork,
-and restored the exact one-design 20-pair baseline through human Revert with no
-proposal/Revert network writes and no browser console errors.
+The latest feature-enabled private browser run used the immediately preceding
+`3ba5118e…f6db` bundle. It found exactly five tools, hid review controls before
+a successful agent proposal, returned dependency rules with bounded option
+IDs, created two temporary 60-pair colourways, reported the missing final
+artwork, and restored the exact one-design 20-pair baseline through human
+Revert with no proposal/Revert network writes and no browser console errors.
+The current `e3f95e6e…db324` private bytes pass 13 focused tests, typecheck,
+production build, and a feature-disabled actual-browser fallback; their
+feature-enabled full browser/E2E rerun remains pending.
+
+Against the exact final public bundle, both public examples rejected an HTTPS
+text value with `INVALID_VALUE`, accepted and Reverted a normal temporary
+proposal, and retained clean consoles. The KORRHAUS reference also returned the
+expected `STALE_REVISION`, `PROPOSAL_PENDING`, `OPERATION_ID_CONFLICT`, and
+`STALE_PROPOSAL_REVISION` recovery errors. Navigation away from the
+configurator removed its page-scoped WebMCP context. The private feature-off
+fallback rendered the normal Designer with no CoDesign script, review host, or
+tools. Full evidence is in
+[`evidence/FINAL_BROWSER_SAFETY_QA.md`](./evidence/FINAL_BROWSER_SAFETY_QA.md).
 
 This browser proof validates page registration and runtime behavior. It does
 not measure whether an independent model consistently selects the right tool.

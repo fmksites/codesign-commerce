@@ -8,12 +8,14 @@ proceed without the owner.
 - `PASS` — reusable public core and exactly five webpage tools.
 - `PASS` — KORRHAUS public reference and materially different studio tote.
 - `PASS` — local disabled-by-default private flagship bridge.
-- `PASS` — 90 deterministic tests, typecheck, builds, boundary/docs checks.
+- `PASS` — 95 deterministic tests, typecheck, builds, boundary/docs checks.
 - `PASS` — repository security scan findings remediated.
 - `PASS` — actual in-app-browser discovery and core flows on all three surfaces.
+- `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
+  private feature-off fallback browser checks.
 - `PENDING` — complete private Designer E2E on the final bundle.
 - `PENDING` — independent model eval and scored result file.
-- `PASS` — clean clone of evidence commit `25e24a3` passes all local public gates.
+- `PENDING` — clean-clone rerun against the post-hardening evidence commit.
 
 ## Public release
 

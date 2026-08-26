@@ -1,14 +1,14 @@
 # Final local contract and flagship QA
 
-Date: 27 August 2026  
-Public source commit: `c47cee03b7bf8e63e9e46c3c15767092b7e448fa`  
-Browser bundle: `sha256:3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db`
+Date: 27 August 2026
+Public source commit: `6fc792644a568d2dee318ad2457639911873cbfd`
+Browser bundle: `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
 
 ## Public gates
 
 | Gate | Result |
 |---|---|
-| Tests | PASS — 90 tests across 8 files |
+| Tests | PASS — 95 tests across 8 files |
 | Strict typecheck | PASS |
 | Core and both example builds | PASS |
 | Public-boundary scan | PASS — 96 candidates before this evidence file |
@@ -21,6 +21,11 @@ dependency references, combined adapter/agent assumption limits, cancellation
 before adapter access, concurrent duplicate Keep, hostile/private change fields,
 oversized tool inputs, arbitrary artwork URLs, sanitized adapter exceptions,
 and read-only validation of committed and proposed state.
+
+The final browser safety pass additionally rejects URL-like text values before
+adapter access and preserves the state-machine precedence for pending,
+conflicting, and stale proposal operations. See
+[`FINAL_BROWSER_SAFETY_QA.md`](./FINAL_BROWSER_SAFETY_QA.md).
 
 The model eval itself remains pending. The synthetic scorer self-test is not
 evaluation evidence.
@@ -38,15 +43,24 @@ and the final clean-clone Git status was empty.
 
 ## Private flagship refresh
 
-The same browser bundle bytes were synced into the approved local private
-KORRHAUS bridge. The private manifest now supplies bounded public option IDs for
-both dependency rules. The feature remains disabled by default.
+The same `e3f95e6e…db324` browser-bundle bytes were synced into the approved
+local private KORRHAUS bridge. The private manifest supplies bounded public
+option IDs for both dependency rules. The feature remains disabled by default.
+
+Current byte-exact private gates are:
 
 | Gate | Result |
 |---|---|
 | Focused private page tests | PASS — 13 tests |
 | Private TypeScript typecheck | PASS |
 | Private production build | PASS |
+| Feature-off actual-browser fallback | PASS — normal UI, no CoDesign script, review host, tools, or console errors |
+
+The latest feature-enabled private actual-browser run used the immediately
+preceding `3ba5118e…f6db` bundle and recorded:
+
+| Gate | Result |
+|---|---|
 | In-app-browser tools | PASS — exactly 5 |
 | Review before successful proposal | PASS — hidden |
 | Public dependency references | PASS — quantities and artwork option IDs only |
@@ -66,15 +80,16 @@ the total to 120.
 
 | File | SHA-256 |
 |---|---|
-| `public/custom-socks/codesign-commerce.js` | `3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db` |
-| `public/custom-socks/codesign-commerce.js.map` | `37546bef1dce17e229f9dda7e3305b9da34ce4f9f6a2179292dbff543fe2a979` |
+| `public/custom-socks/codesign-commerce.js` | `e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324` |
+| `public/custom-socks/codesign-commerce.js.map` | `de627487e16297310a3499a6ab3020361a28fbee6a33af033f7c2f4e4deece1a` |
 | `public/custom-socks/designer-claude.js` | `37a3ef0c516d4e31eaf1d2405f7aca7eb4a7a75c4f6ef425816005101ac6906b` |
 | `public/custom-socks/designer-claude.min.js` | `795ad0c74c71e8e8bc0daa0d5aab570d4a7441f2e4e675f2f839af2025d38ba5` |
-| `app/custom-socks/designer-page.server.ts` | `1544cbc1936bc6173d8dae07093b170e95a273a0db50f14ea9888a1c61f6289c` |
-| `app/custom-socks/designer-page.test.ts` | `593db598fa623ecbb9b4941db55c6c42b412a9ec475635286856cff033447e65` |
+| `app/custom-socks/designer-page.server.ts` | `3fa88662ce0e1479a3d20c0ff7ee38d8e78a1f39096839483bb1363af1826859` |
+| `app/custom-socks/designer-page.test.ts` | `f6837c8f12ee6b1ae150b121e4d697d00db8b61173f37a9c85e9ebc9983dc857` |
 
-The complete private Designer E2E suite has not yet been rerun against this
-final contract bundle. No deployment, public repository, public hosting,
+The complete private Designer E2E suite and feature-enabled private browser
+flow have not yet been rerun against the current `e3f95e6e…db324` contract
+bundle. No deployment, public repository, public hosting,
 production activation, traffic change, DNS change, video upload, or Devpost
 submission occurred.
 
