@@ -32,13 +32,14 @@ evaluation evidence.
 
 ## Clean-clone reproducibility
 
-Evidence commit `25e24a35dc324c4f53c3c6f99dd2f0e8426824fa` was cloned with
-`git clone --no-local` into `/private/tmp/codesign-final-clean.HDp0ka/repo`.
+Evidence commit `aeba23e99c3aaa41b1eb5b0ad89cd23089590b3e` was cloned with
+`git clone --no-local` into
+`/private/tmp/codesign-final-hardened.bpqpg0/repo`.
 From an empty dependency/build state the clone installed 129 packages and
-passed 90 tests, strict typecheck, all three builds, browser-bundle verification,
-the 102-file public-boundary check, 36-file documentation check, and the
+passed 95 tests, strict typecheck, all three builds, browser-bundle verification,
+the 103-file public-boundary check, 37-file documentation check, and the
 24-case eval policy/scorer check. The rebuilt bundle matched
-`sha256:3ba5118ec8b4b4627a4cf09c180abff1acd394defe77b7414b83b2657c15f6db`,
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`,
 and the final clean-clone Git status was empty.
 
 ## Private flagship refresh

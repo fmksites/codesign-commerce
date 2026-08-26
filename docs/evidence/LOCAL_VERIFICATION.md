@@ -246,3 +246,32 @@ packages and passed 90 tests, strict typecheck, all builds, bundle verification,
 the 102-file boundary check, the 36-file documentation check, and the eval
 policy/scorer check. The bundle hash matched `3ba5118e…f6db` and final Git status
 was empty.
+
+## 27 August 2026 — final external-reference and fallback hardening
+
+An actual-browser negative call found that a URL-shaped text value could be
+staged temporarily despite the documented external-reference boundary. Commit
+`6fc7926` closes the mismatch before adapter access and adds five regression
+cases. The resulting public suite passes 95 tests.
+
+The exact production-built public bundle
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
+then passed actual-browser URL rejection, stale revision, pending proposal,
+operation-ID conflict, stale proposal revision, human Revert, clean-console,
+and page-navigation cleanup checks. Both public examples also smoke-tested the
+normal temporary-proposal/Revert path against these bytes.
+
+The same bundle was pinned locally into the disabled-by-default private bridge
+as `codesign-commerce.js?v=e3f95e6e`. Thirteen focused page tests, private
+typecheck, and private production build passed. With the feature flag explicitly
+off, an actual browser found the normal KORRHAUS route, eight route controls,
+and no CoDesign script, review host, WebMCP tools, or console errors. The
+feature-enabled private full-suite rerun remains pending.
+
+Evidence commit `aeba23e` was cloned without local-object shortcuts into
+`/private/tmp/codesign-final-hardened.bpqpg0/repo`. The fresh clone installed
+129 packages and passed 95 tests, strict typecheck, all three builds, bundle
+verification, the 103-file public-boundary check, the 37-file documentation
+check, and the eval policy/scorer check. Both bundle hashes matched and the
+final clean-clone Git status was empty. Full detail is in
+`FINAL_BROWSER_SAFETY_QA.md` and `FINAL_LOCAL_CONTRACT_QA.md`.

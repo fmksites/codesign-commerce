@@ -15,7 +15,7 @@ proceed without the owner.
   private feature-off fallback browser checks.
 - `PENDING` — complete private Designer E2E on the final bundle.
 - `PENDING` — independent model eval and scored result file.
-- `PENDING` — clean-clone rerun against the post-hardening evidence commit.
+- `PASS` — clean clone of evidence commit `aeba23e` passes all local public gates.
 
 ## Public release
 
