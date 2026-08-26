@@ -245,6 +245,9 @@ export function validateOptionValue(option: OptionGroup, value: JsonPrimitive): 
     case "text":
       if (typeof value !== "string") return `Value for ${option.id} must be text`;
       if (option.maximumLength !== undefined && value.length > option.maximumLength) return `Value for ${option.id} is too long`;
+      if (/(?:^|[\s("'=])(?:https?:\/\/|ftp:\/\/|file:\/\/|data:|javascript:|blob:|\/\/[a-z0-9.-]+\.[a-z]{2,}(?:[\/:?#]|$)|www\.)/iu.test(value)) {
+        return `External references are not allowed for ${option.id}`;
+      }
       break;
     case "asset-status":
       return `Option ${option.id} is read-only`;

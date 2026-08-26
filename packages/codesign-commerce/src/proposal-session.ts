@@ -234,6 +234,8 @@ export class ProposalSession<Snapshot = unknown> {
     if (creation && (!isSafeIdentifier(creation.sourceDesignId) || creation.newDesignChanges.length > 20)) {
       return errorResult("INVALID_VALUE", "The design creation input is invalid", false);
     }
+    const changeInputError = this.#validateChangeInputs(changes, false)
+      ?? (creation ? this.#validateChangeInputs(creation.newDesignChanges, true) : null);
 
     const fingerprint = operationFingerprint(input, creation);
     if (this.#active) {
@@ -279,6 +281,7 @@ export class ProposalSession<Snapshot = unknown> {
         );
       }
     }
+    if (changeInputError) return changeInputError;
 
     this.#setStatus("applying");
     let openedProposal = false;
@@ -561,6 +564,21 @@ export class ProposalSession<Snapshot = unknown> {
   destroy(): void {
     this.#unsubscribe?.();
     this.#unsubscribe = null;
+  }
+
+  #validateChangeInputs(changes: ProposalInput["changes"], designOnly: boolean): ProposalErrorResult | null {
+    const options = new Map(this.manifest.optionGroups.map((option) => [option.id, option]));
+    for (const change of changes) {
+      const option = options.get(change.optionId);
+      if (!option) return errorResult("UNKNOWN_OPTION", `Unknown option ${change.optionId}`, false, [change.optionId]);
+      if (!option.agentWritable) return errorResult("OPTION_NOT_WRITABLE", `Option ${change.optionId} is not agent-writable`, false, [change.optionId]);
+      if (designOnly && option.scope !== "design") {
+        return errorResult("INVALID_VALUE", `Option ${change.optionId} cannot be applied to a new design`, false, [change.optionId]);
+      }
+      const invalid = validateOptionValue(option, change.value);
+      if (invalid) return errorResult("INVALID_VALUE", invalid, false, [change.optionId]);
+    }
+    return null;
   }
 
   #applyChanges(state: ConfigurationState, diff: ConfigurationDiff[], changes: ProposalInput["changes"]): ProposalErrorResult | null {

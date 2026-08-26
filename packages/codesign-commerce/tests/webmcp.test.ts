@@ -119,6 +119,27 @@ describe("CoDesign WebMCP tools", () => {
     expect(adapter.counters.localWrites).toBe(0);
   });
 
+  test.each([
+    "https://example.invalid/collect",
+    "www.example.invalid/collect",
+    "data:text/plain,private-file",
+    "javascript:alert(1)",
+    "file:///etc/passwd",
+  ])("rejects URL-like text option value %s before preview", async (value) => {
+    const { adapter, tools } = setup();
+    const result = await tools[2]!.execute({
+      baseRevision: "revision-1",
+      operationId: "external-reference-1",
+      changes: [{ designId: "design-1", optionId: "design.name", value }],
+    }, {});
+
+    expect(result).toMatchObject({ ok: false, persisted: false, error: { code: "INVALID_VALUE" } });
+    expect(adapter.counters.quiesceCalls).toBe(0);
+    expect(adapter.counters.previewCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+  });
+
   test("does not fetch an arbitrary artwork URL or expose a thrown adapter message", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     const { adapter, session, tools } = setup();
