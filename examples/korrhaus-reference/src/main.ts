@@ -99,8 +99,16 @@ const manifest: ConfiguratorManifest = {
     },
   ],
   dependencyRules: [
-    { id: "quantities-match-total", description: "Colourway quantities must add up to the order total." },
-    { id: "artwork-before-production", description: "A placeholder may be kept as a draft, but final artwork is required before production." },
+    {
+      id: "quantities-match-total",
+      description: "Colourway quantities must add up to the order total.",
+      optionIds: ["order.total_quantity", "design.quantity"],
+    },
+    {
+      id: "artwork-before-production",
+      description: "A placeholder may be kept as a draft, but final artwork is required before production.",
+      optionIds: ["branding.artwork_status"],
+    },
   ],
   approval: { mode: "explicit-human", persistence: "keep-only" },
 };

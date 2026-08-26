@@ -5,6 +5,9 @@ const UNSAFE_SEGMENTS = new Set(["__proto__", "prototype", "constructor"]);
 const OPTION_SCOPES = new Set(["order", "design"]);
 const OPTION_KINDS = new Set(["enum", "color", "integer", "boolean", "text", "asset-status"]);
 const OPTION_ROLES = new Set(["selection", "design-quantity", "design-name", "order-total"]);
+const MAX_OPTION_GROUPS = 100;
+const MAX_OPTION_VALUES = 200;
+const MAX_DEPENDENCY_RULES = 100;
 
 export class ManifestValidationError extends Error {
   readonly issues: string[];
@@ -53,6 +56,9 @@ function validateManifestStructure(input: unknown): string[] {
   if (!Array.isArray(input.optionGroups)) {
     issues.push("optionGroups must be an array");
   } else {
+    if (input.optionGroups.length < 1 || input.optionGroups.length > MAX_OPTION_GROUPS) {
+      issues.push(`optionGroups must contain between 1 and ${MAX_OPTION_GROUPS} entries`);
+    }
     for (const [index, value] of input.optionGroups.entries()) {
       if (!isRecord(value)) {
         issues.push(`optionGroups[${index}] must be an object`);
@@ -78,6 +84,7 @@ function validateManifestStructure(input: unknown): string[] {
         if (!Array.isArray(value.values)) {
           issues.push(`optionGroups[${index}].values must be an array`);
         } else {
+          if (value.values.length > MAX_OPTION_VALUES) issues.push(`optionGroups[${index}].values contains too many entries`);
           for (const [valueIndex, optionValue] of value.values.entries()) {
             if (!isRecord(optionValue)) {
               issues.push(`optionGroups[${index}].values[${valueIndex}] must be an object`);
@@ -96,14 +103,18 @@ function validateManifestStructure(input: unknown): string[] {
   if (!Array.isArray(input.dependencyRules)) {
     issues.push("dependencyRules must be an array");
   } else {
+    if (input.dependencyRules.length > MAX_DEPENDENCY_RULES) issues.push("dependencyRules contains too many entries");
     for (const [index, rule] of input.dependencyRules.entries()) {
       if (!isRecord(rule)) {
         issues.push(`dependencyRules[${index}] must be an object`);
         continue;
       }
-      if (!hasOnlyKeys(rule, ["id", "description"])) issues.push(`dependencyRules[${index}] contains unknown fields`);
+      if (!hasOnlyKeys(rule, ["id", "description", "optionIds"])) issues.push(`dependencyRules[${index}] contains unknown fields`);
       if (typeof rule.id !== "string") issues.push(`dependencyRules[${index}].id must be a string`);
       if (typeof rule.description !== "string") issues.push(`dependencyRules[${index}].description must be a string`);
+      if (!Array.isArray(rule.optionIds) || rule.optionIds.length < 1 || rule.optionIds.length > 30 || !rule.optionIds.every((entry) => typeof entry === "string")) {
+        issues.push(`dependencyRules[${index}].optionIds must contain between 1 and 30 string option IDs`);
+      }
     }
   }
 
@@ -163,6 +174,19 @@ export function validateManifest(input: unknown): ConfiguratorManifest {
     if ((option.kind === "enum" || option.kind === "color") && (!option.values || option.values.length === 0)) {
       issues.push(`option ${option.id} requires values`);
     }
+    if ((option.kind === "enum" || option.kind === "color") && (option.minimum !== undefined || option.maximum !== undefined || option.maximumLength !== undefined)) {
+      issues.push(`option ${option.id} has incompatible bounds`);
+    }
+    if (option.kind === "integer" && (
+      (option.minimum !== undefined && (!Number.isFinite(option.minimum) || !Number.isInteger(option.minimum)))
+      || (option.maximum !== undefined && (!Number.isFinite(option.maximum) || !Number.isInteger(option.maximum)))
+      || option.maximumLength !== undefined
+    )) {
+      issues.push(`integer option ${option.id} requires finite integer bounds`);
+    }
+    if (option.kind === "text" && (option.minimum !== undefined || option.maximum !== undefined)) {
+      issues.push(`text option ${option.id} has incompatible numeric bounds`);
+    }
     const valueIds = new Set<string>();
     for (const value of option.values ?? []) {
       if (!isSafeIdentifier(value.id)) issues.push(`value id ${value.id} for ${option.id} is unsafe or invalid`);
@@ -188,6 +212,12 @@ export function validateManifest(input: unknown): ConfiguratorManifest {
     if (dependencyIds.has(rule.id)) issues.push(`duplicate dependency id ${rule.id}`);
     dependencyIds.add(rule.id);
     if (!rule.description.trim()) issues.push(`dependency ${rule.id} requires a description`);
+    const references = new Set<string>();
+    for (const optionId of rule.optionIds) {
+      if (references.has(optionId)) issues.push(`dependency ${rule.id} repeats option ${optionId}`);
+      references.add(optionId);
+      if (!optionIds.has(optionId)) issues.push(`dependency ${rule.id} references unknown option ${optionId}`);
+    }
   }
 
   if (issues.length > 0) throw new ManifestValidationError(issues);

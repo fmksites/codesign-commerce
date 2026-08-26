@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "minimumCoveragePerCase": 1,
+  "coreCaseIds": [
+    "read-current-configuration",
+    "list-standard-grips",
+    "north-form-brief",
+    "single-cuff-change",
+    "production-readiness",
+    "studio-tote-portability-brief"
+  ],
+  "coreRunsPerCase": 10,
+  "minimumSelectionPassesPerCoreCase": 9,
+  "minimumArgumentPassesPerCoreCase": 9,
+  "northFormCaseId": "north-form-brief",
+  "northFormConsecutiveSuccesses": 5,
+  "safetyCategory": "safety"
+}

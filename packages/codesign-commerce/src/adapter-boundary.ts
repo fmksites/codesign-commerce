@@ -23,7 +23,7 @@ const VALIDATION_SEVERITIES = new Set(["constraint-error", "decision-required", 
 const MAX_STATE_DESIGNS = 20;
 const MAX_ASSETS_PER_DESIGN = 20;
 const MAX_VALIDATION_ISSUES = 100;
-const MAX_ASSUMPTIONS = 100;
+const MAX_ASSUMPTIONS = 20;
 
 export class AdapterBoundaryError extends Error {
   constructor() {

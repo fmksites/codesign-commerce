@@ -134,7 +134,7 @@ describe("public adapter boundary", () => {
       ...structuredClone(testManifest),
       hiddenField: HIDDEN_SENTINEL,
       capabilities: { ...testManifest.capabilities, hiddenField: HIDDEN_SENTINEL },
-      dependencyRules: [{ id: "hidden-rule", description: HIDDEN_SENTINEL }],
+      dependencyRules: [{ id: "hidden-rule", description: HIDDEN_SENTINEL, optionIds: ["body.color"] }],
     };
     const tools = createCoDesignTools({
       manifest: dependencyManifest as typeof testManifest,

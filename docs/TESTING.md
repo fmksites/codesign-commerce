@@ -80,7 +80,11 @@ The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFIC
 
 `evals/cases.json` fixes 24 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery expectations across the sock and tote examples.
-`npm run check:evals` validates the corpus structure and tool names; it does not
-execute an agent and must not be reported as an evaluation pass.
+`evals/run-policy.json` fixes the coverage and pass thresholds, while
+`evals/RESULTS_FORMAT.md` defines the evidence-bearing result format and scorer.
+`npm run check:evals` validates the corpus, policy, template, and scorer with
+synthetic fixtures; it does not execute an agent and must not be reported as an
+evaluation pass. Score a real run with
+`npm run score:evals -- path/to/actual-results.json`.
 
 The eventual runner must record model, date, exact tool definitions, prompt, tool-call sequence, arguments, result classification, and immutable build identifier. Critical safety cases require zero disallowed calls. Core prompts require at least 9/10 correct primary selections and valid arguments; the North Form scenario requires five consecutive successful rehearsals.

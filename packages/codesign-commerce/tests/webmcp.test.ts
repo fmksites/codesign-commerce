@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import {
   createCoDesignTools,
   InMemoryConfiguratorAdapter,
@@ -20,6 +20,7 @@ function setup() {
 }
 
 describe("CoDesign WebMCP tools", () => {
+  afterEach(() => vi.restoreAllMocks());
   test("exposes exactly the five approved CoDesign tools", () => {
     const { tools } = setup();
     expect(tools.map((tool) => tool.name)).toEqual([
@@ -73,6 +74,87 @@ describe("CoDesign WebMCP tools", () => {
     expect(result).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
     expect(adapter.counters.quiesceCalls).toBe(0);
     expect(adapter.counters.previewCalls).toBe(0);
+  });
+
+  test.each(["__proto__", "prototype", "constructor", "rawPath", "serverProject", "apiUrl"])(
+    "rejects hostile or private change field %s without adapter work",
+    async (field) => {
+      const { adapter, tools } = setup();
+      const change = JSON.parse(JSON.stringify({ designId: "design-1", optionId: "body.color", value: "navy" }));
+      Object.defineProperty(change, field, { value: "private-value", enumerable: true });
+      const result = await tools[2]!.execute({
+        baseRevision: "revision-1",
+        operationId: `hostile-field-${field.replaceAll("_", "-")}`,
+        changes: [change],
+      }, {});
+      expect(result).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+      expect(adapter.counters.quiesceCalls).toBe(0);
+      expect(adapter.counters.previewCalls).toBe(0);
+    },
+  );
+
+  test("rejects oversized inputs before adapter work", async () => {
+    const { adapter, tools } = setup();
+    const oversizedText = await tools[2]!.execute({
+      baseRevision: "revision-1",
+      operationId: "oversized-text-1",
+      changes: [{ designId: "design-1", optionId: "design.name", value: "x".repeat(1_001) }],
+    }, {});
+    const oversizedChanges = await tools[2]!.execute({
+      baseRevision: "revision-1",
+      operationId: "oversized-changes-1",
+      changes: Array.from({ length: 41 }, () => ({ designId: "design-1", optionId: "body.color", value: "navy" })),
+    }, {});
+    const oversizedAssumptions = await tools[2]!.execute({
+      baseRevision: "revision-1",
+      operationId: "oversized-assumptions-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+      assumptions: Array.from({ length: 21 }, (_, index) => `Assumption ${index}`),
+    }, {});
+
+    expect(oversizedText).toMatchObject({ ok: false, error: { code: "INVALID_VALUE" } });
+    expect(oversizedChanges).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+    expect(oversizedAssumptions).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+    expect(adapter.counters.previewCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+  });
+
+  test("does not fetch an arbitrary artwork URL or expose a thrown adapter message", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    const { adapter, session, tools } = setup();
+    const uploadAttempt = await tools[3]!.execute({
+      baseRevision: "revision-1",
+      operationId: "remote-artwork-attempt-1",
+      sourceDesignId: "design-1",
+      newDesignChanges: [],
+      artworkUrl: "https://example.invalid/private-logo.svg",
+    }, {});
+    expect(uploadAttempt).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    adapter.readState = async () => { throw new Error("PRIVATE_TOKEN at merchant-adapter.ts:999"); };
+    const failedRead = await createCoDesignTools({ manifest: testManifest, adapter, session })[0]!.execute({}, {});
+    expect(failedRead).toMatchObject({ ok: false, error: { code: "ADAPTER_FAILURE" } });
+    expect(JSON.stringify(failedRead)).not.toMatch(/PRIVATE_TOKEN|merchant-adapter|stack/i);
+  });
+
+  test("validation is read-only for both committed and proposed state", async () => {
+    const { adapter, tools } = setup();
+    const committed = await tools[4]!.execute({}, {});
+    expect(committed).toMatchObject({ ok: true, source: "committed", persisted: false });
+    const proposed = await tools[2]!.execute({
+      baseRevision: "revision-1",
+      operationId: "read-only-validation-proposal-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    }, {});
+    if (!isRecord(proposed) || proposed.ok !== true) throw new Error("Expected proposal");
+    const validation = await tools[4]!.execute({
+      proposalId: proposed.proposalId,
+      proposalRevision: proposed.proposalRevision,
+    }, {});
+    expect(validation).toMatchObject({ ok: true, source: "proposal", persisted: false });
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
   });
 
   test("lists bounded public options and dependency descriptions", async () => {

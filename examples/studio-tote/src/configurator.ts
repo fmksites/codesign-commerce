@@ -140,11 +140,31 @@ export const toteManifest: ConfiguratorManifest = {
     },
   ],
   dependencyRules: [
-    { id: "variant-quantities-match-total", description: "Variant quantities must add up to the order total." },
-    { id: "embroidery-needs-substantial-canvas", description: "Embroidery requires 12 oz or 16 oz canvas." },
-    { id: "extra-heavy-needs-reinforcement", description: "16 oz canvas requires reinforced handle construction." },
-    { id: "two-colour-minimum", description: "Two-colour screen print requires at least 50 totes per variant." },
-    { id: "artwork-before-production", description: "A placeholder may be kept as a draft, but final print artwork is required before production." },
+    {
+      id: "variant-quantities-match-total",
+      description: "Variant quantities must add up to the order total.",
+      optionIds: ["order.total_quantity", "design.quantity"],
+    },
+    {
+      id: "embroidery-needs-substantial-canvas",
+      description: "Embroidery requires 12 oz or 16 oz canvas.",
+      optionIds: ["canvas.weight", "print.method"],
+    },
+    {
+      id: "extra-heavy-needs-reinforcement",
+      description: "16 oz canvas requires reinforced handle construction.",
+      optionIds: ["canvas.weight", "construction.reinforced"],
+    },
+    {
+      id: "two-colour-minimum",
+      description: "Two-colour screen print requires at least 50 totes per variant.",
+      optionIds: ["print.method", "design.quantity"],
+    },
+    {
+      id: "artwork-before-production",
+      description: "A placeholder may be kept as a draft, but final print artwork is required before production.",
+      optionIds: ["branding.artwork_status"],
+    },
   ],
   approval: { mode: "explicit-human", persistence: "keep-only" },
 };

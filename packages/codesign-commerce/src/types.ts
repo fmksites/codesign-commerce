@@ -55,6 +55,7 @@ export interface OptionGroup {
 export interface DependencyRule {
   id: string;
   description: string;
+  optionIds: string[];
 }
 
 export interface ConfiguratorManifest {

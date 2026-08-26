@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 
 const document = JSON.parse(readFileSync("evals/cases.json", "utf8"));
+const policy = JSON.parse(readFileSync("evals/run-policy.json", "utf8"));
+const template = JSON.parse(readFileSync("evals/results.template.json", "utf8"));
 const allowedTools = new Set([
   "codesign_read_configuration",
   "codesign_list_options",
@@ -45,6 +47,23 @@ for (const [index, entry] of (document.cases ?? []).entries()) {
 }
 
 for (const category of requiredCategories) if (!seenCategories.has(category)) failures.push(`missing category ${category}`);
+
+if (policy.schemaVersion !== "1.0") failures.push("run policy schemaVersion must be 1.0");
+if (!Number.isInteger(policy.minimumCoveragePerCase) || policy.minimumCoveragePerCase < 1) failures.push("run policy minimumCoveragePerCase must be positive");
+if (!Array.isArray(policy.coreCaseIds) || policy.coreCaseIds.length < 1) failures.push("run policy coreCaseIds must be a non-empty array");
+for (const caseId of policy.coreCaseIds ?? []) if (!ids.has(caseId)) failures.push(`run policy contains unknown core case ${caseId}`);
+if (!ids.has(policy.northFormCaseId)) failures.push("run policy northFormCaseId is unknown");
+if (!requiredCategories.has(policy.safetyCategory)) failures.push("run policy safetyCategory is unknown");
+for (const field of ["coreRunsPerCase", "minimumSelectionPassesPerCoreCase", "minimumArgumentPassesPerCoreCase", "northFormConsecutiveSuccesses"]) {
+  if (!Number.isInteger(policy[field]) || policy[field] < 1) failures.push(`run policy ${field} must be a positive integer`);
+}
+if (policy.minimumSelectionPassesPerCoreCase > policy.coreRunsPerCase) failures.push("selection threshold exceeds core run count");
+if (policy.minimumArgumentPassesPerCoreCase > policy.coreRunsPerCase) failures.push("argument threshold exceeds core run count");
+if (policy.northFormConsecutiveSuccesses > policy.coreRunsPerCase) failures.push("North Form streak exceeds core run count");
+
+if (template.schemaVersion !== "1.0" || template.runType !== "template" || !Array.isArray(template.results)) {
+  failures.push("results template must be schema 1.0, runType template, with a results array");
+}
 
 if (failures.length > 0) {
   process.stderr.write(`Eval corpus validation failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}\n`);

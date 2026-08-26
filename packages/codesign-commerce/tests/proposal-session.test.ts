@@ -159,6 +159,74 @@ describe("ProposalSession", () => {
     expect(adapter.counters.previewCalls).toBe(1);
   });
 
+  test("fails closed when adapter and agent assumptions exceed the public result limit", async () => {
+    const { adapter, session } = setup();
+    const originalValidation = adapter.validateState.bind(adapter);
+    adapter.validateState = async (state) => ({
+      ...(await originalValidation(state)),
+      assumptions: Array.from({ length: 20 }, (_, index) => `Adapter assumption ${index + 1}`),
+    });
+
+    const result = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "combined-assumption-limit-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+      assumptions: ["Agent assumption"],
+    });
+
+    expect(result).toMatchObject({ ok: false, error: { code: "ADAPTER_FAILURE" } });
+    expect(session.status).toBe("idle");
+    expect(adapter.visibleState).toEqual(adapter.committedState);
+    expect(adapter.counters.restoreCalls).toBe(1);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+  });
+
+  test("cancels before touching the adapter", async () => {
+    const { adapter, session } = setup();
+    const controller = new AbortController();
+    controller.abort();
+
+    const result = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "cancel-before-start-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    }, { signal: controller.signal });
+
+    expect(result).toMatchObject({ ok: false, error: { code: "CANCELLED" } });
+    expect(adapter.counters.quiesceCalls).toBe(0);
+    expect(adapter.counters.previewCalls).toBe(0);
+  });
+
+  test("serializes duplicate human Keep actions at one commit boundary", async () => {
+    const { adapter, session } = setup();
+    await session.propose({
+      baseRevision: "revision-1",
+      operationId: "double-keep-proposal-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    const originalCommit = adapter.commitState.bind(adapter);
+    let releaseCommit!: () => void;
+    let commitStarted!: () => void;
+    const started = new Promise<void>((resolve) => { commitStarted = resolve; });
+    const gate = new Promise<void>((resolve) => { releaseCommit = resolve; });
+    adapter.commitState = async (state, metadata) => {
+      commitStarted();
+      await gate;
+      return originalCommit(state, metadata);
+    };
+
+    const firstKeep = session.keep();
+    await started;
+    const secondKeep = await session.keep();
+    expect(secondKeep).toMatchObject({ ok: false, error: { code: "OPERATION_IN_PROGRESS" } });
+    releaseCommit();
+    expect(await firstKeep).toMatchObject({ localPersisted: true, serverPersisted: true });
+    expect(adapter.counters.commitCalls).toBe(1);
+    expect(adapter.counters.localWrites).toBe(1);
+    expect(adapter.counters.serverWrites).toBe(1);
+  });
+
   test("caps successful operations in one proposal", async () => {
     const { adapter, session } = setup();
     let result = await session.propose({

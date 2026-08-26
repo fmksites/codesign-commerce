@@ -646,9 +646,13 @@ export class ProposalSession<Snapshot = unknown> {
   }
 
   #mergeAssumptions(validation: ValidationResult, assumptions: string[]): ValidationResult {
+    const merged = [...new Set([...validation.assumptions, ...assumptions])];
+    if (merged.length > MAX_PROPOSAL_ASSUMPTIONS) {
+      throw new Error("The public assumption limit was exceeded");
+    }
     return {
       ...cloneState(validation),
-      assumptions: [...new Set([...validation.assumptions, ...assumptions])],
+      assumptions: merged,
     };
   }
 

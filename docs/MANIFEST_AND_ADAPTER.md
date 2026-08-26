@@ -11,7 +11,8 @@ Required top-level fields:
 - `displayName` and `productType`: public human-readable context.
 - `capabilities`: multiple-design, maximum-design, and cloning behavior.
 - `optionGroups`: allowlisted semantic options.
-- `dependencyRules`: public descriptions of dependencies.
+- `dependencyRules`: public descriptions plus bounded references to the
+  manifest option IDs affected by each dependency.
 - `approval`: exactly `explicit-human` with `keep-only` persistence.
 
 Unknown top-level and nested fields are rejected. This prevents accidental private-data pass-through and forces explicit contract evolution.
