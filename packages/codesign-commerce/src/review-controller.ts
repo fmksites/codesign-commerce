@@ -18,6 +18,7 @@ export type ReviewState =
       proposalRevision: number;
       designCount: number;
       totalQuantity: number;
+      createdDesigns: Array<{ designId: string; sourceDesignId: string; name: string }>;
       changes: ReviewChange[];
       assumptions: string[];
       hardErrors: ValidationIssue[];
@@ -175,6 +176,7 @@ export class ProposalReviewController<Snapshot = unknown> {
       proposalRevision: result.proposalRevision,
       designCount: proposedState?.designs.length ?? 0,
       totalQuantity: proposedState?.order.totalQuantity ?? 0,
+      createdDesigns: cloneCreatedDesigns(result.createdDesigns),
       changes: result.diff.map((change) => ({
         ...(change.designId === undefined ? {} : { designId: change.designId }),
         optionId: change.optionId,
@@ -199,4 +201,8 @@ export class ProposalReviewController<Snapshot = unknown> {
       }
     }
   }
+}
+
+function cloneCreatedDesigns(createdDesigns: ProposalResult["createdDesigns"]): ProposalResult["createdDesigns"] {
+  return createdDesigns.map((created) => ({ ...created }));
 }

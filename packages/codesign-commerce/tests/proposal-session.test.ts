@@ -3,7 +3,7 @@ import { InMemoryConfiguratorAdapter, ProposalSession } from "../src/index.js";
 import { testManifest, testState } from "./fixtures.js";
 
 function setup() {
-  const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState));
+  const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState), structuredClone(testManifest));
   const session = new ProposalSession(structuredClone(testManifest), adapter);
   return { adapter, session };
 }
@@ -149,6 +149,24 @@ describe("ProposalSession", () => {
     expect(adapter.counters.previewCalls).toBe(1);
   });
 
+  test("coalesces repeated field changes against the original baseline", async () => {
+    const { session } = setup();
+    const first = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "coalesce-first-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    if (!first.ok) throw new Error("Expected first proposal");
+    const returned = await session.propose({
+      baseRevision: first.baseRevision,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+      operationId: "coalesce-return-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "cream" }],
+    });
+    expect(returned).toMatchObject({ ok: true, diff: [] });
+  });
+
   test("crosses the local commit boundary once and retries only the server save", async () => {
     const { adapter, session } = setup();
     await session.propose({
@@ -267,5 +285,94 @@ describe("ProposalSession", () => {
     });
     expect(result).toMatchObject({ ok: false, error: { code: "INVALID_VALUE" } });
     expect(adapter.counters.quiesceCalls).toBe(0);
+  });
+
+  test("creates and extends one proposal with a second design atomically", async () => {
+    const { adapter, session } = setup();
+    const first = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "create-sequence-first-1",
+      changes: [{ designId: "design-1", optionId: "design.name", value: "North Form Cream" }],
+      assumptions: ["Final logo artwork will be supplied later."],
+    });
+    if (!first.ok) throw new Error("Expected first proposal");
+
+    const created = await session.createDesign({
+      baseRevision: first.baseRevision,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+      operationId: "create-sequence-second-1",
+      sourceDesignId: "design-1",
+      changes: [{ designId: "design-1", optionId: "design.quantity", value: 30 }],
+      newDesignChanges: [
+        { optionId: "design.name", value: "North Form Rose" },
+        { optionId: "design.quantity", value: 30 },
+        { optionId: "body.color", value: "rose" },
+        { optionId: "accent.color", value: "berry" },
+      ],
+    });
+
+    expect(created).toMatchObject({
+      ok: true,
+      proposalRevision: 2,
+      persisted: false,
+      createdDesigns: [{ designId: "design-2", sourceDesignId: "design-1", name: "North Form Rose" }],
+    });
+    expect(adapter.visibleState.designs.map((design) => [design.name, design.quantity])).toEqual([
+      ["North Form Cream", 30],
+      ["North Form Rose", 30],
+    ]);
+    expect(adapter.committedState.designs).toHaveLength(1);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+
+    const validation = await session.validateConfiguration({
+      proposalId: session.proposalId!,
+      proposalRevision: session.proposalRevision!,
+    });
+    expect(validation).toMatchObject({
+      ok: true,
+      source: "proposal",
+      validation: { configurationValid: true, assumptions: ["Final logo artwork will be supplied later."] },
+    });
+  });
+
+  test("deduplicates create-design retries and never creates a third design", async () => {
+    const { adapter, session } = setup();
+    const input = {
+      baseRevision: "revision-1",
+      operationId: "create-dedup-1",
+      sourceDesignId: "design-1",
+      changes: [{ designId: "design-1", optionId: "design.quantity", value: 30 }],
+      newDesignChanges: [{ optionId: "design.quantity", value: 30 }],
+    };
+    const first = await session.createDesign(input);
+    if (!first.ok) throw new Error("Expected design creation");
+    const repeated = await session.createDesign({
+      ...input,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+    });
+    expect(repeated).toEqual(first);
+    expect(adapter.visibleState.designs).toHaveLength(2);
+    expect(adapter.counters.createDesignDraftCalls).toBe(1);
+    expect(adapter.counters.previewCalls).toBe(1);
+  });
+
+  test("rejects an invalid cloned batch without changing the visible baseline", async () => {
+    const { adapter, session } = setup();
+    const before = adapter.visibleState;
+    const result = await session.createDesign({
+      baseRevision: "revision-1",
+      operationId: "create-invalid-1",
+      sourceDesignId: "design-1",
+      newDesignChanges: [{ optionId: "body.color", value: "not-allowed" }],
+    });
+    expect(result).toMatchObject({ ok: false, error: { code: "INVALID_VALUE" } });
+    expect(adapter.visibleState).toEqual(before);
+    expect(adapter.counters.previewCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+    expect(session.status).toBe("idle");
   });
 });

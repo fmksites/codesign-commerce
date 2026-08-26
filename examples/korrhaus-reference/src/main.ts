@@ -58,6 +58,16 @@ const manifest: ConfiguratorManifest = {
       values: [{ id: "standard", label: "Standard grip" }],
     },
     {
+      id: "design.name",
+      label: "Design name",
+      agentDescription: "Set the public name for a colourway.",
+      scope: "design",
+      kind: "text",
+      role: "design-name",
+      agentWritable: true,
+      maximumLength: 60,
+    },
+    {
       id: "design.quantity",
       label: "Design quantity",
       agentDescription: "Set the number of pairs for one colourway.",
@@ -101,22 +111,13 @@ const initialState: ConfigurationState = {
   revision: "reference-revision-1",
   activeDesignId: "design-1",
   order: { totalQuantity: 120 },
-  designs: [
-    {
-      id: "design-1",
-      name: "Design 1",
-      quantity: 60,
-      selections: { "body.color": "cream", "accent.color": "navy", "grip.plate": "standard" },
-      assets: [{ slot: "logo", status: "placeholder", agentWritable: false }],
-    },
-    {
-      id: "design-2",
-      name: "Design 2",
-      quantity: 60,
-      selections: { "body.color": "cream", "accent.color": "navy", "grip.plate": "standard" },
-      assets: [{ slot: "logo", status: "placeholder", agentWritable: false }],
-    },
-  ],
+  designs: [{
+    id: "design-1",
+    name: "Design 1",
+    quantity: 120,
+    selections: { "body.color": "cream", "accent.color": "navy", "grip.plate": "standard" },
+    assets: [{ slot: "logo", status: "placeholder", agentWritable: false }],
+  }],
 };
 
 class KorrhausReferenceAdapter extends InMemoryConfiguratorAdapter {
@@ -164,12 +165,8 @@ app.innerHTML = `
 
     <section class="designer" aria-label="KORRHAUS custom sock reference configurator">
       <div class="design-toolbar">
-        <div class="tabs" role="tablist" aria-label="Colourways">
-          <button type="button" class="tab active" role="tab" aria-selected="true" data-design-tab="design-1">Design 1</button>
-          <button type="button" class="tab" role="tab" aria-selected="false" data-design-tab="design-2">Design 2</button>
-          <button type="button" class="add-design" aria-label="Add design">+</button>
-        </div>
-        <p>Draft saved on this device</p>
+        <div class="tabs" role="tablist" aria-label="Colourways" data-design-tabs></div>
+        <p data-save-status>Draft saved on this device</p>
       </div>
       <label class="design-name">Design name <input value="Design 1" data-design-name maxlength="60" /></label>
       <nav class="steps" aria-label="Sock design progress">
@@ -218,7 +215,7 @@ app.innerHTML = `
   </main>
 `;
 
-const adapter = new KorrhausReferenceAdapter(structuredClone(initialState));
+const adapter = new KorrhausReferenceAdapter(structuredClone(initialState), structuredClone(manifest));
 const session = new ProposalSession(manifest, adapter);
 const controller = new ProposalReviewController(manifest, session);
 const reviewContainer = document.querySelector<HTMLElement>("#proposal-review");
@@ -228,7 +225,10 @@ const currentColour = document.querySelector<HTMLElement>("[data-current-colour]
 const currentAccent = document.querySelector<HTMLElement>("[data-current-accent]");
 const placeholder = document.querySelector<HTMLElement>("[data-placeholder-mark]");
 const persistenceAudit = document.querySelector<HTMLOutputElement>("[data-persistence-audit]");
-if (!reviewContainer || !controls || !preview || !currentColour || !currentAccent || !placeholder || !persistenceAudit) {
+const designTabs = document.querySelector<HTMLElement>("[data-design-tabs]");
+const nameInput = document.querySelector<HTMLInputElement>("[data-design-name]");
+const saveStatus = document.querySelector<HTMLElement>("[data-save-status]");
+if (!reviewContainer || !controls || !preview || !currentColour || !currentAccent || !placeholder || !persistenceAudit || !designTabs || !nameInput || !saveStatus) {
   throw new Error("Reference configurator markup is incomplete");
 }
 
@@ -237,6 +237,34 @@ const bodyLabels = new Map([["cream", "Cream"], ["navy", "Navy"], ["dusty-rose",
 const accentLabels = new Map([["navy", "Navy"], ["berry", "Berry"], ["cream", "Cream"]]);
 const bodyAssets = new Map([["cream", "/sock-cream.svg"], ["navy", "/sock-navy.svg"], ["dusty-rose", "/sock-rose.svg"]]);
 const accentColours = new Map([["navy", "#1c2945"], ["berry", "#963552"], ["cream", "#e9e4d8"]]);
+
+const renderDesignTabs = (followVisibleActive = false) => {
+  const state = adapter.visibleState;
+  if (followVisibleActive || !state.designs.some((design) => design.id === activeDesignId)) activeDesignId = state.activeDesignId;
+  designTabs.replaceChildren();
+  for (const design of state.designs) {
+    const tab = document.createElement("button");
+    tab.type = "button";
+    tab.className = `tab${design.id === activeDesignId ? " active" : ""}`;
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-selected", String(design.id === activeDesignId));
+    tab.dataset.designTab = design.id;
+    tab.textContent = design.name;
+    tab.addEventListener("click", () => {
+      activeDesignId = design.id;
+      renderDesignTabs();
+      renderPreview();
+    });
+    designTabs.append(tab);
+  }
+  const add = document.createElement("button");
+  add.type = "button";
+  add.className = "add-design";
+  add.setAttribute("aria-label", "Add design");
+  add.textContent = "+";
+  add.disabled = session.status !== "idle";
+  designTabs.append(add);
+};
 
 const renderPreview = () => {
   const design = adapter.visibleState.designs.find((candidate) => candidate.id === activeDesignId) ?? adapter.visibleState.designs[0];
@@ -248,6 +276,7 @@ const renderPreview = () => {
   currentColour.textContent = bodyLabels.get(body) ?? body;
   currentAccent.textContent = accentLabels.get(accent) ?? accent;
   placeholder.style.color = accentColours.get(accent) ?? "#1c2945";
+  nameInput.value = design.name;
 };
 
 mountProposalReview(reviewContainer, controller, {
@@ -255,25 +284,16 @@ mountProposalReview(reviewContainer, controller, {
 });
 
 controller.subscribe((state) => {
-  controls.disabled = state.kind === "temporary" || state.kind === "busy" || state.kind === "invalidated" || state.kind === "commit-retry" || state.kind === "commit-uncertain";
+  const locked = state.kind === "temporary" || state.kind === "busy" || state.kind === "invalidated" || state.kind === "commit-retry" || state.kind === "commit-uncertain";
+  controls.disabled = locked;
+  nameInput.disabled = locked;
+  saveStatus.textContent = state.kind === "temporary" || state.kind === "busy" || state.kind === "invalidated"
+    ? "Temporary proposal not saved"
+    : "Draft saved on this device";
+  renderDesignTabs(true);
   renderPreview();
   persistenceAudit.value = JSON.stringify(adapter.counters);
 });
-
-for (const tab of document.querySelectorAll<HTMLButtonElement>("[data-design-tab]")) {
-  tab.addEventListener("click", () => {
-    activeDesignId = tab.dataset.designTab ?? "design-1";
-    for (const candidate of document.querySelectorAll<HTMLButtonElement>("[data-design-tab]")) {
-      const selected = candidate === tab;
-      candidate.classList.toggle("active", selected);
-      candidate.setAttribute("aria-selected", String(selected));
-    }
-    const design = adapter.visibleState.designs.find((candidate) => candidate.id === activeDesignId);
-    const nameInput = document.querySelector<HTMLInputElement>("[data-design-name]");
-    if (design && nameInput) nameInput.value = design.name;
-    renderPreview();
-  });
-}
 
 for (const swatch of document.querySelectorAll<HTMLButtonElement>("[data-human-colour]")) {
   swatch.addEventListener("click", () => {
@@ -289,18 +309,36 @@ const registration = registerCoDesignTools(document as DocumentWithModelContext,
 void registration.ready;
 
 renderPreview();
+renderDesignTabs();
 
 // Local visual-QA entry point only. Vite removes this branch from production builds.
 if (import.meta.env.DEV && new URLSearchParams(window.location.search).has("agent-preview")) {
-  void session.propose({
-    baseRevision: adapter.committedState.revision,
-    operationId: "local-visual-qa-proposal",
-    changes: [
-      { designId: "design-1", optionId: "body.color", value: "navy" },
-      { designId: "design-1", optionId: "accent.color", value: "berry" },
-      { designId: "design-2", optionId: "body.color", value: "dusty-rose" },
-      { designId: "design-2", optionId: "accent.color", value: "berry" },
-    ],
-    assumptions: ["Logo will be added later."],
-  }).then(renderPreview);
+  void (async () => {
+    const first = await session.propose({
+      baseRevision: adapter.committedState.revision,
+      operationId: "local-visual-qa-first-colourway",
+      changes: [
+        { designId: "design-1", optionId: "design.name", value: "North Form Cream" },
+        { designId: "design-1", optionId: "body.color", value: "navy" },
+        { designId: "design-1", optionId: "accent.color", value: "berry" },
+      ],
+      assumptions: ["Logo will be added later."],
+    });
+    if (!first.ok) return;
+    await session.createDesign({
+      baseRevision: first.baseRevision,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+      operationId: "local-visual-qa-second-colourway",
+      sourceDesignId: "design-1",
+      changes: [{ designId: "design-1", optionId: "design.quantity", value: 60 }],
+      newDesignChanges: [
+        { optionId: "design.name", value: "North Form Rose" },
+        { optionId: "design.quantity", value: 60 },
+        { optionId: "body.color", value: "dusty-rose" },
+        { optionId: "accent.color", value: "berry" },
+      ],
+    });
+    renderPreview();
+  })();
 }

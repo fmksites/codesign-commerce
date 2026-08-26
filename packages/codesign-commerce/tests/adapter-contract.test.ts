@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { InMemoryConfiguratorAdapter, type CommitMetadata } from "../src/index.js";
-import { testState } from "./fixtures.js";
+import { testManifest, testState } from "./fixtures.js";
 
 const metadata: CommitMetadata = {
   proposalId: "contract-proposal-1",
@@ -72,5 +72,23 @@ describe("ConfiguratorAdapter contract", () => {
     unsubscribe();
     adapter.simulateExternalRevision("revision-3");
     expect(revisions).toEqual(["revision-2"]);
+  });
+
+  test("creates a detached draft clone without preview or persistence side effects", async () => {
+    const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState), structuredClone(testManifest));
+    const committed = await adapter.readState();
+    const result = await adapter.createDesignDraft(committed, {
+      sourceDesignId: "design-1",
+      operationId: "adapter-clone-1",
+    });
+
+    expect(result).toMatchObject({ designId: "design-2", state: { activeDesignId: "design-2" } });
+    expect(result.state.designs).toHaveLength(2);
+    expect(result.state.designs[1]).toMatchObject({ id: "design-2", name: "Design 1 copy" });
+    expect(adapter.visibleState).toEqual(testState);
+    expect(adapter.committedState).toEqual(testState);
+    expect(adapter.counters.previewCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
   });
 });

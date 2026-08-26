@@ -195,12 +195,19 @@ const stylesheet = String.raw`
     .summary { font-size: 16px; }
     .change-list { gap: 0; }
     .change-row {
-      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-areas:
+        "label label label"
+        "before arrow after";
       min-height: 48px;
       padding: 12px 0;
       border-bottom: 1px solid var(--codesign-review-divider);
       font-size: 16px;
     }
+    .change-label { grid-area: label; font-size: 13px; }
+    .change-before { grid-area: before; min-width: 0; overflow-wrap: anywhere; }
+    .change-arrow { grid-area: arrow; }
+    .change-after { grid-area: after; min-width: 0; overflow-wrap: anywhere; text-align: right; }
     .change-row:last-child { border-bottom: 0; }
     .detail-list { gap: 10px; font-size: 15px; }
     .actions { display: grid; grid-template-columns: 1fr 1.25fr; }
@@ -287,6 +294,16 @@ export function mountProposalReview<Snapshot = unknown>(
     const changes = element(document, "div", "changes");
     changes.setAttribute("aria-label", "Proposed changes");
     const changeList = element(document, "ul", "change-list");
+    for (const created of state.createdDesigns) {
+      const row = element(document, "li", "change-row");
+      row.append(
+        element(document, "span", "change-label", "New colourway"),
+        element(document, "span", "change-before", "Clone"),
+        element(document, "span", "change-arrow", "→"),
+        element(document, "span", "change-after", created.name),
+      );
+      changeList.append(row);
+    }
     for (const change of state.changes) {
       const row = element(document, "li", "change-row");
       row.append(

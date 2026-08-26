@@ -6,16 +6,17 @@ The 2026 WebMCP Challenge entry will use KORRHAUS's existing Custom Sock Designe
 
 ## Current status
 
-Local implementation began on 26 August 2026 after explicit approval. The current vertical slice contains:
+Local implementation began on 26 August 2026 after explicit approval. The current implementation contains:
 
 - A canonical, allowlisted configuration state.
 - A bounded manifest contract and validation.
 - An in-memory configurator adapter.
 - A proposal transaction with revisions, retry IDs, temporary preview, Revert, and human Keep.
-- `codesign_read_configuration` and `codesign_propose_configuration` registered through the current imperative WebMCP API.
+- Exactly five focused webpage tools registered through the current imperative WebMCP API: read configuration, list options, propose changes, create a design/colourway, and validate configuration.
+- Atomic proposal extension and idempotent design cloning for multi-colourway briefs.
 - Deterministic tests proving that proposal previews do not cross the persistence boundary.
 - A framework-neutral, accessible Keep/Revert review component.
-- A local public KORRHAUS reference surface for actual-browser WebMCP verification.
+- A local public KORRHAUS reference surface that completes the 120-pair North Form scenario in an actual WebMCP-capable browser.
 
 The repository is licensed under Apache-2.0 but is not published or submission-ready yet. Public hosting, production deployment or promotion, video publication, and Devpost submission remain approval-gated.
 

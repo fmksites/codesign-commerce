@@ -73,6 +73,27 @@ describe("mountProposalReview", () => {
     expect(root.textContent).toContain(payload);
   });
 
+  test("shows a newly created colourway in the human review surface", async () => {
+    const { session, view } = setup();
+    await session.createDesign({
+      baseRevision: "revision-1",
+      operationId: "view-created-design-1",
+      sourceDesignId: "design-1",
+      changes: [{ designId: "design-1", optionId: "design.quantity", value: 30 }],
+      newDesignChanges: [
+        { optionId: "design.name", value: "North Form Rose" },
+        { optionId: "design.quantity", value: 30 },
+        { optionId: "body.color", value: "rose" },
+      ],
+    });
+
+    const root = view.element.shadowRoot!;
+    expect(root.textContent).toContain("2 designs · 60 pairs");
+    expect(root.textContent).toContain("New colourway");
+    expect(root.textContent).toContain("North Form Rose");
+    expect(root.textContent).toContain("Temporary · Not saved");
+  });
+
   test("Revert restores the preview without persistence and publishes the outcome", async () => {
     const { adapter, session, view } = setup();
     await session.propose({

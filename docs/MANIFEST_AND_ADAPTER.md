@@ -68,17 +68,20 @@ The revision is opaque. It must change whenever committed public state changes a
 
 ## Adapter obligations
 
-`ConfiguratorAdapter` has nine responsibilities:
+`ConfiguratorAdapter` has ten responsibilities:
 
 1. `readState()` returns a detached canonical committed state.
 2. `listOptions()` returns public availability and reasons.
-3. `quiescePersistence()` flushes or awaits recent human saves before snapshotting.
-4. `captureSnapshot()` keeps a private exact raw snapshot inside the adapter.
-5. `previewState()` updates the existing visible renderer with zero storage/network writes.
-6. `validateState()` applies public and merchant-specific rules without leaking private explanations.
-7. `restoreSnapshot()` performs an exact zero-write Revert.
-8. `commitState()` crosses local persistence once and securely saves idempotently per proposal ID.
-9. `subscribeToExternalChanges()` invalidates stale proposals.
+3. Optional `createDesignDraft()` clones one design in detached draft state, assigns a safe unique public ID, makes it active, and performs no preview or persistence side effect. It is required when the manifest advertises cloning.
+4. `quiescePersistence()` flushes or awaits recent human saves before snapshotting.
+5. `captureSnapshot()` keeps a private exact raw snapshot inside the adapter.
+6. `previewState()` updates the existing visible renderer with zero storage/network writes.
+7. `validateState()` applies public and merchant-specific rules without leaking private explanations.
+8. `restoreSnapshot()` performs an exact zero-write Revert.
+9. `commitState()` crosses local persistence once and securely saves idempotently per proposal ID.
+10. `subscribeToExternalChanges()` invalidates stale proposals.
+
+The core rejects a draft clone if it changes the committed revision, order total, existing designs, configurator identity, or manifest version; fails to add exactly one uniquely identified design; exposes an agent-writable asset; or does not make the new design active. Source/order changes and new-design overrides are then applied and validated as one transaction.
 
 Expected server-save failure is data, not an exception:
 

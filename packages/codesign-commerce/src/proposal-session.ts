@@ -5,6 +5,9 @@ import type {
   ConfigurationState,
   ConfiguratorAdapter,
   ConfiguratorManifest,
+  CreateDesignDraftResult,
+  CreateDesignInput,
+  CreatedDesign,
   JsonPrimitive,
   ProposalErrorCode,
   ProposalErrorResult,
@@ -14,6 +17,9 @@ import type {
   ProposalSessionStatus,
   ProposalSessionSnapshot,
   ProposeResult,
+  ValidateConfigurationInput,
+  ValidateConfigurationResult,
+  ValidationResult,
 } from "./types.js";
 
 class ProposalCancelledError extends Error {
@@ -30,6 +36,8 @@ interface ActiveProposal<Snapshot> {
   snapshot: Snapshot;
   state: ConfigurationState;
   diff: ConfigurationDiff[];
+  createdDesigns: CreatedDesign[];
+  assumptions: string[];
   operationIds: string[];
   resultsByOperation: Map<string, ProposalResult>;
 }
@@ -114,6 +122,71 @@ export class ProposalSession<Snapshot = unknown> {
   }
 
   async propose(input: ProposalInput, execution: ProposalExecutionOptions = {}): Promise<ProposeResult> {
+    return this.#runOperation(input, null, execution);
+  }
+
+  async createDesign(input: CreateDesignInput, execution: ProposalExecutionOptions = {}): Promise<ProposeResult> {
+    return this.#runOperation(input, { sourceDesignId: input.sourceDesignId, newDesignChanges: input.newDesignChanges }, execution);
+  }
+
+  async validateConfiguration(input: ValidateConfigurationInput = {}): Promise<ValidateConfigurationResult> {
+    if (this.#status === "applying" || this.#status === "committing" || this.#status === "reverting") {
+      return errorResult("OPERATION_IN_PROGRESS", "Another proposal operation is still in progress", true);
+    }
+    if (this.#status === "commit-uncertain") {
+      return errorResult("COMMIT_STATUS_UNKNOWN", "Commit status is unknown. Reload before continuing.", false, [], undefined, "unknown");
+    }
+    if (this.#status === "invalidated") {
+      return errorResult(
+        "STALE_REVISION",
+        "The committed configuration changed while the proposal was open",
+        true,
+        [],
+        this.#externalRevision ?? this.#active?.baseRevision,
+      );
+    }
+
+    try {
+      if (this.#active) {
+        if (input.proposalId !== undefined && input.proposalId !== this.#active.id) {
+          return errorResult("PROPOSAL_PENDING", "Another proposal is awaiting Keep or Revert", true, [], this.#active.baseRevision);
+        }
+        if (input.proposalRevision !== undefined && input.proposalRevision !== this.#active.revision) {
+          return errorResult("STALE_PROPOSAL_REVISION", "The proposal changed. Read it again before validating it.", true, [], this.#active.baseRevision);
+        }
+        const validation = this.#mergeAssumptions(await this.adapter.validateState(cloneState(this.#active.state)), this.#active.assumptions);
+        return {
+          ok: true,
+          persisted: false,
+          source: "proposal",
+          revision: this.#active.baseRevision,
+          proposalId: this.#active.id,
+          proposalRevision: this.#active.revision,
+          validation,
+        };
+      }
+
+      if (input.proposalId !== undefined || input.proposalRevision !== undefined) {
+        return errorResult("NO_PROPOSAL", "There is no proposal to validate", false);
+      }
+      const state = await this.adapter.readState();
+      return {
+        ok: true,
+        persisted: false,
+        source: "committed",
+        revision: state.revision,
+        validation: await this.adapter.validateState(cloneState(state)),
+      };
+    } catch {
+      return errorResult("ADAPTER_FAILURE", "The configuration could not be validated safely", true);
+    }
+  }
+
+  async #runOperation(
+    input: ProposalInput | CreateDesignInput,
+    creation: { sourceDesignId: string; newDesignChanges: CreateDesignInput["newDesignChanges"] } | null,
+    execution: ProposalExecutionOptions,
+  ): Promise<ProposeResult> {
     if (execution.signal?.aborted) return errorResult("CANCELLED", "The proposal was cancelled before it started", true);
     if (this.#status === "invalidated") {
       const currentRevision = this.#externalRevision ?? this.#active?.baseRevision;
@@ -130,8 +203,19 @@ export class ProposalSession<Snapshot = unknown> {
     if (!input.operationId || input.operationId.length > 80 || !isSafeIdentifier(input.operationId)) {
       return errorResult("INVALID_VALUE", "operationId must be a safe identifier with at most 80 characters", false);
     }
-    if (input.changes.length < 1 || input.changes.length > 40) {
+    if (input.proposalId !== undefined && (input.proposalId.length > 200 || !isSafeIdentifier(input.proposalId))) {
+      return errorResult("INVALID_VALUE", "proposalId must be a safe identifier with at most 200 characters", false);
+    }
+    if (input.assumptions && (input.assumptions.length > 20 || input.assumptions.some((entry) => entry.length > 500))) {
+      return errorResult("INVALID_VALUE", "Assumptions must contain at most 20 bounded text entries", false);
+    }
+    const changes = input.changes ?? [];
+    const totalChanges = changes.length + (creation?.newDesignChanges.length ?? 0);
+    if ((!creation && changes.length < 1) || totalChanges > 40) {
       return errorResult("INVALID_VALUE", "A proposal must contain between 1 and 40 changes", false);
+    }
+    if (creation && (!isSafeIdentifier(creation.sourceDesignId) || creation.newDesignChanges.length > 20)) {
+      return errorResult("INVALID_VALUE", "The design creation input is invalid", false);
     }
 
     if (this.#active) {
@@ -169,6 +253,8 @@ export class ProposalSession<Snapshot = unknown> {
           snapshot,
           state: cloneState(committed),
           diff: [],
+          createdDesigns: [],
+          assumptions: [],
           operationIds: [],
           resultsByOperation: new Map(),
         };
@@ -181,9 +267,57 @@ export class ProposalSession<Snapshot = unknown> {
         return errorResult("STALE_REVISION", "The committed configuration changed while the proposal was open", true, [], this.#externalRevision);
       }
 
-      const nextState = cloneState(this.#active.state);
+      let nextState = cloneState(this.#active.state);
       const nextDiff = [...this.#active.diff];
-      const validationError = this.#applyChanges(nextState, nextDiff, input.changes);
+      const nextCreatedDesigns = cloneState(this.#active.createdDesigns);
+      let operationChanges = changes;
+
+      if (creation) {
+        if (!this.manifest.capabilities.multipleDesigns || !this.manifest.capabilities.cloning) {
+          const result = errorResult("CAPABILITY_UNAVAILABLE", "This configurator does not support design cloning", false);
+          if (openedProposal) await this.#restoreAndClear();
+          else this.#setStatus("awaiting-human");
+          return result;
+        }
+        if (nextState.designs.length >= this.manifest.capabilities.maximumDesigns) {
+          const result = errorResult("CAPABILITY_UNAVAILABLE", "The configurator has reached its design limit", false);
+          if (openedProposal) await this.#restoreAndClear();
+          else this.#setStatus("awaiting-human");
+          return result;
+        }
+        if (!nextState.designs.some((design) => design.id === creation.sourceDesignId)) {
+          const result = errorResult("UNKNOWN_DESIGN", `Unknown design ${creation.sourceDesignId}`, false);
+          if (openedProposal) await this.#restoreAndClear();
+          else this.#setStatus("awaiting-human");
+          return result;
+        }
+        if (!this.adapter.createDesignDraft) {
+          const result = errorResult("CAPABILITY_UNAVAILABLE", "The adapter does not implement design cloning", false);
+          if (openedProposal) await this.#restoreAndClear();
+          else this.#setStatus("awaiting-human");
+          return result;
+        }
+
+        const created = await this.adapter.createDesignDraft(cloneState(nextState), {
+          sourceDesignId: creation.sourceDesignId,
+          operationId: input.operationId,
+        });
+        const cloneError = this.#validateCreatedDraft(nextState, created, creation.sourceDesignId);
+        if (cloneError) {
+          if (openedProposal) await this.#restoreAndClear();
+          else this.#setStatus("awaiting-human");
+          return cloneError;
+        }
+        nextState = cloneState(created.state);
+        const newDesign = nextState.designs.find((design) => design.id === created.designId)!;
+        nextCreatedDesigns.push({ designId: newDesign.id, sourceDesignId: creation.sourceDesignId, name: newDesign.name });
+        operationChanges = [
+          ...changes,
+          ...creation.newDesignChanges.map((change) => ({ ...change, designId: created.designId })),
+        ];
+      }
+
+      const validationError = this.#applyChanges(nextState, nextDiff, operationChanges);
       if (validationError) {
         if (openedProposal) await this.#restoreAndClear();
         else this.#setStatus("awaiting-human");
@@ -209,9 +343,14 @@ export class ProposalSession<Snapshot = unknown> {
       this.#throwIfCancelled(execution.signal);
       this.#active.state = nextState;
       this.#active.diff = nextDiff;
+      this.#active.createdDesigns = nextCreatedDesigns.map((created) => {
+        const design = nextState.designs.find((candidate) => candidate.id === created.designId);
+        return design ? { ...created, name: design.name } : created;
+      });
       this.#active.revision += 1;
       this.#active.operationIds.push(input.operationId);
-      if (input.assumptions) validation.assumptions = [...validation.assumptions, ...input.assumptions];
+      this.#active.assumptions = [...new Set([...this.#active.assumptions, ...(input.assumptions ?? [])])];
+      const enrichedValidation = this.#mergeAssumptions(validation, this.#active.assumptions);
 
       const result: ProposalResult = {
         ok: true,
@@ -220,7 +359,13 @@ export class ProposalSession<Snapshot = unknown> {
         baseRevision: this.#active.baseRevision,
         persisted: false,
         diff: cloneState(this.#active.diff),
-        validation,
+        createdDesigns: cloneState(this.#active.createdDesigns),
+        validation: enrichedValidation,
+        confirmation: {
+          required: true,
+          choices: ["keep", "revert"],
+          message: "A person must choose Keep proposal or Revert in the page. Nothing has been saved.",
+        },
       };
       this.#active.resultsByOperation.set(input.operationId, cloneState(result));
       this.#setStatus("awaiting-human");
@@ -359,15 +504,69 @@ export class ProposalSession<Snapshot = unknown> {
           before = design.selections[change.optionId];
           design.selections[change.optionId] = change.value;
         }
-        diff.push({ designId: design.id, optionId: option.id, before, after: change.value });
+        this.#recordDiff(diff, { designId: design.id, optionId: option.id, before, after: change.value });
       } else {
         if (option.role !== "order-total") return errorResult("INVALID_MANIFEST", `Order option ${option.id} has no supported canonical role`, false, [option.id], state.revision);
         const before = state.order.totalQuantity;
         state.order.totalQuantity = change.value as number;
-        diff.push({ optionId: option.id, before, after: change.value });
+        this.#recordDiff(diff, { optionId: option.id, before, after: change.value });
       }
     }
     return null;
+  }
+
+  #recordDiff(diff: ConfigurationDiff[], change: ConfigurationDiff): void {
+    const index = diff.findIndex((candidate) => candidate.optionId === change.optionId && candidate.designId === change.designId);
+    if (index === -1) {
+      if (!Object.is(change.before, change.after)) diff.push(change);
+      return;
+    }
+    const existing = diff[index]!;
+    if (Object.is(existing.before, change.after)) {
+      diff.splice(index, 1);
+    } else {
+      diff[index] = { ...existing, after: change.after };
+    }
+  }
+
+  #validateCreatedDraft(
+    before: ConfigurationState,
+    created: CreateDesignDraftResult,
+    sourceDesignId: string,
+  ): ProposalErrorResult | null {
+    const state = created?.state;
+    if (!state || typeof created.designId !== "string" || !isSafeIdentifier(created.designId)) {
+      return errorResult("ADAPTER_FAILURE", "The adapter returned an invalid design clone", false);
+    }
+    if (
+      state.configuratorId !== before.configuratorId
+      || state.manifestVersion !== before.manifestVersion
+      || state.revision !== before.revision
+      || state.order.totalQuantity !== before.order.totalQuantity
+      || state.designs.length !== before.designs.length + 1
+      || state.activeDesignId !== created.designId
+      || before.designs.some((design) => !state.designs.some((candidate) => candidate.id === design.id && JSON.stringify(candidate) === JSON.stringify(design)))
+    ) {
+      return errorResult("ADAPTER_FAILURE", "The adapter returned an unsafe design clone", false);
+    }
+
+    const matching = state.designs.filter((design) => design.id === created.designId);
+    if (
+      matching.length !== 1
+      || before.designs.some((design) => design.id === created.designId)
+      || !state.designs.some((design) => design.id === sourceDesignId)
+      || matching[0]!.assets.some((asset) => asset.agentWritable !== false)
+    ) {
+      return errorResult("ADAPTER_FAILURE", "The adapter returned an unsafe design clone", false);
+    }
+    return null;
+  }
+
+  #mergeAssumptions(validation: ValidationResult, assumptions: string[]): ValidationResult {
+    return {
+      ...cloneState(validation),
+      assumptions: [...new Set([...validation.assumptions, ...assumptions])],
+    };
   }
 
   async #restoreAndClear(): Promise<void> {

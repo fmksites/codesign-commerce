@@ -24,6 +24,7 @@ ProposalSession ─────── ConfiguratorManifest
     ▼
 Merchant adapter
     ├── allowlisted state mapping
+    ├── public-safe draft design cloning
     ├── persistence quiescence
     ├── private raw snapshot
     ├── zero-write preview and restore
@@ -72,12 +73,15 @@ Rules enforced by the core:
 
 `registerCoDesignTools()` feature-detects `document.modelContext`. A browser without WebMCP receives the unchanged normal interface. When supported, all page tools are registered with a shared `AbortController`; aborting it unregisters the page tools without exposing them outside the configurator lifecycle.
 
-The current critical vertical slice registers only:
+The complete public runtime registers exactly:
 
 - `codesign_read_configuration` — read-only canonical state and proposal metadata.
+- `codesign_list_options` — read-only public option values, availability, bounds, and dependency descriptions.
 - `codesign_propose_configuration` — a temporary, visible, zero-write change to existing designs.
+- `codesign_create_design` — a zero-write clone inside the same proposal, with coordinated source, order, and new-design changes.
+- `codesign_validate_configuration` — read-only consistency and production-readiness validation for the committed state or open proposal.
 
-The complete entry will add option discovery, design creation, and validation only after the flagship autosave-isolation gate passes.
+`codesign_create_design` does not create a Shopify product or catalog variant. The adapter supplies a detached canonical clone, the core verifies clone invariants, applies all changes atomically, validates the complete state, and only then renders the temporary preview.
 
 The implementation follows the current imperative API documented by [Chrome](https://developer.chrome.com/docs/ai/webmcp/imperative-api) and the [WebMCP Community Group specification](https://webmachinelearning.github.io/webmcp/). WebMCP remains experimental, so actual supported-browser verification is a release gate.
 

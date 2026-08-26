@@ -39,6 +39,16 @@ export const testManifest: ConfiguratorManifest = {
       ],
     },
     {
+      id: "design.name",
+      label: "Design name",
+      agentDescription: "Set a public name for one design or colourway.",
+      scope: "design",
+      kind: "text",
+      role: "design-name",
+      agentWritable: true,
+      maximumLength: 60,
+    },
+    {
       id: "design.quantity",
       label: "Design quantity",
       agentDescription: "Set the pair quantity for one design.",

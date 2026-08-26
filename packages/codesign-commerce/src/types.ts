@@ -110,6 +110,16 @@ export interface OptionResult {
   options: OptionAvailability[];
 }
 
+export interface CreateDesignDraftRequest {
+  sourceDesignId: string;
+  operationId: string;
+}
+
+export interface CreateDesignDraftResult {
+  state: ConfigurationState;
+  designId: string;
+}
+
 export interface CommitMetadata {
   proposalId: string;
   operationIds: string[];
@@ -132,6 +142,7 @@ export type CommitResult =
 export interface ConfiguratorAdapter<Snapshot = unknown> {
   readState(): Promise<ConfigurationState>;
   listOptions(request: OptionRequest): Promise<OptionResult>;
+  createDesignDraft?(state: ConfigurationState, request: CreateDesignDraftRequest): Promise<CreateDesignDraftResult>;
   quiescePersistence(): Promise<void>;
   captureSnapshot(): Promise<Snapshot>;
   previewState(state: ConfigurationState): Promise<void>;
@@ -156,11 +167,39 @@ export interface ProposalInput {
   assumptions?: string[];
 }
 
+export interface NewDesignChange {
+  optionId: string;
+  value: JsonPrimitive;
+}
+
+export interface CreateDesignInput {
+  baseRevision: string;
+  proposalId?: string;
+  proposalRevision?: number;
+  operationId: string;
+  sourceDesignId: string;
+  changes?: ConfigurationChange[];
+  newDesignChanges: NewDesignChange[];
+  assumptions?: string[];
+}
+
 export interface ConfigurationDiff {
   designId?: string;
   optionId: string;
   before: JsonPrimitive | undefined;
   after: JsonPrimitive;
+}
+
+export interface CreatedDesign {
+  designId: string;
+  sourceDesignId: string;
+  name: string;
+}
+
+export interface HumanConfirmationRequirement {
+  required: true;
+  choices: ["keep", "revert"];
+  message: string;
 }
 
 export interface ProposalResult {
@@ -170,13 +209,16 @@ export interface ProposalResult {
   baseRevision: string;
   persisted: false;
   diff: ConfigurationDiff[];
+  createdDesigns: CreatedDesign[];
   validation: ValidationResult;
+  confirmation: HumanConfirmationRequirement;
 }
 
 export type ProposalErrorCode =
   | "INVALID_MANIFEST"
   | "UNKNOWN_OPTION"
   | "OPTION_NOT_WRITABLE"
+  | "CAPABILITY_UNAVAILABLE"
   | "INVALID_VALUE"
   | "UNKNOWN_DESIGN"
   | "STALE_REVISION"
@@ -202,6 +244,23 @@ export interface ProposalErrorResult {
 }
 
 export type ProposeResult = ProposalResult | ProposalErrorResult;
+
+export interface ValidateConfigurationInput {
+  proposalId?: string;
+  proposalRevision?: number;
+}
+
+export interface ValidationInspectionResult {
+  ok: true;
+  persisted: false;
+  source: "committed" | "proposal";
+  revision: string;
+  proposalId?: string;
+  proposalRevision?: number;
+  validation: ValidationResult;
+}
+
+export type ValidateConfigurationResult = ValidationInspectionResult | ProposalErrorResult;
 
 export type ProposalSessionStatus = "idle" | "applying" | "awaiting-human" | "invalidated" | "reverting" | "committing" | "commit-retry" | "commit-uncertain";
 

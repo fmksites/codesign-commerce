@@ -31,6 +31,10 @@ Current deterministic coverage includes:
 - Framework-neutral review states and human actions.
 - Shadow-DOM review rendering, hidden-by-default activation, sanitized text, focus, and native Keep/Revert controls.
 - WebMCP schemas, annotations, lifecycle unregistration, and runtime input checks.
+- Exact five-tool registration with no Keep, Revert, save, upload, quote, checkout, order, or payment capability.
+- Public option discovery with bounded option IDs and dependency descriptions.
+- Atomic, idempotent second-design creation with maximum-design and clone-invariant guards.
+- Standalone committed/proposal validation with accumulated proposal assumptions.
 - Adapter detached reads, preview/restore behavior, commits, retries, and subscriptions.
 
 ## Evidence strength

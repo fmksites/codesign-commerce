@@ -3,6 +3,9 @@ import type {
   CommitResult,
   ConfigurationState,
   ConfiguratorAdapter,
+  ConfiguratorManifest,
+  CreateDesignDraftRequest,
+  CreateDesignDraftResult,
   OptionRequest,
   OptionResult,
   ValidationResult,
@@ -19,6 +22,7 @@ export interface InMemoryAdapterCounters {
   localWrites: number;
   serverWrites: number;
   commitCalls: number;
+  createDesignDraftCalls: number;
 }
 
 function clone<T>(value: T): T {
@@ -31,6 +35,7 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
   #listeners = new Set<(revision: string) => void>();
   #revisionNumber = 1;
   #commits = new Map<string, { revision: string; serverPersisted: boolean }>();
+  readonly #manifest: ConfiguratorManifest | null;
 
   readonly counters: InMemoryAdapterCounters = {
     quiesceCalls: 0,
@@ -39,14 +44,16 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
     localWrites: 0,
     serverWrites: 0,
     commitCalls: 0,
+    createDesignDraftCalls: 0,
   };
 
   failServerSave = false;
   throwDuringCommit = false;
 
-  constructor(initialState: ConfigurationState) {
+  constructor(initialState: ConfigurationState, manifest: ConfiguratorManifest | null = null) {
     this.#committed = clone(initialState);
     this.#visible = clone(initialState);
+    this.#manifest = manifest ? clone(manifest) : null;
   }
 
   get visibleState(): ConfigurationState {
@@ -61,8 +68,38 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
     return clone(this.#committed);
   }
 
-  async listOptions(_request: OptionRequest): Promise<OptionResult> {
-    return { revision: this.#committed.revision, options: [] };
+  async listOptions(request: OptionRequest): Promise<OptionResult> {
+    const requested = request.optionIds ? new Set(request.optionIds) : null;
+    const designExists = request.designId === undefined || this.#visible.designs.some((design) => design.id === request.designId);
+    return {
+      revision: this.#committed.revision,
+      options: (this.#manifest?.optionGroups ?? [])
+        .filter((option) => !requested || requested.has(option.id))
+        .map((option) => ({
+          optionId: option.id,
+          allowed: option.scope === "order" || designExists,
+          ...(option.values ? { values: clone(option.values) } : {}),
+          ...((option.scope === "design" && !designExists) ? { reason: "Unknown design" } : {}),
+        })),
+    };
+  }
+
+  async createDesignDraft(state: ConfigurationState, request: CreateDesignDraftRequest): Promise<CreateDesignDraftResult> {
+    this.counters.createDesignDraftCalls += 1;
+    const source = state.designs.find((design) => design.id === request.sourceDesignId);
+    if (!source) throw new Error("Unknown source design");
+    let suffix = state.designs.length + 1;
+    while (state.designs.some((design) => design.id === `design-${suffix}`)) suffix += 1;
+    const designId = `design-${suffix}`;
+    const created = { ...clone(source), id: designId, name: `${source.name} copy` };
+    return {
+      designId,
+      state: {
+        ...clone(state),
+        activeDesignId: designId,
+        designs: [...clone(state.designs), created],
+      },
+    };
   }
 
   async quiescePersistence(): Promise<void> {
@@ -80,14 +117,20 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
 
   async validateState(state: ConfigurationState): Promise<ValidationResult> {
     const sum = state.designs.reduce((total, design) => total + design.quantity, 0);
-    const issues = sum === state.order.totalQuantity
-      ? []
-      : [{
+    const duplicateDesignIds = new Set(state.designs.map((design) => design.id)).size !== state.designs.length;
+    const issues = [
+      ...(sum === state.order.totalQuantity ? [] : [{
           code: "QUANTITY_TOTAL_MISMATCH",
           severity: "constraint-error" as const,
           message: "Design quantities must equal the order total",
           optionIds: ["order.total_quantity", "design.quantity"],
-        }];
+        }]),
+      ...(duplicateDesignIds ? [{
+        code: "DUPLICATE_DESIGN_ID",
+        severity: "constraint-error" as const,
+        message: "Every design must have a unique ID",
+      }] : []),
+    ];
     return {
       configurationValid: issues.length === 0,
       productionReady: issues.length === 0 && state.designs.every((design) => design.assets.every((asset) => asset.status === "ready")),
