@@ -21,6 +21,7 @@ Current deterministic coverage includes:
 - Atomic proposal batches.
 - Committed and proposal revision checks.
 - Successful-operation idempotency.
+- Operation-ID payload binding and cumulative proposal limits.
 - Concurrent-operation serialization.
 - Cancellation before and after preview begins.
 - External-state invalidation before Keep.

@@ -1,4 +1,5 @@
 import type { ProposalSession } from "./proposal-session.js";
+import { validateManifest } from "./manifest.js";
 import type {
   ConfigurationChange,
   ConfiguratorAdapter,
@@ -314,8 +315,18 @@ function invalidInput(message: string) {
   };
 }
 
+function adapterFailure(message: string) {
+  return {
+    ok: false,
+    persisted: false,
+    error: { code: "ADAPTER_FAILURE", message, retryable: true, affectedOptions: [] },
+  };
+}
+
 export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependencies<Snapshot>): WebMcpTool[] {
-  const { adapter, manifest, session } = dependencies;
+  const { session } = dependencies;
+  const manifest = validateManifest(structuredClone(session.manifest));
+  const adapter = session.adapter;
 
   const readTool: WebMcpTool = {
     name: "codesign_read_configuration",
@@ -327,20 +338,24 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
       if (!isRecord(input) || Object.keys(input).length !== 0) {
         return { ok: false, persisted: false, error: { code: "INVALID_INPUT", message: "This tool does not accept arguments", retryable: false } };
       }
-      const state = await adapter.readState();
-      return {
-        ok: true,
-        state,
-        capabilities: manifest.capabilities,
-        pendingProposal: session.proposalId === null
-          ? null
-          : {
-              proposalId: session.proposalId,
-              proposalRevision: session.proposalRevision,
-              status: session.status,
-              persisted: false,
-            },
-      };
+      try {
+        const state = await adapter.readState();
+        return {
+          ok: true,
+          state,
+          capabilities: manifest.capabilities,
+          pendingProposal: session.proposalId === null
+            ? null
+            : {
+                proposalId: session.proposalId,
+                proposalRevision: session.proposalRevision,
+                status: session.status,
+                persisted: false,
+              },
+        };
+      } catch {
+        return adapterFailure("The public configuration could not be read safely");
+      }
     },
   };
 
@@ -353,44 +368,48 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
     async execute(input) {
       const parsed = parseOptionRequest(input, manifest);
       if (!parsed) return invalidInput("The option request did not match the bounded public schema");
-      const state = session.proposedState ?? await adapter.readState();
-      if (parsed.designId && !state.designs.some((design) => design.id === parsed.designId)) {
+      try {
+        const state = session.proposedState ?? await adapter.readState();
+        if (parsed.designId && !state.designs.some((design) => design.id === parsed.designId)) {
+          return {
+            ok: false,
+            persisted: false,
+            currentRevision: state.revision,
+            error: { code: "UNKNOWN_DESIGN", message: `Unknown design ${parsed.designId}`, retryable: false, affectedOptions: parsed.optionIds ?? [] },
+          };
+        }
+        const dynamic = await adapter.listOptions(parsed);
+        const availability = new Map(dynamic.options.map((option) => [option.optionId, option]));
+        const requested = parsed.optionIds ? new Set(parsed.optionIds) : null;
         return {
-          ok: false,
-          persisted: false,
-          currentRevision: state.revision,
-          error: { code: "UNKNOWN_DESIGN", message: `Unknown design ${parsed.designId}`, retryable: false, affectedOptions: parsed.optionIds ?? [] },
+          ok: true,
+          revision: dynamic.revision,
+          designId: parsed.designId ?? null,
+          options: manifest.optionGroups
+            .filter((option) => !requested || requested.has(option.id))
+            .map((option) => {
+              const current = availability.get(option.id);
+              return {
+                optionId: option.id,
+                label: option.label,
+                agentDescription: option.agentDescription,
+                scope: option.scope,
+                kind: option.kind,
+                role: option.role ?? "selection",
+                agentWritable: option.agentWritable,
+                allowed: current?.allowed ?? true,
+                values: current?.values ?? option.values ?? [],
+                ...(current?.reason === undefined ? {} : { reason: current.reason }),
+                ...(option.minimum === undefined ? {} : { minimum: option.minimum }),
+                ...(option.maximum === undefined ? {} : { maximum: option.maximum }),
+                ...(option.maximumLength === undefined ? {} : { maximumLength: option.maximumLength }),
+              };
+            }),
+          dependencies: manifest.dependencyRules,
         };
+      } catch {
+        return adapterFailure("The public option list could not be read safely");
       }
-      const dynamic = await adapter.listOptions(parsed);
-      const availability = new Map(dynamic.options.map((option) => [option.optionId, option]));
-      const requested = parsed.optionIds ? new Set(parsed.optionIds) : null;
-      return {
-        ok: true,
-        revision: dynamic.revision,
-        designId: parsed.designId ?? null,
-        options: manifest.optionGroups
-          .filter((option) => !requested || requested.has(option.id))
-          .map((option) => {
-            const current = availability.get(option.id);
-            return {
-              optionId: option.id,
-              label: option.label,
-              agentDescription: option.agentDescription,
-              scope: option.scope,
-              kind: option.kind,
-              role: option.role ?? "selection",
-              agentWritable: option.agentWritable,
-              allowed: current?.allowed ?? true,
-              values: current?.values ?? option.values ?? [],
-              ...(current?.reason === undefined ? {} : { reason: current.reason }),
-              ...(option.minimum === undefined ? {} : { minimum: option.minimum }),
-              ...(option.maximum === undefined ? {} : { maximum: option.maximum }),
-              ...(option.maximumLength === undefined ? {} : { maximumLength: option.maximumLength }),
-            };
-          }),
-        dependencies: manifest.dependencyRules,
-      };
     },
   };
 

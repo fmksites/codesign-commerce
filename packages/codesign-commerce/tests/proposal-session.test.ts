@@ -111,6 +111,88 @@ describe("ProposalSession", () => {
     expect(adapter.counters.previewCalls).toBe(1);
   });
 
+  test("binds an operation ID to its original payload", async () => {
+    const { adapter, session } = setup();
+    const first = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "bound-operation-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    if (!first.ok) throw new Error("Expected successful proposal");
+
+    const conflicting = await session.propose({
+      baseRevision: first.baseRevision,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+      operationId: "bound-operation-1",
+      changes: [{ designId: "design-1", optionId: "accent.color", value: "berry" }],
+    });
+
+    expect(conflicting).toMatchObject({ ok: false, error: { code: "OPERATION_ID_CONFLICT", retryable: false } });
+    expect(adapter.visibleState.designs[0]!.selections["body.color"]).toBe("navy");
+    expect(adapter.visibleState.designs[0]!.selections["accent.color"]).toBe("navy");
+    expect(adapter.counters.previewCalls).toBe(1);
+  });
+
+  test("caps cumulative assumptions before previewing an extension", async () => {
+    const { adapter, session } = setup();
+    const first = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "assumption-limit-first-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+      assumptions: Array.from({ length: 20 }, (_, index) => `Assumption ${index + 1}`),
+    });
+    if (!first.ok) throw new Error("Expected successful proposal");
+
+    const overflow = await session.propose({
+      baseRevision: first.baseRevision,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+      operationId: "assumption-limit-second-1",
+      changes: [{ designId: "design-1", optionId: "accent.color", value: "berry" }],
+      assumptions: ["Assumption 21"],
+    });
+
+    expect(overflow).toMatchObject({ ok: false, error: { code: "INVALID_VALUE", retryable: false } });
+    expect(session.status).toBe("awaiting-human");
+    expect(adapter.visibleState.designs[0]!.selections["accent.color"]).toBe("navy");
+    expect(adapter.counters.previewCalls).toBe(1);
+  });
+
+  test("caps successful operations in one proposal", async () => {
+    const { adapter, session } = setup();
+    let result = await session.propose({
+      baseRevision: "revision-1",
+      operationId: "bounded-operation-1",
+      changes: [{ designId: "design-1", optionId: "design.name", value: "Name 1" }],
+    });
+    if (!result.ok) throw new Error("Expected successful proposal");
+
+    for (let index = 2; index <= 20; index += 1) {
+      result = await session.propose({
+        baseRevision: result.baseRevision,
+        proposalId: result.proposalId,
+        proposalRevision: result.proposalRevision,
+        operationId: `bounded-operation-${index}`,
+        changes: [{ designId: "design-1", optionId: "design.name", value: `Name ${index}` }],
+      });
+      if (!result.ok) throw new Error(`Expected successful proposal operation ${index}`);
+    }
+
+    const overflow = await session.propose({
+      baseRevision: result.baseRevision,
+      proposalId: result.proposalId,
+      proposalRevision: result.proposalRevision,
+      operationId: "bounded-operation-21",
+      changes: [{ designId: "design-1", optionId: "design.name", value: "Name 21" }],
+    });
+
+    expect(overflow).toMatchObject({ ok: false, error: { code: "CAPABILITY_UNAVAILABLE", retryable: false } });
+    expect(session.proposalRevision).toBe(20);
+    expect(adapter.visibleState.designs[0]!.name).toBe("Name 20");
+    expect(adapter.counters.previewCalls).toBe(20);
+  });
+
   test("rejects a quantity mismatch before preview", async () => {
     const { adapter, session } = setup();
     const result = await session.propose({
@@ -217,6 +299,68 @@ describe("ProposalSession", () => {
     expect(adapter.visibleState.designs[0]!.selections["body.color"]).toBe("cream");
     expect(adapter.visibleState.revision).toBe("revision-external");
     expect(adapter.counters.commitCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+  });
+
+  test("discards a proposal when the committed revision changes during validation", async () => {
+    const { adapter, session } = setup();
+    const originalValidation = adapter.validateState.bind(adapter);
+    let releaseValidation!: () => void;
+    let validationStarted!: () => void;
+    const started = new Promise<void>((resolve) => { validationStarted = resolve; });
+    const gate = new Promise<void>((resolve) => { releaseValidation = resolve; });
+    adapter.validateState = async (state) => {
+      validationStarted();
+      await gate;
+      return originalValidation(state);
+    };
+
+    const proposal = session.propose({
+      baseRevision: "revision-1",
+      operationId: "external-during-validation-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    await started;
+    adapter.simulateExternalRevision("revision-external");
+    releaseValidation();
+
+    expect(await proposal).toMatchObject({
+      ok: false,
+      currentRevision: "revision-external",
+      error: { code: "STALE_REVISION" },
+    });
+    expect(session.status).toBe("idle");
+    expect(session.proposalId).toBeNull();
+    expect(adapter.visibleState).toEqual(adapter.committedState);
+    expect(adapter.counters.commitCalls).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+  });
+
+  test("adapter compare-and-swap closes an external-change race immediately before Keep writes", async () => {
+    const { adapter, session } = setup();
+    await session.propose({
+      baseRevision: "revision-1",
+      operationId: "keep-race-proposal-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    const originalCommit = adapter.commitState.bind(adapter);
+    adapter.commitState = async (state, commitMetadata) => {
+      adapter.simulateExternalRevision("revision-external");
+      return originalCommit(state, commitMetadata);
+    };
+
+    const result = await session.keep();
+    expect(result).toMatchObject({
+      ok: false,
+      currentRevision: "revision-external",
+      error: { code: "STALE_REVISION" },
+    });
+    expect(session.status).toBe("idle");
+    expect(adapter.visibleState).toEqual(adapter.committedState);
+    expect(adapter.committedState.designs[0]!.selections["body.color"]).toBe("cream");
+    expect(adapter.counters.commitCalls).toBe(1);
     expect(adapter.counters.localWrites).toBe(0);
     expect(adapter.counters.serverWrites).toBe(0);
   });

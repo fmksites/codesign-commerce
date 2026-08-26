@@ -66,6 +66,12 @@ interface ConfigurationState {
 
 The revision is opaque. It must change whenever committed public state changes and must not encode confidential values.
 
+The core wraps every merchant adapter in a runtime guard. `readState()`,
+`listOptions()`, `createDesignDraft()`, `validateState()`, and `commitState()`
+are reconstructed field by field into the canonical public contract. Unknown
+fields are dropped; malformed values fail closed with a generic
+`ADAPTER_FAILURE`. TypeScript types alone are not treated as a data boundary.
+
 ## Adapter obligations
 
 `ConfiguratorAdapter` has ten responsibilities:
@@ -78,7 +84,9 @@ The revision is opaque. It must change whenever committed public state changes a
 6. `previewState()` updates the existing visible renderer with zero storage/network writes.
 7. `validateState()` applies public and merchant-specific rules without leaking private explanations.
 8. `restoreSnapshot()` performs an exact zero-write Revert.
-9. `commitState()` crosses local persistence once and securely saves idempotently per proposal ID.
+9. `commitState()` compares `metadata.baseRevision` with the adapter's current
+   committed revision immediately before its first local write, then crosses
+   local persistence once and securely saves idempotently per proposal ID.
 10. `subscribeToExternalChanges()` invalidates stale proposals.
 
 The core rejects a draft clone if it changes the committed revision, order total, existing designs, configurator identity, or manifest version; fails to add exactly one uniquely identified design; exposes an agent-writable asset; or does not make the new design active. Source/order changes and new-design overrides are then applied and validated as one transaction.
@@ -95,6 +103,23 @@ Expected server-save failure is data, not an exception:
 ```
 
 On retry with the same proposal ID, the adapter must not repeat the local write. It performs only the still-missing secure save. Exceptions are reserved for an outcome the adapter cannot verify; the core then enters `commit-uncertain` and requires reload.
+
+If the committed revision no longer matches `metadata.baseRevision`, the
+adapter must perform no write and return:
+
+```ts
+{
+  revision: "current-opaque-revision",
+  localPersisted: false,
+  serverPersisted: false,
+  errorCode: "STALE_REVISION"
+}
+```
+
+This compare-and-swap check closes the interval between the core's final read
+and the adapter's local write. The core also checks external-revision signals
+after asynchronous clone, validation, and preview boundaries, discards the
+temporary proposal, and restores the latest committed public state.
 
 ## KORRHAUS adapter rule
 

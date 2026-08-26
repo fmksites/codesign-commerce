@@ -20,7 +20,25 @@ CoDesign Commerce is designed around a narrow webpage capability boundary, not b
 
 Inputs use bounded JSON schemas with `additionalProperties: false`, semantic IDs, fixed counts and lengths, and prototype-pollution guards. Outputs and error messages are sanitized. Text that may originate with a user is marked untrusted.
 
+A pending proposal accepts at most 20 successful operations and 20 unique
+assumptions. Every operation ID is bound to the exact operation kind and
+payload that first used it; reusing the ID with different changes fails closed
+without another preview or write.
+
+Merchant adapter output is untrusted at runtime even when the adapter is
+written in TypeScript. The core reconstructs canonical state, option,
+validation, clone, and commit results field by field. Undeclared nested fields
+are dropped. Unknown values, invalid references, oversized collections, and
+malformed results fail closed without returning the offending value or an
+adapter stack trace.
+
 Temporary proposal rendering must perform zero storage or network writes. A human Keep action crosses the local commit boundary once. An ambiguous server save is never retried automatically; the page exposes a human retry state instead.
+
+Keep uses optimistic concurrency twice: the core re-reads the committed
+revision before calling the adapter, and `commitState()` receives the original
+`baseRevision` for an immediate compare-and-swap before its first local write.
+An intervening committed change yields `STALE_REVISION`, performs zero writes,
+discards the temporary proposal, and restores the latest committed state.
 
 ## Reporting a vulnerability
 

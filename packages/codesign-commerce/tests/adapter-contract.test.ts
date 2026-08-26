@@ -4,6 +4,7 @@ import { testManifest, testState } from "./fixtures.js";
 
 const metadata: CommitMetadata = {
   proposalId: "contract-proposal-1",
+  baseRevision: "revision-1",
   operationIds: ["contract-operation-1"],
   trigger: "agent_proposal_keep",
 };
@@ -44,6 +45,24 @@ describe("ConfiguratorAdapter contract", () => {
     expect(adapter.counters.commitCalls).toBe(2);
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(1);
+  });
+
+  test("compare-and-swap rejects a stale base revision before any write", async () => {
+    const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState));
+    const draft = await adapter.readState();
+    draft.designs[0]!.selections["body.color"] = "navy";
+    adapter.simulateExternalRevision("revision-external");
+
+    const result = await adapter.commitState(draft, metadata);
+    expect(result).toEqual({
+      revision: "revision-external",
+      localPersisted: false,
+      serverPersisted: false,
+      errorCode: "STALE_REVISION",
+    });
+    expect(adapter.committedState.designs[0]!.selections["body.color"]).toBe("cream");
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
   });
 
   test("expected server failure is explicit and retry does not repeat the local write", async () => {

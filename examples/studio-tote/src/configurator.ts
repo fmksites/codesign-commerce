@@ -330,6 +330,14 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
     this.counters.commitCalls += 1;
     let revision = this.#commits.get(metadata.proposalId);
     if (!revision) {
+      if (this.#committed.revision !== metadata.baseRevision) {
+        return {
+          revision: this.#committed.revision,
+          localPersisted: false,
+          serverPersisted: false,
+          errorCode: "STALE_REVISION",
+        };
+      }
       this.#revisionNumber += 1;
       revision = `tote-revision-${this.#revisionNumber}`;
       this.#commits.set(metadata.proposalId, revision);

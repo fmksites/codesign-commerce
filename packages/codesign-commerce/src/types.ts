@@ -122,6 +122,7 @@ export interface CreateDesignDraftResult {
 
 export interface CommitMetadata {
   proposalId: string;
+  baseRevision: string;
   operationIds: string[];
   trigger: "agent_proposal_keep";
 }
@@ -137,6 +138,12 @@ export type CommitResult =
       localPersisted: true;
       serverPersisted: false;
       errorCode: string;
+    }
+  | {
+      revision: string;
+      localPersisted: false;
+      serverPersisted: false;
+      errorCode: "STALE_REVISION";
     };
 
 export interface ConfiguratorAdapter<Snapshot = unknown> {
@@ -224,6 +231,7 @@ export type ProposalErrorCode =
   | "STALE_REVISION"
   | "STALE_PROPOSAL_REVISION"
   | "PROPOSAL_PENDING"
+  | "OPERATION_ID_CONFLICT"
   | "OPERATION_IN_PROGRESS"
   | "COMMIT_ALREADY_STARTED"
   | "COMMIT_STATUS_UNKNOWN"

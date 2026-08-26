@@ -22,6 +22,9 @@ ProposalSession ─────── ConfiguratorManifest
     │                         │
     │ canonical state         └── semantic options and public constraints
     ▼
+Runtime adapter guard
+    │ field-by-field reconstruction; malformed output fails closed
+    ▼
 Merchant adapter
     ├── allowlisted state mapping
     ├── public-safe draft design cloning
@@ -64,8 +67,12 @@ Rules enforced by the core:
 - An extension also names the current proposal ID and proposal revision.
 - Operation IDs are bounded safe identifiers and deduplicate successful retries.
 - Every batch is validated on a detached copy before any preview update.
+- External changes are rechecked after every asynchronous draft, validation,
+  and preview boundary.
 - Keep and Revert are controller methods intended only for visible page controls; they are not WebMCP tools.
 - Keep is rejected when another operation is in flight or the committed state changed.
+- Keep passes the proposal's base revision to the adapter, which must compare it
+  with current committed state immediately before the first local write.
 - An expected server failure is an explicit adapter result. Retrying uses the same proposal ID and does not repeat the local write.
 - If an adapter throws during commit, persistence is reported as `unknown`; the UI must require reload rather than guessing or automatically retrying.
 
@@ -89,7 +96,14 @@ The implementation follows the current imperative API documented by [Chrome](htt
 
 Tool inputs are untrusted even when a browser is expected to enforce their JSON Schema. Handlers repeat essential structural checks at runtime. Schemas reject additional properties, arbitrary paths, URLs, HTML, file content, and unbounded arrays or text.
 
-Tool output is an allowlist, not a redacted raw object. User-originated names, text, assumptions, or selections are marked with `untrustedContentHint: true`. Errors use public codes and never return stack traces.
+Tool output is an allowlist, not a redacted raw object. A runtime adapter guard
+rebuilds every public state, option, validation, clone, and commit result from
+declared canonical fields; extra nested fields never pass through and malformed
+results become generic failures. The tool factory uses the proposal session's
+detached, validated manifest rather than trusting a second caller-supplied
+reference. User-originated names, text, assumptions, or selections are marked
+with `untrustedContentHint: true`. Errors use public codes and never return
+stack traces.
 
 The following are absent by design:
 
@@ -110,6 +124,7 @@ packages/codesign-commerce/
   src/
     types.ts                 canonical contracts
     manifest.ts              structural and semantic validation
+    adapter-boundary.ts      runtime output reconstruction and fail-closed guards
     proposal-session.ts      transaction and concurrency rules
     review-controller.ts     framework-neutral human-review state
     review-view.ts           accessible Keep/Revert web component
@@ -117,6 +132,7 @@ packages/codesign-commerce/
     in-memory-adapter.ts     deterministic reference adapter
   tests/
     adapter-contract.test.ts
+    adapter-boundary.test.ts
     manifest.test.ts
     proposal-session.test.ts
     review-controller.test.ts

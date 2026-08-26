@@ -1,5 +1,6 @@
 export * from "./types.js";
 export * from "./manifest.js";
+export * from "./adapter-boundary.js";
 export * from "./proposal-session.js";
 export * from "./in-memory-adapter.js";
 export * from "./review-controller.js";

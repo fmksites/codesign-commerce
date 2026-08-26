@@ -1,4 +1,5 @@
 import { isSafeIdentifier, validateManifest, validateOptionValue } from "./manifest.js";
+import { GuardedConfiguratorAdapter } from "./adapter-boundary.js";
 import type {
   CommitResult,
   ConfigurationDiff,
@@ -39,8 +40,11 @@ interface ActiveProposal<Snapshot> {
   createdDesigns: CreatedDesign[];
   assumptions: string[];
   operationIds: string[];
-  resultsByOperation: Map<string, ProposalResult>;
+  resultsByOperation: Map<string, { fingerprint: string; result: ProposalResult }>;
 }
+
+const MAX_PROPOSAL_OPERATIONS = 20;
+const MAX_PROPOSAL_ASSUMPTIONS = 20;
 
 function cloneState<T>(value: T): T {
   return structuredClone(value);
@@ -49,6 +53,19 @@ function cloneState<T>(value: T): T {
 function createProposalId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
   return `proposal-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function operationFingerprint(
+  input: ProposalInput | CreateDesignInput,
+  creation: { sourceDesignId: string; newDesignChanges: CreateDesignInput["newDesignChanges"] } | null,
+): string {
+  return JSON.stringify({
+    kind: creation ? "create-design" : "propose",
+    baseRevision: input.baseRevision,
+    changes: input.changes ?? [],
+    assumptions: input.assumptions ?? [],
+    ...(creation === null ? {} : creation),
+  });
 }
 
 function errorResult(
@@ -78,9 +95,9 @@ export class ProposalSession<Snapshot = unknown> {
   #listeners = new Set<(snapshot: ProposalSessionSnapshot) => void>();
 
   constructor(manifest: ConfiguratorManifest, adapter: ConfiguratorAdapter<Snapshot>) {
-    this.manifest = validateManifest(manifest);
-    this.adapter = adapter;
-    this.#unsubscribe = adapter.subscribeToExternalChanges((revision) => {
+    this.manifest = validateManifest(cloneState(manifest));
+    this.adapter = new GuardedConfiguratorAdapter(this.manifest, adapter);
+    this.#unsubscribe = this.adapter.subscribeToExternalChanges((revision) => {
       this.#externalRevision = revision;
       if (this.#active && this.#status === "awaiting-human" && revision !== this.#active.baseRevision) {
         this.#setStatus("invalidated");
@@ -110,7 +127,7 @@ export class ProposalSession<Snapshot = unknown> {
       proposalId: this.#active?.id ?? null,
       proposalRevision: this.#active?.revision ?? null,
       result: this.#active?.operationIds.length
-        ? cloneState(this.#active.resultsByOperation.get(this.#active.operationIds.at(-1)!) ?? null)
+        ? cloneState(this.#active.resultsByOperation.get(this.#active.operationIds.at(-1)!)?.result ?? null)
         : null,
     };
   }
@@ -206,7 +223,7 @@ export class ProposalSession<Snapshot = unknown> {
     if (input.proposalId !== undefined && (input.proposalId.length > 200 || !isSafeIdentifier(input.proposalId))) {
       return errorResult("INVALID_VALUE", "proposalId must be a safe identifier with at most 200 characters", false);
     }
-    if (input.assumptions && (input.assumptions.length > 20 || input.assumptions.some((entry) => entry.length > 500))) {
+    if (input.assumptions && (input.assumptions.length > MAX_PROPOSAL_ASSUMPTIONS || input.assumptions.some((entry) => entry.length > 500))) {
       return errorResult("INVALID_VALUE", "Assumptions must contain at most 20 bounded text entries", false);
     }
     const changes = input.changes ?? [];
@@ -218,9 +235,21 @@ export class ProposalSession<Snapshot = unknown> {
       return errorResult("INVALID_VALUE", "The design creation input is invalid", false);
     }
 
+    const fingerprint = operationFingerprint(input, creation);
     if (this.#active) {
       const prior = this.#active.resultsByOperation.get(input.operationId);
-      if (prior) return cloneState(prior);
+      if (prior) {
+        if (prior.fingerprint !== fingerprint) {
+          return errorResult(
+            "OPERATION_ID_CONFLICT",
+            "operationId was already used for a different proposal operation",
+            false,
+            [],
+            this.#active.baseRevision,
+          );
+        }
+        return cloneState(prior.result);
+      }
       if (input.proposalId !== this.#active.id) {
         return errorResult("PROPOSAL_PENDING", "Another proposal is awaiting Keep or Revert", true, [], this.#active.baseRevision);
       }
@@ -230,12 +259,32 @@ export class ProposalSession<Snapshot = unknown> {
       if (input.baseRevision !== this.#active.baseRevision) {
         return errorResult("STALE_REVISION", "The proposal is based on a different committed revision", true, [], this.#active.baseRevision);
       }
+      if (this.#active.operationIds.length >= MAX_PROPOSAL_OPERATIONS) {
+        return errorResult(
+          "CAPABILITY_UNAVAILABLE",
+          `A proposal may contain at most ${MAX_PROPOSAL_OPERATIONS} successful operations`,
+          false,
+          [],
+          this.#active.baseRevision,
+        );
+      }
+      const accumulatedAssumptions = new Set([...this.#active.assumptions, ...(input.assumptions ?? [])]);
+      if (accumulatedAssumptions.size > MAX_PROPOSAL_ASSUMPTIONS) {
+        return errorResult(
+          "INVALID_VALUE",
+          `A proposal may contain at most ${MAX_PROPOSAL_ASSUMPTIONS} unique assumptions`,
+          false,
+          [],
+          this.#active.baseRevision,
+        );
+      }
     }
 
     this.#setStatus("applying");
     let openedProposal = false;
     try {
       if (!this.#active) {
+        this.#externalRevision = null;
         await this.adapter.quiescePersistence();
         this.#throwIfCancelled(execution.signal);
         const committed = await this.adapter.readState();
@@ -244,8 +293,20 @@ export class ProposalSession<Snapshot = unknown> {
           this.#setStatus("idle");
           return errorResult("STALE_REVISION", "The visible configuration changed. Read it again before proposing.", true, [], committed.revision);
         }
+        if (this.#externalRevision && this.#externalRevision !== committed.revision) {
+          const currentRevision = this.#externalRevision;
+          this.#externalRevision = null;
+          this.#setStatus("idle");
+          return errorResult("STALE_REVISION", "The visible configuration changed. Read it again before proposing.", true, [], currentRevision);
+        }
         const snapshot = await this.adapter.captureSnapshot();
         this.#throwIfCancelled(execution.signal);
+        if (this.#externalRevision && this.#externalRevision !== committed.revision) {
+          const currentRevision = this.#externalRevision;
+          this.#externalRevision = null;
+          this.#setStatus("idle");
+          return errorResult("STALE_REVISION", "The visible configuration changed. Read it again before proposing.", true, [], currentRevision);
+        }
         this.#active = {
           id: createProposalId(),
           baseRevision: committed.revision,
@@ -259,12 +320,11 @@ export class ProposalSession<Snapshot = unknown> {
           resultsByOperation: new Map(),
         };
         openedProposal = true;
-        this.#externalRevision = null;
+        if (this.#externalRevision === committed.revision) this.#externalRevision = null;
       }
 
       if (this.#externalRevision && this.#externalRevision !== this.#active.baseRevision) {
-        await this.#restoreAndClear();
-        return errorResult("STALE_REVISION", "The committed configuration changed while the proposal was open", true, [], this.#externalRevision);
+        return this.#discardStaleProposal(this.#externalRevision);
       }
 
       let nextState = cloneState(this.#active.state);
@@ -302,6 +362,9 @@ export class ProposalSession<Snapshot = unknown> {
           sourceDesignId: creation.sourceDesignId,
           operationId: input.operationId,
         });
+        if (this.#externalRevision && this.#externalRevision !== this.#active.baseRevision) {
+          return this.#discardStaleProposal(this.#externalRevision);
+        }
         const cloneError = this.#validateCreatedDraft(nextState, created, creation.sourceDesignId);
         if (cloneError) {
           if (openedProposal) await this.#restoreAndClear();
@@ -326,6 +389,9 @@ export class ProposalSession<Snapshot = unknown> {
 
       const validation = await this.adapter.validateState(nextState);
       this.#throwIfCancelled(execution.signal);
+      if (this.#externalRevision && this.#externalRevision !== this.#active.baseRevision) {
+        return this.#discardStaleProposal(this.#externalRevision);
+      }
       if (!validation.configurationValid) {
         const result = errorResult(
           "INVALID_VALUE",
@@ -341,6 +407,9 @@ export class ProposalSession<Snapshot = unknown> {
 
       await this.adapter.previewState(nextState);
       this.#throwIfCancelled(execution.signal);
+      if (this.#externalRevision && this.#externalRevision !== this.#active.baseRevision) {
+        return this.#discardStaleProposal(this.#externalRevision);
+      }
       this.#active.state = nextState;
       this.#active.diff = nextDiff;
       this.#active.createdDesigns = nextCreatedDesigns.map((created) => {
@@ -367,7 +436,7 @@ export class ProposalSession<Snapshot = unknown> {
           message: "A person must choose Keep proposal or Revert in the page. Nothing has been saved.",
         },
       };
-      this.#active.resultsByOperation.set(input.operationId, cloneState(result));
+      this.#active.resultsByOperation.set(input.operationId, { fingerprint, result: cloneState(result) });
       this.#setStatus("awaiting-human");
       return result;
     } catch (error) {
@@ -428,13 +497,27 @@ export class ProposalSession<Snapshot = unknown> {
     if (this.#status !== "awaiting-human" && this.#status !== "commit-retry") {
       return errorResult("OPERATION_IN_PROGRESS", "The proposal is not ready to keep", true);
     }
+    const retryingServerSave = this.#status === "commit-retry";
+    if (!retryingServerSave && this.#externalRevision && this.#externalRevision !== this.#active.baseRevision) {
+      return this.#discardStaleProposal(this.#externalRevision);
+    }
     this.#setStatus("committing");
     try {
+      if (!retryingServerSave) {
+        const committed = await this.adapter.readState();
+        if (committed.revision !== this.#active.baseRevision || (this.#externalRevision && this.#externalRevision !== this.#active.baseRevision)) {
+          return this.#discardStaleProposal(this.#externalRevision ?? committed.revision);
+        }
+      }
       const result = await this.adapter.commitState(this.#active.state, {
         proposalId: this.#active.id,
+        baseRevision: this.#active.baseRevision,
         operationIds: [...this.#active.operationIds],
         trigger: "agent_proposal_keep",
       });
+      if (!result.localPersisted) {
+        return this.#discardStaleProposal(result.revision);
+      }
       if (!result.serverPersisted) {
         this.#setStatus("commit-retry");
         return result;
@@ -572,6 +655,25 @@ export class ProposalSession<Snapshot = unknown> {
   async #restoreAndClear(): Promise<void> {
     if (this.#active) await this.adapter.restoreSnapshot(this.#active.snapshot);
     this.#clear();
+  }
+
+  async #discardStaleProposal(currentRevision: string): Promise<ProposalErrorResult> {
+    try {
+      const committed = await this.adapter.readState();
+      await this.adapter.previewState(committed);
+      this.#clear();
+      return errorResult(
+        "STALE_REVISION",
+        "The committed configuration changed while the proposal was open",
+        true,
+        [],
+        committed.revision,
+      );
+    } catch {
+      this.#externalRevision = currentRevision;
+      this.#setStatus("invalidated");
+      return errorResult("ADAPTER_FAILURE", "The latest committed configuration could not be restored", true, [], currentRevision);
+    }
   }
 
   #clear(): void {

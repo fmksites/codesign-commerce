@@ -149,6 +149,14 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
     if (this.throwDuringCommit) throw new Error("Synthetic unknown commit failure");
     let commit = this.#commits.get(metadata.proposalId);
     if (!commit) {
+      if (this.#committed.revision !== metadata.baseRevision) {
+        return {
+          revision: this.#committed.revision,
+          localPersisted: false,
+          serverPersisted: false,
+          errorCode: "STALE_REVISION",
+        };
+      }
       this.counters.localWrites += 1;
       this.#revisionNumber += 1;
       commit = { revision: `revision-${this.#revisionNumber}`, serverPersisted: false };
