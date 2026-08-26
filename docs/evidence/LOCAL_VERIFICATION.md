@@ -39,3 +39,30 @@ Verified browser bundle digest:
 `sha256:3d103e11996df8918bf752cf8356e53b6170206ed975313b45730f97fa2579c7`
 
 The bundle is a build artifact and remains ignored by Git. It must be regenerated from the referenced source commit. This check does not prove real browser tool discovery or merchant-renderer integration.
+
+## 26 August 2026 — accessible review surface and public KORRHAUS reference
+
+Source state: local implementation pending its slice commit when this evidence was captured.
+
+| Command or check | Outcome |
+|---|---|
+| `npm test` | PASS — 6 files, 44 tests |
+| `npm run typecheck` | PASS — all workspaces plus strict core test project |
+| `npm run build` | PASS — core module/browser bundles and Vite reference app |
+| `npm run check:public-boundary` | PASS — 64 public candidates checked |
+| `npm run check:docs` | PASS — 21 Markdown files checked |
+| `npm run check:evals` | PASS — 20 corpus cases validated across 6 categories |
+| `npm run verify:browser-bundle` | PASS — required global API present and private markers absent |
+| Actual in-app browser tool discovery | PASS — two intended tools for this slice |
+| Actual proposal preview | PASS — two colourways changed visibly, `persisted: false` |
+| Revert persistence instrumentation | PASS — zero local writes, zero server writes |
+| Keep persistence instrumentation | PASS — one local write, one server write, one commit |
+| Native Chrome keyboard Revert | PASS — Enter restored baseline with zero writes |
+| Desktop/mobile visual comparison | PASS — no unresolved P0, P1, or P2 issues |
+| Browser console review | PASS — zero errors and zero warnings |
+
+Verified browser bundle digest:
+
+`sha256:f4e5c0961e8d2289993ac5e228919d5cfc77cd6c0b6b1fa6b63f712ae9d3dd55`
+
+Browser details, counters, limitations, and screenshots are in `ACTUAL_BROWSER_REVIEW_UI.md`; the visual comparison is in the repository-root `design-qa.md`.

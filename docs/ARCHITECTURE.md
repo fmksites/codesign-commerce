@@ -108,6 +108,7 @@ packages/codesign-commerce/
     manifest.ts              structural and semantic validation
     proposal-session.ts      transaction and concurrency rules
     review-controller.ts     framework-neutral human-review state
+    review-view.ts           accessible Keep/Revert web component
     webmcp.ts                tool definitions and page lifecycle
     in-memory-adapter.ts     deterministic reference adapter
   tests/
@@ -115,7 +116,13 @@ packages/codesign-commerce/
     manifest.test.ts
     proposal-session.test.ts
     review-controller.test.ts
+    review-view.test.ts
     webmcp.test.ts
+
+examples/korrhaus-reference/
+  src/main.ts                public manifest, adapter, and renderer wiring
+  src/styles.css             reproducible KORRHAUS reference surface
+  public/                    KORRHAUS-owned public-safe visual assets
 ```
 
-Public examples will consume this package through adapters. Merchant-specific mapping must not be added to the core.
+The public KORRHAUS reference consumes the package through its own adapter. The materially different studio-tote example will use the same package and review view. Merchant-specific mapping must not be added to the core.

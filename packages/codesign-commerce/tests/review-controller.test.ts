@@ -22,7 +22,9 @@ describe("ProposalReviewController", () => {
     expect(review.state).toMatchObject({
       kind: "temporary",
       heading: "Temporary agent proposal — not saved.",
-      changes: [{ label: "Body colour", before: "cream", after: "navy" }],
+      designCount: 1,
+      totalQuantity: 60,
+      changes: [{ label: "Body colour", before: "Cream", after: "Navy" }],
       assumptions: ["Logo artwork will be supplied later."],
       safeToKeepAsDraft: true,
       productionReady: false,

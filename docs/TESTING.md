@@ -29,6 +29,7 @@ Current deterministic coverage includes:
 - One local write across an expected failed server save and human retry.
 - Unknown commit outcome fails closed and cannot Revert or retry automatically.
 - Framework-neutral review states and human actions.
+- Shadow-DOM review rendering, hidden-by-default activation, sanitized text, focus, and native Keep/Revert controls.
 - WebMCP schemas, annotations, lifecycle unregistration, and runtime input checks.
 - Adapter detached reads, preview/restore behavior, commits, retries, and subscriptions.
 
@@ -65,7 +66,7 @@ Before submission-ready handoff:
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
 
-The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md).
+The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The actual-browser transaction and visual evidence for the public KORRHAUS reference is recorded in [evidence/ACTUAL_BROWSER_REVIEW_UI.md](./evidence/ACTUAL_BROWSER_REVIEW_UI.md) and the repository-root [design-qa.md](../design-qa.md).
 
 ## Agent evaluation corpus
 

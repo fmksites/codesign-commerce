@@ -16,6 +16,8 @@ export type ReviewState =
       heading: "Temporary agent proposal — not saved.";
       proposalId: string;
       proposalRevision: number;
+      designCount: number;
+      totalQuantity: number;
       changes: ReviewChange[];
       assumptions: string[];
       hardErrors: ValidationIssue[];
@@ -39,10 +41,17 @@ export interface ReviewChange {
   after: string;
 }
 
-function displayValue(value: ConfigurationDiff["before"] | ConfigurationDiff["after"]): string {
+function displayValue(
+  manifest: ConfiguratorManifest,
+  optionId: string,
+  value: ConfigurationDiff["before"] | ConfigurationDiff["after"],
+): string {
   if (value === undefined) return "Not set";
   if (value === null) return "None";
   if (typeof value === "boolean") return value ? "Yes" : "No";
+  const option = manifest.optionGroups.find((candidate) => candidate.id === optionId);
+  const labelledValue = option?.values?.find((candidate) => candidate.id === value);
+  if (labelledValue) return labelledValue.label;
   return String(value);
 }
 
@@ -154,17 +163,20 @@ export class ProposalReviewController<Snapshot = unknown> {
 
   #temporaryState(result: ProposalResult): ReviewState {
     const labels = new Map(this.manifest.optionGroups.map((option) => [option.id, option.label]));
+    const proposedState = this.session.proposedState;
     return {
       kind: "temporary",
       heading: "Temporary agent proposal — not saved.",
       proposalId: result.proposalId,
       proposalRevision: result.proposalRevision,
+      designCount: proposedState?.designs.length ?? 0,
+      totalQuantity: proposedState?.order.totalQuantity ?? 0,
       changes: result.diff.map((change) => ({
         ...(change.designId === undefined ? {} : { designId: change.designId }),
         optionId: change.optionId,
         label: labels.get(change.optionId) ?? change.optionId,
-        before: displayValue(change.before),
-        after: displayValue(change.after),
+        before: displayValue(this.manifest, change.optionId, change.before),
+        after: displayValue(this.manifest, change.optionId, change.after),
       })),
       assumptions: [...result.validation.assumptions],
       ...groupIssues(result.validation.issues),

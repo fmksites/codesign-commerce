@@ -1421,20 +1421,20 @@ Codex may review the supplied video and final submission text before publication
 
 ### Required for Phase 1
 
-- [ ] Approve this execution plan.
-- [ ] Authorize creation of the persistent Codex goal.
-- [ ] Authorize local Git initialization in this workspace.
-- [ ] Choose or authorize selection between Apache-2.0 and MIT.
-- [ ] Confirm which KORRHAUS assets may enter the public repository.
+- [x] Approve this execution plan.
+- [x] Authorize creation of the persistent Codex goal.
+- [x] Authorize local Git initialization in this workspace.
+- [x] Use Apache-2.0 for the public repository.
+- [x] Permit the KORRHAUS name and wordmark, KORRHAUS-owned sock illustrations, and the public Designer UI in the public repository and demo. Customer assets, private data, confidential pricing, margins, supplier data, and private administrative UI remain excluded.
 - [ ] Confirm whether public remote repository creation is authorized immediately or remains a later gate.
-- [ ] Confirm that the private KORRHAUS project may be modified after the critical public vertical slice is proven.
+- [x] Permit local modification and testing of the private KORRHAUS project after the critical public vertical slice is proven, behind a disabled-by-default feature flag. Deployment, production activation, and publication remain separate gates.
 
 ### May be decided later
 
 - [ ] Public hosting provider.
 - [ ] Branded subdomain versus provider URL.
 - [ ] Production-traffic promotion.
-- [ ] Tote go/no-go after the KORRHAUS safety gate.
+- [x] Keep the studio-tote example in scope after the KORRHAUS safety gate as the materially different portability proof.
 - [ ] Devpost entrant/representative.
 - [ ] YouTube account and human narrator.
 - [ ] Whether Revert must appear in the video or may remain documented evidence.
@@ -1561,11 +1561,11 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Plan approved | `PASS` | User authorization in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Local execution authorized; external gates remain binding. |
 | Persistent goal created | `PASS` | Active Codex goal in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Goal points to this plan. |
 | Baseline captured | `PASS` | Pre-start Cloud Run revision/digest and source separation recorded in `docs/evidence/PRE_CHALLENGE_BASELINE.md`; baseline commit `abf2a7829fdd188c2f2492e9c9d53a247a6ede7f` | Baseline commit timestamp is after written authorization. |
-| Public foundation | `IN_PROGRESS` | Clean clone of `1e65f98` passed exact install, 38 tests, strict source/test typecheck, module/browser build, public-boundary and docs checks; verified browser bundle hash recorded in `docs/evidence/LOCAL_VERIFICATION.md` | Root license and hosted CI remain. |
-| Transaction vertical slice | `IN_PROGRESS` | 38 deterministic tests pass across manifest, transaction, review, WebMCP, and adapter contracts; source and tests typecheck strictly | Nonvisual transaction and human-action invariants pass. Visual review implementation and browser evidence remain before the gate can pass. |
+| Public foundation | `IN_PROGRESS` | Clean clone of `1e65f98` passed exact install, 38 tests, strict source/test typecheck, module/browser build, public-boundary and docs checks; verified browser bundle hash recorded in `docs/evidence/LOCAL_VERIFICATION.md`; Apache-2.0 approved by the owner on 26 Aug 2026 | Hosted CI and public remote repository remain external gates. |
+| Transaction vertical slice | `PASS` | 44 deterministic tests; actual WebMCP discovery and proposal in the in-app browser; zero-write Revert and exactly-one-write-boundary Keep; native Chrome keyboard check; desktop/mobile visual comparison in `design-qa.md`; bundle `sha256:f4e5c0961e8d2289993ac5e228919d5cfc77cd6c0b6b1fa6b63f712ae9d3dd55` | The public adapter proves the complete Phase 2 transaction. The private KORRHAUS bridge must pass independently. |
 | KORRHAUS safety gate | `NOT_STARTED` | — | — |
 | Complete tool suite | `NOT_STARTED` | — | — |
-| Public reference | `NOT_STARTED` | — | — |
+| Public reference | `IN_PROGRESS` | Public KORRHAUS reference renders two synthetic colourways through the shared package and passed actual-browser proposal review | Complete tool suite, reset flow, and final reproducibility remain. |
 | Tote portability proof | `NOT_STARTED` | — | Conditional. |
 | Deterministic QA | `NOT_STARTED` | — | — |
 | WebMCP evals | `NOT_STARTED` | — | — |
@@ -1586,6 +1586,11 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | 26 Aug 2026 | Use GPT-5.6 Sol Extra High for execution. | User / Codex | Ultra is not required for the sequential critical path. |
 | 26 Aug 2026 | Execute this plan under a persistent goal and stop only for genuine user input or defined approval gates. | User | Local implementation may begin. |
 | 26 Aug 2026 | Preserve the existing private one-tool proposal spike as post-start evidence, but migrate it to the public CoDesign package rather than treating it as the submission architecture. | Codex inspection | Exact seams and local hashes recorded in `docs/KORRHAUS_BRIDGE_MAPPING.md`; private files remain unchanged. |
+| 26 Aug 2026 | License the public repository under Apache-2.0. | User | Root license and package metadata may be added locally. |
+| 26 Aug 2026 | Permit public use of the KORRHAUS name and wordmark, KORRHAUS-owned sock illustrations, and the public Designer UI. | User | KORRHAUS can be shown as the real-business flagship; private and customer data remain excluded. |
+| 26 Aug 2026 | Show the review UI only after an agent successfully creates a temporary proposal. | User | Normal human-only Designer use remains visually unchanged. |
+| 26 Aug 2026 | Permit local, disabled-by-default KORRHAUS integration and testing after the public visual slice passes. | User | No deployment, production activation, or public release is authorized by this decision. |
+| 26 Aug 2026 | Retain both the KORRHAUS flagship/reference and a materially different studio-tote example. | User | KORRHAUS proves real-business use; the tote proves adapter portability. |
 
 ---
 

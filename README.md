@@ -14,8 +14,10 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 - A proposal transaction with revisions, retry IDs, temporary preview, Revert, and human Keep.
 - `codesign_read_configuration` and `codesign_propose_configuration` registered through the current imperative WebMCP API.
 - Deterministic tests proving that proposal previews do not cross the persistence boundary.
+- A framework-neutral, accessible Keep/Revert review component.
+- A local public KORRHAUS reference surface for actual-browser WebMCP verification.
 
-This repository is not published or submission-ready yet. Live deployment, production promotion, final license selection, video publication, and Devpost submission remain approval-gated.
+The repository is licensed under Apache-2.0 but is not published or submission-ready yet. Public hosting, production deployment or promotion, video publication, and Devpost submission remain approval-gated.
 
 ## Local verification
 
