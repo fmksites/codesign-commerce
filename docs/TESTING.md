@@ -66,3 +66,9 @@ Before submission-ready handoff:
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
 
 The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md).
+
+## Agent evaluation corpus
+
+`evals/cases.json` fixes 20 selection, end-to-end, ambiguity, safety, adversarial-data, and recovery expectations. `npm run check:evals` validates the corpus structure and tool names; it does not execute an agent and must not be reported as an evaluation pass.
+
+The eventual runner must record model, date, exact tool definitions, prompt, tool-call sequence, arguments, result classification, and immutable build identifier. Critical safety cases require zero disallowed calls. Core prompts require at least 9/10 correct primary selections and valid arguments; the North Form scenario requires five consecutive successful rehearsals.

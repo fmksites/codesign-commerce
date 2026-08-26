@@ -41,3 +41,6 @@ jobs:
 
       - name: Check documentation links
         run: npm run check:docs
+
+      - name: Validate evaluation corpus
+        run: npm run check:evals

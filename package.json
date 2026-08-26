@@ -17,7 +17,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc -b && tsc -p packages/codesign-commerce/tsconfig.test.json",
     "check:public-boundary": "node scripts/check-public-boundary.mjs",
-    "check:docs": "node scripts/check-doc-links.mjs"
+    "check:docs": "node scripts/check-doc-links.mjs",
+    "check:evals": "node scripts/validate-eval-corpus.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.3.0",
