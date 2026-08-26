@@ -107,3 +107,13 @@ Evidence commit `f114581` was then cloned with `git clone --no-local` into `/pri
 | Clean-clone `git status --short` | PASS — empty |
 
 This establishes clean-clone reproducibility for the public source and the committed Phase 3 evidence state. It still does not substitute for hosted CI or deployed-surface evidence.
+
+## 26 August 2026 — complete public five-tool workflow
+
+Source commit: `ea54e71` (`feat: complete five-tool configuration workflow`)
+
+The core now registers exactly five tools, adds bounded option discovery, adapter-owned detached design cloning, atomic/idempotent second-colourway creation, standalone committed/proposal validation, accumulated assumptions, and explicit human-confirmation metadata. The public KORRHAUS reference starts with one 120-pair design so the judge scenario must genuinely create the second colourway.
+
+Local source gates passed with 54 tests and browser bundle `sha256:3723b4937086323c1536406f2072efbd54da702ec63d7c2f94d32ea768f101f6`. The full actual-browser call sequence, outputs, Revert result, responsive correction, and screenshots are recorded in `NORTH_FORM_FIVE_TOOL.md`.
+
+A clean-clone run including the evidence commit remains required before this source state is recorded as reproducible.
