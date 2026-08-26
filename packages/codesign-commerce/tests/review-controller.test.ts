@@ -10,6 +10,36 @@ function setup() {
 }
 
 describe("ProposalReviewController", () => {
+  test("stays hidden until the first agent proposal has been applied successfully", async () => {
+    let releaseQuiesce: (() => void) | undefined;
+    const quiesceGate = new Promise<void>((resolve) => {
+      releaseQuiesce = resolve;
+    });
+    class SlowAdapter extends InMemoryConfiguratorAdapter {
+      override async quiescePersistence(): Promise<void> {
+        await quiesceGate;
+        await super.quiescePersistence();
+      }
+    }
+    const adapter = new SlowAdapter(structuredClone(testState));
+    const session = new ProposalSession(structuredClone(testManifest), adapter);
+    const review = new ProposalReviewController(testManifest, session);
+
+    const proposal = session.propose({
+      baseRevision: "revision-1",
+      operationId: "review-hidden-before-success-1",
+      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
+    });
+    await Promise.resolve();
+
+    expect(session.status).toBe("applying");
+    expect(review.state).toEqual({ kind: "hidden" });
+
+    releaseQuiesce?.();
+    await proposal;
+    expect(review.state.kind).toBe("temporary");
+  });
+
   test("presents a human-readable temporary proposal and keeps only through its UI action", async () => {
     const { adapter, session, review } = setup();
     await session.propose({

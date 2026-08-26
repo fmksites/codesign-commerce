@@ -125,6 +125,10 @@ export class ProposalReviewController<Snapshot = unknown> {
 
   #sync(snapshot: ProposalSessionSnapshot): void {
     if (snapshot.status === "applying") {
+      if (snapshot.proposalId === null) {
+        this.#publish({ kind: "hidden" });
+        return;
+      }
       this.#publish({ kind: "busy", action: "applying", message: "Applying temporary proposal…" });
       return;
     }
