@@ -1,0 +1,18 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.log
+
+# Private registration correspondence is evidence for the owner, not public source.
+reference/
+
+# Local Codex/project metadata must not enter the public challenge repository.
+.agents/
+.codex/
