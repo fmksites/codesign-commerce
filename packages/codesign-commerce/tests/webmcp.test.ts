@@ -51,13 +51,13 @@ describe("CoDesign WebMCP tools", () => {
     expect(JSON.stringify(result)).not.toContain("token");
   });
 
-  test("proposes through the transaction engine with zero persistence", async () => {
+  test("accepts Chrome-native execution without an options object and persists nothing", async () => {
     const { adapter, tools } = setup();
     const result = await tools[2]!.execute({
       baseRevision: "revision-1",
       operationId: "webmcp-proposal-1",
       changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    }, {});
+    });
     expect(result).toMatchObject({ ok: true, persisted: false, proposalRevision: 1 });
     expect(adapter.visibleState.designs[0]!.selections["body.color"]).toBe("navy");
     expect(adapter.counters.localWrites).toBe(0);

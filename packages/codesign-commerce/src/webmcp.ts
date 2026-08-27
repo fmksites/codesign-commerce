@@ -28,7 +28,7 @@ export interface WebMcpTool<Input = unknown, Output = unknown> {
     readOnlyHint: boolean;
     untrustedContentHint?: boolean;
   };
-  execute(input: Input, options: WebMcpExecuteOptions): Promise<Output>;
+  execute(input: Input, options?: WebMcpExecuteOptions): Promise<Output>;
 }
 
 export interface ModelContextLike {
@@ -422,7 +422,7 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
     async execute(input, options) {
       const parsed = parseProposalInput(input);
       if (!parsed) return invalidInput("The proposal input did not match the bounded public schema");
-      return session.propose(parsed, options.signal === undefined ? {} : { signal: options.signal });
+      return session.propose(parsed, options?.signal === undefined ? {} : { signal: options.signal });
     },
   };
 
@@ -435,7 +435,7 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
     async execute(input, options) {
       const parsed = parseCreateDesignInput(input, manifest);
       if (!parsed) return invalidInput("The design creation input did not match the bounded public schema");
-      return session.createDesign(parsed, options.signal === undefined ? {} : { signal: options.signal });
+      return session.createDesign(parsed, options?.signal === undefined ? {} : { signal: options.signal });
     },
   };
 

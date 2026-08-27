@@ -15,6 +15,7 @@
 - **Required stops:** Failed feasibility gate needing a product decision; before private KORRHAUS modification; before deployment/traffic changes; before public publication; before Devpost submission
 - **Approval boundary:** This checklist does not itself authorize implementation, deployment, publication, private-repository mutation, or submission
 - **Lock:** Ordering and build preferences are fixed for `$build-project`; a material scope/order change requires an explicit checklist revision
+- **Approved feasibility deferral (27 August 2026):** After native Chrome and the OpenAI Codex in-app browser both executed the Item 2 preview flow successfully, the participant explicitly approved moving the literal normal-ChatGPT-conversation check from Item 2 to the exact release verification in Item 11. This deferral changes validation timing only; it does not authorize a ChatGPT compatibility claim before that final check passes.
 
 ## Execution Rules
 
@@ -34,11 +35,11 @@
   Acceptance: The exact starting revision/build, pre-existing narrow tool surface, existing tote behavior, and known limitations are recorded; all runnable baseline checks have a truthful pass/fail result; unrelated changes are preserved; the branch and commit history can distinguish work performed after 25 August 2026.
   Verify: Run `git status --short`, `npm test`, `npm run typecheck`, `npm run build`, `npm run check:public-boundary`, `npm run check:docs`, `npm run check:judge-site`, and `npm run check:evals`; review the dated baseline evidence and `git diff --check` before the item commit.
 
-- [ ] **2. Prove inline ChatGPT previews and native Chrome WebMCP before refactoring**
+- [x] **2. Prove inline OpenAI-host previews and native Chrome WebMCP before refactoring**
   Spec ref: `spec.md > Risks And Verification > Critical feasibility gates > Gate 0A — inline ChatGPT preview` and `Gate 0C — Chrome native WebMCP`
   What to build: Add the smallest isolated, removable proof inside the public tote needed to register a bounded preview tool through `document.modelContext`, capture one real tote renderer image, and expose the same contract to ChatGPT's built-in browser and Chrome 149+ native WebMCP. Keep the ordinary human tote working when WebMCP is absent. Do not begin manifest 2.0 or broad UI work in this item.
-  Acceptance: An actual renderer export or genuine browser screenshot is displayed inline in a ChatGPT conversation and matched to the current proposal/preview revision; Chrome discovers and executes the tool through the official origin-trial/testing path; ordinary Chrome without WebMCP remains functional; a text result or bare link does not count as passing.
-  Verify: Run the focused unit/browser proof tests, execute the page tool through `document.modelContext` in Chrome 149+ with the official testing flag/inspector, then perform and capture the actual ChatGPT built-in-browser flow. Record URL, build hash, browser versions, tool result, inline visual evidence, and any required host permissions.
+  Acceptance: An actual renderer export or genuine browser screenshot is displayed inline by the OpenAI Codex in-app browser and matched to the current proposal/preview revision; Chrome discovers and executes the tool through the official origin-trial/testing path; ordinary Chrome without WebMCP remains functional; a text result or bare link does not count as passing. The identical normal-ChatGPT-conversation check remains mandatory but is explicitly deferred to Item 11 release verification.
+  Verify: Run the focused unit/browser proof tests, execute the page tool through `document.modelContext` in Chrome 149+ with the official testing flag/inspector, capture the OpenAI Codex in-app-browser inline visual flow, and verify the human experience in an unflagged browser. Record URL, build hash, browser versions, tool result, inline visual evidence, required host permissions, and the pending Item 11 ChatGPT release check.
 
 - [ ] **3. Prove real artwork transport and chat-confirmed page Keep**
   Spec ref: `spec.md > Risks And Verification > Critical feasibility gates > Gate 0B — ChatGPT asset transport` and `Gate 0D — page Keep from confirmed chat`
@@ -91,7 +92,7 @@
 - [ ] **11. Complete cross-host verification, documentation, and approval-gated releases**
   Spec ref: `spec.md > Risks And Verification`, `External APIs And Dependencies`, and `Build Order For Checklist > Phase 3` through `Phase 6`
   What to build: Finish deterministic/model/safety evals, Playwright and visual coverage, integration/manifest/browser/security/testing/judge documentation, pre-existing-versus-challenge evidence, release hashes, and one static tote/judge release candidate. Stop for approval before public deployment/publication and separately before any KORRHAUS isolated/zero-traffic deployment or production traffic change. After approval, deploy with no traffic where applicable, verify exact hashes/config/logs/URLs, then request any promotion separately.
-  Acceptance: Clean clone builds/tests/runs; public boundary scan is clean; actual ChatGPT, native Chrome, ordinary-browser, mobile, asset, inline-preview, stale, invalid, Keep/Revert, and forbidden-action evidence pass on the exact release; stable tote URL is reproducible; KORRHAUS evidence is versioned and honest; deployed, public, and live states are never conflated.
+  Acceptance: Clean clone builds/tests/runs; public boundary scan is clean; the explicitly deferred literal normal-ChatGPT-conversation check plus native Chrome, ordinary-browser, mobile, asset, inline-preview, stale, invalid, Keep/Revert, and forbidden-action evidence pass on the exact release; stable tote URL is reproducible; KORRHAUS evidence is versioned and honest; deployed, public, and live states are never conflated.
   Verify: Run the complete documented release command suite from a clean clone, inspect all dependency/doc links, execute final actual-host journeys, compare served/local hashes, check runtime logs/security headers/feature flags, and complete the submission checklist with explicit evidence links. Record every approval and release state before commit/tag.
 
 - [ ] **12. Prepare Devpost handoff**

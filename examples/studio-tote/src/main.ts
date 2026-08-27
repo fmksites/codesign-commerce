@@ -9,6 +9,12 @@ import {
   type JsonPrimitive,
 } from "@codesign-commerce/core";
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
+import {
+  PreviewProofError,
+  registerStudioTotePreviewProof,
+  type StudioTotePreviewArtifact,
+  type StudioTotePreviewRequest,
+} from "./preview-proof";
 import "./styles.css";
 
 const publicAsset = (name: string): string => `${import.meta.env.BASE_URL}${name}`;
@@ -147,6 +153,79 @@ const activeDesign = (): ConfigurationDesign => {
 const selection = (design: ConfigurationDesign, optionId: string, fallback: JsonPrimitive): JsonPrimitive =>
   design.selections[optionId] ?? fallback;
 
+const sha256 = async (value: string): Promise<string> => {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return `sha256:${Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+};
+
+const capturePreviewProof = async (
+  request: StudioTotePreviewRequest,
+): Promise<StudioTotePreviewArtifact> => {
+  const proposal = session.snapshot;
+  if (request.proposalId !== undefined && request.proposalId !== proposal.proposalId) {
+    throw new PreviewProofError("PREVIEW_STALE", "The requested proposal is no longer current.");
+  }
+  if (request.proposalRevision !== undefined && request.proposalRevision !== proposal.proposalRevision) {
+    throw new PreviewProofError("PREVIEW_STALE", "The requested proposal revision is no longer current.");
+  }
+
+  const state = adapter.visibleState;
+  const design = state.designs.find((candidate) => candidate.id === (request.variantId ?? activeDesignId));
+  if (!design) throw new PreviewProofError("UNKNOWN_TARGET", "The requested tote variant is not visible.");
+  if (design.id !== activeDesignId) {
+    activeDesignId = design.id;
+    render();
+  }
+
+  if (!preview.complete || preview.naturalWidth === 0) await preview.decode();
+  const width = 640;
+  const height = 640;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d");
+  if (!context) throw new PreviewProofError("PREVIEW_FAILED", "The browser could not create a tote preview canvas.");
+
+  context.fillStyle = "#f5f1e9";
+  context.fillRect(0, 0, width, height);
+  context.filter = getComputedStyle(preview).filter || "none";
+  context.drawImage(preview, 0, 0, width, height);
+  context.filter = "none";
+
+  const colour = String(selection(design, "bag.color", "natural"));
+  const upperLeft = selection(design, "print.position", "front-center") === "upper-left";
+  context.fillStyle = colour === "charcoal" ? "#f6f0e6" : "#20201d";
+  context.font = "700 30px Arial, sans-serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  const markX = upperLeft ? 250 : 320;
+  const markY = upperLeft ? 300 : 360;
+  context.fillText("STUDIO", markX, markY - 18);
+  context.fillText("MARK", markX, markY + 18);
+
+  const dataUrl = canvas.toDataURL("image/webp", 0.82);
+  if (!dataUrl.startsWith("data:image/webp;base64,") || dataUrl.length > 400_000) {
+    throw new PreviewProofError("PREVIEW_FAILED", "The tote preview exceeded the bounded inline transport.");
+  }
+  const integrity = await sha256(dataUrl);
+  const identity = proposal.proposalId === null
+    ? `committed-${state.revision}`
+    : `${proposal.proposalId}-${proposal.proposalRevision}`;
+  return {
+    artifactId: `preview-${identity}-${design.id}`,
+    proposalId: proposal.proposalId,
+    proposalRevision: proposal.proposalRevision,
+    workspaceRevision: state.revision,
+    variantId: design.id,
+    mediaType: "image/webp",
+    width,
+    height,
+    altText: `${preview.alt}; ${design.name}; temporary proposal ${proposal.proposalId === null ? "not active" : "active"}`,
+    integrity,
+    transport: { kind: "data-url", value: dataUrl },
+  };
+};
+
 const renderTabs = (followVisible = false) => {
   const state = adapter.visibleState;
   if (followVisible || !state.designs.some((design) => design.id === activeDesignId)) activeDesignId = state.activeDesignId;
@@ -246,14 +325,131 @@ for (const step of document.querySelectorAll<HTMLButtonElement>("[data-step-targ
   });
 }
 
-const registration = registerCoDesignTools(document as DocumentWithModelContext, {
+const webMcpDocument = import.meta.env.DEV && query.has("disable-webmcp")
+  ? {} as DocumentWithModelContext
+  : document as DocumentWithModelContext;
+const registration = registerCoDesignTools(webMcpDocument, {
   manifest: toteManifest,
   adapter,
   session,
 });
-void registration.ready;
+const previewRegistration = registerStudioTotePreviewProof(webMcpDocument, {
+  capture: capturePreviewProof,
+});
+void Promise.all([registration.ready, previewRegistration.ready]);
+if (import.meta.env.DEV) document.documentElement.dataset.webmcpRegistration = registration.supported ? "supported" : "unsupported";
 
 render();
+
+if (import.meta.env.DEV && query.has("native-webmcp-proof")) {
+  const proof = document.createElement("section");
+  proof.setAttribute("aria-label", "Native Chrome WebMCP proof");
+  proof.style.cssText = "max-width:1180px;margin:0 auto 32px;padding:20px;border:2px solid #20201d;background:#fff";
+  proof.innerHTML = `
+    <h2 style="margin:0 0 8px">Native Chrome WebMCP proof</h2>
+    <p>This development-only panel calls <code>document.modelContext.getTools()</code> and <code>executeTool()</code>. It creates a temporary proposal and never activates Keep.</p>
+    <button type="button" data-native-webmcp-run>Run native WebMCP proof</button>
+    <pre data-native-webmcp-result style="white-space:pre-wrap"></pre>
+    <img data-native-webmcp-preview alt="Native WebMCP tote preview" style="display:none;max-width:360px;width:100%;height:auto" />
+  `;
+  document.querySelector("main")?.append(proof);
+
+  const runButton = proof.querySelector<HTMLButtonElement>("[data-native-webmcp-run]");
+  const resultNode = proof.querySelector<HTMLElement>("[data-native-webmcp-result]");
+  const proofImage = proof.querySelector<HTMLImageElement>("[data-native-webmcp-preview]");
+  if (!runButton || !resultNode || !proofImage) throw new Error("Native WebMCP proof panel is incomplete");
+
+  const asRecord = (value: unknown): Record<string, unknown> => {
+    if (typeof value === "string") {
+      try { return JSON.parse(value) as Record<string, unknown>; } catch { return { raw: value }; }
+    }
+    return typeof value === "object" && value !== null ? value as Record<string, unknown> : { raw: value };
+  };
+
+  runButton.addEventListener("click", () => {
+    void (async () => {
+      runButton.disabled = true;
+      resultNode.textContent = "Discovering native tools…";
+      proof.dataset.status = "running";
+      try {
+        await Promise.all([registration.ready, previewRegistration.ready]);
+        const modelContext = (document as DocumentWithModelContext & {
+          modelContext?: {
+            getTools(): Promise<Array<{ name: string }>>;
+            executeTool(tool: { name: string }, input: string): Promise<unknown>;
+          };
+        }).modelContext;
+        if (!modelContext?.getTools || !modelContext.executeTool) throw new Error("document.modelContext invocation APIs are unavailable");
+
+        const tools = await modelContext.getTools();
+        const findTool = (name: string) => {
+          const tool = tools.find((candidate) => candidate.name === name);
+          if (!tool) throw new Error(`Native Chrome did not discover ${name}`);
+          return tool;
+        };
+        const read = asRecord(await modelContext.executeTool(findTool("codesign_read_configuration"), "{}"));
+        const state = asRecord(read.state);
+        const baseRevision = state.revision;
+        if (typeof baseRevision !== "string") throw new Error("Native configuration read returned no revision");
+
+        const proposal = asRecord(await modelContext.executeTool(
+          findTool("codesign_propose_configuration"),
+          JSON.stringify({
+            baseRevision,
+            operationId: "chrome-native-preview-proof",
+            changes: [
+              { designId: "tote-1", optionId: "design.name", value: "Chrome native proof" },
+              { designId: "tote-1", optionId: "bag.color", value: "charcoal" },
+              { designId: "tote-1", optionId: "print.position", value: "upper-left" },
+            ],
+            assumptions: ["This is a temporary native Chrome feasibility proof."],
+          }),
+        ));
+        if (proposal.ok !== true || typeof proposal.proposalId !== "string" || typeof proposal.proposalRevision !== "number") {
+          throw new Error(`Native proposal failed: ${JSON.stringify(proposal)}`);
+        }
+
+        const previewResult = asRecord(await modelContext.executeTool(
+          findTool("codesign_get_previews"),
+          JSON.stringify({ proposalId: proposal.proposalId, proposalRevision: proposal.proposalRevision, variantId: "tote-1" }),
+        ));
+        const artifacts = Array.isArray(previewResult.artifacts) ? previewResult.artifacts : [];
+        const artifact = asRecord(artifacts[0]);
+        const transport = asRecord(artifact.transport);
+        if (previewResult.ok !== true || transport.kind !== "data-url" || typeof transport.value !== "string") {
+          throw new Error(`Native preview failed: ${JSON.stringify(previewResult)}`);
+        }
+
+        proofImage.src = transport.value;
+        proofImage.style.display = "block";
+        const evidence = {
+          api: "document.modelContext",
+          userAgent: window.navigator.userAgent,
+          discoveredTools: tools.map((tool) => tool.name).sort(),
+          proposalId: proposal.proposalId,
+          proposalRevision: proposal.proposalRevision,
+          persisted: proposal.persisted,
+          preview: {
+            artifactId: artifact.artifactId,
+            mediaType: artifact.mediaType,
+            width: artifact.width,
+            height: artifact.height,
+            integrity: artifact.integrity,
+            dataUrlCharacters: transport.value.length,
+          },
+          persistenceCounters: adapter.counters,
+        };
+        resultNode.textContent = JSON.stringify(evidence, null, 2);
+        proof.dataset.status = "passed";
+      } catch (error) {
+        proof.dataset.status = "failed";
+        resultNode.textContent = error instanceof Error ? error.message : String(error);
+      } finally {
+        runButton.disabled = false;
+      }
+    })();
+  });
+}
 
 if (import.meta.env.DEV && query.has("agent-preview")) {
   void (async () => {
