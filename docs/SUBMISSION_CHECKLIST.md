@@ -30,8 +30,12 @@ proceed without the owner.
 
 ## Public release
 
-- `APPROVAL` — create and publish the public remote repository.
-- `PENDING` — confirm Apache-2.0 detection in repository About.
+- `PASS` — public repository published at
+  <https://github.com/fmksites/codesign-commerce> on exact commit
+  `1c58b37bcd4cbc764ac4b0c436aaa8d649cccb0f`.
+- `PASS` — GitHub detects the root license as Apache-2.0.
+- `PASS` — hosted CI passed on the exact published commit; unauthenticated
+  repository, README, license, and raw WebMCP source requests returned `200`.
 - `APPROVAL` — choose hosting provider and deploy `dist/judge-site/`.
 - `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;
   additionally repeat in Chrome 149+ if its WebMCP testing flag is configured.
