@@ -17,16 +17,21 @@ proceed without the owner.
   intentionally skipped desktop duplicate of a mobile-only overflow case.
 - `PASS` — five consecutive frozen-build KORRHAUS North Form WebMCP rehearsals;
   each restored the exact baseline through human Revert with no console output.
+- `PASS` — frozen public artifact normal-browser fallback in connected native
+  Chrome: baseline UI and assets render, review controls stay hidden, clean
+  console; this was not a feature-enabled Chrome WebMCP pass.
 - `CUT` — API-backed 78-run model eval; optional tooling retained, but the
   owner removed it as a submission gate on 27 August 2026.
-- `PASS` — clean clone of evidence commit `aeba23e` passes all local public gates.
+- `PASS` — clean clone of submission-evidence commit `8d3b5dd` passes all local
+  public gates with the exact final browser-bundle digest.
 
 ## Public release
 
 - `APPROVAL` — create and publish the public remote repository.
 - `PENDING` — confirm Apache-2.0 detection in repository About.
 - `APPROVAL` — choose hosting provider and deploy public examples.
-- `PENDING` — verify public URL logged out in ChatGPT browser and Chrome 149+.
+- `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;
+  additionally repeat in Chrome 149+ if its WebMCP testing flag is configured.
 - `PENDING` — record final public commit, bundle hash, screenshots, and links.
 
 ## KORRHAUS flagship

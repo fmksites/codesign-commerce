@@ -20,6 +20,9 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 - A materially different studio-tote example with its own manifest, adapter,
   renderer, real product assets, coupled canvas/print rules, anonymous reset,
   and the same unchanged five-tool core and review UI.
+- 95 deterministic public tests, a clean-clone proof, complete private Designer
+  regression coverage, exact-bundle feature-on/off browser evidence, and five
+  consecutive frozen-build North Form runtime rehearsals.
 
 The repository is licensed under Apache-2.0. The local implementation and
 submission drafts are advanced, but this is not yet a published or live
@@ -38,6 +41,7 @@ npm ci
 npm test
 npm run typecheck
 npm run build
+npm run verify:browser-bundle
 npm run check:public-boundary
 npm run check:docs
 npm run check:evals

@@ -65,7 +65,9 @@ The challenge is about WebMCP tools registered in the live webpage. A remote MCP
   external content with `untrustedContentHint`.
 - Do not opt into cross-origin exposure; no `exposedTo` origins are configured.
 - Keep tool descriptions and outputs concise enough for current agent budgets.
-- Combine deterministic tool/runtime tests with probabilistic model-selection
-  and end-to-end evaluations.
+- Keep deterministic tool/runtime evidence and an optional model-evaluation
+  corpus, but do not represent scripted calls or synthetic scorer fixtures as
+  an independent model result. The owner removed the API-backed run as a local
+  submission gate; the official rules do not require one.
 
 Primary source URLs are listed in `SOURCE_LINKS.md`.

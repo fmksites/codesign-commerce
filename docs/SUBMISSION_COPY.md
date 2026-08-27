@@ -34,6 +34,21 @@ person must choose Keep or Revert in the webpage. CoDesign exposes no WebMCP
 tool for saving, ordering, checkout, quote acceptance, uploads, customer data,
 prices, margins, suppliers, or private workflows.
 
+## Impact and differentiation
+
+This is aimed at the long tail of merchants whose made-to-order products do not
+fit a normal variant picker: apparel programs, teamwear, packaging, furniture,
+print, uniforms, promotional goods, and other production-aware configurators.
+Those merchants already invested in a visual experience and domain rules. A
+small manifest and adapter can make that experience agent-ready without
+rebuilding it as a generic chatbot or surrendering the human approval boundary.
+
+The Shopify “aha” is the handoff point. Shopify's native WebMCP tools already
+cover catalog discovery, variants, navigation, cart, checkout, and orders.
+CoDesign Commerce covers the difficult configuration work before an item can
+become cart-ready: interdependent choices, multiple coordinated designs, the
+merchant's live preview, and production-readiness validation.
+
 KORRHAUS's real Custom Sock Designer is the flagship merchant integration. A
 second, materially different studio-tote configurator uses the same unchanged
 core package with its own manifest, adapter, renderer, and coupled print/canvas

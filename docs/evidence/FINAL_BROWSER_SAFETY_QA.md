@@ -106,3 +106,14 @@ document contained:
 This is local browser evidence only. It does not authorize or imply a private
 deployment, production enablement, public release, optional independent
 model-eval pass, video publication, or Devpost submission.
+
+## Connected native Chrome fallback
+
+The frozen public KORRHAUS artifact also loaded in the connected native Chrome
+profile from its deterministic reset URL. That profile did not expose
+`document.modelContext`, so this was deliberately recorded as a normal-browser
+fallback check rather than a WebMCP tool-discovery pass. The page showed the
+single baseline design, loaded all images, kept Keep/Revert hidden, and produced
+no console warnings or errors. Feature-enabled WebMCP discovery remains proven
+in the supported in-app browser; it must be repeated on the deployed URL and
+may additionally be repeated in Chrome 149+ with its testing flag enabled.

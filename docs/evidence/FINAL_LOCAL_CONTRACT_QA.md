@@ -43,6 +43,16 @@ the 103-file public-boundary check, 37-file documentation check, and the
 `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`,
 and the final clean-clone Git status was empty.
 
+Submission-evidence commit `8d3b5dd35310dbbba34f69e323225215d154507f`
+was then cloned without local-object shortcuts into
+`/private/tmp/codesign-submission-ready.bQtJht/repo`. From an empty dependency
+and build state it installed 129 packages and passed the same 95 tests, strict
+typecheck, all three builds, exact browser-bundle verification, the 103-file
+public-boundary check, 37-file documentation check, and optional eval
+policy/scorer self-test. The bundle again matched
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`,
+and the clone's final Git status was empty.
+
 ## Private flagship refresh
 
 The same `e3f95e6e…db324` browser-bundle bytes were synced into the approved
