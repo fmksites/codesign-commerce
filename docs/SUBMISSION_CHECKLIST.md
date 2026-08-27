@@ -66,9 +66,10 @@ proceed without the owner.
 - `PASS` — the replacement guarded candidate is complete and fully verified
   locally in `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
 - `PASS` — guarded tagged QA revision `codesign-qa3` and fixtures-off candidate
-  `codesign-prod2` use one immutable image, passed identity, health, logs, HTTP,
-  exact asset, five-tool browser, validation, and Revert checks, and remain at
-  `0%` ordinary traffic. See
+  `codesign-prod2` use one immutable image, passed identity, health, HTTP,
+  exact asset, five-tool browser, validation, Revert, and explained-log checks,
+  and remain at `0%` ordinary traffic. The sole later error entry is a
+  documented self-induced `404` probe to a nonexistent asset path. See
   `docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
 - `PASS` — live traffic remains `100%` on feature-off rollback revision
   `sock-logo-v2`; the Cloud Run service-template default was reset to

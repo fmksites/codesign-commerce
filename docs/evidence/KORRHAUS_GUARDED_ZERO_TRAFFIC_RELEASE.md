@@ -102,11 +102,18 @@ action was performed during the deployed QA verification.
 | Cloud Run ContainerHealthy | `True` |
 | Root HTTP | `200` |
 | Synthetic acceptance preview | `404`, as required |
-| Severity-`ERROR` log entries | `0` |
+| Severity-`ERROR` log entries during the planned candidate check | `0` |
 
 The candidate served the exact core, minified JavaScript, and minified CSS
 hashes above. It was not tested through the public Shopify route because it has
 not received production traffic.
+
+A later final audit found one subsequent `ERROR`-severity stderr entry. It was
+caused by this verification process requesting the nonexistent path
+`/custom-socks/codesign-commerce.min.js`, which React Router logged while
+correctly returning `404`. The actual runtime path
+`/custom-socks/codesign-commerce.js` returned `200` with the exact core hash
+above. No unexplained candidate, customer, or WebMCP runtime error was found.
 
 ## Service-template safety hold
 
