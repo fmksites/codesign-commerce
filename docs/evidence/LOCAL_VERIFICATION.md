@@ -359,6 +359,35 @@ Shopify route is not yet claimed as WebMCP-live. Full evidence is in
 `KORRHAUS_GUARDED_LOCAL_CANDIDATE.md` and
 `KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
 
+## 27 August 2026 — read-only colourway review candidate
+
+The owner requested one additional UX gate before production: a person must be
+able to inspect both proposed colourways in the same live renderer without
+unlocking any mutation or persistence path. The corrected `20260827-10`
+snapshot passed syntax, focused ESLint, 41 Vitest files/199 tests, strict
+typecheck, production build, and the complete 142-case Playwright run with 141
+passes, one expected desktop-only skip, and zero failures.
+
+Cloud Build `2985b639-7524-4a09-85ac-f367b78865e7` produced immutable image
+`sha256:1819173fc2bbc57cf778a0c9ad4d8361f3aa1072b10fb978c67a9973bb7d9e3c`.
+Zero-traffic revision `codesign-review-qa2` serves the exact locally tested
+minified JavaScript hash
+`sha256:160aa32869721b5893be3a960c78d4c3f625d21f3556032c0d17a77807df0c2c`.
+
+On the fresh `codesign-user-qa` origin, the actual in-app WebMCP browser read
+one design/20 pairs, listed eight public option groups, proposed Cream, created
+Rose, allocated 2 × 60, and validated the proposal with only final artwork
+missing. Both tab switches changed the visible proof, retained `Temporary
+proposal not saved`, and kept all mutation/upload controls disabled. A fresh
+read still returned the unchanged one-design/20-pair committed state and an
+`awaiting-human`, `persisted: false` proposal. The console was clean. Full
+evidence is in `KORRHAUS_READ_ONLY_COLOURWAY_QA.md`.
+
+The earlier `codesign-prod2` image is historical and must not be promoted. A
+new fixtures-off candidate from exact image `181917…d9e3c` remains gated on
+owner hands-on QA. Ordinary traffic remains `100%` on feature-off
+`sock-logo-v2`.
+
 ## 27 August 2026 — corrected flagship topology clean clone
 
 Commit `e137a3be4333aaded523626df493a6e38dd24a72` removes the retired synthetic

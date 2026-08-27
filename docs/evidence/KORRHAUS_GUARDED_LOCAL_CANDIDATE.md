@@ -2,9 +2,15 @@
 
 Date: 27 August 2026
 
-Status: `PASS_LOCAL_MATCHED_TO_IMMUTABLE_IMAGE`
+Historical status: `SUPERSEDED_BY_READ_ONLY_COLOURWAY_QA`
 
-This record covers the final merged CoDesign integration candidate inside the
+The `v=20260827-8` snapshot below remains valid historical evidence, but it is
+not the current promotion candidate. The owner requested read-only switching
+between proposed colourways before hands-on QA. The corrected current snapshot,
+complete regression, immutable image and zero-traffic browser proof are in
+[`KORRHAUS_READ_ONLY_COLOURWAY_QA.md`](./KORRHAUS_READ_ONLY_COLOURWAY_QA.md).
+
+This record covers the then-final merged CoDesign integration candidate inside the
 existing private KORRHAUS Shopify Sock Designer. It is not a second Sock
 Designer. These exact bytes passed local regression and were subsequently built
 into the immutable image recorded in

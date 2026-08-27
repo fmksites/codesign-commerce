@@ -2,9 +2,15 @@
 
 Date: 27 August 2026
 
-Status: `PASS_ZERO_TRAFFIC_NOT_LIVE`
+Historical status: `SUPERSEDED_NOT_PROMOTABLE`
 
-This record covers the approved two-revision verification of the final guarded
+The zero-traffic evidence below remains valid for image `aa9c…cb5c4e`, but
+`codesign-prod2` is no longer a promotion candidate. The owner requested a
+read-only proposed-colourway review refinement. Its corrected image and current
+hands-on QA gate are recorded in
+[`KORRHAUS_READ_ONLY_COLOURWAY_QA.md`](./KORRHAUS_READ_ONLY_COLOURWAY_QA.md).
+
+This record covers the approved two-revision verification of the then-final guarded
 CoDesign candidate inside the existing KORRHAUS Shopify Sock Designer. The QA
 and production-candidate revisions use one immutable image and receive zero
 ordinary traffic. This is deployment evidence, not production activation or

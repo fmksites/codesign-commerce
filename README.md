@@ -17,22 +17,25 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 - Deterministic tests proving that proposal previews do not cross the persistence boundary.
 - A framework-neutral, accessible Keep/Revert review component.
 - A narrow private bridge that connects the same public runtime to KORRHAUS's
-  existing Sock Designer. The final guarded snapshot passed local regression
-  and two-revision zero-traffic verification from one immutable image.
+  existing Sock Designer. While a proposal awaits review, only its colourway
+  tabs remain interactive: they switch the same live sock proof without saving,
+  while every edit and upload path stays locked. The corrected snapshot passed
+  local regression and fresh-origin zero-traffic actual-browser verification.
   Production traffic remains unchanged, so live-Shopify WebMCP is not yet
   claimed.
 - A materially different studio-tote example with its own manifest, adapter,
   renderer, real product assets, coupled canvas/print rules, anonymous reset,
   and the same unchanged five-tool core and review UI.
 - 95 deterministic public tests and prior clean-clone proof. The current private
-  integration passes syntax and focused lint, 40 Vitest files with 194 tests,
-  strict typecheck, production build, the complete 138-case desktop/mobile
-  Designer run with 137 passes and one expected skip, and an exact 18/18 focused
-  WebMCP desktop/mobile slice.
-- Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8` produced immutable image
-  `sha256:aa9c591b…cb5c4e`. Tagged acceptance revision `codesign-qa3` and
-  fixtures-off candidate `codesign-prod2` passed at `0%` ordinary traffic;
-  live traffic remains `100%` on feature-off rollback revision `sock-logo-v2`.
+  integration passes syntax and focused lint, 41 Vitest files with 199 tests,
+  strict typecheck, production build, and the complete 142-case desktop/mobile
+  Designer run with 141 passes and one expected skip.
+- Cloud Build `2985b639-7524-4a09-85ac-f367b78865e7` produced immutable image
+  `sha256:1819173f…d9e3c`. Tagged acceptance revision
+  `codesign-review-qa2` passed the fresh-origin five-tool and read-only
+  colourway-switching flow at `0%` ordinary traffic. The older fixtures-off
+  `codesign-prod2` is superseded and must not be promoted; live traffic remains
+  `100%` on feature-off rollback revision `sock-logo-v2`.
 
 The repository is public and licensed under Apache-2.0. The corrected
 landing-plus-tote topology is published on `main`. Guarded-evidence commit
@@ -105,10 +108,12 @@ See:
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the private flagship integration map and safety boundary.
 - [docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md](./docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md) for the distinction between on-page WebMCP capability and traffic acquisition.
 - [docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
-  for the exact current private snapshot and complete local regression.
+  for the historical `v=20260827-8` guarded snapshot and local regression.
 - [docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md](./docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md)
-  for the immutable-image QA and fixtures-off candidate proof, unchanged live
-  traffic, and the still-closed production-promotion gate.
+  for the historical guarded image proof.
+- [docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md](./docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md)
+  for the current immutable QA image, read-only proposed-colourway UX, exact
+  zero-write browser evidence, unchanged live traffic, and owner-test gate.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.

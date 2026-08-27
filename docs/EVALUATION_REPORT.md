@@ -44,7 +44,7 @@ human Revert with no proposal/Revert network writes and no browser console
 errors. This remains historical actual-browser evidence because later private
 adapter and artwork-preview guards changed the host Designer bytes.
 
-The final guarded snapshot keeps the same core bundle and uses the
+The now-superseded guarded snapshot kept the same core bundle and used the
 `20260827-8` Designer asset key. It passes syntax, focused ESLint, production
 build, strict typecheck, 40 unit files/194 tests, the complete 138-case private
 Designer run with 137 passes and one expected skip, and the exact 18/18 focused
@@ -58,11 +58,22 @@ all five tools, rejected an invalid single-design 60/120 allocation, staged two
 `FINAL_LOGO_ARTWORK_REQUIRED`, and Reverted to exact revision
 `korrhaus-3fe7f8ed` with no browser errors. Fixtures-off candidate
 `codesign-prod2` uses the same image and remains healthy at `0%` ordinary
-traffic. Live traffic remains `100%` on feature-off `sock-logo-v2`; therefore
-this is not live-Shopify WebMCP evidence. See
+traffic, but both are now historical and must not be promoted.
+
+The current `20260827-10` snapshot preserves the unchanged public core, adds
+read-only inspection of proposed colourways, and passes 41 unit files/199
+tests plus the complete 142-case private Designer run with 141 passes and one
+expected skip. Immutable image `sha256:1819173f…d9e3c` serves zero-traffic
+revision `codesign-review-qa2`. On its fresh `codesign-user-qa` origin, the
+actual browser completed the five-tool 2 × 60 flow, changed the same live proof
+Rose → Cream → Rose, preserved `Temporary proposal not saved`, kept mutation
+and upload controls disabled, and re-read the unchanged one-design/20-pair
+committed state with no browser errors or warnings. Live traffic remains `100%`
+on feature-off `sock-logo-v2`; therefore this is not live-Shopify WebMCP
+evidence. See
 [`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
 and
-[`evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
+[`evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`](./evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md).
 
 Against the exact final public bundle, the tote and the now-retired synthetic
 development harness rejected an HTTPS text value with `INVALID_VALUE`, accepted

@@ -13,8 +13,8 @@ proceed without the owner.
   root-plus-`/tote/` artifact verified with three release-gated KORRHAUS CTA
   slots, verified non-release URL withholding, and a `404` for the retired
   `/korrhaus/` route.
-- `PASS` — guarded private flagship bridge, with complete local regression and
-  two-revision zero-traffic proof.
+- `PASS` — guarded private flagship bridge, with complete current local
+  regression and fresh-origin zero-traffic proof.
 - `PASS` — 95 deterministic public tests and the current local public
   typecheck/build/boundary/docs checks.
 - `PASS` — repository security scan findings remediated.
@@ -25,10 +25,11 @@ proceed without the owner.
 - `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
   private feature-off fallback browser checks.
 - `PASS` — current guarded private candidate: syntax, focused ESLint,
-  production build, typecheck, 40 unit files/194 tests, complete 138-case
-  Designer browser run with 137 passes and 1 expected skip, and the exact 18/18
-  WebMCP desktop/mobile slice. See
-  `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
+  production build, typecheck, 41 unit files/199 tests, complete 142-case
+  Designer browser run with 141 passes and 1 expected skip, plus the deployed
+  read-only Cream/Rose live-proof flow with persistent temporary status and
+  locked edits/uploads. See
+  `docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`.
 - `HISTORICAL` — five consecutive North Form rehearsals and the connected-native-
   Chrome fallback passed on the retired synthetic harness. They remain runtime
   evidence, not current public-surface or live-flagship proof.
@@ -63,18 +64,28 @@ proceed without the owner.
 - `SUPERSEDED` — the earlier two-revision zero-traffic sequence is preserved in
   `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`, but its `codesign-prod1`
   candidate predates the current safety fixes and must never be promoted.
-- `PASS` — the replacement guarded candidate is complete and fully verified
-  locally in `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
-- `PASS` — guarded tagged QA revision `codesign-qa3` and fixtures-off candidate
+- `SUPERSEDED` — the replacement guarded candidate was complete and fully verified
+  locally in `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`, but predates
+  the proposed-colourway review refinement.
+- `SUPERSEDED` — guarded tagged QA revision `codesign-qa3` and fixtures-off candidate
   `codesign-prod2` use one immutable image, passed identity, health, HTTP,
   exact asset, five-tool browser, validation, Revert, and explained-log checks,
-  and remain at `0%` ordinary traffic. The sole later error entry is a
+  and remain at `0%` ordinary traffic. They must not be promoted. The sole later error entry is a
   documented self-induced `404` probe to a nonexistent asset path. See
   `docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
+- `PASS` — current immutable image `sha256:181917…d9e3c`, zero-traffic revision
+  `codesign-review-qa2`, fresh `codesign-user-qa` origin, exact asset identity,
+  full local suite, five-tool browser flow and read-only Cream/Rose live-proof
+  switching pass. See
+  `docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`.
 - `PASS` — live traffic remains `100%` on feature-off rollback revision
   `sock-logo-v2`; the Cloud Run service-template default was reset to
   WebMCP-off through a retired zero-traffic hold revision.
-- `APPROVAL` — promote production traffic only after explicit owner approval.
+- `PENDING` — owner hands-on QA on the fresh tagged surface.
+- `PENDING` — deploy and verify a new fixtures-off zero-traffic candidate from
+  exact image `181917…d9e3c` after owner QA.
+- `APPROVAL` — promote production traffic only after those checks and explicit
+  owner approval.
 - `PENDING` — verify the actual public English route and normal human fallback.
 
 ## Submission materials
