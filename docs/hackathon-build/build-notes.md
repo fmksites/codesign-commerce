@@ -289,3 +289,19 @@
 - Dated evidence: `docs/evidence/CODESIGN_V2_ITEM4_MANIFEST_PARITY_2026-08-27.md`.
 - No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
 - Item 5 is next: canonical workspace guards and atomic typed operations.
+
+## 27 August 2026 — Item 5 completed with canonical workspace guards and atomic typed operations
+
+- Added a detached Manifest 2.0 `WorkspaceState` with bounded workspace controls, variants, typed elements, finite control values and opaque asset handles.
+- Added field-by-field workspace reconstruction that drops undeclared safe adapter data and rejects identity mismatches, unsafe/prototype keys, duplicates, unknown element types, malformed values/transforms/assets, missing unconditional configuration controls and oversized arrays.
+- Added the product-neutral operation union for control edits, create/duplicate/remove/reorder/activate variant actions, and asset attach/remove actions across explicit workspace/variant/element targets.
+- The atomic reducer works only on a sanitized clone and validates the complete result. Invalid later operations leave the caller's baseline byte-equivalent; unaffected variants remain byte-equivalent.
+- Added batch-level operation-ID idempotency: identical retries deduplicate, conflicting payloads fail, and one proposal ledger is capped at 80 successful operations.
+- Hardened Manifest 2 asset control/slot scope matching and allowed legitimate non-total workspace-scoped controls.
+- Added `docs/WORKSPACE_AND_OPERATIONS.md` and updated the manifest/adapter guide to the canonical Manifest 2 workspace vocabulary.
+- Focused verification passed 3 files / 24 tests. Full verification passed 15 files / 119 tests, strict typecheck, production build, browser-bundle verification, 141-candidate public-boundary scan, 56-file documentation check, judge-site check, 24-case eval validation/scorer self-test, 16/16 tote parity, product-branch scan and `git diff --check`.
+- The actual in-app browser reloaded the ordinary tote after the build with 20 controls, no unsolicited review panel and no horizontal overflow.
+- Dated evidence: `docs/evidence/CODESIGN_V2_ITEM5_WORKSPACE_OPERATIONS_2026-08-27.md`.
+- The old proposal/adapter engine is intentionally not yet called the final architecture; Item 6 migrates it onto this guarded workspace and operation foundation.
+- No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
+- Item 6 is next: the guarded adapter and proposal transaction engine.

@@ -82,29 +82,31 @@ The migration should be accompanied by a fresh human-control inventory so contro
 The adapter returns only:
 
 ```ts
-interface ConfigurationState {
+interface WorkspaceState {
   configuratorId: string;
   manifestVersion: string;
-  revision: string;
-  activeDesignId: string;
-  order: { totalQuantity: number };
-  designs: Array<{
+  committedRevision: string;
+  activeVariantId: string;
+  workspaceControls: Record<string, ControlValue>;
+  variants: Array<{
     id: string;
     name: string;
-    quantity: number;
-    selections: Record<string, string | number | boolean | null>;
-    assets: Array<{
-      slot: string;
-      status: "missing" | "placeholder" | "ready";
-      agentWritable: false;
+    controls: Record<string, ControlValue>;
+    elements: Array<{
+      id: string;
+      type: string;
+      controls: Record<string, ControlValue>;
+      assetHandle?: string;
     }>;
   }>;
 }
 ```
 
-The revision is opaque. It must change whenever committed public state changes and must not encode confidential values.
+The committed revision is opaque. It must change whenever committed public state changes and must not encode confidential values. `ControlValue` is restricted to primitive manifest values or an exact finite `{x, y}` position.
 
-The core wraps every merchant adapter in a runtime guard. `readState()`,
+`sanitizeWorkspaceState()` reconstructs this contract field by field, drops undeclared safe adapter fields and controls, and rejects unsafe keys, malformed IDs, duplicate variants/elements, unknown element types, invalid values/assets/transforms, oversized arrays, and manifest identity mismatches.
+
+The guarded-adapter migration in checklist Item 6 wraps every merchant adapter at runtime. Its read,
 `listOptions()`, `createDesignDraft()`, `validateState()`, and `commitState()`
 are reconstructed field by field into the canonical public contract. Unknown
 fields are dropped; malformed values fail closed with a generic

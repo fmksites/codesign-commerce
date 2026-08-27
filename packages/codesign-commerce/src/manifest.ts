@@ -189,7 +189,7 @@ function validateManifestStructure(input: unknown): string[] {
   return issues;
 }
 
-function validateControl(control: ControlDefinition, assetSlotIds: ReadonlySet<string>, issues: string[]): void {
+function validateControl(control: ControlDefinition, assetSlots: ReadonlyMap<string, { scope: string }>, issues: string[]): void {
   if (!isSafeIdentifier(control.id)) issues.push(`control id ${control.id} is unsafe or invalid`);
   if (!boundedString(control.label, 120)) issues.push(`control ${control.id} requires a bounded label`);
   if (!boundedString(control.agentDescription, 500)) issues.push(`control ${control.id} requires a bounded agent description`);
@@ -225,7 +225,6 @@ function validateControl(control: ControlDefinition, assetSlotIds: ReadonlySet<s
   if (control.role === "variant-quantity" && (control.scope !== "variant" || control.kind !== "integer")) issues.push(`variant-quantity control ${control.id} must be a variant-scoped integer`);
   if (control.role === "variant-name" && (control.scope !== "variant" || control.kind !== "text")) issues.push(`variant-name control ${control.id} must be variant-scoped text`);
   if (control.role === "workspace-total" && (control.scope !== "workspace" || control.kind !== "integer")) issues.push(`workspace-total control ${control.id} must be a workspace-scoped integer`);
-  if (control.scope === "workspace" && control.agentWritable && control.role !== "workspace-total") issues.push(`writable workspace control ${control.id} requires the workspace-total role`);
 
   if (control.kind === "enum" || control.kind === "color") {
     if (!control.values?.length) issues.push(`control ${control.id} requires values`);
@@ -241,7 +240,8 @@ function validateControl(control: ControlDefinition, assetSlotIds: ReadonlySet<s
   if (control.kind === "text" && (control.maximumLength === undefined || !Number.isInteger(control.maximumLength) || control.maximumLength < 1 || control.maximumLength > 1000)) issues.push(`text control ${control.id} requires maximumLength between 1 and 1000`);
   if (control.kind === "boolean" && [control.minimum, control.maximum, control.maximumLength, control.assetSlotId].some((value) => value !== undefined)) issues.push(`boolean control ${control.id} has incompatible fields`);
   if (control.kind === "asset") {
-    if (!control.assetSlotId || !assetSlotIds.has(control.assetSlotId)) issues.push(`asset control ${control.id} requires a declared asset slot`);
+    if (!control.assetSlotId || !assetSlots.has(control.assetSlotId)) issues.push(`asset control ${control.id} requires a declared asset slot`);
+    else if (assetSlots.get(control.assetSlotId)?.scope !== control.scope) issues.push(`asset control ${control.id} scope must match its asset slot`);
     if (!control.agentWritable) issues.push(`asset control ${control.id} must be agent-writable`);
   } else if (control.assetSlotId !== undefined) {
     issues.push(`non-asset control ${control.id} cannot declare an asset slot`);
@@ -268,10 +268,12 @@ export function validateManifest(input: unknown): ConfiguratorManifest {
   if (!boundedString(manifest.productType, 120)) issues.push("productType is required and bounded");
 
   const assetSlotIds = new Set<string>();
+  const assetSlots = new Map<string, { scope: string }>();
   for (const slot of manifest.assetSlots) {
     if (!isSafeIdentifier(slot.id)) issues.push(`asset slot id ${slot.id} is unsafe or invalid`);
     if (assetSlotIds.has(slot.id)) issues.push(`duplicate asset slot ${slot.id}`);
     assetSlotIds.add(slot.id);
+    assetSlots.set(slot.id, { scope: slot.scope });
     if (!boundedString(slot.label, 120) || !boundedString(slot.agentDescription, 500)) issues.push(`asset slot ${slot.id} requires bounded labels`);
     if (!CONTROL_SCOPES.has(slot.scope)) issues.push(`asset slot ${slot.id} has invalid scope`);
     if (slot.sourceKinds.length < 1 || new Set(slot.sourceKinds).size !== slot.sourceKinds.length || slot.sourceKinds.some((kind) => !ASSET_SOURCE_KINDS.has(kind))) issues.push(`asset slot ${slot.id} has invalid source kinds`);
@@ -284,7 +286,7 @@ export function validateManifest(input: unknown): ConfiguratorManifest {
   for (const control of manifest.controls) {
     if (controlIds.has(control.id)) issues.push(`duplicate control id ${control.id}`);
     controlIds.add(control.id);
-    validateControl(control, assetSlotIds, issues);
+    validateControl(control, assetSlots, issues);
   }
   if (manifest.controls.filter((control) => control.role === "workspace-total").length !== 1) issues.push("manifest requires exactly one workspace-total control");
   if (manifest.controls.filter((control) => control.role === "variant-quantity").length !== 1) issues.push("manifest requires exactly one variant-quantity control");

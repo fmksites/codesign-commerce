@@ -114,6 +114,132 @@ export interface ConfiguratorManifest {
   };
 }
 
+export interface Position2DValue {
+  x: number;
+  y: number;
+}
+
+export type ControlValue = JsonPrimitive | Position2DValue;
+
+export interface ElementState {
+  id: string;
+  type: string;
+  controls: Record<string, ControlValue>;
+  assetHandle?: string;
+}
+
+export interface VariantState {
+  id: string;
+  name: string;
+  controls: Record<string, ControlValue>;
+  elements: ElementState[];
+}
+
+export interface WorkspaceState {
+  configuratorId: string;
+  manifestVersion: string;
+  committedRevision: string;
+  activeVariantId: string;
+  workspaceControls: Record<string, ControlValue>;
+  variants: VariantState[];
+}
+
+export type ControlTarget =
+  | { scope: "workspace" }
+  | { scope: "variant"; variantId: string }
+  | { scope: "element"; variantId: string; elementId: string };
+
+export interface SetControlOperation {
+  type: "set-control";
+  target: ControlTarget;
+  controlId: string;
+  value: ControlValue;
+}
+
+export interface CreateVariantOperation {
+  type: "create-variant";
+  variant: VariantState;
+  index?: number;
+}
+
+export interface DuplicateVariantOperation {
+  type: "duplicate-variant";
+  sourceVariantId: string;
+  variantId: string;
+  name?: string;
+  index?: number;
+  initialControls?: Record<string, ControlValue>;
+}
+
+export interface RemoveVariantOperation {
+  type: "remove-variant";
+  variantId: string;
+}
+
+export interface ReorderVariantOperation {
+  type: "reorder-variant";
+  variantId: string;
+  index: number;
+}
+
+export interface SetActiveVariantOperation {
+  type: "set-active-variant";
+  variantId: string;
+}
+
+export interface AttachAssetOperation {
+  type: "attach-asset";
+  target: ControlTarget;
+  controlId: string;
+  assetHandle: string;
+}
+
+export interface RemoveAssetOperation {
+  type: "remove-asset";
+  target: ControlTarget;
+  controlId: string;
+}
+
+export type ProposalOperation =
+  | SetControlOperation
+  | CreateVariantOperation
+  | DuplicateVariantOperation
+  | RemoveVariantOperation
+  | ReorderVariantOperation
+  | SetActiveVariantOperation
+  | AttachAssetOperation
+  | RemoveAssetOperation;
+
+export interface ApplyOperationsInput {
+  baseRevision: string;
+  proposalId?: string;
+  proposalRevision?: number;
+  operationId: string;
+  operations: ProposalOperation[];
+  assumptions?: string[];
+}
+
+export interface OperationBatchResult {
+  state: WorkspaceState;
+  operationId: string;
+  appliedOperations: number;
+  deduplicated: boolean;
+}
+
+export type OperationErrorCode =
+  | "INVALID_INPUT"
+  | "UNKNOWN_CONTROL"
+  | "CONTROL_NOT_WRITABLE"
+  | "INVALID_VALUE"
+  | "INVALID_TARGET"
+  | "UNKNOWN_VARIANT"
+  | "UNKNOWN_ELEMENT"
+  | "VARIANT_OPERATION_UNAVAILABLE"
+  | "VARIANT_LIMIT"
+  | "DUPLICATE_ID"
+  | "STALE_REVISION"
+  | "OPERATION_ID_CONFLICT";
+
 export type ValidationSeverity = "constraint-error" | "decision-required" | "warning" | "information";
 
 export interface ValidationIssue {

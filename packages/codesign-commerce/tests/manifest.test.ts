@@ -100,6 +100,17 @@ describe("Manifest 2.0 validation", () => {
       sourceKinds: ["data-url"], mediaTypes: ["image/png"], maximumSourceCharacters: 1_000, maximumBytes: 500,
     });
     expect(() => validateManifest(missingSlot)).not.toThrow();
+
+    const mismatchedScope = clone();
+    mismatchedScope.assetSlots.push({
+      id: "print-artwork", label: "Artwork", agentDescription: "Public print artwork.", scope: "workspace",
+      sourceKinds: ["data-url"], mediaTypes: ["image/png"], maximumSourceCharacters: 1_000, maximumBytes: 500,
+    });
+    mismatchedScope.controls.push({
+      id: "branding.artwork_ref", label: "Artwork", agentDescription: "Attach staged artwork.", scope: "variant",
+      kind: "asset", agentWritable: true, requirement: "production-readiness", assetSlotId: "print-artwork",
+    });
+    expect(() => validateManifest(mismatchedScope)).toThrow(/scope must match its asset slot/);
   });
 
   test("rejects unknown fields and malformed incomplete input", () => {

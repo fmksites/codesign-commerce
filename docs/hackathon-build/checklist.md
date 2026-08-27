@@ -53,7 +53,7 @@
   Acceptance: Valid manifests and complete inventories pass; unknown fields, duplicate/unsafe IDs, invalid bounds, unsupported control/slot combinations, oversized schemas, and unmapped visible controls fail closed; every shipped tote control is either mapped or explicitly excluded with a legitimate public-safe reason.
   Verify: Run focused manifest/inventory tests plus `npm test -- manifest inventory`, `npm run typecheck`, `npm run build`, the parity script, and `git diff --check`; inspect generated public types and migration documentation before commit.
 
-- [ ] **5. Implement canonical workspace guards and atomic typed operations**
+- [x] **5. Implement canonical workspace guards and atomic typed operations**
   Spec ref: `spec.md > Components And Responsibilities > Canonical workspace state` and `Typed proposal operations`
   What to build: Implement field-by-field public workspace reconstruction, finite control values, variant/element targets, asset-handle references, operation schemas/reducer, mixed atomic batches, create/duplicate/remove/reorder/set-active variant operations, transform controls, operation limits, and operation-ID idempotency/conflict detection.
   Acceptance: Valid mixed batches create complete detached candidates; invalid values/targets/operations leave the prior state byte-equivalent; adapter extras and malformed nested data cannot cross the public boundary; identical retries deduplicate and conflicting operation IDs fail; no product-specific tote or sock branch enters the core.
