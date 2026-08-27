@@ -1,8 +1,12 @@
-import type {
+import {
+  PreviewBridge,
+  PreviewBridgeError,
+  type AssetResolver,
   DocumentWithModelContext,
   WebMcpRegistration,
   WebMcpTool,
 } from "@codesign-commerce/core";
+import { toteManifest } from "./configurator";
 
 export interface StudioTotePreviewArtifact {
   artifactId: string;
@@ -75,19 +79,51 @@ export function createStudioTotePreviewProofTool(
 
       try {
         const artifact = await dependencies.capture(input);
+        let artifacts: StudioTotePreviewArtifact[] | unknown[] = [artifact];
+        if (input.proposalId !== undefined && input.proposalRevision !== undefined) {
+          const bridge = new PreviewBridge(toteManifest, {
+            async capturePreviews() {
+              return [{
+                variantId: artifact.variantId,
+                surfaceId: "product-preview",
+                mediaType: artifact.mediaType,
+                width: artifact.width,
+                height: artifact.height,
+                altText: artifact.altText,
+                transport: artifact.transport,
+              }];
+            },
+          });
+          const workspace = {
+            configuratorId: toteManifest.id,
+            manifestVersion: toteManifest.version,
+            committedRevision: artifact.workspaceRevision,
+            activeVariantId: artifact.variantId,
+            workspaceControls: {},
+            variants: [{ id: artifact.variantId, name: artifact.altText, controls: {}, elements: [] }],
+          };
+          const noAssets: AssetResolver<never> = { resolve: () => null };
+          artifacts = await bridge.capture({
+            proposalId: input.proposalId,
+            proposalRevision: input.proposalRevision,
+            baseRevision: artifact.workspaceRevision,
+            variantIds: [artifact.variantId],
+            surfaceIds: ["product-preview"],
+          }, workspace, noAssets);
+        }
         return {
           ok: true,
           persisted: false,
           previewStatus: "available",
-          artifacts: [artifact],
+          artifacts,
         } as never;
       } catch (error) {
         return {
           ok: false,
           persisted: false,
           error: {
-            code: error instanceof PreviewProofError ? error.code : "PREVIEW_FAILED",
-            message: error instanceof Error ? error.message : "The tote preview could not be captured.",
+            code: error instanceof PreviewProofError ? error.code : error instanceof PreviewBridgeError ? error.code : "PREVIEW_FAILED",
+            message: "The current tote preview could not be captured and verified safely.",
             retryable: true,
           },
         } as never;

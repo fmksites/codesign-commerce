@@ -12,6 +12,7 @@ interface NativeAssetProofOptions {
   adapter: StudioToteAdapter;
   assetStore: StudioToteAssetProofStore;
   ready: Promise<unknown>;
+  fixtureUrl: string;
 }
 
 const asRecord = (value: unknown): Record<string, any> => {
@@ -36,6 +37,7 @@ export function mountNativeAssetProof(options: NativeAssetProofOptions): HTMLEle
     <h2 style="margin:0 0 8px">Native Chrome supplied-artwork proof</h2>
     <p>Select a real local raster image. This development-only harness converts that selected file to the bounded source passed into <code>codesign_stage_asset</code>, attaches only its opaque handle through the proposal tool and never activates Keep.</p>
     <input type="file" accept="image/png,image/jpeg,image/webp" data-native-asset-file />
+    <button type="button" data-native-asset-fixture>Use public North Form proof image</button>
     <button type="button" data-native-asset-run>Stage and propose through native WebMCP</button>
     <pre data-native-asset-result style="white-space:pre-wrap"></pre>
     <img data-native-asset-preview alt="Native WebMCP supplied-artwork tote preview" style="display:none;max-width:360px;width:100%;height:auto" />
@@ -43,10 +45,36 @@ export function mountNativeAssetProof(options: NativeAssetProofOptions): HTMLEle
   options.parent.append(panel);
 
   const input = panel.querySelector<HTMLInputElement>("[data-native-asset-file]");
+  const fixtureButton = panel.querySelector<HTMLButtonElement>("[data-native-asset-fixture]");
   const button = panel.querySelector<HTMLButtonElement>("[data-native-asset-run]");
   const output = panel.querySelector<HTMLElement>("[data-native-asset-result]");
   const image = panel.querySelector<HTMLImageElement>("[data-native-asset-preview]");
-  if (!input || !button || !output || !image) throw new Error("Native asset proof panel is incomplete");
+  if (!input || !fixtureButton || !button || !output || !image) throw new Error("Native asset proof panel is incomplete");
+
+  let publicFixture: File | null = null;
+  input.addEventListener("change", () => { publicFixture = null; });
+  fixtureButton.addEventListener("click", () => {
+    void (async () => {
+      fixtureButton.disabled = true;
+      output.textContent = "Loading the public North Form proof image…";
+      try {
+        const response = await fetch(options.fixtureUrl, {
+          credentials: "omit",
+          cache: "no-store",
+          referrerPolicy: "no-referrer",
+        });
+        if (!response.ok) throw new Error("The public proof image could not be loaded.");
+        const blob = await response.blob();
+        publicFixture = new File([blob], "north-form-supplied-mark.png", { type: blob.type || "image/png" });
+        output.textContent = `Ready: ${publicFixture.name} (${publicFixture.size} bytes).`;
+      } catch (error) {
+        publicFixture = null;
+        output.textContent = error instanceof Error ? error.message : String(error);
+      } finally {
+        fixtureButton.disabled = false;
+      }
+    })();
+  });
 
   button.addEventListener("click", () => {
     void (async () => {
@@ -54,7 +82,7 @@ export function mountNativeAssetProof(options: NativeAssetProofOptions): HTMLEle
       output.textContent = "Transporting the selected artwork through native WebMCP…";
       panel.dataset.status = "running";
       try {
-        const file = input.files?.[0];
+        const file = input.files?.[0] ?? publicFixture;
         if (!file) throw new Error("Select one real artwork file first.");
         await options.ready;
         const modelContext = options.document.modelContext as unknown as NativeInvokingModelContext | undefined;

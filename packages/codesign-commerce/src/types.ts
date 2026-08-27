@@ -75,6 +75,139 @@ export interface AssetSlotDefinition {
   maximumBytes: number;
 }
 
+export type AssetSource =
+  | { kind: "data-url"; data: string }
+  | { kind: "https-url"; url: string };
+
+export interface StageAssetInput {
+  baseRevision: string;
+  proposalId?: string;
+  proposalRevision?: number;
+  slotId: string;
+  source: AssetSource;
+  filename?: string;
+  altText: string;
+}
+
+export interface AdapterAssetStageRequest {
+  slotId: string;
+  sourceKind: AssetSourceKind;
+  declaredMediaType: AssetMediaType;
+  bytes: Uint8Array;
+  sourceIntegrity: string;
+  filename?: string;
+  altText: string;
+}
+
+export interface AdapterStagedAsset<PrivateAsset = unknown> {
+  privateAsset: PrivateAsset;
+  mediaType: AssetMediaType;
+  byteLength: number;
+  width?: number;
+  height?: number;
+  integrity: string;
+}
+
+export interface StagedAssetReceipt {
+  assetHandle: string;
+  slotId: string;
+  mediaType: AssetMediaType;
+  byteLength: number;
+  width?: number;
+  height?: number;
+  filename?: string;
+  altText: string;
+  integrity: string;
+  sourceIntegrity: string;
+  temporary: true;
+  expiresAt: string;
+  persisted: false;
+}
+
+export interface ResolvedTemporaryAsset<PrivateAsset = unknown> {
+  privateAsset: PrivateAsset;
+  receipt: StagedAssetReceipt;
+}
+
+export interface AssetResolver<PrivateAsset = unknown> {
+  resolve(assetHandle: string): ResolvedTemporaryAsset<PrivateAsset> | null;
+}
+
+export interface AssetStagingAdapter<PrivateAsset = unknown> {
+  stageAsset(request: AdapterAssetStageRequest): Promise<AdapterStagedAsset<PrivateAsset>>;
+  releaseAsset(privateAsset: PrivateAsset): Promise<void>;
+}
+
+export interface AssetBindingContext {
+  baseRevision: string;
+  proposalId?: string;
+  proposalRevision?: number;
+}
+
+export interface PreviewCaptureRequest {
+  proposalId: string;
+  proposalRevision: number;
+  baseRevision: string;
+  variantIds?: string[];
+  surfaceIds?: string[];
+}
+
+export type PreviewTransport =
+  | { kind: "data-url"; value: string }
+  | { kind: "same-origin-url"; value: string; expiresAt?: string };
+
+export interface PreviewArtifactCandidate {
+  variantId: string;
+  surfaceId: string;
+  mediaType: "image/png" | "image/jpeg" | "image/webp";
+  width: number;
+  height: number;
+  altText: string;
+  integrity?: string;
+  transport: PreviewTransport;
+}
+
+export interface PreviewArtifact {
+  artifactId: string;
+  proposalId: string;
+  proposalRevision: number;
+  baseRevision: string;
+  variantId: string;
+  surfaceId: string;
+  mediaType: "image/png" | "image/jpeg" | "image/webp";
+  width: number;
+  height: number;
+  altText: string;
+  integrity: string;
+  transport: PreviewTransport;
+}
+
+export interface PreviewCaptureAdapter<PrivateAsset = unknown> {
+  capturePreviews(
+    request: PreviewCaptureRequest,
+    assets: AssetResolver<PrivateAsset>,
+  ): Promise<PreviewArtifactCandidate[]>;
+}
+
+export type AssetSandboxErrorCode =
+  | "INVALID_INPUT"
+  | "UNKNOWN_ASSET_SLOT"
+  | "ASSET_SOURCE_REJECTED"
+  | "ASSET_FETCH_FAILED"
+  | "ASSET_DECODE_FAILED"
+  | "ASSET_TOO_LARGE"
+  | "ASSET_STAGE_FAILED"
+  | "ASSET_EXPIRED"
+  | "UNKNOWN_ASSET"
+  | "ASSET_BINDING_MISMATCH";
+
+export type PreviewBridgeErrorCode =
+  | "INVALID_INPUT"
+  | "UNKNOWN_TARGET"
+  | "CAPABILITY_UNAVAILABLE"
+  | "PREVIEW_FAILED"
+  | "PREVIEW_STALE";
+
 export type VariantOperation = "create" | "duplicate" | "remove" | "reorder" | "set-active";
 
 export interface VariantPolicy {
@@ -281,16 +414,16 @@ export interface ProposalContext {
 
 export type ProposalEndReason = "kept" | "reverted" | "invalid" | "cancelled" | "stale" | "teardown";
 
-export interface WorkspaceAdapter<Snapshot = unknown> {
+export interface WorkspaceAdapter<Snapshot = unknown, PrivateAsset = unknown> {
   readWorkspace(): Promise<WorkspaceState>;
   listAvailability(request: AvailabilityRequest): Promise<AvailabilityResult>;
   quiescePersistence(): Promise<void>;
   captureSnapshot(): Promise<Snapshot>;
   beginProposalMode(context: ProposalContext): Promise<void>;
-  validateWorkspace(workspace: WorkspaceState): Promise<WorkspaceValidationResult>;
-  previewWorkspace(workspace: WorkspaceState): Promise<void>;
+  validateWorkspace(workspace: WorkspaceState, assets?: AssetResolver<PrivateAsset>): Promise<WorkspaceValidationResult>;
+  previewWorkspace(workspace: WorkspaceState, assets?: AssetResolver<PrivateAsset>): Promise<void>;
   restoreSnapshot(snapshot: Snapshot): Promise<void>;
-  commitWorkspace(workspace: WorkspaceState, metadata: CommitMetadata): Promise<CommitResult>;
+  commitWorkspace(workspace: WorkspaceState, metadata: CommitMetadata, assets?: AssetResolver<PrivateAsset>): Promise<CommitResult>;
   endProposalMode(reason: ProposalEndReason): Promise<void>;
   subscribeToExternalChanges(listener: (revision: string) => void): () => void;
 }
@@ -301,6 +434,9 @@ export type ProposalEngineStatus =
   | "validating"
   | "rendering"
   | "reviewable"
+  | "staging-asset"
+  | "capturing-preview"
+  | "preview-unavailable"
   | "stale"
   | "reverting"
   | "committing"
@@ -313,16 +449,20 @@ export interface ProposalEngineSnapshot {
   proposalRevision: number;
   baseRevision: string | null;
   committedRevision: string | null;
+  previewStatus: "none" | "ready-for-capture" | "available" | "unavailable";
 }
 
 export type ProposalEngineErrorCode =
   | OperationErrorCode
+  | AssetSandboxErrorCode
+  | PreviewBridgeErrorCode
   | "PROPOSAL_PENDING"
   | "STALE_PROPOSAL_REVISION"
   | "NO_PROPOSAL"
   | "OPERATION_IN_PROGRESS"
   | "CANCELLED"
   | "ADAPTER_FAILURE"
+  | "PREVIEW_REQUIRED"
   | "COMMIT_ALREADY_STARTED"
   | "COMMIT_STATUS_UNKNOWN";
 
@@ -348,7 +488,23 @@ export interface ProposalEngineSuccessResult {
   deduplicated: boolean;
   workspace: WorkspaceState;
   validation: WorkspaceValidationResult;
+  previewStatus: "ready-for-capture";
   confirmation: HumanConfirmationRequirement;
+}
+
+export interface AssetStageSuccessResult {
+  ok: true;
+  persisted: false;
+  asset: StagedAssetReceipt;
+}
+
+export interface PreviewCaptureSuccessResult {
+  ok: true;
+  persisted: false;
+  previewStatus: "available";
+  proposalId: string;
+  proposalRevision: number;
+  artifacts: PreviewArtifact[];
 }
 
 export type ValidationSeverity = "constraint-error" | "decision-required" | "warning" | "information";
@@ -399,6 +555,8 @@ export interface CommitMetadata {
   proposalId: string;
   baseRevision: string;
   operationIds: string[];
+  finalProposalRevision?: number;
+  previewReceipts?: Array<Pick<PreviewArtifact, "artifactId" | "variantId" | "surfaceId" | "integrity">>;
   trigger: "confirmed_page_keep";
 }
 

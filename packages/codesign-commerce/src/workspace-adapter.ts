@@ -3,6 +3,7 @@ import { sanitizeWorkspaceState } from "./workspace.js";
 import type {
   AvailabilityRequest,
   AvailabilityResult,
+  AssetResolver,
   CommitMetadata,
   CommitResult,
   ConfiguratorManifest,
@@ -127,11 +128,11 @@ export function sanitizeWorkspaceCommitResult(value: unknown): CommitResult {
   return fail();
 }
 
-export class GuardedWorkspaceAdapter<Snapshot = unknown> implements WorkspaceAdapter<Snapshot> {
+export class GuardedWorkspaceAdapter<Snapshot = unknown, PrivateAsset = unknown> implements WorkspaceAdapter<Snapshot, PrivateAsset> {
   readonly manifest: ConfiguratorManifest;
-  readonly #raw: WorkspaceAdapter<Snapshot>;
+  readonly #raw: WorkspaceAdapter<Snapshot, PrivateAsset>;
 
-  constructor(manifest: ConfiguratorManifest, raw: WorkspaceAdapter<Snapshot>) {
+  constructor(manifest: ConfiguratorManifest, raw: WorkspaceAdapter<Snapshot, PrivateAsset>) {
     this.manifest = validateManifest(structuredClone(manifest));
     this.#raw = raw;
   }
@@ -156,25 +157,25 @@ export class GuardedWorkspaceAdapter<Snapshot = unknown> implements WorkspaceAda
     await this.#raw.beginProposalMode(structuredClone(context));
   }
 
-  async validateWorkspace(workspace: WorkspaceState): Promise<WorkspaceValidationResult> {
+  async validateWorkspace(workspace: WorkspaceState, assets?: AssetResolver<PrivateAsset>): Promise<WorkspaceValidationResult> {
     try {
       const canonical = sanitizeWorkspaceState(workspace, this.manifest);
-      return sanitizeWorkspaceValidationResult(await this.#raw.validateWorkspace(structuredClone(canonical)), this.manifest, canonical);
+      return sanitizeWorkspaceValidationResult(await this.#raw.validateWorkspace(structuredClone(canonical), assets), this.manifest, canonical);
     } catch { return fail(); }
   }
 
-  async previewWorkspace(workspace: WorkspaceState): Promise<void> {
-    await this.#raw.previewWorkspace(structuredClone(sanitizeWorkspaceState(workspace, this.manifest)));
+  async previewWorkspace(workspace: WorkspaceState, assets?: AssetResolver<PrivateAsset>): Promise<void> {
+    await this.#raw.previewWorkspace(structuredClone(sanitizeWorkspaceState(workspace, this.manifest)), assets);
   }
 
   async restoreSnapshot(snapshot: Snapshot): Promise<void> {
     await this.#raw.restoreSnapshot(snapshot);
   }
 
-  async commitWorkspace(workspace: WorkspaceState, metadata: CommitMetadata): Promise<CommitResult> {
+  async commitWorkspace(workspace: WorkspaceState, metadata: CommitMetadata, assets?: AssetResolver<PrivateAsset>): Promise<CommitResult> {
     try {
       const canonical = sanitizeWorkspaceState(workspace, this.manifest);
-      return sanitizeWorkspaceCommitResult(await this.#raw.commitWorkspace(structuredClone(canonical), structuredClone(metadata)));
+      return sanitizeWorkspaceCommitResult(await this.#raw.commitWorkspace(structuredClone(canonical), structuredClone(metadata), assets));
     } catch { return fail(); }
   }
 

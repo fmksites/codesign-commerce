@@ -1,9 +1,14 @@
-import type {
+import {
+  AssetSandbox,
+  AssetSandboxError,
+  type AdapterAssetStageRequest,
+  type AssetStagingAdapter,
   ConfigurationState,
   DocumentWithModelContext,
   WebMcpRegistration,
   WebMcpTool,
 } from "@codesign-commerce/core";
+import { toteManifest } from "./configurator";
 
 export type StudioToteProofMediaType = "image/png" | "image/jpeg" | "image/webp";
 
@@ -23,6 +28,9 @@ export interface StudioToteAssetReceipt {
   altText: string;
   integrity: string;
   temporary: boolean;
+  sourceIntegrity?: string;
+  expiresAt?: string;
+  persisted?: false;
 }
 
 export interface StudioToteResolvedAsset extends StudioToteAssetReceipt {
@@ -93,26 +101,17 @@ function decodeSource(dataUrl: string): { mediaType: StudioToteProofMediaType; b
   return { mediaType, bytes };
 }
 
-async function sha256(bytes: Uint8Array): Promise<string> {
-  const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-  const digest = await crypto.subtle.digest("SHA-256", buffer);
-  return `sha256:${Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
-}
-
-function sanitizedFilename(filename: string | undefined): string | undefined {
-  if (filename === undefined) return undefined;
-  const normalized = filename.normalize("NFKC").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
-  return normalized.slice(0, 120) || undefined;
-}
-
-export class StudioToteAssetProofStore {
+export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioToteResolvedAsset> {
   readonly counters: StudioToteAssetCounters = { stageCalls: 0, importCalls: 0, releasedAssets: 0 };
   #temporary = new Map<string, StudioToteResolvedAsset>();
   #committed = new Map<string, StudioToteResolvedAsset>();
+  #sandbox: AssetSandbox<StudioToteResolvedAsset>;
+  #baseRevision = () => "tote-revision-1";
 
   constructor(committedAssets: unknown = []) {
-    if (!Array.isArray(committedAssets)) return;
-    for (const candidate of committedAssets) {
+    this.#sandbox = new AssetSandbox(toteManifest, this);
+    if (!Array.isArray(committedAssets)) committedAssets = [];
+    for (const candidate of committedAssets as unknown[]) {
       if (!isRecord(candidate)
         || typeof candidate.assetHandle !== "string"
         || !/^saved-[0-9a-f]{24}$/.test(candidate.assetHandle)
@@ -136,25 +135,65 @@ export class StudioToteAssetProofStore {
     }
   }
 
+  setBaseRevisionProvider(provider: () => string): void {
+    this.#baseRevision = provider;
+  }
+
   async stage(input: StudioToteAssetStageInput): Promise<StudioToteAssetReceipt> {
-    const { mediaType, bytes } = decodeSource(input.source.data);
-    const integrity = await sha256(bytes);
-    const assetHandle = `asset-${crypto.randomUUID()}`;
-    const filename = sanitizedFilename(input.filename);
-    const asset: StudioToteResolvedAsset = {
-      assetHandle,
+    const baseRevision = this.#baseRevision();
+    const receipt = await this.#sandbox.stage({ ...input, baseRevision });
+    const resolved = this.#sandbox.createResolver({ baseRevision }, true).resolve(receipt.assetHandle);
+    if (!resolved) throw new AssetProofError("UNKNOWN_ASSET", "The temporary artwork was unavailable after staging.");
+    const asset = resolved.privateAsset;
+    asset.assetHandle = receipt.assetHandle;
+    asset.sourceIntegrity = receipt.sourceIntegrity;
+    asset.expiresAt = receipt.expiresAt;
+    asset.persisted = false;
+    this.#temporary.set(receipt.assetHandle, asset);
+    return {
+      assetHandle: receipt.assetHandle,
       slotId: "print-artwork",
-      mediaType,
-      byteLength: bytes.byteLength,
-      ...(filename === undefined ? {} : { filename }),
-      altText: input.altText.trim(),
-      integrity,
+      mediaType: receipt.mediaType as StudioToteProofMediaType,
+      byteLength: receipt.byteLength,
+      ...(receipt.filename === undefined ? {} : { filename: receipt.filename }),
+      altText: receipt.altText,
+      integrity: receipt.integrity,
       temporary: true,
-      dataUrl: input.source.data,
+      sourceIntegrity: receipt.sourceIntegrity,
+      expiresAt: receipt.expiresAt,
+      persisted: false,
     };
-    this.#temporary.set(assetHandle, asset);
+  }
+
+  async stageAsset(request: AdapterAssetStageRequest) {
+    let binary = "";
+    for (let offset = 0; offset < request.bytes.length; offset += 8_192) {
+      binary += String.fromCharCode(...request.bytes.subarray(offset, offset + 8_192));
+    }
+    const dataUrl = `data:${request.declaredMediaType};base64,${btoa(binary)}`;
+    const asset: StudioToteResolvedAsset = {
+      assetHandle: "pending",
+      slotId: "print-artwork",
+      mediaType: request.declaredMediaType as StudioToteProofMediaType,
+      byteLength: request.bytes.byteLength,
+      ...(request.filename === undefined ? {} : { filename: request.filename }),
+      altText: request.altText,
+      integrity: request.sourceIntegrity,
+      temporary: true,
+      dataUrl,
+    };
     this.counters.stageCalls += 1;
-    return this.#receipt(asset);
+    return {
+      privateAsset: asset,
+      mediaType: request.declaredMediaType,
+      byteLength: request.bytes.byteLength,
+      integrity: request.sourceIntegrity,
+    };
+  }
+
+  async releaseAsset(privateAsset: StudioToteResolvedAsset): Promise<void> {
+    if (privateAsset.assetHandle !== "pending") this.#temporary.delete(privateAsset.assetHandle);
+    this.counters.releasedAssets += 1;
   }
 
   resolve(assetReference: unknown): StudioToteResolvedAsset | null {
@@ -174,9 +213,11 @@ export class StudioToteAssetProofStore {
       let committedReference = currentReference;
       if (temporary) {
         committedReference = `saved-${temporary.integrity.slice("sha256:".length, "sha256:".length + 24)}`;
-        this.#committed.set(committedReference, { ...temporary, assetHandle: committedReference, temporary: false });
+        const { sourceIntegrity: _sourceIntegrity, expiresAt: _expiresAt, persisted: _persisted, ...persistable } = temporary;
+        this.#committed.set(committedReference, { ...persistable, assetHandle: committedReference, temporary: false });
         this.#temporary.delete(currentReference);
         this.counters.importCalls += 1;
+        void this.#sandbox.releaseHandle(currentReference);
       }
       design.selections["branding.artwork_ref"] = committedReference;
       design.assets = design.assets.map((asset) => asset.slot === "print-artwork" ? { ...asset, status: "ready" } : asset);
@@ -185,8 +226,7 @@ export class StudioToteAssetProofStore {
   }
 
   releaseTemporary(): void {
-    this.counters.releasedAssets += this.#temporary.size;
-    this.#temporary.clear();
+    for (const handle of [...this.#temporary.keys()]) void this.#sandbox.releaseHandle(handle);
   }
 
   exportCommitted(): StudioToteResolvedAsset[] {
@@ -227,8 +267,8 @@ export function createStudioToteAssetProofTool(store: StudioToteAssetProofStore)
           ok: false,
           persisted: false,
           error: {
-            code: error instanceof AssetProofError ? error.code : "ASSET_STAGE_FAILED",
-            message: error instanceof Error ? error.message : "The artwork could not be staged.",
+            code: error instanceof AssetProofError ? error.code : error instanceof AssetSandboxError ? error.code : "ASSET_STAGE_FAILED",
+            message: "The artwork could not be staged under the declared temporary asset policy.",
             retryable: false,
           },
         } as never;

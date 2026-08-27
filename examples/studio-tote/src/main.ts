@@ -149,6 +149,7 @@ const adapter = new StudioToteAdapter(seed, (state) => {
     assets: assetStore.exportCommitted(),
   }));
 }, assetStore);
+assetStore.setBaseRevisionProvider(() => adapter.committedState.revision);
 const session = new ProposalSession(toteManifest, adapter);
 const controller = new ProposalReviewController(toteManifest, session);
 
@@ -399,6 +400,7 @@ if (import.meta.env.DEV && query.has("native-asset-proof")) {
     adapter,
     assetStore,
     ready: allToolsReady,
+    fixtureUrl: publicAsset("north-form-supplied-mark.png"),
   });
 }
 

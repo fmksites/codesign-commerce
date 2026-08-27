@@ -5,6 +5,9 @@ import {
   type StudioTotePreviewArtifact,
 } from "./preview-proof";
 
+const webpBytes = Uint8Array.from([0x52, 0x49, 0x46, 0x46, 0x04, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50]);
+const webpDataUrl = `data:image/webp;base64,${btoa(String.fromCharCode(...webpBytes))}`;
+
 const artifact: StudioTotePreviewArtifact = {
   artifactId: "preview-proposal-2-tote-1",
   proposalId: "proposal-2",
@@ -16,7 +19,7 @@ const artifact: StudioTotePreviewArtifact = {
   height: 640,
   altText: "Natural canvas studio tote with long handles",
   integrity: "sha256:preview-proof",
-  transport: { kind: "data-url", value: "data:image/webp;base64,cHJldmlldw==" },
+  transport: { kind: "data-url", value: webpDataUrl },
 };
 
 describe("studio tote preview feasibility proof", () => {
@@ -28,11 +31,19 @@ describe("studio tote preview feasibility proof", () => {
       proposalId: "proposal-2",
       proposalRevision: 2,
       variantId: "tote-1",
-    }, {})).resolves.toEqual({
+    }, {})).resolves.toMatchObject({
       ok: true,
       persisted: false,
       previewStatus: "available",
-      artifacts: [artifact],
+      artifacts: [{
+        proposalId: "proposal-2",
+        proposalRevision: 2,
+        baseRevision: "tote-revision-1",
+        variantId: "tote-1",
+        surfaceId: "product-preview",
+        mediaType: "image/webp",
+        transport: { kind: "data-url", value: webpDataUrl },
+      }],
     });
     expect(capture).toHaveBeenCalledWith({
       proposalId: "proposal-2",

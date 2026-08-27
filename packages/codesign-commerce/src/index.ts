@@ -5,6 +5,8 @@ export * from "./workspace.js";
 export * from "./operations.js";
 export * from "./workspace-adapter.js";
 export * from "./proposal-engine.js";
+export * from "./asset-sandbox.js";
+export * from "./preview-bridge.js";
 export * from "./adapter-boundary.js";
 export * from "./proposal-session.js";
 export * from "./in-memory-adapter.js";
