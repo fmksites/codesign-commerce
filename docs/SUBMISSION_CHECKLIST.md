@@ -33,18 +33,19 @@ proceed without the owner.
 - `CUT` — API-backed 78-run model eval; optional tooling retained, but the
   owner removed it as a submission gate on 27 August 2026.
 - `SUPERSEDED` — clean-clone evidence for judge-site commit `10a02ee` covered the
-  retired `/korrhaus/` subpath. A corrected root-plus-tote artifact requires new
-  clean-clone and browser evidence before deployment.
-- `PENDING` — commit the corrected topology, then repeat the complete gate set,
-  responsive capture, and final clean-clone status against that exact commit.
+  retired `/korrhaus/` subpath and remains historical only.
+- `PASS` — corrected topology commit `e137a3b` passed a fresh `--no-local`
+  clone: 95 tests, typecheck, build, bundle/judge/boundary/docs/eval checks,
+  `git diff --check`, exact non-release metadata, and an empty final status.
 
 ## Public release
 
 - `PASS` — public repository exists at
   <https://github.com/fmksites/codesign-commerce>.
 - `PASS` — GitHub detects the root license as Apache-2.0.
-- `PENDING` — publish the corrected topology commit, rerun hosted CI on that
-  exact commit, and repeat unauthenticated repository/source checks.
+- `PENDING` — publish the corrected topology and its evidence commit, rerun
+  hosted CI on the exact final commit, and repeat unauthenticated
+  repository/source checks.
 - `APPROVAL` — after the fresh guarded zero-traffic proof, separately approved
   production promotion, and live-route verification, choose a hosting provider
   and deploy `dist/judge-site/`.

@@ -350,3 +350,25 @@ This is local candidate evidence only. No guarded-candidate image was deployed,
 no customer traffic changed, and the public Shopify route was not claimed as
 updated or live-verified by this run. Full hashes and boundary evidence are in
 `KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
+
+## 27 August 2026 — corrected flagship topology clean clone
+
+Commit `e137a3be4333aaded523626df493a6e38dd24a72` removes the retired synthetic
+Sock Designer from the active repository and judge artifact. The resulting
+topology contains one root judge landing, the studio tote at `/tote/`, and
+release-gated links to the existing KORRHAUS Shopify Designer.
+
+The commit was cloned with `git clone --no-local` into
+`/private/tmp/codesign-topology.mseDWn/repo`. Starting without dependencies or
+build output, the clone installed 128 packages and passed 95 tests across 8
+files, strict typecheck, all builds, exact browser-bundle verification, the
+108-candidate public-boundary check, 41-file documentation check, judge-site
+check, 24-case eval policy/scorer self-test, `git diff --check`, and an empty
+final Git status.
+
+The rebuilt bundle matched
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`.
+Generated metadata named the exact commit and correctly withheld both release
+URLs with `releaseBuild: false` and `flagshipVerified: false`. This proves local
+reproducibility; public push, hosted CI, KORRHAUS deployment, production
+promotion, and judge-site hosting remain separately evidenced gates.

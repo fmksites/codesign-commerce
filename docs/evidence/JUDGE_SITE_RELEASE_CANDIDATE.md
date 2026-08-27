@@ -7,9 +7,11 @@ portability demo, and metadata-bound links to the real KORRHAUS Shopify
 Designer. The synthetic `/korrhaus/` configurator described below has been
 retired from the package and artifact.
 
-The correction was verified locally on the working tree above base commit
-`6cdad175e035756b15b85f11e6f42dc380101f91`. This is not yet an immutable
-release commit or clean-clone result.
+The corrected topology is committed as
+`e137a3be4333aaded523626df493a6e38dd24a72` (`feat: use live KORRHAUS as sole
+flagship`). It was cloned without local-object shortcuts into
+`/private/tmp/codesign-topology.mseDWn/repo` and verified from an empty
+dependency and build state.
 
 | Gate | Result |
 |---|---|
@@ -22,6 +24,8 @@ release commit or clean-clone result.
 | `npm run check:public-boundary` | PASS — 108 current public candidates |
 | `npm run check:docs` | PASS — 41 current Markdown files |
 | `npm run check:evals` | PASS — 24-case corpus plus scorer self-test; no model run claimed |
+| `git diff --check` | PASS |
+| Final clean-clone Git status | PASS — empty |
 
 Current fail-closed behavior also passed:
 
@@ -42,15 +46,23 @@ Current fail-closed behavior also passed:
 - all three rendered KORRHAUS CTA slots remained disabled rather than exposing
   an unverified destination.
 
-The corrected landing rendered at 1280 × 720 and 390 × 844 with all four images
+The clean-clone artifact identifies commit `e137a3be4333aaded523626df493a6e38dd24a72`
+and bundle
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`.
+Its metadata is deliberately non-release: `repositoryUrl` and `flagshipUrl` are
+`null`, while `releaseBuild` and `flagshipVerified` are `false`.
+
+The same corrected source tree rendered immediately before the immutable commit
+at 1280 × 720 and 390 × 844 with all four images
 loaded, no horizontal overflow, and a clean browser console. The tote loaded at
 `/tote/?reset=true`, exposed exactly the five intended CoDesign tools, and
 completed the five-tool portability flow. It rejected an invalid intermediate
 quantity-only change atomically, then staged two 50-unit variants, validated a
 coherent draft with final artwork still required, and human-Reverted to the
 exact one-variant `tote-revision-1` baseline. Every proposal result reported
-`persisted: false`; the console remained clean. A fresh immutable commit, clean
-clone, hosted CI, and public deployment remain separate gates.
+`persisted: false`; the console remained clean. Hosted CI and public deployment
+remain separate gates. The exact final release build will receive a new browser
+check after the verified KORRHAUS URL can be bound.
 
 ## Superseded historical candidate
 
