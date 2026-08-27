@@ -35,10 +35,12 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
   live traffic remains `100%` on feature-off rollback revision `sock-logo-v2`.
 
 The repository is public and licensed under Apache-2.0. The corrected
-landing-plus-tote topology is published on `main`; the exact final submission
-commit and matching hosted-CI run will be recorded after these evidence updates
-are committed and CI passes. Public hosting, KORRHAUS production promotion,
-video publication, and Devpost submission remain incomplete or approval-gated.
+landing-plus-tote topology is published on `main`. Guarded-evidence commit
+`3c14a005ff126399a875873928a378ee22085384` is publicly reachable and passed
+hosted CI run `33073677187`; the exact final submission commit will be recorded
+after the remaining live and hosting gates. Public hosting, KORRHAUS production
+promotion, video publication, and Devpost submission remain incomplete or
+approval-gated.
 The API-backed 78-run model evaluation was explicitly removed as a submission
 gate; its corpus and scorer remain optional quality tooling.
 

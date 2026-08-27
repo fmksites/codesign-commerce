@@ -49,6 +49,9 @@ proceed without the owner.
   CI run `33062478946` passed on that exact commit, and unauthenticated checks
   confirmed public `main`, Apache-2.0, raw README/source access, the tote tree,
   five tool registrations, and absence of the retired reference tree.
+- `PASS` — guarded-evidence commit `3c14a00` is public; exact hosted CI run
+  `33073677187` passed, its three new/updated public evidence documents return
+  `200` anonymously, and the retired KORRHAUS example path still returns `404`.
 - `APPROVAL` — after separately approved production promotion and live-route
   verification, choose a hosting provider and deploy `dist/judge-site/`.
 - `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;

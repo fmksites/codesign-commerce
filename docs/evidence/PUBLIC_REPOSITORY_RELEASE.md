@@ -1,5 +1,26 @@
 # Public repository release evidence
 
+## Guarded flagship evidence update — active companion evidence
+
+Commit `3c14a005ff126399a875873928a378ee22085384` publishes the final guarded
+private-snapshot hashes, immutable-image and zero-traffic proof, corrected live
+rollback baseline, service-template safety hold, and the explicit distinction
+between on-page WebMCP capability and traffic acquisition. It does not publish
+private application source or a second KORRHAUS Designer.
+
+The commit passed hosted CI in
+<https://github.com/fmksites/codesign-commerce/actions/runs/33073677187>.
+That exact run installed dependencies, passed 95 tests, strict typecheck,
+production build, exact browser-bundle verification, judge-site verification,
+the 110-candidate public-boundary scan, the 43-file documentation-link scan,
+and eval-corpus/scorer checks.
+
+Fresh unauthenticated checks confirmed that the exact commit is reachable, its
+README, guarded zero-traffic evidence, and discovery/distribution document
+return `200`, and `examples/korrhaus-reference/` returns `404`. This update
+does not prove or authorize production traffic, live-Shopify WebMCP,
+judge-site hosting, video publication, or Devpost submission.
+
 ## Corrected topology release — active evidence
 
 The corrected public topology is published at
