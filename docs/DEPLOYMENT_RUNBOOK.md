@@ -9,7 +9,8 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 2. Run `npm ci`, tests, typecheck, build, bundle verification, boundary check,
    documentation check, and eval-corpus/scorer check from a clean clone.
 3. Record the core browser-bundle SHA-256 and public example asset hashes.
-4. Run the independent model eval against those exact tool definitions.
+4. Optionally run the retained model-eval corpus only if API access and budget
+   are separately authorized; it is not a release or submission gate.
 5. Fix or explicitly document every failure before creating a release tag.
 
 ## 2. Publish the public repository — approval required

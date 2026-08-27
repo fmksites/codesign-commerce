@@ -23,9 +23,11 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 
 The repository is licensed under Apache-2.0. The local implementation and
 submission drafts are advanced, but this is not yet a published or live
-submission: the independent model eval, public remote, public deployment,
-production deployment/promotion, video publication, and Devpost submission
-remain incomplete or approval-gated.
+submission: the public remote, public deployment, production
+deployment/promotion, video publication, and Devpost submission remain
+incomplete or approval-gated. The API-backed 78-run model evaluation was
+explicitly removed as a submission gate; its corpus and scorer remain optional
+quality tooling.
 
 ## Local verification
 
@@ -66,7 +68,8 @@ See:
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.
 - [docs/EVALUATION_REPORT.md](./docs/EVALUATION_REPORT.md) for the exact
-  distinction between deterministic checks and the pending model eval.
+  distinction between verified evidence and the optional model eval that was
+  intentionally not run.
 - [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) for the gated public
   and flagship release sequence.
 - [docs/SUBMISSION_COPY.md](./docs/SUBMISSION_COPY.md) for the English Devpost

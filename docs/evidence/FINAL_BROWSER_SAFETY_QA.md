@@ -77,5 +77,5 @@ document contained:
 - zero browser-console entries.
 
 This is local browser evidence only. It does not authorize or imply a private
-deployment, production enablement, public release, independent model-eval pass,
-or completed final private Playwright suite.
+deployment, production enablement, public release, optional independent
+model-eval pass, or completed final private Playwright suite.

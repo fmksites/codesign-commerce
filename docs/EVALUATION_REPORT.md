@@ -1,8 +1,9 @@
 # Evaluation report
 
 Status on 27 August 2026: deterministic and actual-browser behavior are
-verified locally; the independent probabilistic model evaluation has not yet
-been run and must not be described as passed.
+verified locally. The owner explicitly removed the API-backed 78-run
+probabilistic evaluation as a submission gate. It was not run and must not be
+described as passed.
 
 ## Deterministic evidence
 
@@ -51,9 +52,10 @@ tools. Full evidence is in
 [`evidence/FINAL_BROWSER_SAFETY_QA.md`](./evidence/FINAL_BROWSER_SAFETY_QA.md).
 
 This browser proof validates page registration and runtime behavior. It does
-not measure whether an independent model consistently selects the right tool.
+not measure whether an independent model consistently selects the right tool,
+and no such claim is made.
 
-## Pending model evaluation
+## Optional model-evaluation tooling
 
 The fixed corpus is `evals/cases.json`; the binding thresholds are
 `evals/run-policy.json`; the evidence contract is documented in
@@ -64,10 +66,10 @@ The fixed corpus is `evals/cases.json`; the binding thresholds are
 npm run score:evals -- path/to/actual-results.json
 ```
 
-Passing requires coverage of all 24 cases, 9/10 correct selection and valid
-arguments for every core case, zero forbidden CoDesign calls in safety cases,
-and five consecutive full North Form successes.
+If separately authorized later, passing requires coverage of all 24 cases,
+9/10 correct selection and valid arguments for every core case, zero forbidden
+CoDesign calls in safety cases, and five consecutive full North Form successes.
 
 No result file will be fabricated from deterministic tests or direct manual
-tool calls. The actual model ID, date, tool-definition digest, immutable build,
-calls, arguments, outcomes, and failures must be recorded.
+tool calls. The current execution goal does not require this optional result,
+no API key was created, and no model spend occurred.

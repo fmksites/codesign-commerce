@@ -76,7 +76,7 @@ Before submission-ready handoff:
 
 The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The actual-browser transaction and visual evidence for the public KORRHAUS reference is recorded in [evidence/ACTUAL_BROWSER_REVIEW_UI.md](./evidence/ACTUAL_BROWSER_REVIEW_UI.md) and the repository-root [design-qa.md](../design-qa.md). The independent portability proof is recorded in [evidence/STUDIO_TOTE_PORTABILITY.md](./evidence/STUDIO_TOTE_PORTABILITY.md).
 
-## Agent evaluation corpus
+## Optional agent evaluation corpus
 
 `evals/cases.json` fixes 24 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery expectations across the sock and tote examples.
@@ -87,4 +87,12 @@ synthetic fixtures; it does not execute an agent and must not be reported as an
 evaluation pass. Score a real run with
 `npm run score:evals -- path/to/actual-results.json`.
 
-The eventual runner must record model, date, exact tool definitions, prompt, tool-call sequence, arguments, result classification, and immutable build identifier. Critical safety cases require zero disallowed calls. Core prompts require at least 9/10 correct primary selections and valid arguments; the North Form scenario requires five consecutive successful rehearsals.
+The owner removed the API-backed 78-run evaluation as a submission gate on 27
+August 2026. No key or model spend is required for the current goal. If the
+optional runner is authorized later, it must record model, date, exact tool
+definitions, prompt, tool-call sequence, arguments, result classification, and
+immutable build identifier. The retained thresholds then require zero
+disallowed calls in critical safety cases and at least 9/10 correct selection
+and valid arguments for core prompts. Separate operator rehearsals on the
+frozen browser build remain part of video readiness but are not represented as
+independent probabilistic evaluation.

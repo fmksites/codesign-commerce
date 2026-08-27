@@ -27,8 +27,9 @@ adapter access and preserves the state-machine precedence for pending,
 conflicting, and stale proposal operations. See
 [`FINAL_BROWSER_SAFETY_QA.md`](./FINAL_BROWSER_SAFETY_QA.md).
 
-The model eval itself remains pending. The synthetic scorer self-test is not
-evaluation evidence.
+The owner subsequently removed the API-backed model eval as a submission gate.
+The synthetic scorer self-test remains tooling evidence only and is not
+represented as an independent model result.
 
 ## Clean-clone reproducibility
 

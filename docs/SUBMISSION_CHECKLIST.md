@@ -14,7 +14,8 @@ proceed without the owner.
 - `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
   private feature-off fallback browser checks.
 - `PENDING` — complete private Designer E2E on the final bundle.
-- `PENDING` — independent model eval and scored result file.
+- `CUT` — API-backed 78-run model eval; optional tooling retained, but the
+  owner removed it as a submission gate on 27 August 2026.
 - `PASS` — clean clone of evidence commit `aeba23e` passes all local public gates.
 
 ## Public release
