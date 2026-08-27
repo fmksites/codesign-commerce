@@ -94,6 +94,9 @@ See:
 - [docs/EVALUATION_REPORT.md](./docs/EVALUATION_REPORT.md) for the exact
   distinction between verified evidence and the optional model eval that was
   intentionally not run.
+- [docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md)
+  for clean-clone, responsive, and five-tool proof of the single deployable
+  public artifact.
 - [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) for the gated public
   and flagship release sequence.
 - [docs/SUBMISSION_COPY.md](./docs/SUBMISSION_COPY.md) for the English Devpost

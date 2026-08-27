@@ -300,3 +300,21 @@ strict typecheck, all three builds, exact browser-bundle verification, the
 policy/scorer self-test. The rebuilt browser bundle matched
 `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`.
 The final clone status was empty.
+
+## 27 August 2026 — provider-neutral judge-site clean clone
+
+Implementation commit `10a02ee40e1f6310157aaf925e4097e3faa75a69` was
+cloned without local-object shortcuts into
+`/private/tmp/codesign-judge-site.ZaeCJC/repo`. From an empty state the clone
+installed 129 packages, passed 95 tests, strict typecheck, the core and both
+example builds, the new assembled judge-site build/verifier, exact browser-
+bundle verification, the 110-file public-boundary check, the 37-file docs
+check, the optional eval policy/scorer self-test, and an empty final status.
+
+The exact clean-clone artifact displayed package `0.1.0`, commit `10a02ee40e1f`,
+and bundle `e3f95e6e51bb6b60` in the actual WebMCP-capable browser. Its desktop
+and 390 × 844 mobile landing layouts loaded all imagery without overflow or
+console output. Both same-origin configurator subpaths discovered five tools,
+completed their full two-design proposal and validation flows with
+`persisted: false`, exposed human Keep/Revert, and Reverted to their exact
+baselines. Full evidence is in `JUDGE_SITE_RELEASE_CANDIDATE.md`.

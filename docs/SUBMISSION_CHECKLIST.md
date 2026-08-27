@@ -7,6 +7,8 @@ proceed without the owner.
 
 - `PASS` — reusable public core and exactly five webpage tools.
 - `PASS` — KORRHAUS public reference and materially different studio tote.
+- `PASS` — anonymous English judge landing and one provider-neutral static
+  artifact containing both deterministic configurator subpaths.
 - `PASS` — local disabled-by-default private flagship bridge.
 - `PASS` — 95 deterministic tests, typecheck, builds, boundary/docs checks.
 - `PASS` — repository security scan findings remediated.
@@ -22,14 +24,15 @@ proceed without the owner.
   console; this was not a feature-enabled Chrome WebMCP pass.
 - `CUT` — API-backed 78-run model eval; optional tooling retained, but the
   owner removed it as a submission gate on 27 August 2026.
-- `PASS` — clean clone of submission-evidence commit `8d3b5dd` passes all local
-  public gates with the exact final browser-bundle digest.
+- `PASS` — clean clone of judge-site implementation commit `10a02ee` passes all
+  public gates, assembled-site verification, and exact five-tool flows on both
+  subpaths with the final browser-bundle digest.
 
 ## Public release
 
 - `APPROVAL` — create and publish the public remote repository.
 - `PENDING` — confirm Apache-2.0 detection in repository About.
-- `APPROVAL` — choose hosting provider and deploy public examples.
+- `APPROVAL` — choose hosting provider and deploy `dist/judge-site/`.
 - `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;
   additionally repeat in Chrome 149+ if its WebMCP testing flag is configured.
 - `PENDING` — record final public commit, bundle hash, screenshots, and links.
