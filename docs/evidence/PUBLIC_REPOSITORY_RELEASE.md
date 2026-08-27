@@ -1,10 +1,42 @@
 # Public repository release evidence
 
-> Topology status: this file records an earlier successful public-source release
-> that still included the synthetic KORRHAUS reference. The corrected
-> landing-plus-tote topology is local and has not been pushed. Do not use the
-> commit or CI run below as final submission-release evidence; append a new exact
-> commit and hosted-CI result after the correction is approved for push.
+## Corrected topology release — active evidence
+
+The corrected public topology is published at
+<https://github.com/fmksites/codesign-commerce>. Commit
+`485060654fb9c209df6f7614006875b55d375947` is publicly reachable as `main` and
+passed hosted CI in
+<https://github.com/fmksites/codesign-commerce/actions/runs/33062478946>.
+
+Fresh unauthenticated checks confirmed:
+
+- repository visibility is public, the default branch is `main`, and GitHub
+  detects `Apache-2.0`;
+- the remote `main` ref resolves to the exact commit above;
+- the raw README and five-tool WebMCP source are accessible;
+- the exact public tree contains `examples/studio-tote/`, the judge landing,
+  and `packages/codesign-commerce/src/webmcp.ts`;
+- the retired `examples/korrhaus-reference/` tree is absent; and
+- the source contains exactly the intended read, list-options, propose,
+  create-design, and validate tool registrations.
+
+The exact final commit was also cloned without local-object shortcuts into
+`/private/tmp/codesign-final-topology.AelRWu/repo`. From an empty dependency and
+build state it installed 128 packages and passed 95 tests, strict typecheck,
+build, exact bundle verification, judge-site, public-boundary, docs, and eval
+checks, `git diff --check`, and an empty final Git status. The generated
+non-release metadata names commit `485060654fb9c209df6f7614006875b55d375947`,
+withholds both release URLs, and marks both release flags `false`.
+
+This proves the corrected public source release and reproducibility. It does
+not prove or authorize KORRHAUS production traffic, judge-site hosting, video
+publication, or Devpost submission.
+
+## Superseded initial public release
+
+The remainder records the earlier successful public-source release that still
+included the synthetic KORRHAUS reference. It is historical and must not be
+used as final submission-release evidence.
 
 Date: 27 August 2026
 

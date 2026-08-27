@@ -28,11 +28,12 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
   latest private hardening.
 
 The repository is public and licensed under Apache-2.0. The corrected
-landing-plus-tote topology is locally verified but not yet pushed. Public
-hosting, KORRHAUS production promotion, video publication, and Devpost
-submission remain incomplete or approval-gated. The API-backed 78-run model
-evaluation was explicitly removed as a submission gate; its corpus and scorer
-remain optional quality tooling.
+landing-plus-tote topology is published on `main`; hosted CI passed on exact
+commit `485060654fb9c209df6f7614006875b55d375947`. Public hosting, KORRHAUS
+production promotion, video publication, and Devpost submission remain
+incomplete or approval-gated. The API-backed 78-run model evaluation was
+explicitly removed as a submission gate; its corpus and scorer remain optional
+quality tooling.
 
 ## Local verification
 

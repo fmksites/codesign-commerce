@@ -43,9 +43,10 @@ proceed without the owner.
 - `PASS` — public repository exists at
   <https://github.com/fmksites/codesign-commerce>.
 - `PASS` — GitHub detects the root license as Apache-2.0.
-- `PENDING` — publish the corrected topology and its evidence commit, rerun
-  hosted CI on the exact final commit, and repeat unauthenticated
-  repository/source checks.
+- `PASS` — corrected topology and evidence commit `4850606` are public; hosted
+  CI run `33062478946` passed on that exact commit, and unauthenticated checks
+  confirmed public `main`, Apache-2.0, raw README/source access, the tote tree,
+  five tool registrations, and absence of the retired reference tree.
 - `APPROVAL` — after the fresh guarded zero-traffic proof, separately approved
   production promotion, and live-route verification, choose a hosting provider
   and deploy `dist/judge-site/`.
