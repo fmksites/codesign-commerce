@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ProposalSession, validateManifest, type ConfigurationState } from "@codesign-commerce/core";
+import { StudioToteAssetProofStore } from "./asset-proof";
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
 
 const clone = <T>(value: T): T => structuredClone(value);
@@ -10,6 +11,14 @@ describe("studio tote portability adapter", () => {
     expect(toteManifest.id).toBe("codesign.studio-tote-reference");
     expect(toteManifest.productType).toBe("custom-canvas-studio-tote");
     expect(toteManifest.controls.map((option) => option.id)).toContain("canvas.weight");
+    expect(toteManifest.controls.map((option) => option.id)).toEqual(expect.arrayContaining([
+      "branding.artwork_ref",
+      "branding.text",
+      "branding.typeface",
+      "branding.ink_color",
+      "branding.scale",
+      "branding.rotation",
+    ]));
     expect(toteManifest.controls.map((option) => option.id)).not.toContain("body.color");
   });
 
@@ -100,5 +109,45 @@ describe("studio tote portability adapter", () => {
       designs: [{ quantity: 50, selections: { "bag.color": "charcoal" } }],
     });
     expect(persisted).toHaveLength(2);
+  });
+
+  it("keeps the human path complete for typography, transforms, variants, and artwork", async () => {
+    const tinyPng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+    const store = new StudioToteAssetProofStore();
+    const persisted: ConfigurationState[] = [];
+    const adapter = new StudioToteAdapter(toteInitialState, (state) => persisted.push(state), store);
+    expect(adapter.applyHumanChange("tote-1", "branding.text", "NORTH FORM STUDIO")).toBe(true);
+    expect(adapter.applyHumanChange("tote-1", "branding.typeface", "editorial")).toBe(true);
+    expect(adapter.applyHumanChange("tote-1", "branding.scale", 1.25)).toBe(true);
+    expect(adapter.applyHumanChange("tote-1", "branding.rotation", -8)).toBe(true);
+    const secondId = adapter.addHumanVariant("tote-1");
+    expect(secondId).toBeTruthy();
+    expect(adapter.committedState.designs.map((design) => design.quantity)).toEqual([50, 50]);
+    expect(adapter.committedState.order.totalQuantity).toBe(100);
+    expect(adapter.setHumanActiveVariant(secondId!)).toBe(true);
+    expect(await adapter.applyHumanArtwork(secondId!, {
+      slotId: "print-artwork",
+      source: { kind: "data-url", data: tinyPng },
+      filename: "north-form.png",
+      altText: "North Form supplied artwork",
+    })).toBe(true);
+    const savedReference = adapter.committedState.designs[1]!.selections["branding.artwork_ref"];
+    expect(savedReference).toMatch(/^saved-[0-9a-f]{24}$/);
+    expect(store.resolve(savedReference)?.dataUrl).toBe(tinyPng);
+    expect(adapter.removeHumanArtwork(secondId!)).toBe(true);
+    expect(adapter.committedState.designs[1]!.selections["branding.artwork_ref"]).toBeUndefined();
+    expect(store.exportCommitted()).toHaveLength(0);
+    expect(persisted.length).toBeGreaterThanOrEqual(8);
+  });
+
+  it("does not duplicate a minimum-quantity variant by inflating the collection total", () => {
+    const minimumState = clone(toteInitialState);
+    minimumState.designs[0]!.quantity = 25;
+    minimumState.order.totalQuantity = 25;
+    const adapter = new StudioToteAdapter(minimumState);
+
+    expect(adapter.addHumanVariant("tote-1")).toBeNull();
+    expect(adapter.committedState.designs).toHaveLength(1);
+    expect(adapter.committedState.order.totalQuantity).toBe(25);
   });
 });

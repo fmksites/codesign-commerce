@@ -333,3 +333,21 @@
 - Literal normal-ChatGPT-conversation verification remains explicitly deferred to Item 11 and is not claimed here.
 - No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
 - Item 9 is next: complete the public studio-tote visual product experience and full judge flow.
+
+## 27 August 2026 — Item 9 completed with the full visual tote experience
+
+- Rebuilt the public tote as a visual-first three-column merchant customizer with a canvas-first 390-pixel mobile layout, while keeping semantic HTML, actual form controls, the real tote renderer, and ordinary human operation.
+- Added customer and agent parity for names and quantities, materials, construction, typography, real artwork, print method and placement, ink, scale, rotation, variant selection and quantity-preserving duplication.
+- The versioned inventory now accounts for all 25 shipped surfaces: 14 control mappings, four variant operations, one asset slot, and six legitimate exclusions.
+- The North Form journey now uses Foundation, Branding, and Variants passes, one real 214,745-byte PNG, two named 50-tote variants, production-ready validation, and one revision-bound preview per variant.
+- Added targeted-refinement coverage proving that a subjective charcoal-only change leaves the natural variant byte-equivalent.
+- Actual in-app-browser Revert restored the one-variant baseline with zero local/server writes, zero commits, and one asset release. A fresh visible Keep produced one local write, one server simulation write, and one configuration commit.
+- Actual ordinary-browser fallback hid the review panel, exposed no WebMCP tools, remained fully editable, and restored a human charcoal selection after navigation.
+- Generated desktop and mobile design references, compared them directly with final browser captures, and recorded the implementation fidelity ledger. Native 390 by 844 testing found and fixed a four-pixel navigation overflow; the corrected page measured exactly 390 pixels wide.
+- Hardened minimum-quantity duplication so a 25-unit design cannot inflate the collection total, and pruned removed human artwork bytes from the saved local fixture.
+- Updated the judge prompt, downloadable demo artwork, expected results, tote README, testing guide, eval corpus, submission copy, and current six-tool documentation.
+- Final verification passed 20 test files / 175 tests, strict typecheck, production build, exact-six tool discovery, 25/25 parity, 164-candidate public-boundary scan, 64-file documentation check, 25-case eval validation/scorer self-test, judge-site verification, browser-bundle digest `sha256:7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`, and `git diff --check`.
+- The current attached Chrome instance rendered the final shell with no console errors or overflow but did not expose `document.modelContext`; Item 8's native Chrome 151 exact-six evidence remains valid, and the final immutable-build Chrome repeat plus literal normal-ChatGPT conversation remain Item 11 release checks.
+- Dated evidence: `docs/evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md`.
+- No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
+- Item 10 is next and begins with the required explicit owner approval before any private KORRHAUS edit.

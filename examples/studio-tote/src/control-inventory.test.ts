@@ -9,11 +9,11 @@ describe("studio tote human-control parity", () => {
     expect(report).toEqual({
       integrationId: "codesign.studio-tote-reference.web",
       manifestId: toteManifest.id,
-      mappedControls: 8,
-      mappedVariantOperations: 2,
-      mappedAssetSlots: 0,
+      mappedControls: 14,
+      mappedVariantOperations: 4,
+      mappedAssetSlots: 1,
       excludedControls: 6,
-      totalHumanControls: 16,
+      totalHumanControls: 25,
     });
   });
 });

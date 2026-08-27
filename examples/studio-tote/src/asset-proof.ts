@@ -247,6 +247,13 @@ export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioTote
       design.selections["branding.artwork_ref"] = committedReference;
       design.assets = design.assets.map((asset) => asset.slot === "print-artwork" ? { ...asset, status: "ready" } : asset);
     }
+    const referencedHandles = new Set(next.designs.flatMap((design) => {
+      const reference = design.selections["branding.artwork_ref"];
+      return typeof reference === "string" ? [reference] : [];
+    }));
+    for (const handle of this.#committed.keys()) {
+      if (!referencedHandles.has(handle)) this.#committed.delete(handle);
+    }
     return next;
   }
 

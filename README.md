@@ -17,7 +17,12 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 - A materially different studio-tote adapter using its existing visual renderer, real supplied artwork, coupled production rules, deterministic reset, browser-local Keep, and zero-write temporary proposals.
 - Deterministic unit, schema, lifecycle, safety, review, asset, and preview tests. Native Chrome 151 and the Codex in-app browser both discovered the exact six tools and executed a visible proposal/preview/Revert flow with zero writes.
 
-This is local implementation evidence, not a release claim. The full tote product pass, private KORRHAUS Manifest 2 adapter, public deployment/publication, literal ChatGPT release validation, production traffic, and Devpost submission remain incomplete or separately approval-gated. The optional model-evaluation corpus and scorer are quality tooling, not proof of an actual model run.
+This is local implementation evidence, not a release claim. The complete tote
+product pass is implemented and locally verified; the private KORRHAUS Manifest
+2 adapter, public deployment/publication, literal ChatGPT release validation,
+production traffic, and Devpost submission remain incomplete or separately
+approval-gated. The optional model-evaluation corpus and scorer are quality
+tooling, not proof of an actual model run.
 
 ## Local verification
 

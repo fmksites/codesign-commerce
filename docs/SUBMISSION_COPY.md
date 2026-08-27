@@ -51,9 +51,11 @@ merchant's live preview, and production-readiness validation.
 
 KORRHAUS's real Custom Sock Designer is the flagship merchant integration. A
 second, materially different studio-tote configurator uses the same unchanged
-core package with its own manifest, adapter, renderer, and coupled print/canvas
-rules. This demonstrates portability without claiming that CoDesign Commerce
-is a universal renderer.
+core package with its own manifest, adapter, renderer, actual-artwork handling,
+typography and transform controls, and coupled print/canvas rules. In the judge
+flow, one brief visibly builds two named variants through Foundation, Branding,
+and Variants passes and returns one visual preview per variant. This demonstrates
+portability without claiming that CoDesign Commerce is a universal renderer.
 
 ## Why WebMCP
 

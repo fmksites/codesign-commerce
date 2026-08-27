@@ -26,20 +26,21 @@ traffic acquisition.
    Bot Auth traffic. Cloud-browser allowlisting is not a prerequisite for
    desktop site-tool discovery, and any allowlisting change remains a separate
    operational/security decision.
-4. **Expose tools only in the supported state.** The current V1 registers five
-   tools after Route 02 is open with catalog-supported choices. Route 01,
-   unsupported exact-colour states, and ordinary browsers remain unchanged.
-   All five tools—read, list options, propose, create design, and validate—are
-   zero-write. None exposes Keep, Revert, or save: Revert writes nothing, and
-   only the visible human Keep control may enter the existing Designer save
-   path.
+4. **Expose tools only in the supported state.** The Manifest 2 integration
+   registers exactly six tools after Route 02 is open with catalog-supported
+   choices. Route 01, unsupported exact-colour states, and ordinary browsers
+   remain unchanged. Read, capability discovery, temporary asset staging,
+   proposal application, preview capture, and validation cannot persist the
+   configuration. None exposes Keep, Revert, save, quote, order, or checkout:
+   Revert writes nothing, and only the visible human Keep control may enter the
+   existing Designer save path.
 5. **Measure the funnel without customer data.** Recommended first-party events
    are capability available, proposal staged, proposal reverted, proposal kept,
    and proposal failed, plus aggregate referral/source reporting. Event payloads
    must not contain the brief, customer identity, artwork, tokens, prices, or
    private configuration data.
 6. **Evaluate discovery separately from execution.** Track whether agent-origin
-   visits increase, whether the five tools are actually discovered, whether a
+   visits increase, whether the six tools are actually discovered, whether a
    proposal is kept, and whether the visitor later completes the existing human
    lead/quote journey. Do not attribute traffic growth to WebMCP without this
    evidence.

@@ -21,12 +21,16 @@ import {
   type WorkspaceState,
   type WorkspaceValidationResult,
 } from "@codesign-commerce/core";
-import type { StudioToteAssetProofStore, StudioToteResolvedAsset } from "./asset-proof";
+import type {
+  StudioToteAssetProofStore,
+  StudioToteAssetStageInput,
+  StudioToteResolvedAsset,
+} from "./asset-proof";
 
 export const toteManifest: ConfiguratorManifest = {
   schemaVersion: "2.0",
   id: "codesign.studio-tote-reference",
-  version: "2.0.0",
+  version: "2.1.0",
   displayName: "Studio tote public reference",
   productType: "custom-canvas-studio-tote",
   controls: [
@@ -159,6 +163,71 @@ export const toteManifest: ConfiguratorManifest = {
       affectedPreviewRegion: "front decoration artwork",
     },
     {
+      id: "branding.text",
+      label: "Studio name",
+      agentDescription: "Set the visible studio or collection name used when no supplied artwork is attached.",
+      scope: "variant",
+      kind: "text",
+      agentWritable: true,
+      requirement: "configuration",
+      maximumLength: 32,
+      affectedPreviewRegion: "front decoration typography",
+    },
+    {
+      id: "branding.typeface",
+      label: "Typography",
+      agentDescription: "Choose the public typography direction for the studio-name fallback.",
+      scope: "variant",
+      kind: "enum",
+      agentWritable: true,
+      requirement: "configuration",
+      affectedPreviewRegion: "front decoration typography",
+      values: [
+        { id: "grotesk", label: "Grotesk bold" },
+        { id: "editorial", label: "Editorial serif" },
+        { id: "mono", label: "Studio mono" },
+      ],
+    },
+    {
+      id: "branding.ink_color",
+      label: "Artwork colour",
+      agentDescription: "Choose the visible single-colour ink used for studio-name typography.",
+      scope: "variant",
+      kind: "color",
+      agentWritable: true,
+      requirement: "configuration",
+      affectedPreviewRegion: "front decoration colour",
+      values: [
+        { id: "ink", label: "Ink black" },
+        { id: "cobalt", label: "Studio blue" },
+        { id: "canvas", label: "Canvas white" },
+      ],
+    },
+    {
+      id: "branding.scale",
+      label: "Artwork scale",
+      agentDescription: "Scale the visible branding between 50 and 140 percent of its standard size.",
+      scope: "variant",
+      kind: "scale",
+      agentWritable: true,
+      requirement: "configuration",
+      minimum: 0.5,
+      maximum: 1.4,
+      affectedPreviewRegion: "front decoration size",
+    },
+    {
+      id: "branding.rotation",
+      label: "Artwork rotation",
+      agentDescription: "Rotate the visible branding between minus 30 and plus 30 degrees.",
+      scope: "variant",
+      kind: "rotation",
+      agentWritable: true,
+      requirement: "configuration",
+      minimum: -30,
+      maximum: 30,
+      affectedPreviewRegion: "front decoration rotation",
+    },
+    {
       id: "branding.artwork_status",
       label: "Print artwork",
       agentDescription: "Read whether final production print artwork is available for this tote variant.",
@@ -242,6 +311,11 @@ export const toteInitialState: ConfigurationState = {
       "print.method": "screen-1",
       "print.position": "front-center",
       "construction.reinforced": true,
+      "branding.text": "NORTH FORM",
+      "branding.typeface": "grotesk",
+      "branding.ink_color": "ink",
+      "branding.scale": 1,
+      "branding.rotation": 0,
     },
     assets: [{ slot: "print-artwork", status: "placeholder", agentWritable: false }],
   }],
@@ -331,8 +405,18 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
     persist?: (state: ConfigurationState) => void,
     assetStore?: StudioToteAssetProofStore,
   ) {
-    this.#committed = clone(initialState);
-    this.#visible = clone(initialState);
+    const hydrated = clone(initialState);
+    hydrated.configuratorId = toteManifest.id;
+    hydrated.manifestVersion = toteManifest.version;
+    for (const design of hydrated.designs) {
+      design.selections["branding.text"] ??= "NORTH FORM";
+      design.selections["branding.typeface"] ??= "grotesk";
+      design.selections["branding.ink_color"] ??= "ink";
+      design.selections["branding.scale"] ??= 1;
+      design.selections["branding.rotation"] ??= 0;
+    }
+    this.#committed = hydrated;
+    this.#visible = clone(hydrated);
     const revisionSuffix = Number(initialState.revision.match(/(\d+)$/)?.[1]);
     if (Number.isInteger(revisionSuffix) && revisionSuffix > 0) this.#revisionNumber = revisionSuffix;
     this.#persist = persist;
@@ -566,13 +650,50 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
     return true;
   }
 
+  setHumanActiveVariant(designId: string): boolean {
+    const next = this.committedState;
+    if (!next.designs.some((design) => design.id === designId)) return false;
+    next.activeDesignId = designId;
+    this.#setHumanState(next);
+    return true;
+  }
+
+  async applyHumanArtwork(designId: string, input: StudioToteAssetStageInput): Promise<boolean> {
+    if (!this.#assetStore) return false;
+    const next = this.committedState;
+    const design = next.designs.find((candidate) => candidate.id === designId);
+    if (!design) return false;
+    const receipt = await this.#assetStore.stage(input);
+    design.selections["branding.artwork_ref"] = receipt.assetHandle;
+    design.assets = design.assets.map((asset) => asset.slot === "print-artwork" ? { ...asset, status: "ready" } : asset);
+    this.#setHumanState(this.#assetStore.commitState(next));
+    return true;
+  }
+
+  removeHumanArtwork(designId: string): boolean {
+    const next = this.committedState;
+    const design = next.designs.find((candidate) => candidate.id === designId);
+    if (!design) return false;
+    delete design.selections["branding.artwork_ref"];
+    design.assets = design.assets.map((asset) => asset.slot === "print-artwork" ? { ...asset, status: "placeholder" } : asset);
+    this.#setHumanState(this.#assetStore?.commitState(next) ?? next);
+    return true;
+  }
+
   addHumanVariant(sourceDesignId: string): string | null {
     const next = this.committedState;
     if (next.designs.length >= toteManifest.variantPolicy.maximumVariants) return null;
     const source = next.designs.find((design) => design.id === sourceDesignId);
-    if (!source) return null;
+    if (!source || source.quantity < 50) return null;
     const designId = `tote-${next.designs.length + 1}-${Date.now()}`;
-    const created = { ...clone(source), id: designId, name: `Tote variant ${next.designs.length + 1}` };
+    const createdQuantity = Math.max(25, Math.floor((source.quantity / 2) / 25) * 25);
+    source.quantity = Math.max(25, source.quantity - createdQuantity);
+    const created = {
+      ...clone(source),
+      id: designId,
+      name: `Tote variant ${next.designs.length + 1}`,
+      quantity: createdQuantity,
+    };
     next.designs.push(created);
     next.activeDesignId = designId;
     next.order.totalQuantity = next.designs.reduce((total, design) => total + design.quantity, 0);

@@ -105,26 +105,36 @@ separate disposable-draft procedure has been explicitly approved.
 
 ## Runnable demo — studio tote portability proof
 
-Open a fresh `/tote/?reset=true` URL and use this exact prompt:
+Download the **Demo artwork** from the judge landing, attach the resulting
+`north-form-supplied-mark.png` to the agent conversation, open a fresh
+`/tote/?reset=true` URL, and use this exact prompt:
 
-> Create 100 studio totes split evenly across two variants. Make the first natural 12 oz canvas with long handles and a centered one-colour print. Make the second charcoal with short handles and an upper-left print. Leave final artwork for later.
+> Create 100 studio totes for North Form, split evenly across two variants, and use the supplied artwork. Name the first North Form Natural: natural 12 oz canvas, long handles, centered one-colour ink artwork at 105% scale. Name the second North Form Charcoal: charcoal 12 oz canvas, short handles, upper-left one-colour artwork at 82% scale and -6 degrees rotation. Show me both previews and check production readiness. Do not save either design.
 
-The intended sequence uses the same six tools. The option values, dependencies,
-renderer, persisted human fixture, and validation belong to the tote adapter
-rather than the CoDesign core. A judge run with supplied artwork must stage and
-visibly render the actual image; the studio name is the typography fallback
-when no artwork is supplied.
+The intended sequence uses all six tools. The agent reads the workspace and
+relevant capabilities, stages the supplied PNG, then applies Foundation,
+Branding, and Variants as coherent temporary passes. It captures one current
+preview per variant and validates the complete collection. The option values,
+dependencies, renderer, persisted human fixture, and validation belong to the
+tote adapter rather than the CoDesign core. The studio name remains the
+typography fallback when no artwork is supplied.
 
 Expected result:
 
-- `Natural long-handle`: 50 totes, natural 12 oz canvas, long handles, centered
-  one-colour print.
-- `Charcoal short-handle`: 50 totes, charcoal canvas, short handles, upper-left
-  print.
+- `North Form Natural`: 50 totes, natural 12 oz canvas, long handles, centered
+  one-colour artwork at 105% scale.
+- `North Form Charcoal`: 50 totes, charcoal 12 oz canvas, short handles,
+  upper-left one-colour artwork at 82% scale and -6 degrees rotation.
 - Total: 100 totes.
 - Configuration valid: yes.
-- Production ready: no, because final print artwork is still required.
+- Production ready: yes; the supplied artwork is visibly present on both
+  revision-bound previews.
 - Persisted: false until a person chooses Keep.
+
+Ask for one subjective refinement before deciding, for example: “Make only the
+charcoal version feel bolder: use cobalt ink, increase the artwork to 95%, and
+rotate it to -10 degrees.” The natural variant must remain byte-equivalent and
+both refreshed previews must match the newest proposal revision.
 
 For a coupled-rule check, reset and ask for a two-colour screen print at 25
 totes. The adapter must reject the batch because two-colour screen print

@@ -12,24 +12,31 @@ npm run dev --workspace @codesign-commerce/studio-tote
 ```
 
 Open the printed local URL. Add `?reset=true` for the documented anonymous
-baseline, or `?reset=true&agent-preview=true` for a local visual-QA proposal
-that creates two 50-tote variants. The review remains temporary until a person
-chooses Keep or Revert.
+baseline. The normal page supports every shipped customer choice: materials,
+variant names and quantities, studio-name typography, supplied artwork, print
+method and placement, ink colour, scale, rotation, and up to three variants.
+
+For implementation-only visual QA, `?reset=true&agent-preview=true` creates a
+three-pass temporary proposal with two 50-tote variants and the repository's
+real North Form artwork. That query is not the WebMCP judge path. In either
+case, the review remains temporary until a person chooses Keep or Revert.
 
 The example contains no prices, checkout, ordering, upload, customer data,
 confidential merchant data, or production actions. It is a portability proof,
 not a universal renderer or claimed live merchant deployment.
 
-Use this exact judge brief:
+For a reproducible agent run, attach
+[`public/north-form-supplied-mark.png`](./public/north-form-supplied-mark.png)
+to the conversation, open a fresh `?reset=true` page, and use this judge brief:
 
-> Create 100 studio totes split evenly across two variants. Make the first natural 12 oz canvas with long handles and a centered one-colour print. Make the second charcoal with short handles and an upper-left print. Leave final artwork for later.
+> Create 100 studio totes for North Form, split evenly across two variants, and use the supplied artwork. Name the first North Form Natural: natural 12 oz canvas, long handles, centered one-colour ink artwork at 105% scale. Name the second North Form Charcoal: charcoal 12 oz canvas, short handles, upper-left one-colour artwork at 82% scale and -6 degrees rotation. Show me both previews and check production readiness. Do not save either design.
 
 The tote registers the exact six reusable WebMCP tools documented in
 [`docs/WEBMCP_TOOLS.md`](../../docs/WEBMCP_TOOLS.md). Agent changes are applied
-as coherent temporary passes, actual supplied artwork can be staged and shown
-in the tote renderer, and revision-bound WebP previews can be returned to the
-conversation. There is no WebMCP save tool; only the visible page Keep control
-can persist a reviewed proposal.
+as visible Foundation, Branding, and Variants passes. The supplied PNG is
+staged into a temporary opaque handle, rendered in the same tote canvas, and
+returned as one revision-bound WebP preview per variant. There is no WebMCP
+save tool; only the visible page Keep control can persist a reviewed proposal.
 
 The complete live-flagship and tote walkthrough, expected tool sequence, safety
 checks, and recovery instructions are in

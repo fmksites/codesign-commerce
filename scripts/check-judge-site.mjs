@@ -17,6 +17,7 @@ const requiredFiles = [
   "assets/korrhaus-sock-cream.svg",
   "tote/index.html",
   "tote/tote-natural-long.png",
+  "tote/north-form-supplied-mark.png",
 ];
 await Promise.all(requiredFiles.map((file) => access(path.join(site, file))));
 
@@ -35,7 +36,8 @@ const requiredLandingText = [
   "Fictional studio tote",
   "The agent never gets the last click",
   "We need 120 pairs for North Form",
-  "Create 100 studio totes split evenly",
+  "Create 100 studio totes for North Form",
+  "Download demo artwork",
 ];
 for (const marker of requiredLandingText) {
   if (!landingHtml.includes(marker)) throw new Error(`Judge landing is missing required text: ${marker}`);
@@ -46,6 +48,9 @@ if (!landingJs.includes('querySelectorAll(`[data-link="${name}"]`)')) {
 }
 if (!landingHtml.includes('./tote/?reset=true')) {
   throw new Error("Judge landing lacks the deterministic tote demo link");
+}
+if (!landingHtml.includes('./tote/north-form-supplied-mark.png')) {
+  throw new Error("Judge landing lacks the reproducible tote artwork link");
 }
 if (legacyKorrhausPathExists || landingHtml.includes("./korrhaus/") || landingHtml.includes("KORRHAUS public reference")) {
   throw new Error("Judge artifact still exposes the retired synthetic KORRHAUS configurator");

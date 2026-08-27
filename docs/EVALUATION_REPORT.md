@@ -1,5 +1,13 @@
 # Evaluation report
 
+> Historical evidence note: the detailed KORRHAUS rows below document earlier
+> guarded five-tool private candidates and remain intentionally dated. The
+> current public Manifest 2 implementation registers exactly six tools; its
+> deterministic evidence is recorded in
+> [`evidence/CODESIGN_V2_ITEM8_SIX_TOOLS_2026-08-27.md`](./evidence/CODESIGN_V2_ITEM8_SIX_TOOLS_2026-08-27.md)
+> and the Item 9 tote evidence. Historical private candidates are not current
+> release claims.
+
 Status on 27 August 2026: deterministic behavior is verified locally, and the
 final guarded KORRHAUS bytes completed actual-browser verification on a tagged
 zero-traffic QA revision. The owner explicitly removed the API-backed 78-run

@@ -32,101 +32,112 @@ const app = document.querySelector<HTMLElement>("#app");
 if (!app) throw new Error("Studio tote app root is missing");
 
 app.innerHTML = `
-  <div class="announcement">Studio Tote reference · powered by CoDesign Commerce</div>
-  <header class="site-header">
-    <strong>STUDIO TOTE</strong>
-    <span>Public portability example</span>
-  </header>
-  <main class="page-shell">
-    <section class="top-grid">
-      <div class="intro">
-        <h1>Build a tote <em>for your studio</em></h1>
-        <p>Configure canvas, handles and print placement. Agent proposals stay temporary until you Keep or Revert them.</p>
-      </div>
-      <div class="product-row">
-        <span>Selected product</span>
-        <strong>Canvas studio tote</strong>
-        <button type="button">Change</button>
-      </div>
-    </section>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="brand-lockup"><strong>CoDesign Commerce</strong><span>Studio tote reference</span></div>
+      <div class="header-status"><span class="status-dot" aria-hidden="true"></span><span data-save-status>Draft saved on this device</span></div>
+    </header>
 
-    <section class="designer" aria-label="Studio tote reference configurator">
-      <div class="variant-toolbar">
-        <div class="variant-tabs" role="tablist" aria-label="Tote variants" data-variant-tabs></div>
-        <span data-save-status>Draft saved on this device</span>
-      </div>
-      <label class="variant-name">Variant name <input data-variant-name maxlength="60" /></label>
-      <nav class="steps" aria-label="Tote design progress">
-        <button class="active" type="button" data-step-target="canvas"><span>1</span>Canvas</button>
-        <button type="button" data-step-target="colour"><span>2</span>Colour</button>
-        <button type="button" data-step-target="handles"><span>3</span>Handles</button>
-        <button type="button" data-step-target="print"><span>4</span>Print</button>
-        <button type="button" data-step-target="quantity"><span>5</span>Quantity</button>
-      </nav>
+    <main class="designer-layout" aria-label="Studio tote reference configurator">
+      <aside class="inspector" aria-label="Design controls">
+        <div class="inspector-title">
+          <div><h1>Design your collection</h1><p>Every choice stays in the merchant's real visual workspace.</p></div>
+          <div class="product-card"><button type="button" data-reset-design>Reset</button></div>
+        </div>
 
-      <div id="proposal-review" class="proposal-slot"></div>
-      <output data-persistence-audit hidden aria-hidden="true"></output>
-      <output data-asset-audit hidden aria-hidden="true"></output>
+        <nav class="section-nav" aria-label="Design control sections">
+          <button class="active" type="button" data-step-target="collection">Collection</button>
+          <button type="button" data-step-target="materials">Materials</button>
+          <button type="button" data-step-target="branding">Branding</button>
+          <button type="button" data-step-target="variants">Variants</button>
+        </nav>
 
-      <div class="builder-grid">
         <fieldset class="controls" data-human-controls>
-          <section class="control-section" id="canvas">
-            <div class="section-heading"><strong>Canvas</strong><span>Canvas weight</span></div>
-            <div class="choice-grid weight-grid" data-choice-group="canvas.weight">
-              <button type="button" data-option="canvas.weight" data-value="8oz"><b>8 oz</b><span>Lightweight</span></button>
-              <button type="button" data-option="canvas.weight" data-value="12oz"><b>12 oz</b><span>Heavyweight</span></button>
-              <button type="button" data-option="canvas.weight" data-value="16oz"><b>16 oz</b><span>Extra heavyweight</span></button>
-            </div>
+          <section class="control-section" id="collection">
+            <div class="section-heading"><strong>Collection</strong><span data-total-quantity>100 totes total</span></div>
+            <label class="field-label">Variant name<input data-variant-name maxlength="60" /></label>
+            <label class="field-label">Variant quantity<input type="number" min="25" max="5000" step="25" data-option="design.quantity" /></label>
           </section>
 
-          <section class="control-section" id="colour">
-            <div class="section-heading"><strong>Colour</strong><span>Stocked canvas</span></div>
+          <section class="control-section" id="materials">
+            <div class="section-heading"><strong>Materials</strong><span>Merchant-valid choices</span></div>
+            <span class="micro-label">Canvas weight</span>
+            <div class="choice-grid weight-grid" data-choice-group="canvas.weight">
+              <button type="button" data-option="canvas.weight" data-value="8oz"><b>8 oz</b><span>Light</span></button>
+              <button type="button" data-option="canvas.weight" data-value="12oz"><b>12 oz</b><span>Heavy</span></button>
+              <button type="button" data-option="canvas.weight" data-value="16oz"><b>16 oz</b><span>Extra</span></button>
+            </div>
+            <span class="micro-label">Bag colour</span>
             <div class="colour-grid" data-choice-group="bag.color">
               <button type="button" data-option="bag.color" data-value="natural"><i style="--colour:#e8dfd0"></i><span>Natural</span></button>
               <button type="button" data-option="bag.color" data-value="charcoal"><i style="--colour:#262927"></i><span>Charcoal</span></button>
             </div>
+            <span class="micro-label">Handle length</span>
+            <div class="choice-grid handle-grid" data-choice-group="handles.length">
+              <button type="button" data-option="handles.length" data-value="short"><b>Short</b><span>33 cm</span></button>
+              <button type="button" data-option="handles.length" data-value="long"><b>Long</b><span>66 cm</span></button>
+            </div>
+            <label class="check-row"><input type="checkbox" data-option="construction.reinforced" />Reinforced cross-stitch</label>
           </section>
 
-          <section class="control-section" id="handles">
-            <div class="section-heading"><strong>Handles</strong><span>Carry style</span></div>
-            <div class="choice-grid handle-grid" data-choice-group="handles.length">
-              <button type="button" data-option="handles.length" data-value="short"><b>Short tote</b><span>33 cm hand carry</span></button>
-              <button type="button" data-option="handles.length" data-value="long"><b>Long shoulder</b><span>66 cm shoulder carry</span></button>
+          <section class="control-section" id="branding">
+            <div class="section-heading"><strong>Branding</strong><span>Text or supplied artwork</span></div>
+            <label class="field-label">Studio name<input data-option="branding.text" maxlength="32" /></label>
+            <label class="field-label">Typography<select data-option="branding.typeface"><option value="grotesk">Grotesk bold</option><option value="editorial">Editorial serif</option><option value="mono">Studio mono</option></select></label>
+            <div class="artwork-control">
+              <div><span class="micro-label">Artwork file</span><strong data-artwork-name>Use studio-name typography</strong></div>
+              <div class="artwork-actions"><label class="file-action">Choose<input type="file" accept="image/png,image/jpeg,image/webp" data-artwork-file /></label><button type="button" data-artwork-remove hidden>Remove</button></div>
             </div>
-            <label class="reinforced"><input type="checkbox" data-option="construction.reinforced" />Reinforced cross-stitch at stress points</label>
+            <label class="field-label">Print method<select data-option="print.method"><option value="screen-1">Screen print · 1 colour</option><option value="screen-2">Screen print · 2 colours</option><option value="embroidery">Embroidery</option></select></label>
+            <label class="field-label">Placement<select data-option="print.position"><option value="front-center">Front center</option><option value="upper-left">Upper left</option></select></label>
+            <span class="micro-label">Artwork colour</span>
+            <div class="ink-grid" data-choice-group="branding.ink_color">
+              <button type="button" aria-label="Ink black" data-option="branding.ink_color" data-value="ink" style="--ink:#1c222b"></button>
+              <button type="button" aria-label="Studio blue" data-option="branding.ink_color" data-value="cobalt" style="--ink:#1d56d8"></button>
+              <button type="button" aria-label="Canvas white" data-option="branding.ink_color" data-value="canvas" style="--ink:#f5f1e8"></button>
+            </div>
+            <label class="range-field"><span>Scale <output data-scale-output>100%</output></span><input type="range" min="0.5" max="1.4" step="0.05" data-option="branding.scale" /></label>
+            <label class="range-field"><span>Rotation <output data-rotation-output>0°</output></span><input type="range" min="-30" max="30" step="1" data-option="branding.rotation" /></label>
+          </section>
+
+          <section class="control-section variant-section" id="variants">
+            <div class="section-heading"><strong>Variants</strong><span>Up to three</span></div>
+            <div class="variant-list" role="tablist" aria-label="Tote variants" data-variant-tabs></div>
           </section>
         </fieldset>
+      </aside>
 
-        <aside class="proof-column" aria-labelledby="proof-title">
-          <div class="proof-heading"><span id="proof-title">Live tote proof</span><span>Visible proposal preview</span></div>
-          <div class="proof-stage">
-            <img src="${publicAsset("tote-natural-long.png")}" alt="Natural canvas studio tote with long handles" data-tote-preview />
-            <span class="print-mark" data-print-mark>STUDIO<br />MARK</span>
-            <img class="artwork-mark" data-artwork-mark alt="" hidden />
-          </div>
-          <div class="proof-specs" id="print">
-            <label>Print placement
-              <select data-option="print.position">
-                <option value="front-center">Front center</option>
-                <option value="upper-left">Upper left</option>
-              </select>
-            </label>
-            <label>Print method
-              <select data-option="print.method">
-                <option value="screen-1">Screen print · 1 colour</option>
-                <option value="screen-2">Screen print · 2 colours</option>
-                <option value="embroidery">Embroidery</option>
-              </select>
-            </label>
-            <label id="quantity">Variant quantity
-              <input type="number" min="25" max="5000" step="25" data-option="design.quantity" />
-            </label>
-            <div class="production-note"><span>Production note</span><strong>Final print artwork is still required.</strong></div>
-          </div>
-        </aside>
-      </div>
-    </section>
-  </main>
+      <section class="canvas-column" aria-labelledby="canvas-title">
+        <div class="mobile-variant-tabs" role="tablist" aria-label="Mobile tote variants" data-mobile-variant-tabs></div>
+        <div class="canvas-toolbar"><div><span>Live product canvas</span><strong id="canvas-title" data-canvas-title>North Form Natural</strong></div><span data-canvas-mode>Human editing</span></div>
+        <div class="proof-stage">
+          <img src="${publicAsset("tote-natural-long.png")}" alt="Natural canvas studio tote with long handles" data-tote-preview />
+          <span class="print-mark" data-print-mark>NORTH FORM</span>
+          <img class="artwork-mark" data-artwork-mark alt="" hidden />
+        </div>
+        <div class="canvas-footer"><span>Front</span><span data-canvas-spec>Natural · 12 oz · long handles</span><span>100%</span></div>
+        <output data-persistence-audit hidden aria-hidden="true"></output>
+        <output data-asset-audit hidden aria-hidden="true"></output>
+      </section>
+
+      <aside class="review-rail" aria-label="Proposal and preview review">
+        <section class="progress-panel" data-proposal-progress hidden>
+          <div class="rail-heading"><strong>Proposal progress</strong><span data-progress-count>1 of 3</span></div>
+          <ol><li data-pass="foundation"><i></i><span>Foundation</span></li><li data-pass="branding"><i></i><span>Branding</span></li><li data-pass="variants"><i></i><span>Variants</span></li></ol>
+        </section>
+        <div id="proposal-review" class="proposal-slot"></div>
+        <section class="preview-panel">
+          <div class="rail-heading"><strong>Variant previews</strong><span data-preview-count>1 design</span></div>
+          <div class="preview-list" data-variant-previews></div>
+        </section>
+        <section class="readiness-panel">
+          <div class="readiness-icon" aria-hidden="true">!</div>
+          <div><strong>Production readiness</strong><p class="production-note"><span>Final print artwork is still required.</span></p></div>
+        </section>
+        <p class="review-boundary">Agent work stays temporary. Keep is the only save boundary; Revert restores the previous design.</p>
+      </aside>
+    </main>
+  </div>
 `;
 
 const query = new URLSearchParams(window.location.search);
@@ -167,8 +178,23 @@ const artworkMark = document.querySelector<HTMLImageElement>("[data-artwork-mark
 const controls = document.querySelector<HTMLFieldSetElement>("[data-human-controls]");
 const audit = document.querySelector<HTMLOutputElement>("[data-persistence-audit]");
 const assetAudit = document.querySelector<HTMLOutputElement>("[data-asset-audit]");
-const productionNote = document.querySelector<HTMLElement>(".production-note strong");
-if (!reviewContainer || !tabs || !nameInput || !saveStatus || !preview || !mark || !artworkMark || !controls || !audit || !assetAudit || !productionNote) {
+const productionNote = document.querySelector<HTMLElement>(".production-note span");
+const totalQuantity = document.querySelector<HTMLElement>("[data-total-quantity]");
+const canvasTitle = document.querySelector<HTMLElement>("[data-canvas-title]");
+const canvasMode = document.querySelector<HTMLElement>("[data-canvas-mode]");
+const canvasSpec = document.querySelector<HTMLElement>("[data-canvas-spec]");
+const progressPanel = document.querySelector<HTMLElement>("[data-proposal-progress]");
+const progressCount = document.querySelector<HTMLElement>("[data-progress-count]");
+const previewList = document.querySelector<HTMLElement>("[data-variant-previews]");
+const previewCount = document.querySelector<HTMLElement>("[data-preview-count]");
+const mobileTabs = document.querySelector<HTMLElement>("[data-mobile-variant-tabs]");
+const artworkName = document.querySelector<HTMLElement>("[data-artwork-name]");
+const artworkFile = document.querySelector<HTMLInputElement>("[data-artwork-file]");
+const artworkRemove = document.querySelector<HTMLButtonElement>("[data-artwork-remove]");
+const scaleOutput = document.querySelector<HTMLOutputElement>("[data-scale-output]");
+const rotationOutput = document.querySelector<HTMLOutputElement>("[data-rotation-output]");
+const resetButton = document.querySelector<HTMLButtonElement>("[data-reset-design]");
+if (!reviewContainer || !tabs || !nameInput || !saveStatus || !preview || !mark || !artworkMark || !controls || !audit || !assetAudit || !productionNote || !totalQuantity || !canvasTitle || !canvasMode || !canvasSpec || !progressPanel || !progressCount || !previewList || !previewCount || !mobileTabs || !artworkName || !artworkFile || !artworkRemove || !scaleOutput || !rotationOutput || !resetButton) {
   throw new Error("Studio tote configurator markup is incomplete");
 }
 
@@ -221,23 +247,41 @@ const capturePreviewProof = async (
   context.drawImage(preview, 0, 0, width, height);
   context.filter = "none";
 
-  const colour = String(selection(design, "bag.color", "natural"));
   const upperLeft = selection(design, "print.position", "front-center") === "upper-left";
   const artwork = assetStore.resolve(selection(design, "branding.artwork_ref", null));
-  context.fillStyle = colour === "charcoal" ? "#f6f0e6" : "#20201d";
+  const scale = Number(selection(design, "branding.scale", 1));
+  const rotation = Number(selection(design, "branding.rotation", 0));
+  const typeface = String(selection(design, "branding.typeface", "grotesk"));
+  context.fillStyle = inkColour(design);
   const markX = upperLeft ? 250 : 320;
   const markY = upperLeft ? 300 : 360;
+  context.save();
+  context.translate(markX, markY);
+  context.rotate(rotation * Math.PI / 180);
   if (artwork) {
     if (!artworkMark.complete || artworkMark.naturalWidth === 0) await artworkMark.decode();
-    const artworkSize = upperLeft ? 170 : 210;
-    context.drawImage(artworkMark, markX - artworkSize / 2, markY - artworkSize / 2, artworkSize, artworkSize);
+    const artworkSize = (upperLeft ? 170 : 210) * scale;
+    const artworkCanvas = document.createElement("canvas");
+    artworkCanvas.width = Math.max(1, Math.round(artworkSize));
+    artworkCanvas.height = Math.max(1, Math.round(artworkSize));
+    const artworkContext = artworkCanvas.getContext("2d");
+    if (!artworkContext) throw new PreviewProofError("PREVIEW_FAILED", "The browser could not prepare the artwork layer.");
+    artworkContext.drawImage(artworkMark, 0, 0, artworkCanvas.width, artworkCanvas.height);
+    artworkContext.globalCompositeOperation = "source-in";
+    artworkContext.fillStyle = inkColour(design);
+    artworkContext.fillRect(0, 0, artworkCanvas.width, artworkCanvas.height);
+    context.drawImage(artworkCanvas, -artworkSize / 2, -artworkSize / 2, artworkSize, artworkSize);
   } else {
-    context.font = "700 30px Arial, sans-serif";
+    const fontFamily = typeface === "editorial" ? "Georgia, serif" : typeface === "mono" ? "monospace" : "Arial, sans-serif";
+    context.font = `${typeface === "editorial" ? "600" : "700"} ${Math.round(30 * scale)}px ${fontFamily}`;
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.fillText("STUDIO", markX, markY - 18);
-    context.fillText("MARK", markX, markY + 18);
+    const words = String(selection(design, "branding.text", "STUDIO NAME")).trim().split(/\s+/u);
+    const lines = words.length > 1 ? [words.slice(0, Math.ceil(words.length / 2)).join(" "), words.slice(Math.ceil(words.length / 2)).join(" ")] : words;
+    const lineHeight = 36 * scale;
+    lines.forEach((line, index) => context.fillText(line, 0, (index - (lines.length - 1) / 2) * lineHeight));
   }
+  context.restore();
 
   const dataUrl = canvas.toDataURL("image/webp", 0.82);
   if (!dataUrl.startsWith("data:image/webp;base64,") || dataUrl.length > 400_000) {
@@ -298,16 +342,26 @@ const renderTabs = (followVisible = false) => {
     tab.className = `variant-tab${design.id === activeDesignId ? " active" : ""}`;
     tab.setAttribute("role", "tab");
     tab.setAttribute("aria-selected", String(design.id === activeDesignId));
-    tab.textContent = `${design.name} · ${design.quantity}`;
-    tab.addEventListener("click", () => { activeDesignId = design.id; render(); });
+    const tabName = document.createElement("span");
+    tabName.textContent = design.name;
+    const tabQuantity = document.createElement("small");
+    tabQuantity.textContent = `${design.quantity} totes`;
+    tab.append(tabName, tabQuantity);
+    tab.addEventListener("click", () => {
+      activeDesignId = design.id;
+      if (engine.status === "idle") adapter.setHumanActiveVariant(design.id);
+      render();
+    });
     tabs.append(tab);
   }
   const add = document.createElement("button");
   add.type = "button";
   add.className = "add-variant";
   add.setAttribute("aria-label", "Add tote variant");
-  add.textContent = "+";
-  add.disabled = engine.status !== "idle" || state.designs.length >= toteManifest.variantPolicy.maximumVariants;
+  add.textContent = "+ Duplicate active variant";
+  const source = state.designs.find((design) => design.id === activeDesignId);
+  add.disabled = engine.status !== "idle" || state.designs.length >= toteManifest.variantPolicy.maximumVariants || (source?.quantity ?? 0) < 50;
+  if ((source?.quantity ?? 0) < 50) add.title = "A variant needs at least 50 totes before it can be split into two valid variants.";
   add.addEventListener("click", () => {
     const created = adapter.addHumanVariant(activeDesignId);
     if (created) { activeDesignId = created; render(); }
@@ -315,32 +369,139 @@ const renderTabs = (followVisible = false) => {
   tabs.append(add);
 };
 
+const toteAssetFor = (design: ConfigurationDesign): { src: string; filtered: boolean } => {
+  const colour = String(selection(design, "bag.color", "natural"));
+  const handles = String(selection(design, "handles.length", "long"));
+  return {
+    src: handles === "short"
+      ? publicAsset("tote-natural-short.png")
+      : colour === "charcoal" ? publicAsset("tote-charcoal-long.png") : publicAsset("tote-natural-long.png"),
+    filtered: colour === "charcoal" && handles === "short",
+  };
+};
+
+const inkColour = (design: ConfigurationDesign): string => {
+  const colour = String(selection(design, "branding.ink_color", "ink"));
+  return colour === "cobalt" ? "#1d56d8" : colour === "canvas" ? "#f5f1e8" : "#1c222b";
+};
+
+const renderVariantPreviews = (state: ConfigurationState): void => {
+  previewList.replaceChildren();
+  previewCount.textContent = `${state.designs.length} ${state.designs.length === 1 ? "design" : "designs"}`;
+  for (const design of state.designs) {
+    const asset = toteAssetFor(design);
+    const artwork = assetStore.resolve(selection(design, "branding.artwork_ref", null));
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `preview-card${design.id === activeDesignId ? " active" : ""}`;
+    button.setAttribute("aria-label", `Show ${design.name}`);
+    const visual = document.createElement("span");
+    visual.className = "preview-card-visual";
+    const image = document.createElement("img");
+    image.src = asset.src;
+    image.alt = "";
+    image.classList.toggle("filtered-charcoal", asset.filtered);
+    visual.append(image);
+    if (artwork) {
+      const art = document.createElement("img");
+      art.src = artwork.dataUrl;
+      art.alt = "";
+      art.className = "preview-card-art";
+      art.dataset.ink = String(selection(design, "branding.ink_color", "ink"));
+      visual.append(art);
+    } else {
+      const text = document.createElement("i");
+      text.textContent = String(selection(design, "branding.text", "STUDIO NAME"));
+      text.style.color = inkColour(design);
+      visual.append(text);
+    }
+    const copy = document.createElement("span");
+    copy.className = "preview-card-copy";
+    const title = document.createElement("strong");
+    title.textContent = design.name;
+    const meta = document.createElement("small");
+    meta.textContent = `${design.quantity} totes · ${String(selection(design, "bag.color", "natural"))}`;
+    copy.append(title, meta);
+    button.append(visual, copy);
+    button.addEventListener("click", () => {
+      activeDesignId = design.id;
+      if (engine.status === "idle") adapter.setHumanActiveVariant(design.id);
+      render();
+    });
+    previewList.append(button);
+  }
+};
+
+const renderMobileVariantTabs = (state: ConfigurationState): void => {
+  mobileTabs.replaceChildren();
+  for (const design of state.designs) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-selected", String(design.id === activeDesignId));
+    button.classList.toggle("active", design.id === activeDesignId);
+    button.textContent = design.name;
+    button.addEventListener("click", () => {
+      activeDesignId = design.id;
+      if (engine.status === "idle") adapter.setHumanActiveVariant(design.id);
+      render();
+    });
+    mobileTabs.append(button);
+  }
+};
+
+const renderProgress = (): void => {
+  const proposal = engine.snapshot;
+  const active = proposal.proposalId !== null;
+  progressPanel.hidden = !active;
+  canvasMode.textContent = active ? "Agent proposal · not saved" : "Human editing";
+  if (!active) return;
+  const completed = proposal.previewStatus === "available" ? 3 : Math.min(3, Math.max(1, proposal.proposalRevision));
+  progressCount.textContent = proposal.previewStatus === "available" ? "Preview ready" : `${completed} of 3`;
+  const passes = [...progressPanel.querySelectorAll<HTMLElement>("[data-pass]")];
+  passes.forEach((pass, index) => {
+    pass.classList.toggle("complete", index < completed);
+    pass.classList.toggle("active", index === completed && completed < 3);
+  });
+};
+
 const render = (followVisible = false) => {
   renderTabs(followVisible);
   const design = activeDesign();
   const colour = String(selection(design, "bag.color", "natural"));
   const handles = String(selection(design, "handles.length", "long"));
-  const asset = handles === "short"
-    ? publicAsset("tote-natural-short.png")
-    : colour === "charcoal" ? publicAsset("tote-charcoal-long.png") : publicAsset("tote-natural-long.png");
-  preview.src = asset;
-  preview.classList.toggle("filtered-charcoal", colour === "charcoal" && handles === "short");
+  const toteAsset = toteAssetFor(design);
+  preview.src = toteAsset.src;
+  preview.classList.toggle("filtered-charcoal", toteAsset.filtered);
   preview.alt = `${colour === "charcoal" ? "Charcoal" : "Natural"} canvas studio tote with ${handles} handles`;
   const upperLeft = selection(design, "print.position", "front-center") === "upper-left";
   const artwork = assetStore.resolve(selection(design, "branding.artwork_ref", null));
+  const scale = Number(selection(design, "branding.scale", 1));
+  const rotation = Number(selection(design, "branding.rotation", 0));
+  const typeface = String(selection(design, "branding.typeface", "grotesk"));
+  const transform = `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`;
   mark.hidden = artwork !== null;
   artworkMark.hidden = artwork === null;
+  mark.textContent = String(selection(design, "branding.text", "STUDIO NAME"));
+  mark.dataset.typeface = typeface;
+  mark.style.color = inkColour(design);
+  mark.style.transform = transform;
+  artworkMark.style.transform = transform;
   if (artwork) {
     artworkMark.src = artwork.dataUrl;
     artworkMark.alt = artwork.altText;
+    artworkMark.dataset.ink = String(selection(design, "branding.ink_color", "ink"));
   } else {
     artworkMark.removeAttribute("src");
     artworkMark.alt = "";
+    delete artworkMark.dataset.ink;
   }
   mark.classList.toggle("upper-left", upperLeft);
   mark.classList.toggle("light", colour === "charcoal");
   artworkMark.classList.toggle("upper-left", upperLeft);
-  productionNote.textContent = artwork ? "Supplied artwork staged for this design." : "Final print artwork is still required.";
+  productionNote.textContent = artwork ? "Artwork is attached and ready for review." : "Studio-name typography is shown; production artwork can be supplied later.";
+  artworkName.textContent = artwork?.filename ?? (artwork ? "Supplied artwork" : "Use studio-name typography");
+  artworkRemove.hidden = artwork === null;
   nameInput.value = design.name;
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-option][data-value]")) {
     button.classList.toggle("selected", selection(design, button.dataset.option ?? "", "") === button.dataset.value);
@@ -351,6 +512,14 @@ const render = (followVisible = false) => {
     if (control instanceof HTMLInputElement && control.type === "checkbox") control.checked = value === true;
     else control.value = String(value);
   }
+  scaleOutput.value = `${Math.round(scale * 100)}%`;
+  rotationOutput.value = `${rotation}°`;
+  totalQuantity.textContent = `${adapter.visibleState.order.totalQuantity} totes total`;
+  canvasTitle.textContent = design.name;
+  canvasSpec.textContent = `${colour === "charcoal" ? "Charcoal" : "Natural"} · ${String(selection(design, "canvas.weight", "12oz")).replace("oz", " oz")} · ${handles} handles`;
+  renderVariantPreviews(adapter.visibleState);
+  renderMobileVariantTabs(adapter.visibleState);
+  renderProgress();
   audit.value = JSON.stringify(adapter.counters);
   assetAudit.value = JSON.stringify(assetStore.counters);
 };
@@ -363,6 +532,7 @@ controller.subscribe((state) => {
   const locked = reviewLocksHumanControls(state);
   for (const control of controls.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement>("button, input, select")) control.disabled = locked;
   nameInput.disabled = locked;
+  resetButton.disabled = locked;
   saveStatus.textContent = ["temporary", "busy", "stale"].includes(state.kind)
     ? "Temporary proposal not saved"
     : "Draft saved on this device";
@@ -385,13 +555,55 @@ for (const control of document.querySelectorAll<HTMLInputElement | HTMLSelectEle
     if (!optionId) return;
     let value: JsonPrimitive = control.value;
     if (control instanceof HTMLInputElement && control.type === "checkbox") value = control.checked;
-    if (control instanceof HTMLInputElement && control.type === "number") value = Number(control.value);
+    if (control instanceof HTMLInputElement && (control.type === "number" || control.type === "range")) value = Number(control.value);
     if (adapter.applyHumanChange(activeDesignId, optionId, value)) render();
   });
 }
 
 nameInput.addEventListener("change", () => {
   if (adapter.applyHumanChange(activeDesignId, "design.name", nameInput.value.trim() || "Untitled tote")) render();
+});
+
+const fileAsDataUrl = (file: File): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => typeof reader.result === "string" ? resolve(reader.result) : reject(new Error("Artwork could not be read.")), { once: true });
+  reader.addEventListener("error", () => reject(new Error("Artwork could not be read.")), { once: true });
+  reader.readAsDataURL(file);
+});
+
+artworkFile.addEventListener("change", () => {
+  void (async () => {
+    const file = artworkFile.files?.[0];
+    if (!file) return;
+    artworkFile.disabled = true;
+    artworkName.textContent = "Checking artwork…";
+    try {
+      const imported = await adapter.applyHumanArtwork(activeDesignId, {
+        slotId: "print-artwork",
+        source: { kind: "data-url", data: await fileAsDataUrl(file) },
+        filename: file.name.slice(0, 120),
+        altText: `${activeDesign().name} supplied artwork`,
+      });
+      if (!imported) throw new Error("Artwork could not be attached to this variant.");
+      render();
+    } catch (error) {
+      artworkName.textContent = error instanceof Error ? error.message : "Artwork could not be attached.";
+    } finally {
+      artworkFile.value = "";
+      artworkFile.disabled = false;
+    }
+  })();
+});
+
+artworkRemove.addEventListener("click", () => {
+  if (adapter.removeHumanArtwork(activeDesignId)) render();
+});
+
+resetButton.addEventListener("click", () => {
+  window.localStorage.removeItem("codesign-studio-tote");
+  const url = new URL(window.location.href);
+  url.search = "?reset=true";
+  window.location.assign(url);
 });
 
 for (const step of document.querySelectorAll<HTMLButtonElement>("[data-step-target]")) {
@@ -551,25 +763,62 @@ if (import.meta.env.DEV && query.has("agent-preview")) {
   void (async () => {
     const first = await engine.apply({
       baseRevision: adapter.committedState.revision,
-      operationId: "tote-visual-first",
+      operationId: "tote-visual-foundation",
       operations: [
-        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.name", value: "Natural long-handle" },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.name", value: "North Form Natural" },
         { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "canvas.weight", value: "12oz" },
         { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "bag.color", value: "natural" },
         { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "handles.length", value: "long" },
       ],
-      assumptions: ["Split the 100 totes evenly across two variants.", "Final print artwork will be supplied later."],
+      assumptions: ["Use the merchant's 12 oz canvas and reinforced long-handle construction."],
     });
     if (!first.ok) return;
-    await engine.apply({
+    await new Promise((resolve) => window.setTimeout(resolve, 450));
+    const artworkResponse = await fetch(publicAsset("north-form-supplied-mark.png"));
+    const artworkFile = new File([await artworkResponse.blob()], "north-form-supplied-mark.png", { type: "image/png" });
+    const staged = await engine.stageAsset({
       baseRevision: first.baseRevision,
       proposalId: first.proposalId,
       proposalRevision: first.proposalRevision,
-      operationId: "tote-visual-second",
+      slotId: "print-artwork",
+      source: { kind: "data-url", data: await fileAsDataUrl(artworkFile) },
+      filename: artworkFile.name,
+      altText: "North Form supplied geometric mark",
+    });
+    if (!staged.ok) return;
+    const branded = await engine.apply({
+      baseRevision: first.baseRevision,
+      proposalId: first.proposalId,
+      proposalRevision: first.proposalRevision,
+      operationId: "tote-visual-branding",
+      operations: [
+        { type: "attach-asset", target: { scope: "variant", variantId: "tote-1" }, controlId: "branding.artwork_ref", assetHandle: staged.asset.assetHandle },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "branding.text", value: "NORTH FORM" },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "branding.scale", value: 1.05 },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "branding.rotation", value: 0 },
+      ],
+      assumptions: ["Apply the supplied artwork as the collection's shared front mark."],
+    });
+    if (!branded.ok) return;
+    await new Promise((resolve) => window.setTimeout(resolve, 450));
+    const variants = await engine.apply({
+      baseRevision: branded.baseRevision,
+      proposalId: branded.proposalId,
+      proposalRevision: branded.proposalRevision,
+      operationId: "tote-visual-variants",
       operations: [
         { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.quantity", value: 50 },
-        { type: "duplicate-variant", sourceVariantId: "tote-1", variantId: "tote-2", name: "Charcoal short-handle", initialControls: { "design.quantity": 50, "bag.color": "charcoal", "handles.length": "short", "print.position": "upper-left" } },
+        { type: "duplicate-variant", sourceVariantId: "tote-1", variantId: "tote-2", name: "North Form Charcoal", initialControls: { "design.quantity": 50, "bag.color": "charcoal", "handles.length": "short", "print.position": "upper-left", "branding.scale": .82, "branding.rotation": -6 } },
       ],
+      assumptions: ["Split the 100-tote collection evenly across two visibly distinct variants."],
+    });
+    if (!variants.ok) return;
+    await engine.capturePreviews({
+      baseRevision: variants.baseRevision,
+      proposalId: variants.proposalId,
+      proposalRevision: variants.proposalRevision,
+      variantIds: ["tote-1", "tote-2"],
+      surfaceIds: ["product-preview"],
     });
   })();
 }

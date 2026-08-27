@@ -31,6 +31,7 @@ const stylesheet = String.raw`
     --codesign-review-font: Inter, Helvetica, Arial, sans-serif;
     --codesign-review-motion: 160ms ease;
     display: block;
+    container-type: inline-size;
     color: var(--codesign-review-text);
     font-family: var(--codesign-review-font);
   }
@@ -187,6 +188,33 @@ const stylesheet = String.raw`
     .changes,
     .review-details { border-left: 0; border-top: 1px solid var(--codesign-review-divider); padding: 18px 0 0; }
     .actions { border-top: 1px solid var(--codesign-review-divider); padding-top: 18px; }
+  }
+
+  @container (max-width: 720px) {
+    .panel { padding: 18px; }
+    .temporary { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .changes,
+    .review-details { border-left: 0; border-top: 1px solid var(--codesign-review-divider); padding: 14px 0 0; }
+    .actions { order: 1; display: grid; grid-template-columns: 1fr 1.2fr; border-top: 1px solid var(--codesign-review-divider); padding-top: 14px; }
+    .changes { order: 2; }
+    .review-details { order: 3; }
+    .change-row { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "label label label" "before arrow after"; }
+    .change-label { grid-area: label; }
+    .change-before { grid-area: before; min-width: 0; overflow-wrap: anywhere; }
+    .change-arrow { grid-area: arrow; }
+    .change-after { grid-area: after; min-width: 0; overflow-wrap: anywhere; text-align: right; }
+    button { width: 100%; padding-inline: 10px; }
+  }
+
+  @container (max-width: 340px) {
+    .panel { padding: 16px; }
+    .temporary { gap: 12px; }
+    .changes,
+    .review-details { display: none; }
+    .actions { border-top: 1px solid var(--codesign-review-divider); padding-top: 12px; }
+    h2 { font-size: 20px; }
+    .summary { font-size: 13px; }
+    .status-line { margin-bottom: 7px; font-size: 10px; }
   }
 
   @media (max-width: 759px) {

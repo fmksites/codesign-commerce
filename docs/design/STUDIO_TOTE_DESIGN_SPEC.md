@@ -1,7 +1,12 @@
 # Studio tote design specification
 
-Status: implementation reference, 26 August 2026  
-Accepted concept: `studio-tote-concept.png`
+Status: superseded historical reference, 26 August 2026
+Accepted at the time: `studio-tote-concept.png`
+
+The complete Item 9 product direction is now defined by
+[`STUDIO_TOTE_DESIGN_SYSTEM.md`](./STUDIO_TOTE_DESIGN_SYSTEM.md), including the
+desktop/mobile references, implementation screenshots, full creative controls,
+and fidelity ledger. The remainder of this file is retained as design history.
 
 ## Purpose and boundary
 
@@ -83,4 +88,3 @@ configuration layer, not branding baked into the source product photograph.
 - No horizontal overflow at 320px.
 - On mobile the product preview precedes control groups, variant tabs scroll
   horizontally, and shared review actions remain fully visible.
-

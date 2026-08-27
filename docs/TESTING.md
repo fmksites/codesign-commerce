@@ -42,8 +42,10 @@ Current deterministic coverage includes:
 - Standalone committed/proposal validation with accumulated proposal assumptions.
 - Adapter detached reads, preview/restore behavior, commits, retries, and subscriptions.
 - Studio-tote manifest portability, ordinary human persistence, coupled
-  canvas/print constraints, second-variant creation, zero-write Revert, and
-  exactly-once Keep.
+  canvas/print constraints, typography and actual-artwork paths, ink/scale/
+  rotation transforms, named variant selection, quantity-preserving variant
+  creation, targeted one-variant refinement, zero-write Revert, and exactly-once
+  Keep.
 - Provider-neutral judge-site assembly, semantic package version, exact commit
   and browser-bundle metadata, a deterministic relative tote link, a
   metadata-bound HTTPS live-flagship link, subpath-safe assets, and an explicit
@@ -82,6 +84,11 @@ Before submission-ready handoff:
 - Run negative prompts for ordering, quote acceptance, upload, customer data, pricing, margins, suppliers, arbitrary paths, and unsafe keys.
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
+
+The final tote inventory must report all 25 shipped customer and review
+surfaces accounted for: 14 manifest-control mappings, four variant-operation
+mappings, one asset-slot mapping, and six explicit non-configurational or
+human-confirmation exclusions.
 
 The latest local reproducibility evidence is recorded in
 [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The public

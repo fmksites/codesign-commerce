@@ -5,8 +5,11 @@ proceed without the owner.
 
 ## Local engineering
 
-- `PASS` — reusable public core and exactly five webpage tools.
-- `PASS` — materially different studio tote as the sole standalone public demo.
+- `PASS` — reusable public core and exactly six webpage tools.
+- `PASS` — materially different studio tote as the sole standalone public demo,
+  with every shipped customer control mapped, actual supplied artwork, two
+  named variants, three visible proposal passes, and current per-variant
+  previews.
 - `CUT` — synthetic public KORRHAUS reference retired from the package and judge
   artifact; the existing Shopify Designer is the only KORRHAUS proof surface.
 - `PASS` — local anonymous English judge landing and provider-neutral
@@ -15,13 +18,13 @@ proceed without the owner.
   `/korrhaus/` route.
 - `PASS` — guarded private flagship bridge, with complete current local
   regression and fresh-origin zero-traffic proof.
-- `PASS` — 95 deterministic public tests and the current local public
-  typecheck/build/boundary/docs checks.
+- `PASS` — 175 deterministic public tests and the current local public
+  typecheck/build/boundary/docs/parity/eval-corpus checks.
 - `PASS` — repository security scan findings remediated.
-- `PASS` — corrected non-release landing rendered at desktop and mobile with
-  disabled KORRHAUS CTA slots and a clean console; the sole tote demo exposed
-  exactly five tools, completed the temporary two-variant flow, and Reverted to
-  its exact baseline with a clean console.
+- `PASS` — current non-release landing and final tote rendered at desktop and
+  native 390-pixel mobile width; the tote exposes exactly six tools in the
+  supported in-app browser, completes its temporary two-variant artwork flow,
+  Reverts with zero writes, and Keeps with one state commit.
 - `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
   private feature-off fallback browser checks.
 - `PASS` — current guarded private candidate: syntax, focused ESLint,

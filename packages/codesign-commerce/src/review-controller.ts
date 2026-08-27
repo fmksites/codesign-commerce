@@ -49,9 +49,10 @@ export interface ReviewChange {
 function displayValue(manifest: ConfiguratorManifest, controlId: string, value: ControlValue | undefined): string {
   if (value === undefined) return "Not set";
   if (value === null) return "None";
+  const control = manifest.controls.find((candidate) => candidate.id === controlId);
+  if (control?.kind === "asset") return "Artwork attached";
   if (typeof value === "boolean") return value ? "Yes" : "No";
   if (typeof value === "object") return `x ${value.x.toFixed(2)}, y ${value.y.toFixed(2)}`;
-  const control = manifest.controls.find((candidate) => candidate.id === controlId);
   const labelledValue = control?.values?.find((candidate) => candidate.id === value);
   return labelledValue?.label ?? String(value);
 }
