@@ -9,6 +9,8 @@ npm ci
 npm test
 npm run typecheck
 npm run build
+npm run verify:browser-bundle
+npm run check:judge-site
 npm run check:public-boundary
 ```
 
@@ -40,6 +42,9 @@ Current deterministic coverage includes:
 - Studio-tote manifest portability, ordinary human persistence, coupled
   canvas/print constraints, second-variant creation, zero-write Revert, and
   exactly-once Keep.
+- Provider-neutral judge-site assembly, semantic package version, exact commit
+  and browser-bundle metadata, deterministic relative demo links, subpath-safe
+  assets, and complete KORRHAUS/tote production bundles.
 
 ## Evidence strength
 

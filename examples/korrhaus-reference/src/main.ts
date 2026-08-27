@@ -11,6 +11,8 @@ import {
 } from "@codesign-commerce/core";
 import "./styles.css";
 
+const publicAsset = (name: string): string => `${import.meta.env.BASE_URL}${name}`;
+
 const manifest: ConfiguratorManifest = {
   schemaVersion: "1.0",
   id: "codesign.korrhaus-reference",
@@ -159,7 +161,7 @@ if (query.has("reset")) document.documentElement.dataset.demoBaseline = "reset";
 app.innerHTML = `
   <div class="announcement">KORRHAUS public reference · powered by CoDesign Commerce</div>
   <header class="site-header">
-    <img src="/korr-logo.png" alt="KORRHAUS" class="brand" />
+    <img src="${publicAsset("korr-logo.png")}" alt="KORRHAUS" class="brand" />
     <span>Custom sock reference</span>
   </header>
   <main class="page-shell">
@@ -216,7 +218,7 @@ app.innerHTML = `
         <aside class="proof-column" aria-labelledby="proof-title">
           <div class="proof-heading"><span id="proof-title">Live sock proof</span><span>Visible proposal preview</span></div>
           <div class="proof-stage">
-            <img src="/sock-cream.svg" alt="Cream custom sock preview" data-sock-preview />
+            <img src="${publicAsset("sock-cream.svg")}" alt="Cream custom sock preview" data-sock-preview />
             <span class="placeholder-mark" data-placeholder-mark>NORTH FORM</span>
           </div>
           <div class="proof-footer"><strong>Grip bottom — Standard dots + k.o.r.r.</strong><span>Molded silicone</span></div>
@@ -246,7 +248,11 @@ if (!reviewContainer || !controls || !preview || !currentColour || !currentAccen
 let activeDesignId = "design-1";
 const bodyLabels = new Map([["cream", "Cream"], ["navy", "Navy"], ["dusty-rose", "Dusty rose"]]);
 const accentLabels = new Map([["navy", "Navy"], ["berry", "Berry"], ["cream", "Cream"]]);
-const bodyAssets = new Map([["cream", "/sock-cream.svg"], ["navy", "/sock-navy.svg"], ["dusty-rose", "/sock-rose.svg"]]);
+const bodyAssets = new Map([
+  ["cream", publicAsset("sock-cream.svg")],
+  ["navy", publicAsset("sock-navy.svg")],
+  ["dusty-rose", publicAsset("sock-rose.svg")],
+]);
 const accentColours = new Map([["navy", "#1c2945"], ["berry", "#963552"], ["cream", "#e9e4d8"]]);
 
 const renderDesignTabs = (followVisibleActive = false) => {
@@ -282,7 +288,7 @@ const renderPreview = () => {
   if (!design) return;
   const body = String(design.selections["body.color"] ?? "cream");
   const accent = String(design.selections["accent.color"] ?? "navy");
-  preview.src = bodyAssets.get(body) ?? "/sock-cream.svg";
+  preview.src = bodyAssets.get(body) ?? publicAsset("sock-cream.svg");
   preview.alt = `${bodyLabels.get(body) ?? body} custom sock preview`;
   currentColour.textContent = bodyLabels.get(body) ?? body;
   currentAccent.textContent = accentLabels.get(accent) ?? accent;
@@ -310,7 +316,7 @@ for (const swatch of document.querySelectorAll<HTMLButtonElement>("[data-human-c
   swatch.addEventListener("click", () => {
     const colour = swatch.dataset.humanColour;
     if (!colour) return;
-    preview.src = bodyAssets.get(colour) ?? "/sock-cream.svg";
+    preview.src = bodyAssets.get(colour) ?? publicAsset("sock-cream.svg");
     currentColour.textContent = bodyLabels.get(colour) ?? colour;
     for (const candidate of document.querySelectorAll<HTMLButtonElement>("[data-human-colour]")) candidate.classList.toggle("selected", candidate === swatch);
   });

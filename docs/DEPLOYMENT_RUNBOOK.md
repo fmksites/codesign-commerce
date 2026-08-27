@@ -7,7 +7,8 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 
 1. Confirm a clean working tree and immutable commit SHA.
 2. Run `npm ci`, tests, typecheck, build, bundle verification, boundary check,
-   documentation check, and eval-corpus/scorer check from a clean clone.
+   judge-site verification, documentation check, and eval-corpus/scorer check
+   from a clean clone.
 3. Record the core browser-bundle SHA-256 and public example asset hashes.
 4. Optionally run the retained model-eval corpus only if API access and budget
    are separately authorized; it is not a release or submission gate.
@@ -25,14 +26,18 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 
 ## 3. Deploy the public judge app — approval and provider choice required
 
-1. Deploy both static example builds from the same public commit over HTTPS.
-2. Do not add secrets, authentication, analytics, customer data, or private APIs.
-3. Show the commit SHA in the deployed app or build metadata.
-4. Preserve anonymous deterministic reset paths for both examples.
-5. Verify logged-out access, cache headers, asset hashes, exactly five tools,
+1. Build the single release artifact with the verified repository and flagship
+   URLs; `npm run build:release` fails if either HTTPS link is absent.
+2. Deploy `dist/judge-site/` from that public commit over HTTPS. Its root is the
+   English judge landing; `/korrhaus/` and `/tote/` are the two deterministic
+   examples under the same origin.
+3. Do not add secrets, authentication, analytics, customer data, or private APIs.
+4. Show the commit SHA in the deployed app and `site-metadata.json`.
+5. Preserve anonymous deterministic reset paths for both examples.
+6. Verify logged-out access, cache headers, asset hashes, exactly five tools,
    North Form, tote, safety prompts, Keep/Revert, responsive layout, navigation,
    reload, and browser-without-WebMCP fallback.
-6. Retain the provider URL as a fallback even if a branded domain is added.
+7. Retain the provider URL as a fallback even if a branded domain is added.
 
 ## 4. Build the private flagship release candidate
 

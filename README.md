@@ -42,9 +42,29 @@ npm test
 npm run typecheck
 npm run build
 npm run verify:browser-bundle
+npm run check:judge-site
 npm run check:public-boundary
 npm run check:docs
 npm run check:evals
+```
+
+`npm run build` also assembles one provider-neutral static judge artifact at
+`dist/judge-site/`: the English landing is `/`, the KORRHAUS reference is
+`/korrhaus/`, and the tote is `/tote/`. Preview that exact production output:
+
+```bash
+npm run preview:judge-site
+```
+
+The landing shows package `v0.1.0`, the exact source commit and browser-bundle
+digest. Public repository and live-flagship links remain visibly disabled in a
+local build. A release build fails closed unless both verified HTTPS links are
+provided:
+
+```bash
+CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/OWNER/codesign-commerce \
+CODESIGN_FLAGSHIP_URL=https://example.com/custom-sock-designer \
+npm run build:release
 ```
 
 Run either public example from the repository root:

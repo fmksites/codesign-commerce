@@ -36,6 +36,9 @@ jobs:
       - name: Verify browser bundle
         run: npm run verify:browser-bundle
 
+      - name: Verify assembled judge site
+        run: npm run check:judge-site
+
       - name: Check public boundary
         run: npm run check:public-boundary
 

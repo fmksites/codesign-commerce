@@ -1,6 +1,6 @@
 {
   "name": "codesign-commerce-challenge",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
@@ -12,13 +12,18 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build:workspaces && npm run build:judge-site",
+    "build:workspaces": "npm run build --workspaces --if-present",
+    "build:judge-site": "node scripts/assemble-judge-site.mjs",
+    "build:release": "npm run build:workspaces && node scripts/assemble-judge-site.mjs --require-release-links",
+    "preview:judge-site": "node scripts/serve-judge-site.mjs",
     "verify:browser-bundle": "node scripts/verify-browser-bundle.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p packages/codesign-commerce/tsconfig.test.json",
     "check:public-boundary": "node scripts/check-public-boundary.mjs",
     "check:docs": "node scripts/check-doc-links.mjs",
+    "check:judge-site": "node scripts/check-judge-site.mjs",
     "check:evals": "node scripts/validate-eval-corpus.mjs && node scripts/score-eval-results.mjs --self-test",
     "score:evals": "node scripts/score-eval-results.mjs"
   },

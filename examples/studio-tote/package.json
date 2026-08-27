@@ -1,16 +1,16 @@
 {
   "name": "@codesign-commerce/studio-tote",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build --base ./",
     "dev": "vite",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@codesign-commerce/core": "0.0.0"
+    "@codesign-commerce/core": "0.1.0"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

@@ -11,6 +11,8 @@ import {
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
 import "./styles.css";
 
+const publicAsset = (name: string): string => `${import.meta.env.BASE_URL}${name}`;
+
 const app = document.querySelector<HTMLElement>("#app");
 if (!app) throw new Error("Studio tote app root is missing");
 
@@ -82,7 +84,7 @@ app.innerHTML = `
         <aside class="proof-column" aria-labelledby="proof-title">
           <div class="proof-heading"><span id="proof-title">Live tote proof</span><span>Visible proposal preview</span></div>
           <div class="proof-stage">
-            <img src="/tote-natural-long.png" alt="Natural canvas studio tote with long handles" data-tote-preview />
+            <img src="${publicAsset("tote-natural-long.png")}" alt="Natural canvas studio tote with long handles" data-tote-preview />
             <span class="print-mark" data-print-mark>STUDIO<br />MARK</span>
           </div>
           <div class="proof-specs" id="print">
@@ -178,8 +180,8 @@ const render = (followVisible = false) => {
   const colour = String(selection(design, "bag.color", "natural"));
   const handles = String(selection(design, "handles.length", "long"));
   const asset = handles === "short"
-    ? "/tote-natural-short.png"
-    : colour === "charcoal" ? "/tote-charcoal-long.png" : "/tote-natural-long.png";
+    ? publicAsset("tote-natural-short.png")
+    : colour === "charcoal" ? publicAsset("tote-charcoal-long.png") : publicAsset("tote-natural-long.png");
   preview.src = asset;
   preview.classList.toggle("filtered-charcoal", colour === "charcoal" && handles === "short");
   preview.alt = `${colour === "charcoal" ? "Charcoal" : "Natural"} canvas studio tote with ${handles} handles`;

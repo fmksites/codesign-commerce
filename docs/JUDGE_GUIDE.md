@@ -31,9 +31,16 @@ npm ci
 npm test
 npm run typecheck
 npm run build
+npm run check:judge-site
+npm run preview:judge-site
 ```
 
-Start the examples in separate terminals:
+Open `http://127.0.0.1:4173/`. This is the exact provider-neutral production
+artifact: the anonymous English judge landing links to deterministic KORRHAUS
+and tote reset paths under the same origin. It contains no credentials, private
+APIs, analytics, or customer data.
+
+For source-development work, the examples can still run in separate terminals:
 
 ```bash
 npm run dev --workspace @codesign-commerce/korrhaus-reference
