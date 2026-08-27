@@ -1,5 +1,24 @@
 # Public repository release evidence
 
+## Read-only colourway QA evidence update — active companion evidence
+
+Commit `4592aea5dc58bee66da089b00f0abba197b2c135` publishes the
+current zero-traffic KORRHAUS QA evidence, marks the older guarded candidate
+historical, and records the owner hands-on test as the next gate. It does not
+publish private application source, route customer traffic to QA, or claim
+live-Shopify WebMCP.
+
+The exact commit passed hosted CI in
+<https://github.com/fmksites/codesign-commerce/actions/runs/33079821637>.
+That run installed exact dependencies and passed 95 tests, strict typecheck,
+production build, exact browser-bundle verification, judge-site assembly,
+the public-boundary scan, the 44-file documentation-link scan, and the
+evaluation-corpus checks.
+
+This evidence update does not authorize a fixtures-off production candidate,
+production traffic, judge-site hosting, video publication, or Devpost
+submission.
+
 ## Guarded flagship evidence update — active companion evidence
 
 Commit `3c14a005ff126399a875873928a378ee22085384` publishes the final guarded
