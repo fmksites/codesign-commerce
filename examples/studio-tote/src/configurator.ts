@@ -13,6 +13,7 @@ import {
   type ValidationIssue,
   type ValidationResult,
 } from "@codesign-commerce/core";
+import type { StudioToteAssetProofStore } from "./asset-proof";
 
 export const toteManifest: ConfiguratorManifest = {
   schemaVersion: "1.0",
@@ -131,9 +132,19 @@ export const toteManifest: ConfiguratorManifest = {
       maximum: 5_000,
     },
     {
+      id: "branding.artwork_ref",
+      label: "Staged print artwork",
+      agentDescription: "Attach an opaque temporary handle returned by codesign_stage_asset to this tote variant.",
+      scope: "design",
+      kind: "text",
+      agentWritable: true,
+      maximumLength: 128,
+      affectedPreviewRegion: "front decoration artwork",
+    },
+    {
       id: "branding.artwork_status",
       label: "Print artwork",
-      agentDescription: "Read whether final production print artwork is available. Artwork cannot be uploaded through WebMCP.",
+      agentDescription: "Read whether final production print artwork is available for this tote variant.",
       scope: "design",
       kind: "asset-status",
       agentWritable: false,
@@ -212,6 +223,7 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
   #listeners = new Set<(revision: string) => void>();
   #commits = new Map<string, string>();
   #persist: ((state: ConfigurationState) => void) | undefined;
+  #assetStore: StudioToteAssetProofStore | undefined;
 
   readonly counters: ToteAdapterCounters = {
     quiesceCalls: 0,
@@ -223,12 +235,17 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
     createDesignDraftCalls: 0,
   };
 
-  constructor(initialState = toteInitialState, persist?: (state: ConfigurationState) => void) {
+  constructor(
+    initialState = toteInitialState,
+    persist?: (state: ConfigurationState) => void,
+    assetStore?: StudioToteAssetProofStore,
+  ) {
     this.#committed = clone(initialState);
     this.#visible = clone(initialState);
     const revisionSuffix = Number(initialState.revision.match(/(\d+)$/)?.[1]);
     if (Number.isInteger(revisionSuffix) && revisionSuffix > 0) this.#revisionNumber = revisionSuffix;
     this.#persist = persist;
+    this.#assetStore = assetStore;
   }
 
   get visibleState(): ConfigurationState { return clone(this.#visible); }
@@ -321,8 +338,22 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
           designIds: [design.id],
         });
       }
+      const artworkReference = design.selections["branding.artwork_ref"];
+      if (artworkReference !== undefined && !this.#assetStore?.resolve(artworkReference)) {
+        issues.push({
+          code: "ARTWORK_HANDLE_UNAVAILABLE",
+          severity: "constraint-error",
+          message: "The staged print artwork is no longer available",
+          optionIds: ["branding.artwork_ref"],
+          designIds: [design.id],
+        });
+      }
     }
-    const missingArtwork = state.designs.filter((design) => design.assets.some((asset) => asset.slot === "print-artwork" && asset.status !== "ready"));
+    const missingArtwork = state.designs.filter((design) => {
+      const artworkReference = design.selections["branding.artwork_ref"];
+      const stagedArtworkAvailable = artworkReference !== undefined && (this.#assetStore?.resolve(artworkReference) ?? null) !== null;
+      return !stagedArtworkAvailable && design.assets.some((asset) => asset.slot === "print-artwork" && asset.status !== "ready");
+    });
     if (missingArtwork.length > 0) {
       issues.push({
         code: "FINAL_PRINT_ARTWORK_REQUIRED",
@@ -358,10 +389,11 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
           errorCode: "STALE_REVISION",
         };
       }
+      const importedState = this.#assetStore?.commitState(state) ?? clone(state);
       this.#revisionNumber += 1;
       revision = `tote-revision-${this.#revisionNumber}`;
       this.#commits.set(metadata.proposalId, revision);
-      this.#committed = { ...clone(state), revision };
+      this.#committed = { ...clone(importedState), revision };
       this.#visible = clone(this.#committed);
       this.counters.localWrites += 1;
       this.counters.serverWrites += 1;

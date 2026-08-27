@@ -702,7 +702,7 @@ An agent proposal must not call these normal persistence paths.
 10. **Mount the review UI.** Clearly mark the proposal temporary.
 11. **For later agent operations:** update the same draft, validate, and rerender under suppression.
 12. **On Revert:** restore the raw snapshot, render while still suppressed, clear proposal mode, and perform zero writes.
-13. **On Keep:** cross the commit boundary once, persist locally once, call the normal server save once with a distinct trigger such as `agent_proposal_keep`, and unlock normal controls.
+13. **On Keep:** cross the commit boundary once, persist locally once, call the normal server save once with the distinct `confirmed_page_keep` trigger, and unlock normal controls.
 
 ### 7.3 Integration implementation principle
 

@@ -93,6 +93,8 @@ button, select, input { accent-color: #0e4b36; }
 .print-mark { position: absolute; top: 58%; left: 50%; border: 1px solid currentColor; padding: 7px 9px; color: #242824; font-size: 12px; font-weight: 650; letter-spacing: .08em; line-height: 1.05; text-align: center; transform: translate(-50%, -50%); }
 .print-mark.upper-left { top: 46%; left: 39%; }
 .print-mark.light { color: #f4efe5; }
+.proof-stage img.artwork-mark { position: absolute; top: 58%; left: 50%; width: 24%; height: 24%; max-height: none; object-fit: contain; transform: translate(-50%, -50%); }
+.proof-stage img.artwork-mark.upper-left { top: 46%; left: 39%; width: 21%; height: 21%; }
 .proof-specs { display: grid; grid-template-columns: 1fr 1fr .82fr 1.15fr; gap: 18px; border: 1px solid #d8ddd8; border-top: 0; border-radius: 0 0 7px 7px; padding: 16px; }
 .proof-specs label, .production-note { display: grid; align-content: start; gap: 6px; color: #6a716b; font-size: 11px; }
 .proof-specs select, .proof-specs input { width: 100%; border: 0; border-bottom: 1px solid #cfd5d0; background: transparent; padding: 5px 0; color: #222622; font-size: 12px; }

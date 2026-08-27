@@ -10,11 +10,16 @@ import {
 } from "@codesign-commerce/core";
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
 import {
+  registerStudioToteAssetProof,
+  StudioToteAssetProofStore,
+} from "./asset-proof";
+import {
   PreviewProofError,
   registerStudioTotePreviewProof,
   type StudioTotePreviewArtifact,
   type StudioTotePreviewRequest,
 } from "./preview-proof";
+import { mountNativeAssetProof } from "./native-asset-proof";
 import "./styles.css";
 
 const publicAsset = (name: string): string => `${import.meta.env.BASE_URL}${name}`;
@@ -57,6 +62,7 @@ app.innerHTML = `
 
       <div id="proposal-review" class="proposal-slot"></div>
       <output data-persistence-audit hidden aria-hidden="true"></output>
+      <output data-asset-audit hidden aria-hidden="true"></output>
 
       <div class="builder-grid">
         <fieldset class="controls" data-human-controls>
@@ -92,6 +98,7 @@ app.innerHTML = `
           <div class="proof-stage">
             <img src="${publicAsset("tote-natural-long.png")}" alt="Natural canvas studio tote with long handles" data-tote-preview />
             <span class="print-mark" data-print-mark>STUDIO<br />MARK</span>
+            <img class="artwork-mark" data-artwork-mark alt="" hidden />
           </div>
           <div class="proof-specs" id="print">
             <label>Print placement
@@ -122,12 +129,26 @@ const query = new URLSearchParams(window.location.search);
 if (query.has("reset")) window.localStorage.removeItem("codesign-studio-tote");
 const persisted = window.localStorage.getItem("codesign-studio-tote");
 let seed = structuredClone(toteInitialState);
+let committedAssets: unknown = [];
 if (persisted) {
-  try { seed = JSON.parse(persisted) as ConfigurationState; } catch { /* keep public fixture */ }
+  try {
+    const parsed = JSON.parse(persisted) as unknown;
+    if (typeof parsed === "object" && parsed !== null && "state" in parsed) {
+      seed = (parsed as { state: ConfigurationState }).state;
+      committedAssets = (parsed as { assets?: unknown }).assets ?? [];
+    } else {
+      seed = parsed as ConfigurationState;
+    }
+  } catch { /* keep public fixture */ }
 }
+const assetStore = new StudioToteAssetProofStore(committedAssets);
 const adapter = new StudioToteAdapter(seed, (state) => {
-  window.localStorage.setItem("codesign-studio-tote", JSON.stringify(state));
-});
+  window.localStorage.setItem("codesign-studio-tote", JSON.stringify({
+    schemaVersion: 1,
+    state,
+    assets: assetStore.exportCommitted(),
+  }));
+}, assetStore);
 const session = new ProposalSession(toteManifest, adapter);
 const controller = new ProposalReviewController(toteManifest, session);
 
@@ -137,9 +158,12 @@ const nameInput = document.querySelector<HTMLInputElement>("[data-variant-name]"
 const saveStatus = document.querySelector<HTMLElement>("[data-save-status]");
 const preview = document.querySelector<HTMLImageElement>("[data-tote-preview]");
 const mark = document.querySelector<HTMLElement>("[data-print-mark]");
+const artworkMark = document.querySelector<HTMLImageElement>("[data-artwork-mark]");
 const controls = document.querySelector<HTMLFieldSetElement>("[data-human-controls]");
 const audit = document.querySelector<HTMLOutputElement>("[data-persistence-audit]");
-if (!reviewContainer || !tabs || !nameInput || !saveStatus || !preview || !mark || !controls || !audit) {
+const assetAudit = document.querySelector<HTMLOutputElement>("[data-asset-audit]");
+const productionNote = document.querySelector<HTMLElement>(".production-note strong");
+if (!reviewContainer || !tabs || !nameInput || !saveStatus || !preview || !mark || !artworkMark || !controls || !audit || !assetAudit || !productionNote) {
   throw new Error("Studio tote configurator markup is incomplete");
 }
 
@@ -194,14 +218,21 @@ const capturePreviewProof = async (
 
   const colour = String(selection(design, "bag.color", "natural"));
   const upperLeft = selection(design, "print.position", "front-center") === "upper-left";
+  const artwork = assetStore.resolve(selection(design, "branding.artwork_ref", null));
   context.fillStyle = colour === "charcoal" ? "#f6f0e6" : "#20201d";
-  context.font = "700 30px Arial, sans-serif";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
   const markX = upperLeft ? 250 : 320;
   const markY = upperLeft ? 300 : 360;
-  context.fillText("STUDIO", markX, markY - 18);
-  context.fillText("MARK", markX, markY + 18);
+  if (artwork) {
+    if (!artworkMark.complete || artworkMark.naturalWidth === 0) await artworkMark.decode();
+    const artworkSize = upperLeft ? 170 : 210;
+    context.drawImage(artworkMark, markX - artworkSize / 2, markY - artworkSize / 2, artworkSize, artworkSize);
+  } else {
+    context.font = "700 30px Arial, sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("STUDIO", markX, markY - 18);
+    context.fillText("MARK", markX, markY + 18);
+  }
 
   const dataUrl = canvas.toDataURL("image/webp", 0.82);
   if (!dataUrl.startsWith("data:image/webp;base64,") || dataUrl.length > 400_000) {
@@ -220,7 +251,7 @@ const capturePreviewProof = async (
     mediaType: "image/webp",
     width,
     height,
-    altText: `${preview.alt}; ${design.name}; temporary proposal ${proposal.proposalId === null ? "not active" : "active"}`,
+    altText: `${preview.alt}; ${design.name}; ${artwork ? artwork.altText : "studio-name typography"}; temporary proposal ${proposal.proposalId === null ? "not active" : "active"}`,
     integrity,
     transport: { kind: "data-url", value: dataUrl },
   };
@@ -264,8 +295,21 @@ const render = (followVisible = false) => {
   preview.src = asset;
   preview.classList.toggle("filtered-charcoal", colour === "charcoal" && handles === "short");
   preview.alt = `${colour === "charcoal" ? "Charcoal" : "Natural"} canvas studio tote with ${handles} handles`;
-  mark.classList.toggle("upper-left", selection(design, "print.position", "front-center") === "upper-left");
+  const upperLeft = selection(design, "print.position", "front-center") === "upper-left";
+  const artwork = assetStore.resolve(selection(design, "branding.artwork_ref", null));
+  mark.hidden = artwork !== null;
+  artworkMark.hidden = artwork === null;
+  if (artwork) {
+    artworkMark.src = artwork.dataUrl;
+    artworkMark.alt = artwork.altText;
+  } else {
+    artworkMark.removeAttribute("src");
+    artworkMark.alt = "";
+  }
+  mark.classList.toggle("upper-left", upperLeft);
   mark.classList.toggle("light", colour === "charcoal");
+  artworkMark.classList.toggle("upper-left", upperLeft);
+  productionNote.textContent = artwork ? "Supplied artwork staged for this design." : "Final print artwork is still required.";
   nameInput.value = design.name;
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-option][data-value]")) {
     button.classList.toggle("selected", selection(design, button.dataset.option ?? "", "") === button.dataset.value);
@@ -277,6 +321,7 @@ const render = (followVisible = false) => {
     else control.value = String(value);
   }
   audit.value = JSON.stringify(adapter.counters);
+  assetAudit.value = JSON.stringify(assetStore.counters);
 };
 
 mountProposalReview(reviewContainer, controller, {
@@ -290,8 +335,10 @@ controller.subscribe((state) => {
   saveStatus.textContent = ["temporary", "busy", "invalidated"].includes(state.kind)
     ? "Temporary proposal not saved"
     : "Draft saved on this device";
+  if (state.kind === "reverted") assetStore.releaseTemporary();
   render(true);
 });
+window.addEventListener("pagehide", () => assetStore.releaseTemporary(), { once: true });
 
 for (const button of document.querySelectorAll<HTMLButtonElement>("[data-option][data-value]")) {
   button.addEventListener("click", () => {
@@ -336,10 +383,24 @@ const registration = registerCoDesignTools(webMcpDocument, {
 const previewRegistration = registerStudioTotePreviewProof(webMcpDocument, {
   capture: capturePreviewProof,
 });
-void Promise.all([registration.ready, previewRegistration.ready]);
+const assetRegistration = registerStudioToteAssetProof(webMcpDocument, assetStore);
+const allToolsReady = Promise.all([registration.ready, previewRegistration.ready, assetRegistration.ready]);
+void allToolsReady;
 if (import.meta.env.DEV) document.documentElement.dataset.webmcpRegistration = registration.supported ? "supported" : "unsupported";
 
 render();
+
+if (import.meta.env.DEV && query.has("native-asset-proof")) {
+  const parent = document.querySelector<HTMLElement>("main");
+  if (!parent) throw new Error("Native asset proof parent is missing");
+  mountNativeAssetProof({
+    document: document as Document & DocumentWithModelContext,
+    parent,
+    adapter,
+    assetStore,
+    ready: allToolsReady,
+  });
+}
 
 if (import.meta.env.DEV && query.has("native-webmcp-proof")) {
   const proof = document.createElement("section");

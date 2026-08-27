@@ -40,7 +40,7 @@ The guarded adapter remains inside the existing browser closure and reuses these
 | Temporary preview | Existing proposal-overlay accessor and render skip-persistence option | Expand the overlay from one design to a complete draft state; do not replace state through DOM clicks. |
 | Restore | Drop the overlay and render with persistence skipped | Revert writes neither local storage nor network. |
 | Validate | Existing option catalog plus review-blocker rules | Convert impossible values to constraint errors; convert missing final logo into a decision-required issue for a keepable draft. |
-| Commit | Existing persist/save-server queue | Write locally once and invoke one secure save with `agent_proposal_keep`; model expected server failure explicitly. |
+| Commit | Existing persist/save-server queue | Write locally once and invoke one secure save with `confirmed_page_keep`; model expected server failure explicitly. |
 | External change | Committed project fingerprint and server-project application path | Invalidate an open proposal and resynchronize; never Keep a stale draft. |
 | Lock controls | Existing root proposal-active marker and input/click guards | Preserve tab/preview inspection where safe; block all mutation and upload paths. |
 

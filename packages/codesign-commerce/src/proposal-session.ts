@@ -516,7 +516,7 @@ export class ProposalSession<Snapshot = unknown> {
         proposalId: this.#active.id,
         baseRevision: this.#active.baseRevision,
         operationIds: [...this.#active.operationIds],
-        trigger: "agent_proposal_keep",
+        trigger: "confirmed_page_keep",
       });
       if (!result.localPersisted) {
         return this.#discardStaleProposal(result.revision);

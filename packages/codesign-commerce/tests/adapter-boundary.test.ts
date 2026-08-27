@@ -96,7 +96,7 @@ describe("public adapter boundary", () => {
       proposalId: "boundary-commit-1",
       baseRevision: "revision-1",
       operationIds: ["boundary-operation-1"],
-      trigger: "agent_proposal_keep",
+      trigger: "confirmed_page_keep",
     };
     const committed = await guarded.commitState(structuredClone(testState), metadata);
     const serialized = JSON.stringify({ read, options, validation, committed });

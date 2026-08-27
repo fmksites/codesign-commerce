@@ -125,7 +125,7 @@ export interface CommitMetadata {
   proposalId: string;
   baseRevision: string;
   operationIds: string[];
-  trigger: "agent_proposal_keep";
+  trigger: "confirmed_page_keep";
 }
 
 export type CommitResult =

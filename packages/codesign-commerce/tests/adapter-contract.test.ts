@@ -6,7 +6,7 @@ const metadata: CommitMetadata = {
   proposalId: "contract-proposal-1",
   baseRevision: "revision-1",
   operationIds: ["contract-operation-1"],
-  trigger: "agent_proposal_keep",
+  trigger: "confirmed_page_keep",
 };
 
 describe("ConfiguratorAdapter contract", () => {

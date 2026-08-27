@@ -253,3 +253,25 @@
 - Baseline verification passed: 8 test files / 95 tests, strict typecheck, full build, 118-candidate public-boundary scan, 50-file documentation check, judge-site hash check, and 24-case eval-corpus check.
 - No private KORRHAUS inspection or mutation and no external deployment, traffic, publication, or submission action occurred.
 - Item 1 is complete. Item 2 is the next dependency: the smallest removable proof for actual inline ChatGPT previews and native Chrome WebMCP.
+
+## 27 August 2026 — Item 2 completed with release-time ChatGPT deferral
+
+- Added the bounded `codesign_get_previews` proof tool and captured the existing tote renderer as a revision-bound 640 × 640 WebP artifact.
+- Native Chrome 151 discovered and executed the page tools through `document.modelContext`; the OpenAI Codex in-app browser independently discovered the tools and displayed the returned image inline in conversation.
+- Fixed a native compatibility defect exposed by Chrome: tool callbacks must accept a missing execution-options object.
+- Verified ordinary Chrome behavior with WebMCP registration absent and confirmed proposal Revert restored the baseline with zero persistence writes.
+- The participant explicitly approved deferring the identical normal-ChatGPT-conversation check to Item 11. No normal-ChatGPT compatibility claim is authorized before that release check passes.
+- Item 2 was committed as `a9fed9f` after the full local verification suite passed.
+
+## 27 August 2026 — Item 3 completed with real artwork, Keep, Revert and interruption evidence
+
+- Added a bounded temporary raster-asset proof path using one real 214,745-byte North Form PNG selected at runtime rather than embedded in a proposal.
+- OpenAI Codex in-app-browser evidence staged the PNG through `codesign_stage_asset`, rendered it in the existing tote and inline preview, then used Felix's explicit chat approval to activate the visible page Keep controller.
+- Keep crossed the page-owned boundary once: one local write, one server-simulation write, one commit and one exact asset import. A saved handle replaced the temporary handle; the Keep control disappeared and reread returned no pending proposal.
+- Actual page-reopen verification exposed and fixed a persistence defect where the saved state reference survived but its artwork bytes did not. The corrected implementation stores state and approved artwork together in one local-storage write; reopening restored the same visible mark and preview integrity.
+- Native Chrome 151 selected the same PNG through the file chooser, staged/proposed/captured it through `document.modelContext`, then visible Revert restored the natural tote with one restore, zero writes/commits, zero asset imports and one temporary-asset release.
+- Closing an in-app-browser page with an unsaved proposal caused the proposal to disappear; reopening returned the previously saved revision, saved artwork and no pending proposal, with zero writes before closure.
+- Deterministic tests cover invalid asset input, raw-byte non-disclosure, exact Keep import, Revert cleanup, save-once behavior, duplicate Keep idempotency and approved-artwork restoration after reopening.
+- Final local verification passed: 11 test files / 106 tests, strict workspace typecheck, production build, browser-bundle verification, 128-candidate public-boundary scan, 53-file documentation check, judge-site check, 24-case eval validation/scorer self-test and `git diff --check`.
+- The identical normal-ChatGPT-conversation asset/confirmation path remains explicitly deferred to Item 11 and blocks any final ChatGPT claim until it passes.
+- Item 4 is next: replace manifest 1.0 with the strict manifest 2.0 contract and parity harness.
