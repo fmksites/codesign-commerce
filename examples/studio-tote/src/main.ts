@@ -276,7 +276,7 @@ const renderTabs = (followVisible = false) => {
   add.className = "add-variant";
   add.setAttribute("aria-label", "Add tote variant");
   add.textContent = "+";
-  add.disabled = session.status !== "idle" || state.designs.length >= toteManifest.capabilities.maximumDesigns;
+  add.disabled = session.status !== "idle" || state.designs.length >= toteManifest.variantPolicy.maximumVariants;
   add.addEventListener("click", () => {
     const created = adapter.addHumanVariant(activeDesignId);
     if (created) { activeDesignId = created; render(); }

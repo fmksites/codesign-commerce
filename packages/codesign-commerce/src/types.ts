@@ -27,53 +27,90 @@ export interface ConfigurationState {
   designs: ConfigurationDesign[];
 }
 
-export type OptionScope = "order" | "design";
-export type OptionKind = "enum" | "color" | "integer" | "boolean" | "text" | "asset-status";
-export type CanonicalRole = "selection" | "design-quantity" | "design-name" | "order-total";
+export type ControlScope = "workspace" | "variant" | "element";
+export type ControlKind = "enum" | "color" | "integer" | "number" | "boolean" | "text" | "asset" | "position-2d" | "scale" | "rotation";
+export type CanonicalRole = "selection" | "variant-quantity" | "variant-name" | "workspace-total";
+export type ControlRequirement = "configuration" | "production-readiness" | "optional";
 
-export interface OptionValue {
+export interface ControlChoice {
   id: string;
   label: string;
   description?: string;
 }
 
-export interface OptionGroup {
+export interface ControlDefinition {
   id: string;
   label: string;
   agentDescription: string;
-  scope: OptionScope;
-  kind: OptionKind;
+  scope: ControlScope;
+  kind: ControlKind;
   role?: CanonicalRole;
   agentWritable: boolean;
-  values?: OptionValue[];
+  requirement: ControlRequirement;
+  targetType?: string;
+  values?: ControlChoice[];
   minimum?: number;
   maximum?: number;
   maximumLength?: number;
+  xMinimum?: number;
+  xMaximum?: number;
+  yMinimum?: number;
+  yMaximum?: number;
+  assetSlotId?: string;
+  availabilityGroupIds?: string[];
   affectedPreviewRegion?: string;
 }
 
-export interface DependencyRule {
+export type AssetSourceKind = "data-url" | "https-url";
+export type AssetMediaType = "image/png" | "image/jpeg" | "image/webp" | "image/svg+xml";
+
+export interface AssetSlotDefinition {
+  id: string;
+  label: string;
+  agentDescription: string;
+  scope: "workspace" | "variant" | "element";
+  sourceKinds: AssetSourceKind[];
+  mediaTypes: AssetMediaType[];
+  maximumSourceCharacters: number;
+  maximumBytes: number;
+}
+
+export type VariantOperation = "create" | "duplicate" | "remove" | "reorder" | "set-active";
+
+export interface VariantPolicy {
+  minimumVariants: number;
+  maximumVariants: number;
+  operations: VariantOperation[];
+}
+
+export interface PreviewSurfaceDefinition {
+  id: string;
+  label: string;
+  scope: "workspace" | "variant";
+  mediaTypes: Array<"image/png" | "image/jpeg" | "image/webp">;
+  maximumBytes: number;
+}
+
+export interface DependencyDescription {
   id: string;
   description: string;
-  optionIds: string[];
+  controlIds: string[];
 }
 
 export interface ConfiguratorManifest {
-  schemaVersion: "1.0";
+  schemaVersion: "2.0";
   id: string;
   version: string;
   displayName: string;
   productType: string;
-  capabilities: {
-    multipleDesigns: boolean;
-    maximumDesigns: number;
-    cloning: boolean;
-  };
-  optionGroups: OptionGroup[];
-  dependencyRules: DependencyRule[];
+  controls: ControlDefinition[];
+  assetSlots: AssetSlotDefinition[];
+  variantPolicy: VariantPolicy;
+  previewSurfaces: PreviewSurfaceDefinition[];
+  dependencyDescriptions: DependencyDescription[];
   approval: {
     mode: "explicit-human";
-    persistence: "keep-only";
+    persistencePath: "page-keep-controller";
   };
 }
 
@@ -102,7 +139,7 @@ export interface OptionRequest {
 export interface OptionAvailability {
   optionId: string;
   allowed: boolean;
-  values?: OptionValue[];
+  values?: ControlChoice[];
   reason?: string;
 }
 

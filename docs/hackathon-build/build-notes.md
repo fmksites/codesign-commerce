@@ -275,3 +275,17 @@
 - Final local verification passed: 11 test files / 106 tests, strict workspace typecheck, production build, browser-bundle verification, 128-candidate public-boundary scan, 53-file documentation check, judge-site check, 24-case eval validation/scorer self-test and `git diff --check`.
 - The identical normal-ChatGPT-conversation asset/confirmation path remains explicitly deferred to Item 11 and blocks any final ChatGPT claim until it passes.
 - Item 4 is next: replace manifest 1.0 with the strict manifest 2.0 contract and parity harness.
+
+## 27 August 2026 — Item 4 completed with Manifest 2.0 and tote control parity
+
+- Replaced the unfinished Manifest 1.0 runtime surface with strict Manifest 2.0 types and field-by-field validation; no 1.0 runtime compatibility layer remains.
+- Added finite workspace/variant/element scopes; semantic control kinds including assets and transforms; requirements; bounded asset slots; variant policy; preview surfaces; public dependency descriptions; and the fixed page-owned Keep persistence path.
+- Migrated the current core, tests, and studio-tote adapter to the new control/role/scope vocabulary without changing the still-transitional WebMCP tool count; the approved exact six-tool rewrite remains Item 8.
+- Added a reusable, versioned human-control inventory validator and parity report. It fails on missing mappings, unknown targets, unsafe/duplicate IDs, unknown fields, and unjustified exclusions.
+- The tote inventory accounts for all 16 shipped control groups: 8 manifest-control mappings, 2 variant-operation mappings, and 6 explicit public-safe exclusions.
+- Added a migration table and explicit asset/preview/parity guidance in `docs/MANIFEST_AND_ADAPTER.md`.
+- Actual in-app-browser verification loaded the normal tote, found no unsolicited proposal UI or overflow, read manifest version `2.0.0`, and returned the declared variant policy, asset control, and five public dependencies through WebMCP.
+- Final automated verification passed: focused 3 files / 14 tests, full 13 test files / 105 tests, strict typecheck, production build, browser-bundle verification, parity audit, 134-candidate public-boundary scan, 54-file documentation check, judge-site check, 24-case eval validation/scorer self-test, and `git diff --check`.
+- Dated evidence: `docs/evidence/CODESIGN_V2_ITEM4_MANIFEST_PARITY_2026-08-27.md`.
+- No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
+- Item 5 is next: canonical workspace guards and atomic typed operations.

@@ -4,28 +4,30 @@
 
 A manifest describes the safe, semantic surface an agent may understand. It does not expose raw state paths or implement the merchant's visual renderer.
 
-Required top-level fields:
+Manifest 2.0 has these required top-level fields:
 
-- `schemaVersion`: currently exactly `1.0`.
-- `id` and `version`: stable safe identifiers and an adapter-controlled version.
-- `displayName` and `productType`: public human-readable context.
-- `capabilities`: multiple-design, maximum-design, and cloning behavior.
-- `optionGroups`: allowlisted semantic options.
-- `dependencyRules`: public descriptions plus bounded references to the
-  manifest option IDs affected by each dependency.
-- `approval`: exactly `explicit-human` with `keep-only` persistence.
+- `schemaVersion`: exactly `2.0`.
+- `id` and `version`: a stable safe integration ID and merchant-controlled contract version.
+- `displayName` and `productType`: public context that helps an agent choose and explain the configurator.
+- `controls`: the complete allowlisted semantic control surface.
+- `assetSlots`: bounded inputs for artwork and other public creative assets.
+- `variantPolicy`: minimum/maximum variants plus the explicitly supported create, duplicate, remove, reorder and activate operations.
+- `previewSurfaces`: the image outputs an adapter can return to an agent or conversation.
+- `dependencyDescriptions`: public production/configuration rules with bounded references to control IDs.
+- `approval`: exactly `explicit-human` through the page's `page-keep-controller`.
 
 Unknown top-level and nested fields are rejected. This prevents accidental private-data pass-through and forces explicit contract evolution.
 
-## Option groups
+## Controls
 
-Each option has:
+Each control has:
 
 - A stable semantic ID such as `body.color` or `design.quantity`.
 - A human label and agent-oriented description.
-- Scope: `design` or `order`.
-- Kind: `enum`, `color`, `integer`, `boolean`, bounded `text`, or read-only `asset-status`.
-- `agentWritable`, with asset status always read-only.
+- Scope: `workspace`, `variant`, or typed `element`.
+- A finite kind: `enum`, `color`, `integer`, `number`, `boolean`, bounded `text`, `asset`, `position-2d`, `scale`, or `rotation`.
+- A requirement classification: configuration, production readiness, or optional.
+- `agentWritable`; read-only status controls can still help the agent explain missing production decisions.
 - Static values or numeric/text bounds where applicable.
 - An optional public preview-region label.
 
@@ -33,12 +35,47 @@ Canonical roles connect an option to non-selection state:
 
 | Role | Required scope and kind | Meaning |
 |---|---|---|
-| `design-quantity` | design integer | Quantity allocated to one design |
-| `design-name` | design text | Human-readable colourway/design name |
-| `order-total` | order integer | Total quantity across designs |
-| `selection` or omitted | normally design option | Entry in the public selections map |
+| `variant-quantity` | variant integer | Quantity allocated to one variant |
+| `variant-name` | variant text | Human-readable colourway/design name |
+| `workspace-total` | workspace integer | Total quantity across variants |
+| `selection` or omitted | normally variant/element control | Entry in the public selections map |
 
-Version 1 requires exactly one `design-quantity` and one `order-total` option. Unsafe IDs containing `__proto__`, `prototype`, or `constructor` are rejected.
+Manifest 2 requires exactly one `variant-quantity` and one `workspace-total` control. Unsafe IDs containing `__proto__`, `prototype`, or `constructor` are rejected. Unknown nested fields, duplicate IDs, non-finite or contradictory bounds, unknown dependency references, undeclared asset slots, unsafe source types, and oversized collections all fail closed.
+
+## Assets and previews
+
+An asset control stores only an opaque temporary handle. Its `assetSlotId` must resolve to a declared slot that allowlists source transports, media types, source characters, and decoded bytes. The generic package never receives merchant storage credentials. The merchant adapter owns staging, visual rendering, import on Keep, and temporary-asset release on Revert.
+
+A preview surface declares only public output constraints. The adapter owns the renderer and returns a bounded raster artifact with proposal/revision identity, accessible alt text, integrity, dimensions, media type, and transport. A text summary or URL alone is not a successful visual preview.
+
+## Human-control inventory and parity
+
+Each integration maintains a versioned inventory of its actual human controls. Every inventory entry must either map to a manifest control, variant operation, or asset slot, or carry a public-safe exclusion reason such as navigation, development-only diagnostics, or the human-only Keep/Revert boundary. Unknown targets, missing mappings, duplicate/unsafe IDs, unknown fields, and empty exclusion reasons fail the reusable parity validator.
+
+For the tote reference, run:
+
+```sh
+npm run check:parity
+```
+
+This is an explicit review artifact, not a claim that the package can infer a merchant's customizer automatically.
+
+## Migration from Manifest 1.0
+
+Manifest 2.0 intentionally has no 1.0 runtime compatibility layer. Migrate deliberately:
+
+| Manifest 1.0 | Manifest 2.0 |
+|---|---|
+| `optionGroups` | `controls` |
+| design/order scopes | variant/workspace scopes |
+| `design-name`, `design-quantity`, `order-total` | `variant-name`, `variant-quantity`, `workspace-total` |
+| `capabilities.maximumDesigns` | `variantPolicy.maximumVariants` |
+| `dependencyRules[].optionIds` | `dependencyDescriptions[].controlIds` |
+| text artwork reference | `asset` control referencing an `assetSlot` |
+| implicit renderer output | declared `previewSurfaces` |
+| `keep-only` string | fixed `page-keep-controller` persistence path |
+
+The migration should be accompanied by a fresh human-control inventory so control parity is reviewed rather than assumed.
 
 ## Canonical state
 
@@ -79,7 +116,7 @@ fields are dropped; malformed values fail closed with a generic
 
 1. `readState()` returns a detached canonical committed state.
 2. `listOptions()` returns public availability and reasons.
-3. Optional `createDesignDraft()` clones one design in detached draft state, assigns a safe unique public ID, makes it active, and performs no preview or persistence side effect. It is required when the manifest advertises cloning.
+3. Optional `createDesignDraft()` clones one variant in detached draft state, assigns a safe unique public ID, makes it active, and performs no preview or persistence side effect. It is required when `variantPolicy.operations` includes `duplicate`.
 4. `quiescePersistence()` flushes or awaits recent human saves before snapshotting.
 5. `captureSnapshot()` keeps a private exact raw snapshot inside the adapter.
 6. `previewState()` updates the existing visible renderer with zero storage/network writes.

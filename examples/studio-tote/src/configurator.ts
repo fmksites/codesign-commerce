@@ -16,20 +16,20 @@ import {
 import type { StudioToteAssetProofStore } from "./asset-proof";
 
 export const toteManifest: ConfiguratorManifest = {
-  schemaVersion: "1.0",
+  schemaVersion: "2.0",
   id: "codesign.studio-tote-reference",
-  version: "1.0.0",
+  version: "2.0.0",
   displayName: "Studio tote public reference",
   productType: "custom-canvas-studio-tote",
-  capabilities: { multipleDesigns: true, maximumDesigns: 3, cloning: true },
-  optionGroups: [
+  controls: [
     {
       id: "canvas.weight",
       label: "Canvas",
       agentDescription: "Choose the public canvas weight for this tote variant.",
-      scope: "design",
+      scope: "variant",
       kind: "enum",
       agentWritable: true,
+      requirement: "configuration",
       affectedPreviewRegion: "tote body and production construction",
       values: [
         { id: "8oz", label: "8 oz lightweight" },
@@ -41,9 +41,10 @@ export const toteManifest: ConfiguratorManifest = {
       id: "bag.color",
       label: "Body colour",
       agentDescription: "Choose one public stocked canvas colour.",
-      scope: "design",
+      scope: "variant",
       kind: "enum",
       agentWritable: true,
+      requirement: "configuration",
       affectedPreviewRegion: "tote body",
       values: [
         { id: "natural", label: "Natural" },
@@ -54,9 +55,10 @@ export const toteManifest: ConfiguratorManifest = {
       id: "handles.length",
       label: "Handles",
       agentDescription: "Choose short hand-carry or long shoulder handles.",
-      scope: "design",
+      scope: "variant",
       kind: "enum",
       agentWritable: true,
+      requirement: "configuration",
       affectedPreviewRegion: "tote handles",
       values: [
         { id: "short", label: "Short tote · 33 cm" },
@@ -67,9 +69,10 @@ export const toteManifest: ConfiguratorManifest = {
       id: "print.method",
       label: "Print method",
       agentDescription: "Choose a public decoration method subject to canvas and quantity rules.",
-      scope: "design",
+      scope: "variant",
       kind: "enum",
       agentWritable: true,
+      requirement: "configuration",
       affectedPreviewRegion: "front decoration",
       values: [
         { id: "screen-1", label: "Screen print · 1 colour" },
@@ -81,9 +84,10 @@ export const toteManifest: ConfiguratorManifest = {
       id: "print.position",
       label: "Print placement",
       agentDescription: "Choose the public front decoration position.",
-      scope: "design",
+      scope: "variant",
       kind: "enum",
       agentWritable: true,
+      requirement: "configuration",
       affectedPreviewRegion: "front decoration position",
       values: [
         { id: "front-center", label: "Front center" },
@@ -94,29 +98,32 @@ export const toteManifest: ConfiguratorManifest = {
       id: "construction.reinforced",
       label: "Reinforced construction",
       agentDescription: "Use reinforced cross-stitching at the handle stress points.",
-      scope: "design",
+      scope: "variant",
       kind: "boolean",
       agentWritable: true,
+      requirement: "configuration",
       affectedPreviewRegion: "handle attachment construction",
     },
     {
       id: "design.name",
       label: "Variant name",
       agentDescription: "Give this tote variant a short public name.",
-      scope: "design",
+      scope: "variant",
       kind: "text",
-      role: "design-name",
+      role: "variant-name",
       agentWritable: true,
+      requirement: "configuration",
       maximumLength: 60,
     },
     {
       id: "design.quantity",
       label: "Variant quantity",
       agentDescription: "Allocate the number of totes for this variant.",
-      scope: "design",
+      scope: "variant",
       kind: "integer",
-      role: "design-quantity",
+      role: "variant-quantity",
       agentWritable: true,
+      requirement: "configuration",
       minimum: 25,
       maximum: 5_000,
     },
@@ -124,10 +131,11 @@ export const toteManifest: ConfiguratorManifest = {
       id: "order.total_quantity",
       label: "Order quantity",
       agentDescription: "Set the total number of totes across all variants.",
-      scope: "order",
+      scope: "workspace",
       kind: "integer",
-      role: "order-total",
+      role: "workspace-total",
       agentWritable: true,
+      requirement: "configuration",
       minimum: 25,
       maximum: 5_000,
     },
@@ -135,49 +143,78 @@ export const toteManifest: ConfiguratorManifest = {
       id: "branding.artwork_ref",
       label: "Staged print artwork",
       agentDescription: "Attach an opaque temporary handle returned by codesign_stage_asset to this tote variant.",
-      scope: "design",
-      kind: "text",
+      scope: "variant",
+      kind: "asset",
       agentWritable: true,
-      maximumLength: 128,
+      requirement: "production-readiness",
+      assetSlotId: "print-artwork",
       affectedPreviewRegion: "front decoration artwork",
     },
     {
       id: "branding.artwork_status",
       label: "Print artwork",
       agentDescription: "Read whether final production print artwork is available for this tote variant.",
-      scope: "design",
-      kind: "asset-status",
+      scope: "variant",
+      kind: "enum",
       agentWritable: false,
+      requirement: "production-readiness",
+      values: [
+        { id: "missing", label: "Missing" },
+        { id: "placeholder", label: "Placeholder" },
+        { id: "ready", label: "Ready" },
+      ],
     },
   ],
-  dependencyRules: [
+  assetSlots: [{
+    id: "print-artwork",
+    label: "Print artwork",
+    agentDescription: "Public artwork for the tote's front decoration.",
+    scope: "variant",
+    sourceKinds: ["data-url"],
+    mediaTypes: ["image/png", "image/jpeg", "image/webp"],
+    maximumSourceCharacters: 400_000,
+    maximumBytes: 250_000,
+  }],
+  variantPolicy: {
+    minimumVariants: 1,
+    maximumVariants: 3,
+    operations: ["duplicate", "set-active"],
+  },
+  previewSurfaces: [{
+    id: "product-preview",
+    label: "Tote product preview",
+    scope: "variant",
+    mediaTypes: ["image/webp", "image/png"],
+    maximumBytes: 300_000,
+  }],
+  dependencyDescriptions: [
     {
       id: "variant-quantities-match-total",
       description: "Variant quantities must add up to the order total.",
-      optionIds: ["order.total_quantity", "design.quantity"],
+      controlIds: ["order.total_quantity", "design.quantity"],
     },
     {
       id: "embroidery-needs-substantial-canvas",
       description: "Embroidery requires 12 oz or 16 oz canvas.",
-      optionIds: ["canvas.weight", "print.method"],
+      controlIds: ["canvas.weight", "print.method"],
     },
     {
       id: "extra-heavy-needs-reinforcement",
       description: "16 oz canvas requires reinforced handle construction.",
-      optionIds: ["canvas.weight", "construction.reinforced"],
+      controlIds: ["canvas.weight", "construction.reinforced"],
     },
     {
       id: "two-colour-minimum",
       description: "Two-colour screen print requires at least 50 totes per variant.",
-      optionIds: ["print.method", "design.quantity"],
+      controlIds: ["print.method", "design.quantity"],
     },
     {
       id: "artwork-before-production",
       description: "A placeholder may be kept as a draft, but final print artwork is required before production.",
-      optionIds: ["branding.artwork_status"],
+      controlIds: ["branding.artwork_status"],
     },
   ],
-  approval: { mode: "explicit-human", persistence: "keep-only" },
+  approval: { mode: "explicit-human", persistencePath: "page-keep-controller" },
 };
 
 export const toteInitialState: ConfigurationState = {
@@ -258,13 +295,13 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
     const designExists = request.designId === undefined || this.#visible.designs.some((design) => design.id === request.designId);
     return {
       revision: this.#committed.revision,
-      options: toteManifest.optionGroups
+      options: toteManifest.controls
         .filter((option) => !requested || requested.has(option.id))
         .map((option) => ({
           optionId: option.id,
-          allowed: option.scope === "order" || designExists,
+          allowed: option.scope === "workspace" || designExists,
           ...(option.values ? { values: clone(option.values) } : {}),
-          ...(option.scope === "design" && !designExists ? { reason: "Unknown design" } : {}),
+          ...(option.scope !== "workspace" && !designExists ? { reason: "Unknown design" } : {}),
         })),
     };
   }
@@ -409,16 +446,16 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
   }
 
   applyHumanChange(designId: string, optionId: string, value: JsonPrimitive): boolean {
-    const option = toteManifest.optionGroups.find((candidate) => candidate.id === optionId);
+    const option = toteManifest.controls.find((candidate) => candidate.id === optionId);
     if (!option || validateOptionValue(option, value)) return false;
     const next = this.committedState;
-    if (option.scope === "order") {
+    if (option.scope === "workspace") {
       next.order.totalQuantity = Number(value);
     } else {
       const design = next.designs.find((candidate) => candidate.id === designId);
       if (!design) return false;
-      if (option.role === "design-name") design.name = String(value);
-      else if (option.role === "design-quantity") {
+      if (option.role === "variant-name") design.name = String(value);
+      else if (option.role === "variant-quantity") {
         design.quantity = Number(value);
         next.order.totalQuantity = next.designs.reduce((total, candidate) => total + candidate.quantity, 0);
       }
@@ -430,7 +467,7 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
 
   addHumanVariant(sourceDesignId: string): string | null {
     const next = this.committedState;
-    if (next.designs.length >= toteManifest.capabilities.maximumDesigns) return null;
+    if (next.designs.length >= toteManifest.variantPolicy.maximumVariants) return null;
     const source = next.designs.find((design) => design.id === sourceDesignId);
     if (!source) return null;
     const designId = `tote-${next.designs.length + 1}-${Date.now()}`;

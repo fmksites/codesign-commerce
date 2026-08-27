@@ -9,8 +9,8 @@ describe("studio tote portability adapter", () => {
     expect(validateManifest(toteManifest)).toEqual(toteManifest);
     expect(toteManifest.id).toBe("codesign.studio-tote-reference");
     expect(toteManifest.productType).toBe("custom-canvas-studio-tote");
-    expect(toteManifest.optionGroups.map((option) => option.id)).toContain("canvas.weight");
-    expect(toteManifest.optionGroups.map((option) => option.id)).not.toContain("body.color");
+    expect(toteManifest.controls.map((option) => option.id)).toContain("canvas.weight");
+    expect(toteManifest.controls.map((option) => option.id)).not.toContain("body.color");
   });
 
   it("keeps a coherent draft valid while final print artwork is missing", async () => {

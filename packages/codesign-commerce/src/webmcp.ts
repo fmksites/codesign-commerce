@@ -68,7 +68,7 @@ const VALUE_SCHEMA: JsonSchema = {
 };
 
 function proposalInputSchema(manifest: ConfiguratorManifest): JsonSchema {
-  const writableOptionIds = manifest.optionGroups.filter((option) => option.agentWritable).map((option) => option.id);
+  const writableOptionIds = manifest.controls.filter((option) => option.agentWritable).map((option) => option.id);
   return {
     type: "object",
     properties: {
@@ -112,7 +112,7 @@ function optionRequestSchema(manifest: ConfiguratorManifest): JsonSchema {
         minItems: 1,
         maxItems: 30,
         uniqueItems: true,
-        items: { type: "string", enum: manifest.optionGroups.map((option) => option.id) },
+        items: { type: "string", enum: manifest.controls.map((option) => option.id) },
       },
     },
     additionalProperties: false,
@@ -120,9 +120,9 @@ function optionRequestSchema(manifest: ConfiguratorManifest): JsonSchema {
 }
 
 function createDesignInputSchema(manifest: ConfiguratorManifest): JsonSchema {
-  const writableOptionIds = manifest.optionGroups.filter((option) => option.agentWritable).map((option) => option.id);
-  const writableDesignOptionIds = manifest.optionGroups
-    .filter((option) => option.agentWritable && option.scope === "design")
+  const writableOptionIds = manifest.controls.filter((option) => option.agentWritable).map((option) => option.id);
+  const writableDesignOptionIds = manifest.controls
+    .filter((option) => option.agentWritable && (option.scope === "variant" || option.scope === "element"))
     .map((option) => option.id);
   return {
     type: "object",
@@ -233,7 +233,7 @@ function parseProposalInput(value: unknown): ProposalInput | null {
 function parseOptionRequest(value: unknown, manifest: ConfiguratorManifest): OptionRequest | null {
   if (!isRecord(value) || !hasOnlyKeys(value, ["designId", "optionIds"])) return null;
   if (value.designId !== undefined && (typeof value.designId !== "string" || value.designId.length < 1 || value.designId.length > 128)) return null;
-  const knownOptions = new Set(manifest.optionGroups.map((option) => option.id));
+  const knownOptions = new Set(manifest.controls.map((option) => option.id));
   if (
     value.optionIds !== undefined
     && (
@@ -276,8 +276,8 @@ function parseCreateDesignInput(value: unknown, manifest: ConfiguratorManifest):
   const changes = value.changes === undefined ? [] : parseChanges(value.changes, true);
   const newDesignChanges = parseChanges(value.newDesignChanges, false);
   if (!changes || !newDesignChanges || changes.length + newDesignChanges.length > 40) return null;
-  const writableOptions = new Set(manifest.optionGroups.filter((option) => option.agentWritable).map((option) => option.id));
-  const writableDesignOptions = new Set(manifest.optionGroups.filter((option) => option.agentWritable && option.scope === "design").map((option) => option.id));
+  const writableOptions = new Set(manifest.controls.filter((option) => option.agentWritable).map((option) => option.id));
+  const writableDesignOptions = new Set(manifest.controls.filter((option) => option.agentWritable && (option.scope === "variant" || option.scope === "element")).map((option) => option.id));
   if (changes.some((change) => !writableOptions.has(change.optionId)) || newDesignChanges.some((change) => !writableDesignOptions.has(change.optionId))) return null;
 
   let assumptions: string[] | undefined;
@@ -343,7 +343,7 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
         return {
           ok: true,
           state,
-          capabilities: manifest.capabilities,
+          variantPolicy: manifest.variantPolicy,
           pendingProposal: session.proposalId === null
             ? null
             : {
@@ -385,7 +385,7 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
           ok: true,
           revision: dynamic.revision,
           designId: parsed.designId ?? null,
-          options: manifest.optionGroups
+          options: manifest.controls
             .filter((option) => !requested || requested.has(option.id))
             .map((option) => {
               const current = availability.get(option.id);
@@ -405,7 +405,7 @@ export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependen
                 ...(option.maximumLength === undefined ? {} : { maximumLength: option.maximumLength }),
               };
             }),
-          dependencies: manifest.dependencyRules,
+          dependencies: manifest.dependencyDescriptions,
         };
       } catch {
         return adapterFailure("The public option list could not be read safely");

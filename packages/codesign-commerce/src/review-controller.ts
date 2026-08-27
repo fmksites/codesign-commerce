@@ -50,7 +50,7 @@ function displayValue(
   if (value === undefined) return "Not set";
   if (value === null) return "None";
   if (typeof value === "boolean") return value ? "Yes" : "No";
-  const option = manifest.optionGroups.find((candidate) => candidate.id === optionId);
+  const option = manifest.controls.find((candidate) => candidate.id === optionId);
   const labelledValue = option?.values?.find((candidate) => candidate.id === value);
   if (labelledValue) return labelledValue.label;
   return String(value);
@@ -167,7 +167,7 @@ export class ProposalReviewController<Snapshot = unknown> {
   }
 
   #temporaryState(result: ProposalResult): ReviewState {
-    const labels = new Map(this.manifest.optionGroups.map((option) => [option.id, option.label]));
+    const labels = new Map(this.manifest.controls.map((option) => [option.id, option.label]));
     const proposedState = this.session.proposedState;
     return {
       kind: "temporary",

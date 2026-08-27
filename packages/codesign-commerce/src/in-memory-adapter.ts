@@ -73,13 +73,13 @@ export class InMemoryConfiguratorAdapter implements ConfiguratorAdapter<InMemory
     const designExists = request.designId === undefined || this.#visible.designs.some((design) => design.id === request.designId);
     return {
       revision: this.#committed.revision,
-      options: (this.#manifest?.optionGroups ?? [])
+      options: (this.#manifest?.controls ?? [])
         .filter((option) => !requested || requested.has(option.id))
         .map((option) => ({
           optionId: option.id,
-          allowed: option.scope === "order" || designExists,
+          allowed: option.scope === "workspace" || designExists,
           ...(option.values ? { values: clone(option.values) } : {}),
-          ...((option.scope === "design" && !designExists) ? { reason: "Unknown design" } : {}),
+          ...((option.scope !== "workspace" && !designExists) ? { reason: "Unknown design" } : {}),
         })),
     };
   }

@@ -11,7 +11,7 @@ import type {
   CreateDesignDraftRequest,
   CreateDesignDraftResult,
   JsonPrimitive,
-  OptionGroup,
+  ControlDefinition,
   OptionRequest,
   OptionResult,
   ValidationIssue,
@@ -61,7 +61,7 @@ function primitiveValue(value: unknown): JsonPrimitive {
   return fail();
 }
 
-function publicOptionValue(option: OptionGroup, value: unknown): JsonPrimitive {
+function publicOptionValue(option: ControlDefinition, value: unknown): JsonPrimitive {
   const primitive = primitiveValue(value);
   switch (option.kind) {
     case "enum":
@@ -70,13 +70,23 @@ function publicOptionValue(option: OptionGroup, value: unknown): JsonPrimitive {
       return primitive;
     case "integer":
       return integerValue(primitive, option.minimum, option.maximum);
+    case "number":
+    case "scale":
+    case "rotation":
+      if (typeof primitive !== "number" || !Number.isFinite(primitive)) return fail();
+      if (option.minimum !== undefined && primitive < option.minimum) return fail();
+      if (option.maximum !== undefined && primitive > option.maximum) return fail();
+      return primitive;
     case "boolean":
       if (typeof primitive !== "boolean") return fail();
       return primitive;
     case "text":
       if (typeof primitive !== "string" || primitive.length > (option.maximumLength ?? 1_000)) return fail();
       return primitive;
-    case "asset-status":
+    case "asset":
+      if (typeof primitive !== "string" || !isSafeIdentifier(primitive)) return fail();
+      return primitive;
+    case "position-2d":
       return fail();
   }
 }
@@ -113,13 +123,13 @@ function sanitizeAsset(value: unknown): ConfigurationAsset {
 
 export function sanitizeConfigurationState(value: unknown, manifest: ConfiguratorManifest): ConfigurationState {
   if (!isRecord(value) || !isRecord(value.order) || !Array.isArray(value.designs)) return fail();
-  if (value.designs.length < 1 || value.designs.length > Math.min(MAX_STATE_DESIGNS, manifest.capabilities.maximumDesigns)) return fail();
+  if (value.designs.length < manifest.variantPolicy.minimumVariants || value.designs.length > Math.min(MAX_STATE_DESIGNS, manifest.variantPolicy.maximumVariants)) return fail();
 
-  const totalOption = manifest.optionGroups.find((option) => option.role === "order-total");
-  const quantityOption = manifest.optionGroups.find((option) => option.role === "design-quantity");
-  const nameOption = manifest.optionGroups.find((option) => option.role === "design-name");
+  const totalOption = manifest.controls.find((option) => option.role === "workspace-total");
+  const quantityOption = manifest.controls.find((option) => option.role === "variant-quantity");
+  const nameOption = manifest.controls.find((option) => option.role === "variant-name");
   if (!totalOption || !quantityOption) return fail();
-  const selectionOptions = manifest.optionGroups.filter((option) => option.scope === "design" && (option.role === undefined || option.role === "selection") && option.kind !== "asset-status");
+  const selectionOptions = manifest.controls.filter((option) => (option.scope === "variant" || option.scope === "element") && (option.role === undefined || option.role === "selection"));
 
   const designs: ConfigurationDesign[] = value.designs.map((candidate) => {
     if (!isRecord(candidate) || !isRecord(candidate.selections) || !Array.isArray(candidate.assets)) return fail();
@@ -155,8 +165,8 @@ export function sanitizeConfigurationState(value: unknown, manifest: Configurato
 }
 
 export function sanitizeOptionResult(value: unknown, manifest: ConfiguratorManifest): OptionResult {
-  if (!isRecord(value) || !Array.isArray(value.options) || value.options.length > manifest.optionGroups.length) return fail();
-  const optionsById = new Map(manifest.optionGroups.map((option) => [option.id, option]));
+  if (!isRecord(value) || !Array.isArray(value.options) || value.options.length > manifest.controls.length) return fail();
+  const optionsById = new Map(manifest.controls.map((option) => [option.id, option]));
   const seen = new Set<string>();
   const options = value.options.map((candidate) => {
     if (!isRecord(candidate)) return fail();
@@ -195,7 +205,7 @@ export function sanitizeValidationResult(
   if (!isRecord(value) || typeof value.configurationValid !== "boolean" || typeof value.productionReady !== "boolean") return fail();
   if (value.productionReady && !value.configurationValid) return fail();
   if (!Array.isArray(value.issues) || value.issues.length > MAX_VALIDATION_ISSUES) return fail();
-  const optionIds = new Set(manifest.optionGroups.map((option) => option.id));
+  const optionIds = new Set(manifest.controls.map((option) => option.id));
   const designIds = state ? new Set(state.designs.map((design) => design.id)) : undefined;
   const issues: ValidationIssue[] = value.issues.map((candidate) => {
     if (!isRecord(candidate) || typeof candidate.severity !== "string" || !VALIDATION_SEVERITIES.has(candidate.severity)) return fail();

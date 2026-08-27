@@ -336,13 +336,13 @@ export class ProposalSession<Snapshot = unknown> {
       let operationChanges = changes;
 
       if (creation) {
-        if (!this.manifest.capabilities.multipleDesigns || !this.manifest.capabilities.cloning) {
+        if (!this.manifest.variantPolicy.operations.includes("duplicate")) {
           const result = errorResult("CAPABILITY_UNAVAILABLE", "This configurator does not support design cloning", false);
           if (openedProposal) await this.#restoreAndClear();
           else this.#setStatus("awaiting-human");
           return result;
         }
-        if (nextState.designs.length >= this.manifest.capabilities.maximumDesigns) {
+        if (nextState.designs.length >= this.manifest.variantPolicy.maximumVariants) {
           const result = errorResult("CAPABILITY_UNAVAILABLE", "The configurator has reached its design limit", false);
           if (openedProposal) await this.#restoreAndClear();
           else this.#setStatus("awaiting-human");
@@ -567,12 +567,12 @@ export class ProposalSession<Snapshot = unknown> {
   }
 
   #validateChangeInputs(changes: ProposalInput["changes"], designOnly: boolean): ProposalErrorResult | null {
-    const options = new Map(this.manifest.optionGroups.map((option) => [option.id, option]));
+    const options = new Map(this.manifest.controls.map((option) => [option.id, option]));
     for (const change of changes) {
       const option = options.get(change.optionId);
       if (!option) return errorResult("UNKNOWN_OPTION", `Unknown option ${change.optionId}`, false, [change.optionId]);
       if (!option.agentWritable) return errorResult("OPTION_NOT_WRITABLE", `Option ${change.optionId} is not agent-writable`, false, [change.optionId]);
-      if (designOnly && option.scope !== "design") {
+      if (designOnly && option.scope !== "variant" && option.scope !== "element") {
         return errorResult("INVALID_VALUE", `Option ${change.optionId} cannot be applied to a new design`, false, [change.optionId]);
       }
       const invalid = validateOptionValue(option, change.value);
@@ -582,7 +582,7 @@ export class ProposalSession<Snapshot = unknown> {
   }
 
   #applyChanges(state: ConfigurationState, diff: ConfigurationDiff[], changes: ProposalInput["changes"]): ProposalErrorResult | null {
-    const options = new Map(this.manifest.optionGroups.map((option) => [option.id, option]));
+    const options = new Map(this.manifest.controls.map((option) => [option.id, option]));
 
     for (const change of changes) {
       const option = options.get(change.optionId);
@@ -591,14 +591,14 @@ export class ProposalSession<Snapshot = unknown> {
       const invalid = validateOptionValue(option, change.value);
       if (invalid) return errorResult("INVALID_VALUE", invalid, false, [change.optionId], state.revision);
 
-      if (option.scope === "design") {
+      if (option.scope === "variant" || option.scope === "element") {
         const design = state.designs.find((candidate) => candidate.id === change.designId);
         if (!design) return errorResult("UNKNOWN_DESIGN", `Unknown design ${change.designId ?? ""}`, false, [change.optionId], state.revision);
         let before: JsonPrimitive | undefined;
-        if (option.role === "design-quantity") {
+        if (option.role === "variant-quantity") {
           before = design.quantity;
           design.quantity = change.value as number;
-        } else if (option.role === "design-name") {
+        } else if (option.role === "variant-name") {
           before = design.name;
           design.name = change.value as string;
         } else {
@@ -607,7 +607,7 @@ export class ProposalSession<Snapshot = unknown> {
         }
         this.#recordDiff(diff, { designId: design.id, optionId: option.id, before, after: change.value });
       } else {
-        if (option.role !== "order-total") return errorResult("INVALID_MANIFEST", `Order option ${option.id} has no supported canonical role`, false, [option.id], state.revision);
+        if (option.role !== "workspace-total") return errorResult("INVALID_MANIFEST", `Workspace control ${option.id} has no supported canonical role`, false, [option.id], state.revision);
         const before = state.order.totalQuantity;
         state.order.totalQuantity = change.value as number;
         this.#recordDiff(diff, { optionId: option.id, before, after: change.value });
