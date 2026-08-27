@@ -16,6 +16,16 @@ The persistent Codex goal, when explicitly authorized, should remain short and p
 
 This document does not authorize implementation, Git initialization, publication, deployment, production modification, traffic promotion, DNS changes, external uploads, or Devpost submission.
 
+### Current topology amendment — 27 August 2026
+
+The user clarified that the challenge must not present a rebuilt public Sock
+Designer beside the real one. The active submission topology therefore contains
+one external KORRHAUS flagship—the existing Shopify Sock Designer—and one
+standalone fictional studio-tote demo. The earlier synthetic KORRHAUS reference
+was useful as a local development harness, but it is retired from the active
+package and judge artifact. Its dated evidence remains historical and must not
+be presented as a hosted or submitted flagship.
+
 ---
 
 ## 1. Executive decision
@@ -24,7 +34,10 @@ This document does not authorize implementation, Git initialization, publication
 
 CoDesign Commerce is an open-source browser-side WebMCP layer that makes an existing complex Shopify product configurator agent-ready without replacing its normal interface, renderer, product rules, or commercial backend.
 
-The real KORRHAUS Custom Sock Designer is the flagship production integration. A fully public KORRHAUS reference example and a small, materially different studio-tote example make the challenge submission reproducible and prove that the abstraction is reusable.
+The real KORRHAUS Custom Sock Designer is the sole KORRHAUS flagship integration.
+A small, materially different studio-tote example makes the public package
+runnable and proves that the abstraction is reusable without presenting a
+second Sock Designer.
 
 CoDesign Commerce is not the KORRHAUS Sock Designer itself. KORRHAUS is the strongest proof that the layer works in an existing, real, made-to-order configurator.
 
@@ -211,7 +224,7 @@ If two live agent turns are too variable for the time limit, keep the proposal a
 
 The public project must contain:
 
-- The actual CoDesign Commerce core used by all demos.
+- The actual CoDesign Commerce core used by the live KORRHAUS integration and the public tote demo.
 - Canonical state and manifest types.
 - Manifest validation.
 - Proposal transaction and revision handling.
@@ -220,9 +233,9 @@ The public project must contain:
 - Tool cancellation and lifecycle behavior.
 - Framework-neutral Keep/Revert review UI.
 - Public adapter interface.
-- KORRHAUS public-safe reference manifest and adapter.
-- Public KORRHAUS reference renderer and fixtures.
 - Studio-tote manifest, adapter, renderer, and fixtures.
+- Sanitized KORRHAUS integration documentation and evidence, without the private
+  renderer, state, persistence, or a synthetic public Sock Designer.
 - Deterministic tests.
 - Tool-selection and safety eval cases.
 - Actual-browser judge instructions.
@@ -275,15 +288,15 @@ The bridge may expose functions but must not expose raw `state`, raw `boot`, API
 
 ### 4.5 Reproducibility strategy
 
-The formal submitted project is a fully public judge application that can run from a clean clone. It contains:
+The formal submitted project is a fully public judge application that can run
+from a clean clone. It contains the public studio-tote example, the full
+CoDesign runtime and tests, and a landing page whose only KORRHAUS destination
+is the verified live Shopify route.
 
-1. A public KORRHAUS reference example.
-2. A public studio-tote example.
-3. The full CoDesign runtime and tests.
+The real KORRHAUS production route is the flagship evidence that the same public
+runtime works against an existing private configurator.
 
-The real KORRHAUS production route is additional flagship evidence that the same public runtime works against an existing private configurator.
-
-Public examples and the live KORRHAUS integration should expose or document:
+The tote and the live KORRHAUS integration should expose or document:
 
 - Public package version.
 - Manifest ID and version.
@@ -312,7 +325,6 @@ packages/
       adapter/
     tests/
 examples/
-  korrhaus-reference/
   studio-tote/
 ```
 
@@ -764,13 +776,12 @@ After the user selects Keep:
 
 One anonymous English page should provide:
 
-- “Try KORRHAUS reference.”
+- “Open live KORRHAUS flagship.”
 - “Try studio tote.”
-- “Open live flagship.”
 - Exact demo prompts.
 - Browser requirements.
 - WebMCP unsupported fallback.
-- Reset-demo controls.
+- A reset control for the fictional tote only.
 - Package version and commit SHA.
 - Repository and judge-guide links.
 - No authentication requirement.
@@ -790,19 +801,13 @@ Restrictions:
 - Do not display customer or confidential commercial data in challenge evidence.
 - Load the exact versioned public CoDesign runtime.
 
-### 9.3 Public KORRHAUS reference
+### 9.3 Retired synthetic KORRHAUS development harness
 
-Use:
-
-- Public-safe synthetic studio names.
-- No customer projects.
-- No uploaded artwork.
-- No prices or commercial rules.
-- Bounded public sock option values.
-- Public SVG renderer.
-- Same safe semantic manifest IDs as the production bridge where appropriate.
-
-The reference is explicitly a reproducible adapter example, not the production renderer.
+The public-safe synthetic Sock Designer built during early implementation was a
+useful transaction, visual, and browser test harness. It is no longer an active
+example or deployment surface. Its dated evidence may be retained only when
+clearly labeled historical; current judge instructions must point to the real
+KORRHAUS Designer and the tote.
 
 ### 9.4 Studio-tote example
 
@@ -853,7 +858,6 @@ If a core change is required, document whether it exposes a genuinely missing ab
 packages/
   codesign-commerce/
 examples/
-  korrhaus-reference/
   studio-tote/
 evals/
   selection/
@@ -1036,20 +1040,21 @@ Do not build the tote or broad polish until this passes.
 - End-to-end scenario test.
 - Browser screenshots.
 
-### Phase 5 — Public reference and portability proof
+### Phase 5 — Live flagship and portability proof
 
 **Work**
 
-- Complete public KORRHAUS reference.
+- Complete the private KORRHAUS bridge and verify it against the existing
+  Designer behind its feature gate.
 - Add studio-tote manifest, adapter, renderer, and fixtures.
 - Add anonymous reset and judge prompts.
 
 **Acceptance**
 
-- Public examples run from a clean clone.
+- The tote and public package run from a clean clone.
 - No credentials required.
 - Tote requires no tote-specific core change.
-- Both use the same public package and review UI.
+- Tote and KORRHAUS use the same public package and review UI.
 
 **Evidence**
 
@@ -1130,7 +1135,7 @@ Stop for explicit approval before production traffic promotion or DNS changes.
 **Acceptance**
 
 - Production surface works in actual supported browsers.
-- Public examples and repository remain reproducible.
+- The public tote demo and repository remain reproducible.
 - Submission materials accurately distinguish pre-existing and new work.
 - Human has a stable video environment and exact recording plan.
 
@@ -1194,7 +1199,6 @@ Stop for explicit approval before production traffic promotion or DNS changes.
 Run the same contract suite against:
 
 - In-memory adapter.
-- Public KORRHAUS reference adapter.
 - Studio-tote adapter.
 - Private KORRHAUS bridge harness.
 
@@ -1369,7 +1373,7 @@ Do not collapse these states into “done.”
 - Provider URL retained as backup.
 - Optional branded subdomain only after stable verification.
 - Exact commit SHA visible.
-- Resettable deterministic examples.
+- A resettable deterministic tote demo.
 - Kept available throughout judging.
 
 ### 15.2 KORRHAUS production integration
@@ -1458,7 +1462,7 @@ Codex may review the supplied video and final submission text before publication
 | Risk | Severity | Mitigation / trigger |
 |---|---|---|
 | Existing render and input paths autosave | Critical | Prove quiescence and suppression first. No production promotion without network/storage evidence. |
-| Public repository cannot reproduce flagship | High | Fully functional public judge app and references; label private bridge honestly. |
+| Public repository cannot reproduce the private flagship renderer | High | Provide the fully functional tote demo, the real Shopify flagship link, the public package, and an honest narrow-adapter boundary; do not claim the private renderer is reproduced. |
 | Concept appears similar to shared-canvas demos | High | Center coupled manufacturing rules, existing integration, multi-design proposals, and approval transaction. |
 | Shopify native tools conflict with CoDesign names | High | Prefix names, explicit descriptions, and ambiguity evals. |
 | WebMCP API changes during challenge | Medium | Minimal current imperative API, feature detection, no experimental framework wrapper. |
@@ -1504,7 +1508,7 @@ Do not cut:
 ## 20. Recommended ownership
 
 - **Product/entrant owner:** scope approval, brand/IP decisions, Devpost identity, final story, and human video.
-- **Core implementation owner:** manifest, proposal engine, WebMCP tools, review UI, and public examples.
+- **Core implementation owner:** manifest, proposal engine, WebMCP tools, review UI, and the public tote demo.
 - **KORRHAUS integration owner:** private bridge, regression, no-traffic deployment, and live verification.
 - **QA/evidence owner:** tests, evals, browser runs, evidence log, and release checklist.
 - **Independent reviewer if available:** logged-out judge run and submission/video critique.
@@ -1521,13 +1525,16 @@ For a one-agent execution, these are sequential responsibilities rather than sep
 | 27 Aug | Critical transaction vertical slice. |
 | 28 Aug | KORRHAUS local bridge and persistence-isolation gate. |
 | 29 Aug | Full tools, multiple designs, validation, and flagship behavior. |
-| 30 Aug | Public KORRHAUS reference and tote if gate permits. |
+| 30 Aug | Studio-tote demo and public judge landing if gate permits. |
 | 31 Aug | Hardening, evals, public deployment, and no-traffic production proof. |
 | 1 Sep | Internal freeze, documentation, judge guide, and human video handoff. |
 | 2 Sep | Verified blocker fixes and final live recheck. |
 | 3 Sep | Human video/upload/submission buffer; submit before 22:00 CEST. |
 
-If the KORRHAUS bridge cannot safely isolate autosave by 29 August midday, do not promote it. Preserve the fully public reference entry and disclose the limitation honestly.
+If the KORRHAUS bridge cannot safely isolate autosave by 29 August midday, do
+not promote it or claim a live flagship. Preserve the public package and tote
+demo, disclose the limitation honestly, and do not restore a duplicate public
+Sock Designer as a substitute.
 
 ---
 
@@ -1575,20 +1582,24 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Baseline captured | `PASS` | Pre-start Cloud Run revision/digest and source separation recorded in `docs/evidence/PRE_CHALLENGE_BASELINE.md`; baseline commit `abf2a7829fdd188c2f2492e9c9d53a247a6ede7f` | Baseline commit timestamp is after written authorization. |
 | Public foundation | `PASS` | Security-remediation clean clone of `2f7235b` passed `npm ci`, 73 tests, strict source/test typecheck, core plus both example builds, public-boundary over 91 tracked candidates, 28 docs, 24 eval-corpus cases, browser-bundle digest `sha256:dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b`, and an empty final status; Apache-2.0 is present. Public release evidence is in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md`. | Public repository `fmksites/codesign-commerce`, Apache-2.0 detection, exact-commit hosted CI, and unauthenticated source access now pass. |
 | Transaction vertical slice | `PASS` | 45 deterministic tests; actual WebMCP discovery and proposal in the in-app browser; zero-write Revert and exactly-one-write-boundary Keep; native Chrome keyboard check; desktop/mobile visual comparison in `design-qa.md`; bundle `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a` | The public adapter proves the complete Phase 2 transaction and hides the review surface until a proposal succeeds. |
-| KORRHAUS safety gate | `PASS` | `docs/evidence/KORRHAUS_LOCAL_BRIDGE.md` and `docs/evidence/KORRHAUS_LOCAL_FIVE_TOOL.md`; exact zero-write Revert and one-write-boundary Keep assertions; private typecheck/build; 12 focused page tests; focused desktop/mobile five-tool E2E; 95 passed and 1 intentionally skipped complete E2E | Local and disabled by default. Nothing was deployed, published, enabled in production, or promoted. |
-| Complete tool suite | `PASS` | Public source commit `ea54e71` and private pinned bundle register exactly five tools; public and private actual-browser evidence covers discovery, option listing, proposal extension, design creation, validation, and Revert | The complete North Form behavior passes in the public reference and real private merchant configurator. |
-| Public reference | `PASS` | The public KORRHAUS reference completes the exact two-colourway scenario through five actual webpage calls; desktop/mobile evidence in `docs/evidence/NORTH_FORM_FIVE_TOOL.md`; clean clone of evidence commit `37682a2`; anonymous reset and exact two-demo judge guide in `b3a7634` | The local Phase 5 public-reference requirements are complete. Public repository and hosted CI now pass; public deployment remains separate. |
+| KORRHAUS safety gate | `PASS` | `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`; exact zero-write Revert and one-normal-save Keep assertions; production-catalog privacy checks; private typecheck/build; 40 unit files/192 tests; 127 passed and 1 intentionally skipped complete 128-case E2E | Local and disabled by default. Nothing from the guarded candidate was deployed, enabled in production, or promoted. |
+| Complete tool suite | `PASS` | Public source commit `ea54e71` and private pinned bundle register exactly five tools; public and private actual-browser evidence covers discovery, option listing, proposal extension, design creation, validation, and Revert | The complete North Form behavior passed first in the retired synthetic harness and independently in the real private merchant configurator. |
+| Synthetic KORRHAUS reference | `RETIRED` | The former reference completed the exact two-colourway scenario and remains documented in `docs/evidence/NORTH_FORM_FIVE_TOOL.md` | Development evidence only. It is removed from the active package and judge artifact and must not be presented as a submitted or hosted demo. |
 | Tote portability proof | `PASS` | `examples/studio-tote/` and `docs/evidence/STUDIO_TOTE_PORTABILITY.md`; unchanged core diff; actual five-tool browser flow; coupled-rule failure; zero-write Revert; human persistence; responsive product renderer; clean clone of `13a168d` | Fictional public reference, not claimed as a live merchant or universal renderer. Native-size desktop capture remains final QA. |
-| Public judge landing | `PASS` | Commit `10a02ee`, `docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md`, and clean clone `/private/tmp/codesign-judge-site.ZaeCJC/repo`: anonymous English landing, package/commit/digest metadata, deterministic `/korrhaus/` and `/tote/` subpaths, desktop/mobile QA, fail-closed release links, exact five-tool proposal/validation/Revert flows, and clean consoles | One provider-neutral `dist/judge-site/` artifact is ready for an approved HTTPS host. |
-| Deterministic QA | `PASS` | Clean clone of judge-site implementation commit `10a02ee`: 129-package install, 95 tests, strict typecheck, core plus both examples and assembled-site build, bundle `e3f95e6e…db324`, 110-file boundary, 37-doc link, judge-site verifier, eval policy/scorer, and empty status pass; matching private bundle passes 13 focused tests, typecheck, production build, and the complete 96-case Designer E2E run with 95 passes and one intentional desktop skip | The final public reproducibility and current-bundle private regression gates are closed. |
+| Public judge landing | `IN_PROGRESS` | Corrected working tree removes `/korrhaus/`, retains `/tote/`, withholds all three release-gated KORRHAUS CTA URLs in non-release output, renders responsively with a clean console, exposes five tote tools, and returns `404` for the retired route; see `docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md`. | Commit and clean-clone evidence are still required. Exact Shopify binding remains blocked until live verification and a clean release build. |
+| Deterministic QA | `IN_PROGRESS` | Corrected public working tree passes 95 tests, strict core/tote typecheck and build, exact bundle verification, boundary/docs/judge/eval checks. The guarded private integration passes 192 unit tests, typecheck, production build, focused desktop/mobile safety cases, and the complete 128-case browser suite with 127 passes and 1 intentional skip. | Private local QA is complete. Repeat every public check from a clean clone of the eventual corrected commit. |
 | API-backed WebMCP evals | `CUT` | Owner decision on 27 Aug 2026; fixed 24-case corpus, run policy, evidence format, result template, and fail-closed scorer remain in `evals/` and pass structural/self-tests | Not a challenge requirement or submission gate. No API key was created and no model cost was incurred. |
-| Actual-browser verification | `IN_PROGRESS` | The exact clean-clone `10a02ee` judge artifact presents the English landing, exact metadata, responsive layouts, subpath-safe assets, five tools on both configurators, complete two-design proposal/validation/Revert flows, and clean consoles; final public bundle `e3f95e6e…db324` also passes URL rejection, stale/pending/conflict recovery, navigation cleanup, and five consecutive North Form rehearsals; the matching private feature-on/off flows and connected-native-Chrome fallback pass | Deployed in-app-browser checks remain; feature-enabled Chrome 149+ is an additional compatibility check if configured. |
-| Public deployment | `IN_PROGRESS` | Public repository, Apache-2.0 detection, unauthenticated source access, and exact-commit hosted CI pass in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md` | Hosted judge site remains approval-gated. The deployed topology will use the real KORRHAUS shop as flagship and the public tote as portability proof; the KORRHAUS reference remains reproducibility source/test evidence. |
-| KORRHAUS no-traffic proof | `PASS` | `docs/evidence/KORRHAUS_DEPLOYMENT_PREFLIGHT.md` and `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`; QA revision `codesign-qa2`, production candidate `codesign-prod1`, shared image digest `bcae014b…3763c`, exact bundle `e3f95e6e…db324`, full five-tool North Form/Revert browser proof, fixtures-off production configuration, clean logs, and unchanged production routing | Revision `00353-rag` retained 100% ordinary traffic. The initial `qa1` runtime mismatch failed closed with 404 and was replaced using the same image; it was never evidence or traffic-bearing. |
-| Production promotion | `WAITING_FOR_APPROVAL` | Verified fixtures-off candidate `korrhaus-admin-app-codesign-prod1`; rollback target `korrhaus-admin-app-00353-rag` | Explicit approval required before changing traffic. |
-| Submission-ready handoff | `IN_PROGRESS` | English Devpost draft, deployment runbook, evaluation report, submission checklist, human-owned 2:45 video script, and verified provider-neutral judge artifact are present | Final URLs, hosted release evidence, human video, attestations, and submission remain. |
+| Actual-browser verification | `IN_PROGRESS` | Corrected non-release landing renders at 1280px and 390px with all imagery, no overflow, disabled KORRHAUS CTA slots, and a clean console. The sole tote demo exposes exactly five tools, stages and validates two 50-unit variants with `persisted: false`, then Reverts to exact `tote-revision-1` with a clean console. Historical browser evidence covers the retired harness and older private feature-on/off flows. | After separately approved production activation, verify the current private bytes on the real Shopify route. Feature-enabled Chrome 149+ is an additional compatibility check if configured. |
+| Public deployment | `IN_PROGRESS` | Public repository, Apache-2.0 detection, unauthenticated source access, and earlier exact-commit hosted CI pass in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md` | The corrected topology must be committed, pushed, and pass hosted CI before the separately approval-gated judge-site deployment. The real KORRHAUS shop is the only flagship destination; tote is the only standalone demo. |
+| KORRHAUS no-traffic proof | `SUPERSEDED` | Historical evidence remains in `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md` for QA revision `codesign-qa2` and candidate `codesign-prod1`; neither carried ordinary traffic. | The current guarded integration contains later safety fixes and must be deployed and verified as a fresh zero-traffic immutable image. Revision `00353-rag` still retains 100% ordinary traffic. Never promote `codesign-prod1`. |
+| Production promotion | `NOT_READY` | Rollback target remains `korrhaus-admin-app-00353-rag`; there is no current verified production candidate. | Local regression is complete. First complete a fresh two-revision zero-traffic proof, then request explicit approval before changing traffic. |
+| Submission-ready handoff | `IN_PROGRESS` | English Devpost draft, deployment runbook, evaluation report, submission checklist, and human-owned 2:45 video script are present | Corrected immutable judge artifact, final URLs, hosted release evidence, human video, attestations, and submission remain. |
 
 ### Decision log
+
+Rows are chronological records. Where decisions conflict, the later dated row
+explicitly supersedes the earlier effect; historical evidence is retained rather
+than rewritten.
 
 | Date | Decision | Owner | Effect |
 |---|---|---|---|
@@ -1617,8 +1628,11 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | 27 Aug 2026 | Close the local public judge-landing and single-artifact gate. | Codex verification | `10a02ee` adds the missing plan-required landing and assembles both examples under one provider-neutral release root; clean-clone desktop/mobile and full WebMCP flow evidence pass. |
 | 27 Aug 2026 | Publish the public repository under `fmksites/codesign-commerce`. | User approval / Codex verification | GitHub recognizes Apache-2.0, hosted CI passes on exact commit `1c58b37`, and repository, README, license, and WebMCP source are publicly accessible. |
 | 27 Aug 2026 | Use the real KORRHAUS shop as the deployed flagship rather than a separate hosted KORRHAUS reference. | User | The public KORRHAUS reference remains in the repository for reproducibility and local testing; the hosted judge journey links to the real shop and uses the tote as the separate portability example. |
+| 27 Aug 2026 | Retire the synthetic public KORRHAUS reference from the active repository and judge artifact. | User clarification | Supersedes the active effect of the 26 August dual-reference decision and the earlier repository-retention clause above. The challenge has one live KORRHAUS flagship link and one standalone tote demo; dated synthetic-harness evidence stays clearly historical. |
 | 27 Aug 2026 | Approve the two-revision zero-traffic KORRHAUS verification sequence. | User | Tagged synthetic QA and fixtures-off production-candidate revisions may be created from one immutable image; production traffic remains a separate gate. |
 | 27 Aug 2026 | Close the KORRHAUS zero-traffic gate on `codesign-prod1`. | Codex verification | Exact-image QA browser proof, fixtures-off production configuration, clean logs, exact bundle hash, and unchanged 100% traffic on `00353-rag` pass. |
+| 27 Aug 2026 | Supersede `codesign-prod1` after deeper private-integration review. | Codex verification | Later guards preserve hidden production fields, require securely stored artwork for readiness, isolate lifecycle generations, sanitize production-catalog tool output, and remove tools in unsupported exact-colour states. A fresh zero-traffic candidate is required; ordinary traffic remains unchanged. |
+| 27 Aug 2026 | Close the replacement guarded private local candidate. | Codex verification | The unchanged public core bundle plus the hardened private adapter and `20260827-3` Designer assets pass build, typecheck, 192 unit tests, 6 focused artwork/security browser cases, and the complete 128-case desktop/mobile run with 127 passes and 1 intentional skip. No deployment or production traffic change occurred. |
 
 ---
 
@@ -1628,7 +1642,7 @@ The Codex execution goal may be marked complete only when:
 
 - All non-cut implementation milestones pass.
 - Every non-negotiable safety gate passes.
-- Public repository and examples are reproducible.
+- The public repository and tote demo are reproducible.
 - Live surfaces have been verified in actual supported browsers.
 - Pre-existing and challenge work are clearly distinguished.
 - Submission documentation and Devpost copy are ready.

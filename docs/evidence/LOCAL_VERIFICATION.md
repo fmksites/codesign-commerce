@@ -1,5 +1,10 @@
 # Local verification evidence
 
+> Historical-record note: dated sections referring to a public KORRHAUS
+> reference used a synthetic development harness retired from the active
+> package and judge artifact on 27 August 2026. They are not live-flagship
+> evidence.
+
 ## 26 August 2026 — public core clean clone
 
 Source commit: `9ff2dfe` (`feat: add safe WebMCP proposal core`)
@@ -318,3 +323,30 @@ console output. Both same-origin configurator subpaths discovered five tools,
 completed their full two-design proposal and validation flows with
 `persisted: false`, exposed human Keep/Revert, and Reverted to their exact
 baselines. Full evidence is in `JUDGE_SITE_RELEASE_CANDIDATE.md`.
+
+## 27 August 2026 — replacement guarded private candidate
+
+After the older zero-traffic candidate was superseded, the existing private
+KORRHAUS Sock Designer integration was hardened without changing the public
+CoDesign core bundle. The replacement local candidate passed:
+
+- `node --check public/custom-socks/designer-claude.js`;
+- private production build and strict typecheck;
+- 40 Vitest files and 192 tests;
+- 6 focused desktop/mobile artwork-hydration, solid-mask packaging, and unsafe
+  SVG preview cases; and
+- the complete 128-case Playwright run with 127 passes and one intentional
+  desktop skip of a mobile-only overflow case.
+
+The current private Designer source is
+`sha256:e54835c9c05a9c6500d03d25b31c93ee0f62b8065716e36f628bd4b0776036de`;
+its rebuilt minified asset is
+`sha256:13ffa7d5f239126b1dc8b884d068f4430e272fce752f2c15e669c89d862fee74`;
+and both CSS/JavaScript asset URLs use the fresh `20260827-3` cache key. The
+embedded public core remains
+`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`.
+
+This is local candidate evidence only. No guarded-candidate image was deployed,
+no customer traffic changed, and the public Shopify route was not claimed as
+updated or live-verified by this run. Full hashes and boundary evidence are in
+`KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.

@@ -10,7 +10,7 @@
     <title>CoDesign Commerce · WebMCP for made-to-order configuration</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=20260827-1"></script>
   </head>
   <body>
     <header class="site-header">
@@ -20,10 +20,10 @@
       </a>
       <nav aria-label="Primary navigation">
         <a href="#workflow">How it works</a>
-        <a href="#demos">Demos</a>
+        <a href="#demos">Proofs</a>
         <a href="#boundary">Safety</a>
       </nav>
-      <a class="header-action" href="./korrhaus/?reset=true">Try the flagship proof <span aria-hidden="true">↗</span></a>
+      <a class="header-action" data-link="flagship">Open the KORRHAUS flagship <span aria-hidden="true">↗</span></a>
     </header>
 
     <main id="top">
@@ -35,7 +35,7 @@
             Add safe, visible agent collaboration to an existing complex product configurator—without rebuilding its preview, rules, or human approval boundary.
           </p>
           <div class="hero-actions hero-step">
-            <a class="button button-primary" href="./korrhaus/?reset=true">Run the KORRHAUS demo <span aria-hidden="true">↗</span></a>
+            <a class="button button-primary" data-link="flagship">Open KORRHAUS <span aria-hidden="true">↗</span></a>
             <a class="text-link" href="#workflow">See the transaction <span aria-hidden="true">↓</span></a>
           </div>
           <div class="browser-status hero-step" data-webmcp-status role="status" aria-live="polite">
@@ -46,8 +46,8 @@
         <div class="hero-visual" aria-label="A custom sock and studio tote connected by a temporary proposal">
           <span class="visual-orbit" aria-hidden="true"></span>
           <figure class="product product-sock">
-            <img src="./korrhaus/sock-cream.svg" alt="Cream KORRHAUS custom sock with navy details" />
-            <figcaption>Existing merchant preview</figcaption>
+            <img src="./assets/korrhaus-sock-cream.svg" alt="Cream KORRHAUS custom sock" />
+            <figcaption>KORRHAUS merchant integration</figcaption>
           </figure>
           <figure class="product product-tote">
             <img src="./tote/tote-natural-long.png" alt="Natural canvas studio tote" />
@@ -94,20 +94,19 @@
         </div>
 
         <article class="demo-row demo-korrhaus" data-reveal>
-          <div class="demo-index">01 / Flagship domain</div>
+          <div class="demo-index">01 / Real merchant proof</div>
           <div class="demo-copy">
-            <p class="demo-kicker">KORRHAUS public reference</p>
+            <p class="demo-kicker">KORRHAUS flagship</p>
             <h3>120 pairs.<br />Two colourways.<br />One missing decision.</h3>
             <blockquote>
               “We need 120 pairs for North Form, split evenly across two colourways. Use cream with navy accents for the first and dusty rose with berry accents for the second. Use the standard grip. Show NORTH FORM as a placeholder, but we will add the real logo later.”
             </blockquote>
             <div class="demo-actions">
-              <a class="button button-dark" href="./korrhaus/?reset=true">Open deterministic demo <span aria-hidden="true">↗</span></a>
-              <a class="text-link" data-link="flagship">Live flagship pending release</a>
+              <a class="button button-dark" data-link="flagship">Open KORRHAUS Sock Designer <span aria-hidden="true">↗</span></a>
             </div>
           </div>
           <div class="demo-visual">
-            <img src="./korrhaus/sock-cream.svg" alt="Cream and navy North Form sock reference" />
+            <img src="./assets/korrhaus-sock-cream.svg" alt="Cream custom sock illustrating the North Form brief" />
             <div class="demo-result"><span>Expected validation</span><strong>Valid draft</strong><small>Final logo artwork required</small></div>
           </div>
         </article>

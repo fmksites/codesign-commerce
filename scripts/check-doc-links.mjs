@@ -11,8 +11,11 @@ if (listed.status !== 0) {
 const markdownFiles = listed.stdout.split("\0").filter(Boolean);
 const failures = [];
 const linkPattern = /\[[^\]]*\]\(([^)]+)\)/g;
+let scannedFileCount = 0;
 
 for (const file of markdownFiles) {
+  if (!existsSync(file)) continue;
+  scannedFileCount += 1;
   const source = readFileSync(file, "utf8");
   for (const match of source.matchAll(linkPattern)) {
     const target = match[1]?.trim();
@@ -27,4 +30,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-process.stdout.write(`Documentation link check passed for ${markdownFiles.length} files.\n`);
+process.stdout.write(`Documentation link check passed for ${scannedFileCount} files.\n`);

@@ -1,5 +1,9 @@
 # Security hardening evidence
 
+> Topology note: build references to both examples describe the repository at
+> the time of this dated scan. The synthetic KORRHAUS UI was later retired; the
+> core security findings and remediations remain applicable.
+
 Date: 26 August 2026  
 Reviewed source: `37b7dbc83e12e8b3d0b1518e7b08845eb335a004`  
 Remediation commit: `2f7235b8f9b03f7033ffbe75ca6f9653667b9622`  

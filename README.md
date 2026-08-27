@@ -16,21 +16,23 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 - Atomic proposal extension and idempotent design cloning for multi-colourway briefs.
 - Deterministic tests proving that proposal previews do not cross the persistence boundary.
 - A framework-neutral, accessible Keep/Revert review component.
-- A local public KORRHAUS reference surface that completes the 120-pair North Form scenario in an actual WebMCP-capable browser.
+- A narrow private bridge that connects the same public runtime to KORRHAUS's existing Sock Designer; the current guarded integration has passed local verification while production remains unchanged. Earlier zero-traffic evidence is superseded by this newer candidate until it is repeated.
 - A materially different studio-tote example with its own manifest, adapter,
   renderer, real product assets, coupled canvas/print rules, anonymous reset,
   and the same unchanged five-tool core and review UI.
-- 95 deterministic public tests, a clean-clone proof, complete private Designer
-  regression coverage, exact-bundle feature-on/off browser evidence, and five
-  consecutive frozen-build North Form runtime rehearsals.
+- 95 deterministic public tests and prior clean-clone proof; the current guarded
+  private integration also passes 192 unit tests and the complete 128-case
+  desktop/mobile Designer run with 127 passes and one intentional desktop skip.
+  Exact-bundle feature-on/off evidence and five frozen-build North Form
+  rehearsals remain clearly identified as historical where they predate the
+  latest private hardening.
 
-The repository is licensed under Apache-2.0. The local implementation and
-submission drafts are advanced, but this is not yet a published or live
-submission: the public remote, public deployment, production
-deployment/promotion, video publication, and Devpost submission remain
-incomplete or approval-gated. The API-backed 78-run model evaluation was
-explicitly removed as a submission gate; its corpus and scorer remain optional
-quality tooling.
+The repository is public and licensed under Apache-2.0. The corrected
+landing-plus-tote topology is locally verified but not yet pushed. Public
+hosting, KORRHAUS production promotion, video publication, and Devpost
+submission remain incomplete or approval-gated. The API-backed 78-run model
+evaluation was explicitly removed as a submission gate; its corpus and scorer
+remain optional quality tooling.
 
 ## Local verification
 
@@ -49,8 +51,10 @@ npm run check:evals
 ```
 
 `npm run build` also assembles one provider-neutral static judge artifact at
-`dist/judge-site/`: the English landing is `/`, the KORRHAUS reference is
-`/korrhaus/`, and the tote is `/tote/`. Preview that exact production output:
+`dist/judge-site/`: the English landing is `/` and the sole standalone runnable
+example is `/tote/`. Every KORRHAUS call to action is populated from release
+metadata and opens the real Shopify Sock Designer; the artifact does not contain
+a second sock configurator. Preview the exact production output:
 
 ```bash
 npm run preview:judge-site
@@ -58,23 +62,24 @@ npm run preview:judge-site
 
 The landing shows package `v0.1.0`, the exact source commit and browser-bundle
 digest. Public repository and live-flagship links remain visibly disabled in a
-local build. A release build fails closed unless both verified HTTPS links are
-provided:
+local build. A release build fails closed unless the working tree is clean, the
+repository URL is present, the exact English Shopify Designer URL is present,
+and the real route has already passed live verification:
 
 ```bash
-CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/OWNER/codesign-commerce \
-CODESIGN_FLAGSHIP_URL=https://example.com/custom-sock-designer \
+CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
+CODESIGN_FLAGSHIP_URL=https://korrhaus.nl/en/apps/wholesale/sock-designer \
+CODESIGN_FLAGSHIP_VERIFIED=true \
 npm run build:release
 ```
 
-Run either public example from the repository root:
+Run the public portability example from the repository root:
 
 ```bash
-npm run dev --workspace @codesign-commerce/korrhaus-reference
 npm run dev --workspace @codesign-commerce/studio-tote
 ```
 
-Both examples accept `?reset=true` for a deterministic anonymous baseline and
+The tote accepts `?reset=true` for a deterministic anonymous baseline and
 `?reset=true&agent-preview=true` for a local visual-QA proposal. The preview
 query is development-only and is not the agent or judge path.
 
@@ -88,6 +93,9 @@ See:
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for runtime, transaction, and trust boundaries.
 - [docs/MANIFEST_AND_ADAPTER.md](./docs/MANIFEST_AND_ADAPTER.md) for merchant integration obligations.
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the read-only flagship integration map.
+- [docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
+  for the current private integration hashes, regressions, and explicit
+  no-deployment boundary.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.
@@ -95,8 +103,8 @@ See:
   distinction between verified evidence and the optional model eval that was
   intentionally not run.
 - [docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md)
-  for clean-clone, responsive, and five-tool proof of the single deployable
-  public artifact.
+  for the corrected local topology checks and clearly marked superseded
+  two-subpath history.
 - [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) for the gated public
   and flagship release sequence.
 - [docs/SUBMISSION_COPY.md](./docs/SUBMISSION_COPY.md) for the English Devpost

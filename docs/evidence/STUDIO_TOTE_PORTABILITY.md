@@ -1,5 +1,9 @@
 # Studio-tote portability evidence
 
+> Topology note: this tote remains the sole standalone runnable demo. Dated
+> build rows mentioning a KORRHAUS reference describe the repository before that
+> synthetic development harness was retired.
+
 Date: 26 August 2026  
 Implementation commit: `9ab806c` (`feat: add studio tote portability proof`)
 Clean-clone fix: `13a168d` (`fix: resolve workspace source in clean-clone tests`)

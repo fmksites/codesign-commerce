@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
 const tracked = spawnSync("git", ["ls-files", "-z", "--cached", "--others", "--exclude-standard"], { encoding: "utf8" });
@@ -24,8 +24,11 @@ const secretPatterns = [
 ];
 const textExtensions = new Set(["", ".cjs", ".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs", ".toml", ".ts", ".tsx", ".txt", ".yaml", ".yml"]);
 const findings = [];
+let scannedFileCount = 0;
 
 for (const file of files) {
+  if (!existsSync(file)) continue;
+  scannedFileCount += 1;
   if (forbiddenPaths.some((pattern) => pattern.test(file))) findings.push(`${file}: forbidden public path`);
   const dot = file.lastIndexOf(".");
   const extension = dot === -1 ? "" : file.slice(dot).toLowerCase();
@@ -41,4 +44,4 @@ if (findings.length > 0) {
   process.exit(1);
 }
 
-process.stdout.write(`Public-boundary check passed for ${files.length} tracked files.\n`);
+process.stdout.write(`Public-boundary check passed for ${scannedFileCount} public candidates.\n`);

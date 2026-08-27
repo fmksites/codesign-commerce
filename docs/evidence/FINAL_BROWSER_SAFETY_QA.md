@@ -1,5 +1,13 @@
 # Final browser safety and fallback QA
 
+> **HISTORICAL BUILD BOUNDARY.** The private Designer browser/build results below
+> predate the latest lifecycle, producer-code, custom-grip and immutable-asset
+> guards. They remain useful dated evidence, not current candidate proof.
+
+> Topology note: sections about the public KORRHAUS reference describe a
+> synthetic development harness retired on 27 August 2026. Core, tote, and
+> private-bridge findings remain valid within their stated build boundaries.
+
 Date: 27 August 2026
 Public source commit: `6fc792644a568d2dee318ad2457639911873cbfd`
 Browser bundle: `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`

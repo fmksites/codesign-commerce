@@ -1,5 +1,10 @@
 # KORRHAUS local bridge evidence
 
+> **HISTORICAL TWO-TOOL BUILD.** The counts, hashes, and browser result below
+> predate the complete five-tool integration and the later guarded private
+> candidate. Use `KORRHAUS_GUARDED_LOCAL_CANDIDATE.md` for current local
+> evidence; do not use this file to justify deployment or traffic promotion.
+
 Date: 26 August 2026  
 Public core source: `a79cdbb` (`fix: reveal review only after proposal succeeds`)  
 Public browser bundle: `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a`

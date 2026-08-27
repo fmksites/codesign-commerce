@@ -58,7 +58,10 @@ The bridge now:
 - Invalidates open proposals when canonical state changes externally.
 - Leaves the normal Designer unchanged when the feature flag is off or no agent proposal exists.
 
-The complete local evidence, final hashes, actual-browser result, and release-state limits are recorded in `evidence/KORRHAUS_LOCAL_BRIDGE.md`.
+The current guarded local candidate, exact snapshot hashes, complete regression,
+and release-state limits are recorded in
+`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`. The earlier two-tool Phase 3
+bridge remains dated history in `evidence/KORRHAUS_LOCAL_BRIDGE.md`.
 
 ## Public canonical mapping
 

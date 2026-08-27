@@ -24,5 +24,6 @@ Use this exact judge brief:
 
 > Create 100 studio totes split evenly across two variants. Make the first natural 12 oz canvas with long handles and a centered one-colour print. Make the second charcoal with short handles and an upper-left print. Leave final artwork for later.
 
-The complete two-example walkthrough, expected tool sequence, safety checks,
-and recovery instructions are in [`docs/JUDGE_GUIDE.md`](../../docs/JUDGE_GUIDE.md).
+The complete live-flagship and tote walkthrough, expected tool sequence, safety
+checks, and recovery instructions are in
+[`docs/JUDGE_GUIDE.md`](../../docs/JUDGE_GUIDE.md).

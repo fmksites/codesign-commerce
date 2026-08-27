@@ -1,5 +1,11 @@
 # KORRHAUS zero-traffic release evidence
 
+> **SUPERSEDED — NEVER PROMOTE THIS REVISION.** This file preserves historical
+> evidence for `korrhaus-admin-app-codesign-prod1`. Later private safety changes
+> changed the Designer bytes and asset key. A fresh QA revision and a fresh
+> fixtures-off zero-traffic candidate from one new immutable image are required
+> before any production-traffic decision.
+
 Date: 27 August 2026
 
 ## Outcome
@@ -105,8 +111,8 @@ contained no CoDesign script, review host, or enabled WebMCP marker.
 
 ## Boundary and next gate
 
-This evidence proves the immutable image and zero-traffic production candidate.
-It does not authorize traffic promotion. The next action must be a separately
-approved promotion of `korrhaus-admin-app-codesign-prod1`, followed by immediate
-actual-shop browser verification and rollback to `00353-rag` if a critical gate
-fails.
+This historical evidence proves only the superseded image and zero-traffic
+candidate described above. It does not authorize traffic promotion.
+`korrhaus-admin-app-codesign-prod1` must never receive production traffic. The
+next deployment action is a fresh two-revision, zero-traffic sequence for the
+latest guarded bytes; production promotion remains a later explicit owner gate.

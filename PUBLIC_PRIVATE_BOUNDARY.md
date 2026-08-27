@@ -10,8 +10,7 @@ Planned contents:
 packages/
   codesign-commerce/
 examples/
-  grip-sock-designer/
-  second-merch-example/
+  studio-tote/
 docs/
   challenge-brief.md
   pre-existing-baseline.md
@@ -27,8 +26,9 @@ The public project includes or will include:
 - State-adapter interfaces.
 - Proposal, confirmation and rollback behavior.
 - Validation hooks.
-- A reproducible KORRHAUS-branded demo using public-safe fixtures.
-- A small second manifest only if it materially proves reuse.
+- One reproducible fictional studio-tote demo with its own manifest and adapter.
+- Public integration documentation and sanitized evidence for the real KORRHAUS
+  flagship; the existing Shopify Designer itself remains in the private project.
 - Deterministic tests and agent evaluation prompts.
 - Setup, deployment and judging instructions.
 
@@ -47,7 +47,10 @@ Keep private:
 
 The public package defines the reusable contract. The private KORRHAUS application implements a narrow adapter against its existing designer state and rendering functions.
 
-The same public package must power the judged demonstration and the production integration. Do not create a disconnected toy implementation solely for the video.
+The same public package must power the tote demonstration and the production
+integration. The judge landing links to the real Shopify Sock Designer rather
+than hosting a synthetic second Sock Designer. Do not create a disconnected toy
+implementation solely for the video.
 
 ## Scope Warning
 

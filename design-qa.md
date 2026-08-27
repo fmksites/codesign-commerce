@@ -1,5 +1,10 @@
 # Proposal review design QA
 
+> Historical development evidence. This review used the synthetic KORRHAUS
+> harness that was retired from the active package and judge artifact on
+> 27 August 2026. It proves review-component design work, not a submitted or
+> hosted KORRHAUS demo.
+
 Date: 26 August 2026
 
 Surface: reusable CoDesign Commerce proposal review mounted in the public KORRHAUS reference configurator

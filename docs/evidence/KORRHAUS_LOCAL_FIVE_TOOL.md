@@ -1,5 +1,9 @@
 # KORRHAUS local five-tool flagship evidence
 
+> **HISTORICAL PRIVATE BUILD.** This file records the first five-tool bridge.
+> Later private safeguards and a new asset key supersede its hashes and test
+> counts. Use the newest guarded-candidate evidence for release decisions.
+
 Date: 26 August 2026  
 Public core source: `ea54e71` (`feat: complete five-tool configuration workflow`)  
 Public evidence state: `37682a2` (`docs: record five-tool North Form evidence`)  

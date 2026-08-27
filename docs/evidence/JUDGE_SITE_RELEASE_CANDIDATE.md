@@ -1,4 +1,62 @@
-# Provider-neutral judge-site release candidate
+# Judge-site release evidence
+
+## Current topology correction — 27 August 2026
+
+The active release topology is one English landing, one internal `/tote/`
+portability demo, and metadata-bound links to the real KORRHAUS Shopify
+Designer. The synthetic `/korrhaus/` configurator described below has been
+retired from the package and artifact.
+
+The correction was verified locally on the working tree above base commit
+`6cdad175e035756b15b85f11e6f42dc380101f91`. This is not yet an immutable
+release commit or clean-clone result.
+
+| Gate | Result |
+|---|---|
+| `npm ci` | PASS — 128 packages |
+| `npm test` | PASS — 95 tests across 8 files |
+| `npm run typecheck` | PASS — core, core tests, and studio tote |
+| `npm run build` | PASS — core, studio tote, and root-plus-tote judge artifact |
+| `npm run verify:browser-bundle` | PASS — `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324` |
+| `npm run check:judge-site` | PASS — no synthetic route, metadata-bound flagship links, tote bundle and release metadata |
+| `npm run check:public-boundary` | PASS — 108 current public candidates |
+| `npm run check:docs` | PASS — 41 current Markdown files |
+| `npm run check:evals` | PASS — 24-case corpus plus scorer self-test; no model run claimed |
+
+Current fail-closed behavior also passed:
+
+- a normal non-release build withheld repository and flagship URLs even when
+  valid-looking release environment variables and the verification flag were
+  injected;
+- generated non-release metadata remained `repositoryUrl: null`,
+  `flagshipUrl: null`, `releaseBuild: false`, and `flagshipVerified: false`;
+- a release build requires a clean working tree, the exact repository and
+  Shopify URLs, and `CODESIGN_FLAGSHIP_VERIFIED=true`; a successful current
+  release build remains pending until the guarded KORRHAUS route is live and
+  verified;
+- the generated artifact contains ten files under `/` and `/tote/` only;
+- root and tote returned HTTP `200`, while the retired `/korrhaus/` path returned
+  `404`;
+- no QA tag, Cloud Run candidate URL, `/korrhaus/` asset path, or synthetic
+  KORRHAUS-reference label remained in the artifact; and
+- all three rendered KORRHAUS CTA slots remained disabled rather than exposing
+  an unverified destination.
+
+The corrected landing rendered at 1280 × 720 and 390 × 844 with all four images
+loaded, no horizontal overflow, and a clean browser console. The tote loaded at
+`/tote/?reset=true`, exposed exactly the five intended CoDesign tools, and
+completed the five-tool portability flow. It rejected an invalid intermediate
+quantity-only change atomically, then staged two 50-unit variants, validated a
+coherent draft with final artwork still required, and human-Reverted to the
+exact one-variant `tote-revision-1` baseline. Every proposal result reported
+`persisted: false`; the console remained clean. A fresh immutable commit, clean
+clone, hosted CI, and public deployment remain separate gates.
+
+## Superseded historical candidate
+
+The remainder of this document records the immutable `10a02ee` development
+artifact as history. It is not the current release candidate and must not be
+deployed or presented as the challenge topology.
 
 Date: 27 August 2026
 Implementation commit: `10a02ee40e1f6310157aaf925e4097e3faa75a69`

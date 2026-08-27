@@ -53,6 +53,6 @@ Logo upload, quote requests, ordering, payments and other consequential actions 
 - Differentiate from Shopify's catalog/cart tools through coupled made-to-order configuration, merchant-owned visual preview, production-aware validation, and human approval.
 - Keep the generic abstraction to a manifest, canonical state, adapter contract, proposal transaction, review UI, and five tools.
 - Build a materially different studio-tote example only after the KORRHAUS autosave-isolation gate passes.
-- Provide a reproducible public KORRHAUS reference; treat production integration and promotion as separate evidence and approval gates.
+- Use the existing live KORRHAUS Sock Designer as the only KORRHAUS proof surface; keep the fictional studio tote as the sole standalone public demo and treat production integration and promotion as separate evidence and approval gates.
 - Keep all private commerce and customer logic behind a narrow adapter.
 - Attribute the pre-existing designer honestly and identify the post-25-August WebMCP implementation through timestamped Git and deployment evidence.

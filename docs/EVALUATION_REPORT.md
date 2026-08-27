@@ -11,7 +11,7 @@ At public source commit `6fc792644a568d2dee318ad2457639911873cbfd`:
 
 - 95 tests pass across eight files.
 - Strict source and test typechecking passes.
-- Core and both public examples build.
+- Core and the public studio-tote example build.
 - Public-boundary and documentation-link checks pass.
 - The 24-case, six-category eval corpus passes structural validation.
 - The eval scorer passes synthetic self-tests; synthetic data is never written
@@ -25,30 +25,40 @@ URLs, URL-like text values before adapter access, and read-only validation.
 
 ## Actual-browser evidence
 
-The public KORRHAUS reference, the studio-tote example, and the local private
-KORRHAUS bridge have each completed their five-tool flows in ChatGPT's WebMCP-
-capable in-app browser. The current private bridge is pinned to bundle:
+The studio-tote example and the existing private KORRHAUS Designer bridge have
+each completed their five-tool flows in ChatGPT's WebMCP-capable in-app browser.
+A retired synthetic KORRHAUS development harness completed the same flow before
+the live bridge was ready; it is historical runtime evidence, not a submitted
+or hosted Sock Designer. The current private bridge is pinned to bundle:
 
 `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
 
-The feature-enabled private browser run used the exact current
-`e3f95e6e…db324` bundle. It found exactly five tools, hid review controls before
+The most recent feature-enabled in-app browser run used the exact
+`e3f95e6e…db324` core bundle. It found exactly five tools, hid review controls before
 a successful agent proposal, returned dependency rules with bounded option
 IDs, created two temporary 60-pair colourways, reported the missing final
 artwork, and restored the exact `korrhaus-8bbd9b55` one-design baseline through
 human Revert with no proposal/Revert network writes and no browser console
-errors. The same bytes pass 13 focused tests, typecheck, production build, the
-feature-disabled actual-browser fallback, and the complete private Designer
-suite with 95 passes and one intentional desktop skip of a mobile-only case.
+errors. This remains historical actual-browser evidence because later private
+adapter and artwork-preview guards changed the host Designer bytes.
 
-Against the exact final public bundle, both public examples rejected an HTTPS
-text value with `INVALID_VALUE`, accepted and Reverted a normal temporary
-proposal, and retained clean consoles. The KORRHAUS reference also returned the
-expected `STALE_REVISION`, `PROPOSAL_PENDING`, `OPERATION_ID_CONFLICT`, and
-`STALE_PROPOSAL_REVISION` recovery errors. Navigation away from the
-configurator removed its page-scoped WebMCP context. The private feature-off
-fallback rendered the normal Designer with no CoDesign script, review host, or
-tools. Full evidence is in
+The replacement guarded local candidate keeps the same core bundle and now
+passes production build, typecheck, 40 unit files/192 tests, six focused
+desktop/mobile artwork-hydration, packaging-mask, and unsafe-SVG cases, and the
+complete 128-case private Designer run with 127 passes and one intentional
+desktop skip of a mobile-only case. It also uses a fresh `20260827-3` asset key.
+This is local candidate evidence only: it has not been deployed, enabled for
+customers, or verified on the public Shopify route. See
+[`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
+
+Against the exact final public bundle, the tote and the now-retired synthetic
+development harness rejected an HTTPS text value with `INVALID_VALUE`, accepted
+and Reverted a normal temporary proposal, and retained clean consoles. The
+synthetic harness also returned the expected `STALE_REVISION`,
+`PROPOSAL_PENDING`, `OPERATION_ID_CONFLICT`, and `STALE_PROPOSAL_REVISION`
+recovery errors. Navigation away from a configurator removed its page-scoped
+WebMCP context. The private feature-off fallback rendered the normal Designer
+with no CoDesign script, review host, or tools. Full historical evidence is in
 [`evidence/FINAL_BROWSER_SAFETY_QA.md`](./evidence/FINAL_BROWSER_SAFETY_QA.md).
 
 This browser proof validates page registration and runtime behavior. It does
@@ -56,10 +66,11 @@ not measure whether an independent model consistently selects the right tool,
 and no such claim is made.
 
 Five consecutive operator-driven North Form rehearsals also passed on the
-frozen public KORRHAUS build: each discovered five tools, staged both 60-pair
-colourways with `persisted: false`, reported the missing artwork, and Reverted
-to the exact `reference-revision-1` baseline with a clean console. These are
-repeatability evidence for the WebMCP runtime, not model-selection results.
+retired frozen synthetic harness: each discovered five tools, staged both
+60-pair colourways with `persisted: false`, reported the missing artwork, and
+Reverted to the exact `reference-revision-1` baseline with a clean console.
+These remain repeatability evidence for the WebMCP runtime, not
+model-selection results or proof of the live merchant route.
 
 ## Optional model-evaluation tooling
 

@@ -1,5 +1,9 @@
 # Actual-browser review UI evidence
 
+> Historical development evidence. This run used the retired synthetic
+> KORRHAUS harness and must not be presented as a submitted, hosted, or live
+> merchant proof.
+
 Date: 26 August 2026
 
 Source: review implementation `4898812`, reproducibility fix `98f347c`; exact bundle digest is recorded in `LOCAL_VERIFICATION.md`

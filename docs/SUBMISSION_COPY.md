@@ -83,10 +83,12 @@ human interface.
 
 The KORRHAUS Sock Designer existed before 25 August 2026. The reusable CoDesign
 Commerce package, five webpage tools, manifest/adapter contract, staged proposal
-transaction, review UI, public KORRHAUS reference, studio-tote example, tests,
-eval corpus, and challenge documentation were created during the submission
-period. Timestamped Git history and `docs/evidence/PRE_CHALLENGE_BASELINE.md`
-separate the prior product from challenge work.
+transaction, review UI, studio-tote example, private KORRHAUS bridge, tests, eval
+corpus, and challenge documentation were created during the submission period.
+The judged KORRHAUS surface is the pre-existing live Designer enhanced by that
+bridge, not a challenge-built replica. Timestamped Git history and
+`docs/evidence/PRE_CHALLENGE_BASELINE.md` separate the prior product from
+challenge work.
 
 ## Links
 

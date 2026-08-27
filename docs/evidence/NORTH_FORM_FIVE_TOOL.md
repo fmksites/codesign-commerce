@@ -1,5 +1,9 @@
 # North Form five-tool browser evidence
 
+> Historical development evidence. This run used the retired synthetic
+> KORRHAUS harness. The active submission points to the real Shopify Designer
+> and uses the tote as its sole standalone demo.
+
 Date: 26 August 2026  
 Source commit: `ea54e71` (`feat: complete five-tool configuration workflow`)  
 Browser bundle: `sha256:3723b4937086323c1536406f2072efbd54da702ec63d7c2f94d32ea768f101f6`

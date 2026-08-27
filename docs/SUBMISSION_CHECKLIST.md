@@ -6,51 +6,65 @@ proceed without the owner.
 ## Local engineering
 
 - `PASS` — reusable public core and exactly five webpage tools.
-- `PASS` — KORRHAUS public reference and materially different studio tote.
-- `PASS` — anonymous English judge landing and one provider-neutral static
-  artifact containing both deterministic configurator subpaths.
+- `PASS` — materially different studio tote as the sole standalone public demo.
+- `CUT` — synthetic public KORRHAUS reference retired from the package and judge
+  artifact; the existing Shopify Designer is the only KORRHAUS proof surface.
+- `PASS` — local anonymous English judge landing and provider-neutral
+  root-plus-`/tote/` artifact verified with three release-gated KORRHAUS CTA
+  slots, verified non-release URL withholding, and a `404` for the retired
+  `/korrhaus/` route.
 - `PASS` — local disabled-by-default private flagship bridge.
-- `PASS` — 95 deterministic tests, typecheck, builds, boundary/docs checks.
+- `PASS` — 95 deterministic public tests and the current local public
+  typecheck/build/boundary/docs checks.
 - `PASS` — repository security scan findings remediated.
-- `PASS` — actual in-app-browser discovery and core flows on all three surfaces.
+- `PASS` — corrected non-release landing rendered at desktop and mobile with
+  disabled KORRHAUS CTA slots and a clean console; the sole tote demo exposed
+  exactly five tools, completed the temporary two-variant flow, and Reverted to
+  its exact baseline with a clean console.
 - `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
   private feature-off fallback browser checks.
-- `PASS` — complete private Designer E2E on the final bundle: 95 passed and 1
-  intentionally skipped desktop duplicate of a mobile-only overflow case.
-- `PASS` — five consecutive frozen-build KORRHAUS North Form WebMCP rehearsals;
-  each restored the exact baseline through human Revert with no console output.
-- `PASS` — frozen public artifact normal-browser fallback in connected native
-  Chrome: baseline UI and assets render, review controls stay hidden, clean
-  console; this was not a feature-enabled Chrome WebMCP pass.
+- `PASS` — current guarded private candidate: production build and typecheck,
+  40 unit files/192 tests, and the complete 128-case Designer browser run with
+  127 passes and 1 intentionally skipped desktop duplicate of a mobile-only
+  overflow case. See `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
+- `HISTORICAL` — five consecutive North Form rehearsals and the connected-native-
+  Chrome fallback passed on the retired synthetic harness. They remain runtime
+  evidence, not current public-surface or live-flagship proof.
 - `CUT` — API-backed 78-run model eval; optional tooling retained, but the
   owner removed it as a submission gate on 27 August 2026.
-- `PASS` — clean clone of judge-site implementation commit `10a02ee` passes all
-  public gates, assembled-site verification, and exact five-tool flows on both
-  subpaths with the final browser-bundle digest.
+- `SUPERSEDED` — clean-clone evidence for judge-site commit `10a02ee` covered the
+  retired `/korrhaus/` subpath. A corrected root-plus-tote artifact requires new
+  clean-clone and browser evidence before deployment.
+- `PENDING` — commit the corrected topology, then repeat the complete gate set,
+  responsive capture, and final clean-clone status against that exact commit.
 
 ## Public release
 
-- `PASS` — public repository published at
-  <https://github.com/fmksites/codesign-commerce> on exact commit
-  `1c58b37bcd4cbc764ac4b0c436aaa8d649cccb0f`.
+- `PASS` — public repository exists at
+  <https://github.com/fmksites/codesign-commerce>.
 - `PASS` — GitHub detects the root license as Apache-2.0.
-- `PASS` — hosted CI passed on the exact published commit; unauthenticated
-  repository, README, license, and raw WebMCP source requests returned `200`.
-- `APPROVAL` — choose hosting provider and deploy `dist/judge-site/`.
+- `PENDING` — publish the corrected topology commit, rerun hosted CI on that
+  exact commit, and repeat unauthenticated repository/source checks.
+- `APPROVAL` — after the fresh guarded zero-traffic proof, separately approved
+  production promotion, and live-route verification, choose a hosting provider
+  and deploy `dist/judge-site/`.
 - `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;
   additionally repeat in Chrome 149+ if its WebMCP testing flag is configured.
 - `PENDING` — record final public commit, bundle hash, screenshots, and links.
 
 ## KORRHAUS flagship
 
-- `PASS` — approved two-revision zero-traffic sequence completed: tagged
-  synthetic QA first, then the exact same image as a fixtures-off production
-  candidate.
-- `PASS` — QA and production-candidate revision identity, health, logs, HTTP,
-  bundle hash, five-tool browser flow, Revert, fallback, and unchanged 100%
-  production traffic are recorded in
-  `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`.
-- `APPROVAL` — promote production traffic.
+- `SUPERSEDED` — the earlier two-revision zero-traffic sequence is preserved in
+  `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`, but its `codesign-prod1`
+  candidate predates the current safety fixes and must never be promoted.
+- `PASS` — the replacement guarded candidate is complete and fully verified
+  locally in `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
+- `PENDING` — deploy the current bytes as a fresh tagged QA revision and then
+  the exact same immutable image as a fixtures-off zero-traffic candidate;
+  verify identity, health, logs, HTTP, privacy boundary, five tools, Revert,
+  fallback, and unchanged production traffic.
+- `APPROVAL` — promote production traffic only after that fresh zero-traffic
+  evidence passes.
 - `PENDING` — verify the actual public English route and normal human fallback.
 
 ## Submission materials

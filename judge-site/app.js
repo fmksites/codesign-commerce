@@ -4,8 +4,8 @@ const supportsWebMcp = typeof document.modelContext?.registerTool === "function"
 if (status) {
   status.classList.add(supportsWebMcp ? "is-supported" : "is-fallback");
   status.textContent = supportsWebMcp
-    ? "Site tools are available. Open either configurator to discover the five CoDesign tools."
-    : "Site tools are not exposed in this browser. The complete human configurators still work normally.";
+    ? "Site tools are available. Open the KORRHAUS flagship or the tote demo to discover CoDesign."
+    : "Site tools are not exposed in this browser. KORRHAUS and the tote keep their normal human interfaces.";
 }
 
 const safeHttpsUrl = (value) => {
@@ -19,19 +19,21 @@ const safeHttpsUrl = (value) => {
 };
 
 const setOptionalLink = (name, value, fallbackLabel) => {
-  const link = document.querySelector(`[data-link="${name}"]`);
-  if (!(link instanceof HTMLAnchorElement)) return;
+  const links = document.querySelectorAll(`[data-link="${name}"]`);
   const href = safeHttpsUrl(value);
-  if (!href) {
-    link.removeAttribute("href");
-    link.setAttribute("aria-disabled", "true");
-    link.textContent = fallbackLabel;
-    return;
+  for (const link of links) {
+    if (!(link instanceof HTMLAnchorElement)) continue;
+    if (!href) {
+      link.removeAttribute("href");
+      link.setAttribute("aria-disabled", "true");
+      link.textContent = fallbackLabel;
+      continue;
+    }
+    link.href = href;
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    link.removeAttribute("aria-disabled");
   }
-  link.href = href;
-  link.target = "_blank";
-  link.rel = "noreferrer";
-  link.removeAttribute("aria-disabled");
 };
 
 const setText = (selector, value) => {
@@ -44,12 +46,16 @@ try {
   if (!response.ok) throw new Error("metadata unavailable");
   const metadata = await response.json();
   const repositoryUrl = safeHttpsUrl(metadata.repositoryUrl);
+  const verifiedFlagshipUrl =
+    metadata.releaseBuild === true && metadata.flagshipVerified === true
+      ? safeHttpsUrl(metadata.flagshipUrl)
+      : null;
   const commit = typeof metadata.commitSha === "string" ? metadata.commitSha : "local build";
 
   setText("[data-version]", metadata.packageVersion);
   setText("[data-commit]", commit.slice(0, 12));
   setText("[data-bundle]", typeof metadata.browserBundleSha256 === "string" ? metadata.browserBundleSha256.slice(0, 16) : "unavailable");
-  setOptionalLink("flagship", metadata.flagshipUrl, "Live flagship pending release");
+  setOptionalLink("flagship", verifiedFlagshipUrl, "KORRHAUS flagship pending release");
   setOptionalLink("repository", repositoryUrl, "Public repository pending release");
   setOptionalLink(
     "judge-guide",
@@ -57,7 +63,7 @@ try {
     "Judge guide pending release",
   );
 } catch {
-  setOptionalLink("flagship", null, "Live flagship pending release");
+  setOptionalLink("flagship", null, "KORRHAUS flagship pending release");
   setOptionalLink("repository", null, "Public repository pending release");
   setOptionalLink("judge-guide", null, "Judge guide pending release");
 }

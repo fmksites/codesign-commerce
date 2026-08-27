@@ -1,5 +1,14 @@
 # Final local contract and flagship QA
 
+> **HISTORICAL BUILD BOUNDARY.** Public-core results in this file remain dated
+> evidence. Its private Designer hashes, focused-test count and full-regression
+> result predate the latest lifecycle, producer-code, custom-grip and immutable-
+> asset guards and must not be presented as the current private candidate.
+
+> Topology note: public-reference sections are historical evidence from the
+> retired synthetic KORRHAUS harness. The existing private Designer bridge and
+> tote remain the active flagship and portability surfaces.
+
 Date: 27 August 2026
 Public source commit: `6fc792644a568d2dee318ad2457639911873cbfd`
 Browser bundle: `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`

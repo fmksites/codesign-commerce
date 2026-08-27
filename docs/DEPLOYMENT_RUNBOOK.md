@@ -24,26 +24,7 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 5. Follow the README from a fresh, logged-out clone.
 6. Record the public URL and final commit.
 
-## 3. Deploy the public judge app — approval and provider choice required
-
-1. Build the single release artifact with the verified repository and flagship
-   URLs; `npm run build:release` fails if either HTTPS link is absent.
-2. Deploy `dist/judge-site/` from that public commit over HTTPS. Its root is the
-   English judge landing and `/tote/` is the deterministic portability example.
-   The KORRHAUS call to action must open the real live KORRHAUS shop. Keep the
-   public KORRHAUS reference in the repository for reproducibility and local
-   testing rather than presenting it as a second hosted KORRHAUS business.
-3. Do not add secrets, authentication, analytics, customer data, or private APIs.
-4. Show the commit SHA in the deployed app and `site-metadata.json`.
-5. Preserve the tote's anonymous deterministic reset path and the repository's
-   local KORRHAUS-reference instructions.
-6. Verify logged-out access, cache headers, asset hashes, tote tools and flow,
-   responsive layout, navigation, reload, and browser-without-WebMCP fallback.
-   Verify the North Form flagship flow on the real KORRHAUS shop after its
-   separately approved traffic promotion.
-7. Retain the provider URL as a fallback even if a branded domain is added.
-
-## 4. Build the private flagship release candidate
+## 3. Build the private flagship release candidate
 
 1. Pin the exact public browser bundle and cache key into the private adapter.
 2. Keep `CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED` disabled by default.
@@ -51,7 +32,7 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
    and actual-browser North Form/Revert/Keep checks against the exact build.
 4. Record private file hashes without publishing private source.
 
-## 5. No-traffic KORRHAUS deployment — separate approval required
+## 4. No-traffic KORRHAUS deployment — separate approval required
 
 1. Build one tagged QA revision with zero traffic, WebMCP enabled, and synthetic
    acceptance fixtures enabled.
@@ -65,7 +46,7 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
    rollback revision at 100%.
 5. Stop and present the evidence before requesting traffic approval.
 
-## 6. Production promotion — explicit approval required
+## 5. Production promotion — explicit approval required
 
 1. Promote only the verified revision and only after written approval.
 2. Verify the actual anonymous English KORRHAUS route in the in-app browser and
@@ -74,8 +55,33 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
    quote/application/upload flows, or browsers without WebMCP.
 4. Keep an immediate rollback revision and document the rollback trigger.
 
+## 6. Deploy the public judge app — approval and provider choice required
+
+Do this only after Section 5 has passed on the actual live Shopify route. The
+judge landing calls KORRHAUS a live flagship, so deploying it earlier would be
+an unsupported product claim.
+
+1. Build the single release artifact with the verified public repository URL,
+   the exact flagship URL
+   `https://korrhaus.nl/en/apps/wholesale/sock-designer`, and
+   `CODESIGN_FLAGSHIP_VERIFIED=true`. `npm run build:release` fails if the
+   working tree is dirty, either URL is absent, the flagship URL differs, or
+   the live-verification attestation is absent.
+2. Deploy `dist/judge-site/` from that public commit over HTTPS. Its root is the
+   English judge landing and `/tote/` is the deterministic portability demo.
+   Every KORRHAUS call to action must open the existing real Shopify Designer.
+   The artifact and repository must not expose a synthetic second Sock Designer.
+3. Do not add secrets, authentication, analytics, customer data, or private APIs.
+4. Show the exact commit SHA in the deployed app and `site-metadata.json`.
+5. Preserve the tote's anonymous deterministic reset path and the repository's
+   package, adapter, and safety-test instructions.
+6. Verify logged-out access, cache headers, asset hashes, tote tools and flow,
+   responsive layout, navigation, reload, browser-without-WebMCP fallback, and
+   every link to the live KORRHAUS route.
+7. Retain the provider URL as a fallback even if a branded domain is added.
+
 ## 7. Availability window
 
-Keep the submitted repository, public examples, and any required flagship URL
-free and accessible through the end of judging: 21 September 2026 at 5:00 PM
-PT. Monitor without silently changing the judged build.
+Keep the submitted repository, the public tote demo, the judge landing, and the
+live flagship URL free and accessible through the end of judging: 21 September
+2026 at 5:00 PM PT. Monitor without silently changing the judged build.

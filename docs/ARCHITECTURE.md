@@ -139,11 +139,6 @@ packages/codesign-commerce/
     review-view.test.ts
     webmcp.test.ts
 
-examples/korrhaus-reference/
-  src/main.ts                public manifest, adapter, and renderer wiring
-  src/styles.css             reproducible KORRHAUS reference surface
-  public/                    KORRHAUS-owned public-safe visual assets
-
 examples/studio-tote/
   src/configurator.ts        tote manifest, adapter, and production rules
   src/main.ts                human UI, renderer, review, and WebMCP wiring
@@ -151,7 +146,9 @@ examples/studio-tote/
   public/                    generated public-safe tote product cutouts
 ```
 
-Both public examples consume the same package and review view. The tote adds no
-core condition, option ID, renderer behavior, or product rule: all tote-specific
-work stays under `examples/studio-tote/`. Merchant-specific mapping must not be
-added to the core.
+The studio tote is the sole standalone public example. KORRHAUS consumes the
+same package through a narrow adapter inside the existing private Shopify
+application, so judges see the actual merchant Designer rather than a synthetic
+copy. The tote adds no core condition, option ID, renderer behavior, or product
+rule: all tote-specific work stays under `examples/studio-tote/`.
+Merchant-specific mapping must not be added to the core.

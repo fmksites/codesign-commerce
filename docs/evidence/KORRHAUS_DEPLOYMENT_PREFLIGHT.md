@@ -1,9 +1,14 @@
 # KORRHAUS zero-traffic deployment preflight
 
+> **SUPERSEDED PREFLIGHT.** The hashes and candidate sequence below belong to an
+> older private integration. Retain them as dated history, but do not deploy or
+> promote from this file. The latest guarded source requires a new immutable
+> image, QA revision, fixtures-off zero-traffic candidate, and fresh evidence.
+
 Date: 27 August 2026
 
-Status: approved and executed. Final evidence is in
-`docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`.
+Historical status: approved and executed for the superseded image. Historical
+evidence is in `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`.
 
 ## Current production baseline
 

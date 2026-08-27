@@ -43,8 +43,9 @@ Current deterministic coverage includes:
   canvas/print constraints, second-variant creation, zero-write Revert, and
   exactly-once Keep.
 - Provider-neutral judge-site assembly, semantic package version, exact commit
-  and browser-bundle metadata, deterministic relative demo links, subpath-safe
-  assets, and complete KORRHAUS/tote production bundles.
+  and browser-bundle metadata, a deterministic relative tote link, a
+  metadata-bound HTTPS live-flagship link, subpath-safe assets, and an explicit
+  assertion that no synthetic `/korrhaus/` configurator is shipped.
 
 ## Evidence strength
 
@@ -79,12 +80,27 @@ Before submission-ready handoff:
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
 
-The latest local reproducibility evidence is recorded in [evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The actual-browser transaction and visual evidence for the public KORRHAUS reference is recorded in [evidence/ACTUAL_BROWSER_REVIEW_UI.md](./evidence/ACTUAL_BROWSER_REVIEW_UI.md) and the repository-root [design-qa.md](../design-qa.md). The independent portability proof is recorded in [evidence/STUDIO_TOTE_PORTABILITY.md](./evidence/STUDIO_TOTE_PORTABILITY.md). The single deployable landing and both assembled subpaths are verified in [evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./evidence/JUDGE_SITE_RELEASE_CANDIDATE.md).
+The latest local reproducibility evidence is recorded in
+[evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The public
+tote portability proof is recorded in
+[evidence/STUDIO_TOTE_PORTABILITY.md](./evidence/STUDIO_TOTE_PORTABILITY.md).
+The current guarded KORRHAUS Designer candidate is recorded in
+[evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
+The earlier five-tool actual-browser run remains historical evidence in
+[evidence/KORRHAUS_LOCAL_FIVE_TOOL.md](./evidence/KORRHAUS_LOCAL_FIVE_TOOL.md).
+The older
+[zero-traffic release](./evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md) is explicitly
+superseded and must never be promoted; a fresh guarded candidate is required.
+The deployable landing-plus-tote artifact is verified in
+[evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./evidence/JUDGE_SITE_RELEASE_CANDIDATE.md).
+The older public-reference browser documents remain dated synthetic-harness
+history, not an active submission surface.
 
 ## Optional agent evaluation corpus
 
 `evals/cases.json` fixes 24 selection, end-to-end, ambiguity, safety,
-adversarial-data, and recovery expectations across the sock and tote examples.
+adversarial-data, and recovery expectations across the live sock integration
+and public tote example.
 `evals/run-policy.json` fixes the coverage and pass thresholds, while
 `evals/RESULTS_FORMAT.md` defines the evidence-bearing result format and scorer.
 `npm run check:evals` validates the corpus, policy, template, and scorer with

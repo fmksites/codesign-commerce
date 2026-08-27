@@ -1,5 +1,11 @@
 # Public repository release evidence
 
+> Topology status: this file records an earlier successful public-source release
+> that still included the synthetic KORRHAUS reference. The corrected
+> landing-plus-tote topology is local and has not been pushed. Do not use the
+> commit or CI run below as final submission-release evidence; append a new exact
+> commit and hosted-CI result after the correction is approved for push.
+
 Date: 27 August 2026
 
 ## Published surface
