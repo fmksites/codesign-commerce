@@ -1,0 +1,101 @@
+# Build Checklist
+
+**Project:** CoDesign Commerce
+**Source of truth:** `scope.md`, `prd.md`, and `spec.md` dated 27 August 2026
+**Status:** Locked by participant and explicitly authorized for public-repository implementation on 27 August 2026
+
+## Build Preferences
+
+- **Plan ownership:** Codex-designed from the approved specification
+- **Build mode:** Autonomous once explicitly approved; locked when `$build-project` begins
+- **Comprehension checks:** N/A
+- **Git:** One scoped commit after each completed and verified item; failed or incomplete items are not committed
+- **Verification:** Yes — continuous automated checks plus actual browser/agent evidence
+- **Check-in cadence:** Speed-run; concise milestone reports, no routine pauses
+- **Required stops:** Failed feasibility gate needing a product decision; before private KORRHAUS modification; before deployment/traffic changes; before public publication; before Devpost submission
+- **Approval boundary:** This checklist does not itself authorize implementation, deployment, publication, private-repository mutation, or submission
+- **Lock:** Ordering and build preferences are fixed for `$build-project`; a material scope/order change requires an explicit checklist revision
+
+## Execution Rules
+
+- Execute items in order unless a documented dependency forces a change.
+- Do not begin broad manifest/tote/KORRHAUS work until Items 2 and 3 pass all four Phase 0 feasibility gates.
+- Preserve unrelated user changes and never infer ownership from a dirty Git index.
+- Keep the tote and KORRHAUS roles distinct: tote is the public reproducible reference; KORRHAUS is private-backed live-business proof.
+- Do not add a WebMCP save, order, quote, checkout, payment, application, proof-acceptance, customer-enumeration, pricing, supplier, or administrative tool.
+- Treat a failed ChatGPT/Chrome user-surface check as a failed item even when source inspection and automated tests are green.
+- At every external gate, report the exact tested build/revision and requested action before asking for approval.
+
+## Checklist
+
+- [x] **1. Establish the implementation baseline and guarded work branch**
+  Spec ref: `spec.md > Build Order For Checklist > Phase 0 — feasibility gates before expansion`
+  What to build: After explicit implementation approval, inspect the shared working tree without discarding user changes, create the scoped implementation branch/worktree strategy, record the current public package/tote behavior and hashes, run the complete existing local verification suite, and create a dated pre-change baseline. Do not touch the private KORRHAUS repository or any deployment. Commit only the planning documents and verified baseline that belong to this project.
+  Acceptance: The exact starting revision/build, pre-existing narrow tool surface, existing tote behavior, and known limitations are recorded; all runnable baseline checks have a truthful pass/fail result; unrelated changes are preserved; the branch and commit history can distinguish work performed after 25 August 2026.
+  Verify: Run `git status --short`, `npm test`, `npm run typecheck`, `npm run build`, `npm run check:public-boundary`, `npm run check:docs`, `npm run check:judge-site`, and `npm run check:evals`; review the dated baseline evidence and `git diff --check` before the item commit.
+
+- [ ] **2. Prove inline ChatGPT previews and native Chrome WebMCP before refactoring**
+  Spec ref: `spec.md > Risks And Verification > Critical feasibility gates > Gate 0A — inline ChatGPT preview` and `Gate 0C — Chrome native WebMCP`
+  What to build: Add the smallest isolated, removable proof inside the public tote needed to register a bounded preview tool through `document.modelContext`, capture one real tote renderer image, and expose the same contract to ChatGPT's built-in browser and Chrome 149+ native WebMCP. Keep the ordinary human tote working when WebMCP is absent. Do not begin manifest 2.0 or broad UI work in this item.
+  Acceptance: An actual renderer export or genuine browser screenshot is displayed inline in a ChatGPT conversation and matched to the current proposal/preview revision; Chrome discovers and executes the tool through the official origin-trial/testing path; ordinary Chrome without WebMCP remains functional; a text result or bare link does not count as passing.
+  Verify: Run the focused unit/browser proof tests, execute the page tool through `document.modelContext` in Chrome 149+ with the official testing flag/inspector, then perform and capture the actual ChatGPT built-in-browser flow. Record URL, build hash, browser versions, tool result, inline visual evidence, and any required host permissions.
+
+- [ ] **3. Prove real artwork transport and chat-confirmed page Keep**
+  Spec ref: `spec.md > Risks And Verification > Critical feasibility gates > Gate 0B — ChatGPT asset transport` and `Gate 0D — page Keep from confirmed chat`
+  What to build: Extend only the feasibility slice so a real user/agent-supplied supported image reaches a temporary session asset handle, renders in the tote without normal persistence, reverts with zero writes, and commits only when the shopper explicitly confirms in chat and the agent activates the existing visible page Keep controller. Keep save outside WebMCP and measure all preview/restore/write/commit calls.
+  Acceptance: The supplied image—not a hard-coded logo—appears in the live tote and inline chat preview; proposal/revert causes zero persistence writes; explicit chat confirmation precedes page Keep activation; one Keep produces exactly one saved local state and reread preview; duplicate activation is idempotent; failed asset transport or confirmation stops the broader build for a user decision.
+  Verify: Run focused asset/Keep tests and inspect test counters; exercise stage, preview, Revert, confirmation, Keep, duplicate Keep, and browser-close cases in the actual ChatGPT host and Chrome path; record exact source type, sanitized metadata, proposal revision, commit count, and final saved revision.
+
+- [ ] **4. Replace manifest 1.0 with manifest 2.0 and enforce control parity**
+  Spec ref: `spec.md > Components And Responsibilities > Manifest 2.0` and `Versioned human-control inventory`
+  What to build: Implement strict manifest 2.0 types/runtime validation, finite control kinds/scopes, asset slots, variant policy, preview surfaces, public dependency descriptions, fixed page-Keep approval mode, the versioned human-control inventory, and a reusable parity harness. Add a concise migration note from the unfinished 1.0 prototype without maintaining a runtime compatibility layer.
+  Acceptance: Valid manifests and complete inventories pass; unknown fields, duplicate/unsafe IDs, invalid bounds, unsupported control/slot combinations, oversized schemas, and unmapped visible controls fail closed; every shipped tote control is either mapped or explicitly excluded with a legitimate public-safe reason.
+  Verify: Run focused manifest/inventory tests plus `npm test -- manifest inventory`, `npm run typecheck`, `npm run build`, the parity script, and `git diff --check`; inspect generated public types and migration documentation before commit.
+
+- [ ] **5. Implement canonical workspace guards and atomic typed operations**
+  Spec ref: `spec.md > Components And Responsibilities > Canonical workspace state` and `Typed proposal operations`
+  What to build: Implement field-by-field public workspace reconstruction, finite control values, variant/element targets, asset-handle references, operation schemas/reducer, mixed atomic batches, create/duplicate/remove/reorder/set-active variant operations, transform controls, operation limits, and operation-ID idempotency/conflict detection.
+  Acceptance: Valid mixed batches create complete detached candidates; invalid values/targets/operations leave the prior state byte-equivalent; adapter extras and malformed nested data cannot cross the public boundary; identical retries deduplicate and conflicting operation IDs fail; no product-specific tote or sock branch enters the core.
+  Verify: Run canonical-state, operation, fuzz/boundary, prototype-pollution, idempotency, and unchanged-state tests; run `npm test`, `npm run typecheck`, `npm run build`, `npm run check:public-boundary`, and `git diff --check` before commit.
+
+- [ ] **6. Build the guarded adapter and proposal transaction engine**
+  Spec ref: `spec.md > Components And Responsibilities > Guarded merchant adapter` and `Proposal engine`
+  What to build: Implement the manifest 2.0 adapter contract, runtime output guards, persistence quiescence, private snapshot lifecycle, explicit proposal mode, external-revision subscription, detached validation/preview, exact restore, compare-and-swap Keep metadata, proposal states/revisions, cancellation, stale handling, retryable commit, and commit-uncertain behavior. Migrate only proven transaction logic from the current implementation.
+  Acceptance: One proposal is active; every async boundary rechecks revisions; invalid first proposals restore baseline; invalid refinements preserve the last inspected proposal; preview/Revert perform zero writes; external changes block Keep; duplicate Keep saves once; expected server failure does not repeat the local write; unknown outcome never auto-retries or claims success.
+  Verify: Run adapter-contract and proposal-engine suites covering all state-machine branches, injected delays/external changes at every async boundary, cancellation, local/server counters, and commit outcomes; then run `npm test`, `npm run typecheck`, `npm run build`, and `git diff --check`.
+
+- [ ] **7. Implement the production-safe asset sandbox and preview bridge**
+  Spec ref: `spec.md > Components And Responsibilities > Temporary asset sandbox` and `Preview bridge`
+  What to build: Turn the feasibility proof into the bounded public asset-handle lifecycle and adapter-owned staging contract; implement source/media/size/private-host policy, cleanup, product-specific sanitizer hooks, exact Keep import, per-variant preview capture, artifact receipts, integrity/revision binding, static-first transport, preview-unavailable state, and retry. Add a same-origin preview endpoint only if Item 2 proved it necessary and that separate architecture/action has been approved.
+  Acceptance: Allowed supplied images stage, render, transform, expire, revert, and commit correctly; disallowed/oversized/private-network/malformed sources fail without changing the proposal; raw bytes/private URLs never leak; current previews correlate with exact variants/revisions; stale/capture failures block Keep and retry without creating a proposal or save.
+  Verify: Run asset/preview unit, malicious fixture, cleanup, stale artifact, integrity, retry, and Keep-once tests; repeat actual ChatGPT and Chrome visual transport with the generalized code; run `npm test`, `npm run typecheck`, `npm run build`, security/boundary checks, and `git diff --check`.
+
+- [ ] **8. Register the six WebMCP tools and unify page review control**
+  Spec ref: `spec.md > Components And Responsibilities > Six WebMCP tools` and `Page review and confirmation controller`
+  What to build: Implement exactly `codesign_read_workspace`, `codesign_list_capabilities`, `codesign_stage_asset`, `codesign_apply_proposal`, `codesign_get_previews`, and `codesign_validate_proposal` with manifest-generated bounded schemas, runtime validation, sanitized results, annotations, and shared abort lifecycle. Replace the old narrow tools/review assumptions; wire visible Keep/Revert to the single review controller; keep ordinary controls visible but locked only during a proposal.
+  Acceptance: The exact six tools register only on supported/enabled pages; schemas reject additional/oversized/unsafe input; outputs contain no private data; no save/commercial/private tool exists; coherent revisions render visibly; Keep is disabled when stale/busy/preview-unavailable; direct and chat-directed page activation share one idempotent commit path; non-agent UI shows no proposal panel.
+  Verify: Run WebMCP schema/lifecycle/tool-selection/review-controller tests, inspect the live Chrome tool list and descriptions, exercise abort/unregister, scan for forbidden tool names/actions, then run `npm test`, `npm run typecheck`, `npm run build`, public-boundary/docs checks, and `git diff --check`.
+
+- [ ] **9. Deliver the complete public studio-tote product experience**
+  Spec ref: `spec.md > Components And Responsibilities > Tote reference integration` and `Demo And Submission Flow > Stable tote judge flow`
+  What to build: Refactor the tote into the final public manifest/inventory/state/adapter/renderer/asset/preview/UI modules; expose every final human control; support actual artwork, typography, placement, scale, rotation, multiple variants, quantity allocation, subjective named-variant revision, two/three visible atomic passes, responsive review controls, local-storage Keep, deterministic reset, and a visual-first judge journey. Do not reuse KORRHAUS branding or renderer logic.
+  Acceptance: One natural-language North Form brief creates two visibly distinct named variants with correct totals, real supplied artwork, all customer controls mapped, live staged changes, one inline preview per variant, concise assumptions/warnings, targeted refinement, Keep/save-once, Revert/no-write, and unchanged human operation without WebMCP on desktop and mobile.
+  Verify: Run tote parity/configurator/browser/visual/accessibility suites; manually inspect desktop and 390px mobile; execute the complete ChatGPT and Chrome flows; compare browser render to inline chat preview by revision; run the full local quality suite and archive dated screenshots/results before commit.
+
+- [ ] **10. Integrate the public core into the real KORRHAUS Sock Designer**
+  Spec ref: `spec.md > Components And Responsibilities > KORRHAUS private integration`
+  What to build: Stop and obtain explicit authority before private edits. Then perform/read the versioned real customer-control inventory, map every current human-editable creative/configuration control through a narrow private adapter, connect existing renderer/autosave/artwork/validation/snapshot/restore/Keep functions, and keep the WebMCP feature disabled by default. Work locally with synthetic/non-customer fixtures first; do not deploy or change traffic in this item.
+  Acceptance: The selected KORRHAUS build has a complete versioned control inventory and proposal parity; all proposals/assets/previews are temporary; normal drafts, autosave, uploads, notifications, customer projects, pricing, and operations remain unaffected; no private state/logic enters the public package; full local regression and actual-browser synthetic flows pass.
+  Verify: Run the private application's focused and full lint/typecheck/unit/build/Playwright suites tied to the exact build; execute synthetic actual-browser design, asset, variant, validation, stale, Keep, Revert, non-agent, mobile, and autosave-isolation checks; review the public diff/boundary scan and dated private evidence before the item commit.
+
+- [ ] **11. Complete cross-host verification, documentation, and approval-gated releases**
+  Spec ref: `spec.md > Risks And Verification`, `External APIs And Dependencies`, and `Build Order For Checklist > Phase 3` through `Phase 6`
+  What to build: Finish deterministic/model/safety evals, Playwright and visual coverage, integration/manifest/browser/security/testing/judge documentation, pre-existing-versus-challenge evidence, release hashes, and one static tote/judge release candidate. Stop for approval before public deployment/publication and separately before any KORRHAUS isolated/zero-traffic deployment or production traffic change. After approval, deploy with no traffic where applicable, verify exact hashes/config/logs/URLs, then request any promotion separately.
+  Acceptance: Clean clone builds/tests/runs; public boundary scan is clean; actual ChatGPT, native Chrome, ordinary-browser, mobile, asset, inline-preview, stale, invalid, Keep/Revert, and forbidden-action evidence pass on the exact release; stable tote URL is reproducible; KORRHAUS evidence is versioned and honest; deployed, public, and live states are never conflated.
+  Verify: Run the complete documented release command suite from a clean clone, inspect all dependency/doc links, execute final actual-host journeys, compare served/local hashes, check runtime logs/security headers/feature flags, and complete the submission checklist with explicit evidence links. Record every approval and release state before commit/tag.
+
+- [ ] **12. Prepare Devpost handoff**
+  Spec ref: `spec.md > Demo And Submission Flow` and `prd.md > Submission Proof Points`
+  What to build: Gather the verified product story, first-15-seconds tote sequence, judge instructions, stable demo URL, public repository link, exact commit/build hashes, screenshots or officially required media, clean-clone commands, browser-support limitations, test/eval evidence, public/private architecture explanation, pre-existing KORRHAUS distinction, real-business proof, Codex/AI usage summary, license, and learning documents. Draft only from verified facts and stop before Devpost submission for explicit approval.
+  Acceptance: The handoff clearly communicates “chat to custom design of products on Shopify,” proves non-trivial WebMCP and a coherent visual product, distinguishes tote from KORRHAUS, contains no unsupported compatibility/win claims, and provides everything `$prepare-submission` needs without exposing private data.
+  Verify: Review every handoff statement against the repository, stable URL, official challenge requirements, dated evidence, and public-boundary scan; confirm all required links are public and functional; confirm the next command is `$prepare-submission` and that nothing has been submitted without explicit approval.
