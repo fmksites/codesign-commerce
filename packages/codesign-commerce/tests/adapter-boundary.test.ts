@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
   AdapterBoundaryError,
-  createCoDesignTools,
   GuardedConfiguratorAdapter,
   InMemoryConfiguratorAdapter,
   ProposalSession,
@@ -18,8 +17,7 @@ const HIDDEN_SENTINEL = "DO_NOT_EXPOSE";
 function setup() {
   const raw = new InMemoryConfiguratorAdapter(structuredClone(testState), structuredClone(testManifest));
   const session = new ProposalSession(structuredClone(testManifest), raw);
-  const tools = createCoDesignTools({ manifest: testManifest, adapter: raw, session });
-  return { raw, session, tools };
+  return { raw, session };
 }
 
 describe("public adapter boundary", () => {
@@ -52,7 +50,7 @@ describe("public adapter boundary", () => {
   });
 
   test("strips undeclared read, option, validation, and commit fields before returning them", async () => {
-    const { raw, session, tools } = setup();
+    const { raw, session } = setup();
     const originalRead = raw.readState.bind(raw);
     const originalCommit = raw.commitState.bind(raw);
 
@@ -88,10 +86,10 @@ describe("public adapter boundary", () => {
       hiddenField: HIDDEN_SENTINEL,
     });
 
-    const read = await tools[0]!.execute({}, {});
-    const options = await tools[1]!.execute({ designId: "design-1", optionIds: ["body.color"] }, {});
-    const validation = await tools[4]!.execute({}, {});
     const guarded = session.adapter as GuardedConfiguratorAdapter;
+    const read = await guarded.readState();
+    const options = await guarded.listOptions({ designId: "design-1", optionIds: ["body.color"] });
+    const validation = await guarded.validateState(structuredClone(testState));
     const metadata: CommitMetadata = {
       proposalId: "boundary-commit-1",
       baseRevision: "revision-1",
@@ -101,51 +99,21 @@ describe("public adapter boundary", () => {
     const committed = await guarded.commitState(structuredClone(testState), metadata);
     const serialized = JSON.stringify({ read, options, validation, committed });
 
-    expect(read).toMatchObject({ ok: true, state: testState });
-    expect(options).toMatchObject({
-      ok: true,
-      options: [{ optionId: "body.color", values: [{ id: "navy", label: "Navy" }] }],
-    });
-    expect(validation).toMatchObject({
-      ok: true,
-      validation: { issues: [{ code: "ARTWORK_REQUIRED", designIds: ["design-1"] }] },
-    });
+    expect(read).toEqual(testState);
+    expect(options).toMatchObject({ options: [{ optionId: "body.color", values: [{ id: "navy", label: "Navy" }] }] });
+    expect(validation).toMatchObject({ issues: [{ code: "ARTWORK_REQUIRED", designIds: ["design-1"] }] });
     expect(committed).toEqual({ revision: "revision-2", localPersisted: true, serverPersisted: true });
     expect(serialized).not.toContain(HIDDEN_SENTINEL);
     expect(serialized).not.toContain("hiddenField");
   });
 
   test("fails closed with a generic public error when adapter output is malformed", async () => {
-    const { raw, tools } = setup();
+    const { raw, session } = setup();
     raw.readState = async () => ({
       ...structuredClone(testState),
       designs: [{ ...structuredClone(testState.designs[0]!), quantity: "sixty", hiddenField: HIDDEN_SENTINEL }],
     } as unknown as ConfigurationState);
 
-    const result = await tools[0]!.execute({}, {});
-    expect(result).toMatchObject({ ok: false, persisted: false, error: { code: "ADAPTER_FAILURE" } });
-    expect(JSON.stringify(result)).not.toContain(HIDDEN_SENTINEL);
-    expect(JSON.stringify(result)).not.toContain("sixty");
-  });
-
-  test("uses the session's validated manifest instead of an untrusted dependency reference", async () => {
-    const { raw, session } = setup();
-    const dependencyManifest = {
-      ...structuredClone(testManifest),
-      hiddenField: HIDDEN_SENTINEL,
-      variantPolicy: { ...testManifest.variantPolicy, hiddenField: HIDDEN_SENTINEL },
-      dependencyDescriptions: [{ id: "hidden-rule", description: HIDDEN_SENTINEL, controlIds: ["body.color"] }],
-    };
-    const tools = createCoDesignTools({
-      manifest: dependencyManifest as typeof testManifest,
-      adapter: raw,
-      session,
-    });
-
-    const read = await tools[0]!.execute({}, {});
-    const options = await tools[1]!.execute({}, {});
-    const serialized = JSON.stringify({ read, options });
-    expect(serialized).not.toContain(HIDDEN_SENTINEL);
-    expect(serialized).not.toContain("hiddenField");
+    await expect(session.adapter.readState()).rejects.toBeInstanceOf(AdapterBoundaryError);
   });
 });

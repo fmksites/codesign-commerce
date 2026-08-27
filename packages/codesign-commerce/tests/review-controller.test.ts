@@ -1,140 +1,130 @@
 import { describe, expect, test } from "vitest";
-import { InMemoryConfiguratorAdapter, ProposalReviewController, ProposalSession } from "../src/index.js";
-import { testManifest, testState } from "./fixtures.js";
+import { PreviewBridge, ProposalEngine, ProposalReviewController, reviewLocksHumanControls } from "../src/index.js";
+import { workspaceTestManifest } from "./workspace-fixtures.js";
+import { V2TestAdapter } from "./v2-test-adapter.js";
 
 function setup() {
-  const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState));
-  const session = new ProposalSession(structuredClone(testManifest), adapter);
-  const review = new ProposalReviewController(testManifest, session);
-  return { adapter, session, review };
+  const adapter = new V2TestAdapter();
+  const previewBridge = new PreviewBridge(workspaceTestManifest, adapter);
+  const engine = new ProposalEngine(workspaceTestManifest, adapter, { previewBridge });
+  const review = new ProposalReviewController(workspaceTestManifest, engine);
+  return { adapter, engine, review };
+}
+
+const proposalInput = (operationId = "review-direction") => ({
+  baseRevision: "workspace-revision-1",
+  operationId,
+  operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "body.color", value: "navy" }],
+  assumptions: ["Logo artwork will be supplied later."],
+});
+
+async function capture(engine: ProposalEngine<any, any>) {
+  const snapshot = engine.snapshot;
+  if (!snapshot.proposalId || !snapshot.baseRevision) throw new Error("expected proposal");
+  return engine.capturePreviews({ proposalId: snapshot.proposalId, proposalRevision: snapshot.proposalRevision, baseRevision: snapshot.baseRevision });
 }
 
 describe("ProposalReviewController", () => {
-  test("stays hidden until the first agent proposal has been applied successfully", async () => {
-    let releaseQuiesce: (() => void) | undefined;
-    const quiesceGate = new Promise<void>((resolve) => {
-      releaseQuiesce = resolve;
-    });
-    class SlowAdapter extends InMemoryConfiguratorAdapter {
-      override async quiescePersistence(): Promise<void> {
-        await quiesceGate;
-        await super.quiescePersistence();
-      }
-    }
-    const adapter = new SlowAdapter(structuredClone(testState));
-    const session = new ProposalSession(structuredClone(testManifest), adapter);
-    const review = new ProposalReviewController(testManifest, session);
-
-    const proposal = session.propose({
-      baseRevision: "revision-1",
-      operationId: "review-hidden-before-success-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
+  test("stays hidden until the first proposal is visibly applied", async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    class SlowAdapter extends V2TestAdapter { override async quiescePersistence() { await gate; return super.quiescePersistence(); } }
+    const adapter = new SlowAdapter();
+    const engine = new ProposalEngine(workspaceTestManifest, adapter);
+    const review = new ProposalReviewController(workspaceTestManifest, engine);
+    const pending = engine.apply(proposalInput("slow-proposal"));
     await Promise.resolve();
-
-    expect(session.status).toBe("applying");
+    expect(engine.status).toBe("building");
     expect(review.state).toEqual({ kind: "hidden" });
-
-    releaseQuiesce?.();
-    await proposal;
+    release();
+    await pending;
     expect(review.state.kind).toBe("temporary");
   });
 
-  test("presents a human-readable temporary proposal and keeps only through its UI action", async () => {
-    const { adapter, session, review } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "review-keep-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-      assumptions: ["Logo artwork will be supplied later."],
-    });
-
+  test("presents cumulative human-readable changes and blocks Keep until preview proof exists", async () => {
+    const { adapter, engine, review } = setup();
+    await engine.apply(proposalInput());
     expect(review.state).toMatchObject({
       kind: "temporary",
       heading: "Temporary agent proposal — not saved.",
-      designCount: 1,
-      totalQuantity: 60,
-      changes: [{ label: "Body colour", before: "Cream", after: "Navy" }],
+      variantCount: 1,
+      activeVariantName: "Cream direction",
+      changes: [{ targetLabel: "Cream direction", label: "Body colour", before: "Cream", after: "Navy" }],
       assumptions: ["Logo artwork will be supplied later."],
-      safeToKeepAsDraft: true,
       productionReady: false,
+      previewReady: false,
+      canKeep: false,
+      keepDisabledReason: "Waiting for a current visual preview.",
     });
+    expect(reviewLocksHumanControls(review.state)).toBe(true);
+    expect(await review.keep()).toMatchObject({ ok: false, error: { code: "PREVIEW_REQUIRED" } });
     expect(adapter.counters.localWrites).toBe(0);
 
+    await capture(engine);
+    expect(review.state).toMatchObject({ kind: "temporary", previewReady: true, canKeep: true });
     await review.keep();
-    expect(review.state).toMatchObject({ kind: "committed", revision: "revision-2" });
+    expect(review.state).toMatchObject({ kind: "committed", revision: "workspace-revision-2" });
+    expect(reviewLocksHumanControls(review.state)).toBe(false);
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(1);
   });
 
-  test("reverts with zero writes and publishes an explicit outcome", async () => {
-    const { adapter, session, review } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "review-revert-1",
-      changes: [{ designId: "design-1", optionId: "accent.color", value: "berry" }],
+  test("summarizes created variants from the full proposal diff", async () => {
+    const { engine, review } = setup();
+    await engine.apply({
+      baseRevision: "workspace-revision-1",
+      operationId: "create-variant-review",
+      operations: [
+        { type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "design.quantity", value: 30 },
+        { type: "duplicate-variant", sourceVariantId: "variant-1", variantId: "variant-2", name: "Rose direction", initialControls: { "design.quantity": 30, "body.color": "rose" } },
+      ],
     });
+    expect(review.state).toMatchObject({ kind: "temporary", variantCount: 2, createdVariants: [{ variantId: "variant-2", name: "Rose direction" }] });
+  });
 
+  test("Revert restores the exact baseline with zero writes", async () => {
+    const { adapter, engine, review } = setup();
+    await engine.apply(proposalInput("review-revert"));
     await review.revert();
     expect(review.state).toEqual({ kind: "reverted", message: "Agent proposal reverted. Nothing was saved." });
-    expect(adapter.visibleState).toEqual(adapter.committedState);
+    expect(adapter.visible).toEqual(adapter.committed);
     expect(adapter.counters.localWrites).toBe(0);
     expect(adapter.counters.serverWrites).toBe(0);
   });
 
-  test("removes Revert after the local commit boundary and offers human retry", async () => {
-    const { adapter, session, review } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "review-retry-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
+  test("removes Revert after the local commit boundary and offers retry", async () => {
+    const { adapter, engine, review } = setup();
+    await engine.apply(proposalInput("review-retry"));
+    await capture(engine);
     adapter.failServerSave = true;
-
     await review.keep();
-    expect(review.state).toEqual({
-      kind: "commit-retry",
-      message: "Kept on this device; secure save failed.",
-      retryLabel: "Retry save",
-    });
+    expect(review.state).toEqual({ kind: "commit-retry", message: "Kept on this device; secure save failed.", retryLabel: "Retry save" });
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(0);
-
     adapter.failServerSave = false;
     await review.retrySave();
-    expect(review.state).toMatchObject({ kind: "committed", revision: "revision-2" });
+    expect(review.state).toMatchObject({ kind: "committed", revision: "workspace-revision-2" });
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(1);
   });
 
-  test("shows an invalidation state and restores the latest committed revision", async () => {
-    const { adapter, session, review } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "review-invalidated-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
-    adapter.simulateExternalRevision("revision-external");
-
-    expect(review.state).toMatchObject({ kind: "invalidated", refreshLabel: "Restore latest" });
-    const restored = await review.restoreLatest();
-    expect(restored).toMatchObject({ resynchronized: true, revision: "revision-external" });
+  test("shows stale state and restores the latest committed revision", async () => {
+    const { adapter, engine, review } = setup();
+    await engine.apply(proposalInput("review-stale"));
+    adapter.externalChange("revision-external");
+    expect(review.state).toMatchObject({ kind: "stale", refreshLabel: "Restore latest" });
+    expect(await review.restoreLatest()).toMatchObject({ resynchronized: true, revision: "revision-external" });
     expect(review.state).toEqual({ kind: "hidden" });
-    expect(adapter.visibleState.revision).toBe("revision-external");
+    expect(adapter.visible.committedRevision).toBe("revision-external");
   });
 
   test("requires reload when commit status is unknown", async () => {
-    const { adapter, session, review } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "review-uncertain-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
+    const { adapter, engine, review } = setup();
+    await engine.apply(proposalInput("review-uncertain"));
+    await capture(engine);
     adapter.throwDuringCommit = true;
-
     await review.keep();
     expect(review.state).toEqual({ kind: "commit-uncertain", message: "Save status could not be verified. Reload before continuing." });
     expect(adapter.counters.localWrites).toBe(0);
-    expect(adapter.counters.serverWrites).toBe(0);
   });
 });

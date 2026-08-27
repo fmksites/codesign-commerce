@@ -1,4 +1,4 @@
-import { validateManifest } from "./manifest.js";
+import { isSafeIdentifier, validateManifest } from "./manifest.js";
 import { AtomicOperationReducer, OperationValidationError, validateApplyOperationsInput } from "./operations.js";
 import { AssetSandbox, AssetSandboxError, validateStageAssetInput } from "./asset-sandbox.js";
 import { PreviewBridge, PreviewBridgeError, validatePreviewCaptureRequest } from "./preview-bridge.js";
@@ -9,6 +9,7 @@ import type {
   AssetStageSuccessResult,
   CommitResult,
   ConfiguratorManifest,
+  ControlValue,
   PreviewArtifact,
   PreviewCaptureSuccessResult,
   ProposalEndReason,
@@ -17,7 +18,10 @@ import type {
   ProposalEngineSnapshot,
   ProposalEngineStatus,
   ProposalEngineSuccessResult,
+  ProposalValidationInput,
+  ProposalValidationSuccessResult,
   WorkspaceAdapter,
+  WorkspaceDiff,
   WorkspaceState,
   WorkspaceValidationResult,
 } from "./types.js";
@@ -53,6 +57,7 @@ interface ActiveProposal<Snapshot> {
   revision: number;
   baseRevision: string;
   snapshot: Snapshot;
+  baselineState: WorkspaceState;
   state: WorkspaceState;
   validation: WorkspaceValidationResult | null;
   reducer: AtomicOperationReducer;
@@ -60,6 +65,7 @@ interface ActiveProposal<Snapshot> {
   results: Map<string, StoredProposalOperation>;
   previewStatus: "ready-for-capture" | "available" | "unavailable";
   previewArtifacts: PreviewArtifact[];
+  reviewResult: ProposalEngineSuccessResult | null;
 }
 
 export interface ProposalEngineExecutionOptions {
@@ -90,6 +96,65 @@ function errorResult(
 
 function createProposalId(): string {
   return `proposal-${crypto.randomUUID()}`;
+}
+
+function sameValue(left: unknown, right: unknown): boolean {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function collectControlChanges(
+  changes: WorkspaceDiff["controlChanges"],
+  target: WorkspaceDiff["controlChanges"][number]["target"],
+  before: Record<string, ControlValue>,
+  after: Record<string, ControlValue>,
+): void {
+  for (const controlId of [...new Set([...Object.keys(before), ...Object.keys(after)])].sort()) {
+    if (sameValue(before[controlId], after[controlId])) continue;
+    changes.push({
+      target: structuredClone(target),
+      controlId,
+      ...(before[controlId] === undefined ? {} : { before: structuredClone(before[controlId]) }),
+      ...(after[controlId] === undefined ? {} : { after: structuredClone(after[controlId]) }),
+    });
+  }
+}
+
+function workspaceDiff(before: WorkspaceState, after: WorkspaceState): WorkspaceDiff {
+  const controlChanges: WorkspaceDiff["controlChanges"] = [];
+  collectControlChanges(controlChanges, { scope: "workspace" }, before.workspaceControls, after.workspaceControls);
+  const beforeVariants = new Map(before.variants.map((variant) => [variant.id, variant]));
+  const afterVariants = new Map(after.variants.map((variant) => [variant.id, variant]));
+  for (const [variantId, beforeVariant] of beforeVariants) {
+    const afterVariant = afterVariants.get(variantId);
+    if (!afterVariant) continue;
+    collectControlChanges(controlChanges, { scope: "variant", variantId }, beforeVariant.controls, afterVariant.controls);
+    const beforeElements = new Map(beforeVariant.elements.map((element) => [element.id, element]));
+    for (const afterElement of afterVariant.elements) {
+      const beforeElement = beforeElements.get(afterElement.id);
+      if (beforeElement) collectControlChanges(controlChanges, { scope: "element", variantId, elementId: afterElement.id }, beforeElement.controls, afterElement.controls);
+    }
+  }
+  return {
+    controlChanges,
+    createdVariants: after.variants.filter((variant) => !beforeVariants.has(variant.id)).map(({ id, name }) => ({ variantId: id, name })),
+    removedVariants: before.variants.filter((variant) => !afterVariants.has(variant.id)).map(({ id, name }) => ({ variantId: id, name })),
+    orderBefore: before.variants.map((variant) => variant.id),
+    orderAfter: after.variants.map((variant) => variant.id),
+    activeVariantBefore: before.activeVariantId,
+    activeVariantAfter: after.activeVariantId,
+  };
+}
+
+function validateProposalValidationInput(value: unknown): ProposalValidationInput {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new TypeError("invalid validation input");
+  const record = value as Record<string, unknown>;
+  if (!Object.keys(record).every((key) => ["proposalId", "proposalRevision"].includes(key))) throw new TypeError("invalid validation input");
+  if ((record.proposalId === undefined) !== (record.proposalRevision === undefined)) throw new TypeError("invalid validation input");
+  if (record.proposalId !== undefined && (typeof record.proposalId !== "string" || !isSafeIdentifier(record.proposalId))) throw new TypeError("invalid validation input");
+  if (record.proposalRevision !== undefined && (!Number.isInteger(record.proposalRevision) || (record.proposalRevision as number) < 1)) throw new TypeError("invalid validation input");
+  return record.proposalId === undefined
+    ? {}
+    : { proposalId: record.proposalId as string, proposalRevision: record.proposalRevision as number };
 }
 
 export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
@@ -127,6 +192,7 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
 
   get status(): ProposalEngineStatus { return this.#status; }
   get proposedWorkspace(): WorkspaceState | null { return this.#active ? structuredClone(this.#active.state) : null; }
+  get currentReview(): ProposalEngineSuccessResult | null { return this.#active?.reviewResult ? structuredClone(this.#active.reviewResult) : null; }
   get snapshot(): ProposalEngineSnapshot {
     return {
       status: this.#status,
@@ -236,6 +302,52 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
     }
   }
 
+  async validate(rawInput: unknown = {}, execution: ProposalEngineExecutionOptions = {}): Promise<ProposalValidationSuccessResult | ProposalEngineErrorResult> {
+    let input: ProposalValidationInput;
+    try { input = validateProposalValidationInput(rawInput); } catch { return errorResult("INVALID_INPUT", "The validation request did not match the public schema", false); }
+    if (this.#destroyed) return errorResult("CANCELLED", "The proposal session has ended", false);
+    try {
+      if (input.proposalId !== undefined) {
+        if (!this.#active) return errorResult("NO_PROPOSAL", "There is no proposal to validate", false);
+        if (input.proposalId !== this.#active.id || input.proposalRevision !== this.#active.revision) {
+          return errorResult("STALE_PROPOSAL_REVISION", "The requested proposal revision is no longer current", true, this.#active.baseRevision);
+        }
+        if (this.#status === "stale" || (this.#externalRevision && this.#externalRevision !== this.#active.baseRevision)) {
+          return errorResult("STALE_REVISION", "The committed workspace changed while the proposal was open", true, this.#externalRevision ?? this.#active.baseRevision);
+        }
+        const active = this.#active;
+        const validation = await this.adapter.validateWorkspace(active.state, this.#assetResolver(active, false));
+        this.#checkBoundary(execution.signal, active.baseRevision);
+        return {
+          ok: true,
+          persisted: false,
+          source: "proposal",
+          baseRevision: active.baseRevision,
+          proposalId: active.id,
+          proposalRevision: active.revision,
+          validation,
+        };
+      }
+      const committed = await this.adapter.readWorkspace();
+      this.#checkBoundary(execution.signal, committed.committedRevision);
+      const validation = await this.adapter.validateWorkspace(committed, EMPTY_ASSET_RESOLVER as AssetResolver<PrivateAsset>);
+      this.#checkBoundary(execution.signal, committed.committedRevision);
+      return {
+        ok: true,
+        persisted: false,
+        source: "committed",
+        baseRevision: committed.committedRevision,
+        proposalId: null,
+        proposalRevision: 0,
+        validation,
+      };
+    } catch (error) {
+      if (error instanceof ProposalCancelledError) return errorResult("CANCELLED", "Validation was cancelled without saving", true);
+      if (error instanceof ProposalStaleError) return errorResult("STALE_REVISION", "The committed workspace changed during validation", true, error.revision);
+      return errorResult("ADAPTER_FAILURE", "The workspace could not be validated safely", true);
+    }
+  }
+
   async apply(rawInput: unknown, execution: ProposalEngineExecutionOptions = {}): Promise<ProposalEngineSuccessResult | ProposalEngineErrorResult> {
     let input: ApplyOperationsInput;
     try {
@@ -282,6 +394,7 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
           revision: 0,
           baseRevision: committed.committedRevision,
           snapshot,
+          baselineState: committed,
           state: committed,
           validation: null,
           reducer: new AtomicOperationReducer(this.manifest),
@@ -289,6 +402,7 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
           results: new Map(),
           previewStatus: "ready-for-capture",
           previewArtifacts: [],
+          reviewResult: null,
         };
         opened = true;
         // Record the private snapshot before entering proposal mode so even a
@@ -367,6 +481,7 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
         appliedOperations: reduced.appliedOperations,
         deduplicated: false,
         workspace: structuredClone(this.#active.state),
+        diff: workspaceDiff(this.#active.baselineState, this.#active.state),
         validation: structuredClone(mergedValidation),
         previewStatus: "ready-for-capture",
         confirmation: {
@@ -375,6 +490,7 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
           message: "A person must inspect the visible proposal and choose Keep or Revert in the page. Nothing has been saved.",
         },
       };
+      this.#active.reviewResult = structuredClone(result);
       this.#active.results.set(input.operationId, { result: structuredClone(result) });
       this.#setStatus("reviewable");
       return result;

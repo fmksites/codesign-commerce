@@ -24,6 +24,13 @@ Use this exact judge brief:
 
 > Create 100 studio totes split evenly across two variants. Make the first natural 12 oz canvas with long handles and a centered one-colour print. Make the second charcoal with short handles and an upper-left print. Leave final artwork for later.
 
+The tote registers the exact six reusable WebMCP tools documented in
+[`docs/WEBMCP_TOOLS.md`](../../docs/WEBMCP_TOOLS.md). Agent changes are applied
+as coherent temporary passes, actual supplied artwork can be staged and shown
+in the tote renderer, and revision-bound WebP previews can be returned to the
+conversation. There is no WebMCP save tool; only the visible page Keep control
+can persist a reviewed proposal.
+
 The complete live-flagship and tote walkthrough, expected tool sequence, safety
 checks, and recovery instructions are in
 [`docs/JUDGE_GUIDE.md`](../../docs/JUDGE_GUIDE.md).

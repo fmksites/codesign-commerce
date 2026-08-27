@@ -1,14 +1,11 @@
-import type { ProposalSession } from "./proposal-session.js";
-import { validateManifest } from "./manifest.js";
+import { isSafeIdentifier, validateManifest } from "./manifest.js";
+import type { ProposalEngine } from "./proposal-engine.js";
 import type {
-  ConfigurationChange,
-  ConfiguratorAdapter,
+  CapabilityCategory,
   ConfiguratorManifest,
-  CreateDesignInput,
-  JsonPrimitive,
-  OptionRequest,
-  ProposalInput,
-  ValidateConfigurationInput,
+  ControlDefinition,
+  ListCapabilitiesInput,
+  WorkspaceState,
 } from "./types.js";
 
 export interface JsonSchema {
@@ -42,141 +39,49 @@ export interface DocumentWithModelContext {
 export interface WebMcpRegistration {
   supported: boolean;
   toolNames: string[];
+  reason?: "disabled" | "unsupported-host" | "invalid-manifest";
   unregister(): void;
   ready: Promise<void>;
 }
 
-export interface CoDesignToolDependencies<Snapshot = unknown> {
-  manifest: ConfiguratorManifest;
-  adapter: ConfiguratorAdapter<Snapshot>;
-  session: ProposalSession<Snapshot>;
+export interface CoDesignToolDependencies<Snapshot = unknown, PrivateAsset = unknown> {
+  engine: ProposalEngine<Snapshot, PrivateAsset>;
+  enabled?: boolean;
 }
 
-const EMPTY_OBJECT_SCHEMA: JsonSchema = {
+export const CODESIGN_TOOL_NAMES = [
+  "codesign_read_workspace",
+  "codesign_list_capabilities",
+  "codesign_stage_asset",
+  "codesign_apply_proposal",
+  "codesign_get_previews",
+  "codesign_validate_proposal",
+] as const;
+
+const EMPTY_OBJECT_SCHEMA: JsonSchema = { type: "object", properties: {}, additionalProperties: false };
+const SAFE_ID_SCHEMA: JsonSchema = { type: "string", minLength: 1, maxLength: 200, pattern: "^[a-zA-Z0-9][a-zA-Z0-9._-]*$" };
+const REVISION_SCHEMA: JsonSchema = { type: "string", minLength: 1, maxLength: 200 };
+const POSITION_SCHEMA: JsonSchema = {
   type: "object",
-  properties: {},
+  properties: { x: { type: "number" }, y: { type: "number" } },
+  required: ["x", "y"],
   additionalProperties: false,
 };
-
-const VALUE_SCHEMA: JsonSchema = {
+const CONTROL_VALUE_SCHEMA: JsonSchema = {
   oneOf: [
-    { type: "string", maxLength: 1000 },
-    { type: "integer" },
+    { type: "string", maxLength: 1_000 },
+    { type: "number", minimum: -1_000_000_000, maximum: 1_000_000_000 },
     { type: "boolean" },
     { type: "null" },
+    POSITION_SCHEMA,
   ],
 };
-
-function proposalInputSchema(manifest: ConfiguratorManifest): JsonSchema {
-  const writableOptionIds = manifest.controls.filter((option) => option.agentWritable).map((option) => option.id);
-  return {
-    type: "object",
-    properties: {
-      baseRevision: { type: "string", minLength: 1, maxLength: 200 },
-      proposalId: { type: "string", minLength: 1, maxLength: 200 },
-      proposalRevision: { type: "integer", minimum: 1 },
-      operationId: { type: "string", minLength: 1, maxLength: 80, pattern: "^[a-zA-Z0-9][a-zA-Z0-9._-]*$" },
-      changes: {
-        type: "array",
-        minItems: 1,
-        maxItems: 40,
-        items: {
-          type: "object",
-          properties: {
-            designId: { type: "string", minLength: 1, maxLength: 128 },
-            optionId: { type: "string", enum: writableOptionIds },
-            value: VALUE_SCHEMA,
-          },
-          required: ["optionId", "value"],
-          additionalProperties: false,
-        },
-      },
-      assumptions: {
-        type: "array",
-        maxItems: 20,
-        items: { type: "string", maxLength: 500 },
-      },
-    },
-    required: ["baseRevision", "operationId", "changes"],
-    additionalProperties: false,
-  };
-}
-
-function optionRequestSchema(manifest: ConfiguratorManifest): JsonSchema {
-  return {
-    type: "object",
-    properties: {
-      designId: { type: "string", minLength: 1, maxLength: 128 },
-      optionIds: {
-        type: "array",
-        minItems: 1,
-        maxItems: 30,
-        uniqueItems: true,
-        items: { type: "string", enum: manifest.controls.map((option) => option.id) },
-      },
-    },
-    additionalProperties: false,
-  };
-}
-
-function createDesignInputSchema(manifest: ConfiguratorManifest): JsonSchema {
-  const writableOptionIds = manifest.controls.filter((option) => option.agentWritable).map((option) => option.id);
-  const writableDesignOptionIds = manifest.controls
-    .filter((option) => option.agentWritable && (option.scope === "variant" || option.scope === "element"))
-    .map((option) => option.id);
-  return {
-    type: "object",
-    properties: {
-      baseRevision: { type: "string", minLength: 1, maxLength: 200 },
-      proposalId: { type: "string", minLength: 1, maxLength: 200 },
-      proposalRevision: { type: "integer", minimum: 1 },
-      operationId: { type: "string", minLength: 1, maxLength: 80, pattern: "^[a-zA-Z0-9][a-zA-Z0-9._-]*$" },
-      sourceDesignId: { type: "string", minLength: 1, maxLength: 128 },
-      changes: {
-        type: "array",
-        maxItems: 20,
-        items: {
-          type: "object",
-          properties: {
-            designId: { type: "string", minLength: 1, maxLength: 128 },
-            optionId: { type: "string", enum: writableOptionIds },
-            value: VALUE_SCHEMA,
-          },
-          required: ["optionId", "value"],
-          additionalProperties: false,
-        },
-      },
-      newDesignChanges: {
-        type: "array",
-        maxItems: 20,
-        items: {
-          type: "object",
-          properties: {
-            optionId: { type: "string", enum: writableDesignOptionIds },
-            value: VALUE_SCHEMA,
-          },
-          required: ["optionId", "value"],
-          additionalProperties: false,
-        },
-      },
-      assumptions: {
-        type: "array",
-        maxItems: 20,
-        items: { type: "string", maxLength: 500 },
-      },
-    },
-    required: ["baseRevision", "operationId", "sourceDesignId", "newDesignChanges"],
-    additionalProperties: false,
-  };
-}
-
-const VALIDATE_INPUT_SCHEMA: JsonSchema = {
-  type: "object",
-  properties: {
-    proposalId: { type: "string", minLength: 1, maxLength: 200 },
-    proposalRevision: { type: "integer", minimum: 1 },
-  },
-  additionalProperties: false,
+const TARGET_SCHEMA: JsonSchema = {
+  oneOf: [
+    { type: "object", properties: { scope: { type: "string", const: "workspace" } }, required: ["scope"], additionalProperties: false },
+    { type: "object", properties: { scope: { type: "string", const: "variant" }, variantId: SAFE_ID_SCHEMA }, required: ["scope", "variantId"], additionalProperties: false },
+    { type: "object", properties: { scope: { type: "string", const: "element" }, variantId: SAFE_ID_SCHEMA, elementId: SAFE_ID_SCHEMA }, required: ["scope", "variantId", "elementId"], additionalProperties: false },
+  ],
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -185,288 +90,346 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return prototype === Object.prototype || prototype === null;
 }
 
-function hasOnlyKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
-  const allowed = new Set(keys);
-  return Object.keys(value).every((key) => allowed.has(key));
+function hasOnlyKeys(value: Record<string, unknown>, allowed: readonly string[]): boolean {
+  const keys = new Set(allowed);
+  return Object.keys(value).every((key) => keys.has(key));
 }
 
-function isJsonPrimitive(value: unknown): value is JsonPrimitive {
-  return value === null || typeof value === "string" || (typeof value === "number" && Number.isFinite(value)) || typeof value === "boolean";
+function safeId(value: unknown): value is string {
+  return typeof value === "string" && isSafeIdentifier(value);
 }
 
-function parseProposalInput(value: unknown): ProposalInput | null {
-  if (!isRecord(value) || !hasOnlyKeys(value, ["baseRevision", "proposalId", "proposalRevision", "operationId", "changes", "assumptions"])) return null;
-  if (typeof value.baseRevision !== "string" || value.baseRevision.length < 1 || value.baseRevision.length > 200) return null;
-  if (typeof value.operationId !== "string" || value.operationId.length < 1 || value.operationId.length > 80) return null;
-  if (value.proposalId !== undefined && (typeof value.proposalId !== "string" || value.proposalId.length < 1 || value.proposalId.length > 200)) return null;
-  if (value.proposalRevision !== undefined && (!Number.isInteger(value.proposalRevision) || (value.proposalRevision as number) < 1)) return null;
-  if (!Array.isArray(value.changes) || value.changes.length < 1 || value.changes.length > 40) return null;
+function controlRecordSchema(controls: ControlDefinition[]): JsonSchema {
+  return {
+    type: "object",
+    properties: Object.fromEntries(controls.map((control) => [control.id, CONTROL_VALUE_SCHEMA])),
+    additionalProperties: false,
+    maxProperties: controls.length,
+  };
+}
 
-  const changes: ConfigurationChange[] = [];
-  for (const candidate of value.changes) {
-    if (!isRecord(candidate) || !hasOnlyKeys(candidate, ["designId", "optionId", "value"])) return null;
-    if (candidate.designId !== undefined && (typeof candidate.designId !== "string" || candidate.designId.length < 1 || candidate.designId.length > 128)) return null;
-    if (typeof candidate.optionId !== "string" || !isJsonPrimitive(candidate.value)) return null;
-    changes.push({
-      ...(candidate.designId === undefined ? {} : { designId: candidate.designId }),
-      optionId: candidate.optionId,
-      value: candidate.value,
+function variantSchema(manifest: ConfiguratorManifest): JsonSchema {
+  const variantControls = manifest.controls.filter((control) => control.scope === "variant" && control.role !== "variant-name");
+  const elementControls = manifest.controls.filter((control) => control.scope === "element");
+  return {
+    type: "object",
+    properties: {
+      id: SAFE_ID_SCHEMA,
+      name: { type: "string", maxLength: 1_000 },
+      controls: controlRecordSchema(variantControls),
+      elements: {
+        type: "array",
+        maxItems: 100,
+        items: {
+          type: "object",
+          properties: {
+            id: SAFE_ID_SCHEMA,
+            type: SAFE_ID_SCHEMA,
+            controls: controlRecordSchema(elementControls),
+            assetHandle: SAFE_ID_SCHEMA,
+          },
+          required: ["id", "type", "controls"],
+          additionalProperties: false,
+        },
+      },
+    },
+    required: ["id", "name", "controls", "elements"],
+    additionalProperties: false,
+  };
+}
+
+function operationSchema(manifest: ConfiguratorManifest): JsonSchema {
+  const writable = manifest.controls.filter((control) => control.agentWritable);
+  const valueControls = writable.filter((control) => control.kind !== "asset").map((control) => control.id);
+  const assetControls = writable.filter((control) => control.kind === "asset").map((control) => control.id);
+  const variantValueControls = writable.filter((control) => control.scope === "variant" && control.kind !== "asset" && control.role !== "variant-name");
+  const operations: JsonSchema[] = [];
+  if (valueControls.length > 0) operations.push({
+    type: "object",
+    properties: { type: { type: "string", const: "set-control" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: valueControls }, value: CONTROL_VALUE_SCHEMA },
+    required: ["type", "target", "controlId", "value"],
+    additionalProperties: false,
+  });
+  if (assetControls.length > 0) {
+    operations.push({
+      type: "object",
+      properties: { type: { type: "string", const: "attach-asset" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: assetControls }, assetHandle: SAFE_ID_SCHEMA },
+      required: ["type", "target", "controlId", "assetHandle"],
+      additionalProperties: false,
+    });
+    operations.push({
+      type: "object",
+      properties: { type: { type: "string", const: "remove-asset" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: assetControls } },
+      required: ["type", "target", "controlId"],
+      additionalProperties: false,
     });
   }
+  if (manifest.variantPolicy.operations.includes("create")) operations.push({
+    type: "object",
+    properties: { type: { type: "string", const: "create-variant" }, variant: variantSchema(manifest), index: { type: "integer", minimum: 0, maximum: 20 } },
+    required: ["type", "variant"],
+    additionalProperties: false,
+  });
+  if (manifest.variantPolicy.operations.includes("duplicate")) operations.push({
+    type: "object",
+    properties: {
+      type: { type: "string", const: "duplicate-variant" }, sourceVariantId: SAFE_ID_SCHEMA, variantId: SAFE_ID_SCHEMA,
+      name: { type: "string", maxLength: 1_000 }, index: { type: "integer", minimum: 0, maximum: 20 },
+      initialControls: controlRecordSchema(variantValueControls),
+    },
+    required: ["type", "sourceVariantId", "variantId"],
+    additionalProperties: false,
+  });
+  if (manifest.variantPolicy.operations.includes("remove")) operations.push({
+    type: "object", properties: { type: { type: "string", const: "remove-variant" }, variantId: SAFE_ID_SCHEMA }, required: ["type", "variantId"], additionalProperties: false,
+  });
+  if (manifest.variantPolicy.operations.includes("reorder")) operations.push({
+    type: "object", properties: { type: { type: "string", const: "reorder-variant" }, variantId: SAFE_ID_SCHEMA, index: { type: "integer", minimum: 0, maximum: 20 } }, required: ["type", "variantId", "index"], additionalProperties: false,
+  });
+  if (manifest.variantPolicy.operations.includes("set-active")) operations.push({
+    type: "object", properties: { type: { type: "string", const: "set-active-variant" }, variantId: SAFE_ID_SCHEMA }, required: ["type", "variantId"], additionalProperties: false,
+  });
+  return { oneOf: operations.length > 0 ? operations : [{ type: "object", maxProperties: 0, additionalProperties: false }] };
+}
 
-  let assumptions: string[] | undefined;
-  if (value.assumptions !== undefined) {
-    if (!Array.isArray(value.assumptions) || value.assumptions.length > 20 || !value.assumptions.every((entry) => typeof entry === "string" && entry.length <= 500)) return null;
-    assumptions = value.assumptions;
-  }
-
+function applyProposalSchema(manifest: ConfiguratorManifest): JsonSchema {
   return {
-    baseRevision: value.baseRevision,
-    operationId: value.operationId,
-    changes,
-    ...(value.proposalId === undefined ? {} : { proposalId: value.proposalId as string }),
-    ...(value.proposalRevision === undefined ? {} : { proposalRevision: value.proposalRevision as number }),
-    ...(assumptions === undefined ? {} : { assumptions }),
+    type: "object",
+    properties: {
+      baseRevision: REVISION_SCHEMA, proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 }, operationId: SAFE_ID_SCHEMA,
+      operations: { type: "array", minItems: 1, maxItems: 80, items: operationSchema(manifest) },
+      assumptions: { type: "array", maxItems: 20, items: { type: "string", maxLength: 500 } },
+    },
+    required: ["baseRevision", "operationId", "operations"],
+    additionalProperties: false,
   };
 }
 
-function parseOptionRequest(value: unknown, manifest: ConfiguratorManifest): OptionRequest | null {
-  if (!isRecord(value) || !hasOnlyKeys(value, ["designId", "optionIds"])) return null;
-  if (value.designId !== undefined && (typeof value.designId !== "string" || value.designId.length < 1 || value.designId.length > 128)) return null;
-  const knownOptions = new Set(manifest.controls.map((option) => option.id));
-  if (
-    value.optionIds !== undefined
-    && (
-      !Array.isArray(value.optionIds)
-      || value.optionIds.length < 1
-      || value.optionIds.length > 30
-      || new Set(value.optionIds).size !== value.optionIds.length
-      || !value.optionIds.every((entry) => typeof entry === "string" && knownOptions.has(entry))
-    )
-  ) return null;
+function stageAssetSchema(manifest: ConfiguratorManifest): JsonSchema {
+  const slots = manifest.assetSlots;
+  const sourceKinds = new Set(slots.flatMap((slot) => slot.sourceKinds));
+  const maximumSource = Math.max(1, ...slots.map((slot) => slot.maximumSourceCharacters));
+  const sources: JsonSchema[] = [];
+  if (sourceKinds.has("data-url")) sources.push({
+    type: "object", properties: { kind: { type: "string", const: "data-url" }, data: { type: "string", minLength: 32, maxLength: maximumSource } }, required: ["kind", "data"], additionalProperties: false,
+  });
+  if (sourceKinds.has("https-url")) sources.push({
+    type: "object", properties: { kind: { type: "string", const: "https-url" }, url: { type: "string", minLength: 9, maxLength: Math.min(maximumSource, 2_048) } }, required: ["kind", "url"], additionalProperties: false,
+  });
   return {
-    ...(value.designId === undefined ? {} : { designId: value.designId as string }),
-    ...(value.optionIds === undefined ? {} : { optionIds: value.optionIds as string[] }),
+    type: "object",
+    properties: {
+      baseRevision: REVISION_SCHEMA, proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 },
+      slotId: slots.length > 0 ? { type: "string", enum: slots.map((slot) => slot.id) } : { type: "string", maxLength: 0 },
+      source: { oneOf: sources.length > 0 ? sources : [{ type: "object", maxProperties: 0, additionalProperties: false }] },
+      filename: { type: "string", minLength: 1, maxLength: 120 }, altText: { type: "string", minLength: 1, maxLength: 300 },
+    },
+    required: ["baseRevision", "slotId", "source", "altText"],
+    additionalProperties: false,
   };
 }
 
-function parseChanges(value: unknown, includeDesignId: boolean): ConfigurationChange[] | null {
-  if (!Array.isArray(value) || value.length > 20) return null;
-  const changes: ConfigurationChange[] = [];
-  for (const candidate of value) {
-    if (!isRecord(candidate) || !hasOnlyKeys(candidate, includeDesignId ? ["designId", "optionId", "value"] : ["optionId", "value"])) return null;
-    if (includeDesignId && candidate.designId !== undefined && (typeof candidate.designId !== "string" || candidate.designId.length < 1 || candidate.designId.length > 128)) return null;
-    if (typeof candidate.optionId !== "string" || !isJsonPrimitive(candidate.value)) return null;
-    changes.push({
-      ...(includeDesignId && candidate.designId !== undefined ? { designId: candidate.designId as string } : {}),
-      optionId: candidate.optionId,
-      value: candidate.value,
-    });
-  }
-  return changes;
-}
-
-function parseCreateDesignInput(value: unknown, manifest: ConfiguratorManifest): CreateDesignInput | null {
-  if (!isRecord(value) || !hasOnlyKeys(value, ["baseRevision", "proposalId", "proposalRevision", "operationId", "sourceDesignId", "changes", "newDesignChanges", "assumptions"])) return null;
-  if (typeof value.baseRevision !== "string" || value.baseRevision.length < 1 || value.baseRevision.length > 200) return null;
-  if (typeof value.operationId !== "string" || value.operationId.length < 1 || value.operationId.length > 80) return null;
-  if (typeof value.sourceDesignId !== "string" || value.sourceDesignId.length < 1 || value.sourceDesignId.length > 128) return null;
-  if (value.proposalId !== undefined && (typeof value.proposalId !== "string" || value.proposalId.length < 1 || value.proposalId.length > 200)) return null;
-  if (value.proposalRevision !== undefined && (!Number.isInteger(value.proposalRevision) || (value.proposalRevision as number) < 1)) return null;
-  const changes = value.changes === undefined ? [] : parseChanges(value.changes, true);
-  const newDesignChanges = parseChanges(value.newDesignChanges, false);
-  if (!changes || !newDesignChanges || changes.length + newDesignChanges.length > 40) return null;
-  const writableOptions = new Set(manifest.controls.filter((option) => option.agentWritable).map((option) => option.id));
-  const writableDesignOptions = new Set(manifest.controls.filter((option) => option.agentWritable && (option.scope === "variant" || option.scope === "element")).map((option) => option.id));
-  if (changes.some((change) => !writableOptions.has(change.optionId)) || newDesignChanges.some((change) => !writableDesignOptions.has(change.optionId))) return null;
-
-  let assumptions: string[] | undefined;
-  if (value.assumptions !== undefined) {
-    if (!Array.isArray(value.assumptions) || value.assumptions.length > 20 || !value.assumptions.every((entry) => typeof entry === "string" && entry.length <= 500)) return null;
-    assumptions = value.assumptions;
-  }
+function previewSchema(manifest: ConfiguratorManifest): JsonSchema {
   return {
-    baseRevision: value.baseRevision,
-    operationId: value.operationId,
-    sourceDesignId: value.sourceDesignId,
-    newDesignChanges,
-    ...(changes.length === 0 ? {} : { changes }),
-    ...(value.proposalId === undefined ? {} : { proposalId: value.proposalId as string }),
-    ...(value.proposalRevision === undefined ? {} : { proposalRevision: value.proposalRevision as number }),
-    ...(assumptions === undefined ? {} : { assumptions }),
+    type: "object",
+    properties: {
+      proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 }, baseRevision: REVISION_SCHEMA,
+      variantIds: { type: "array", minItems: 1, maxItems: 20, uniqueItems: true, items: SAFE_ID_SCHEMA },
+      surfaceIds: { type: "array", minItems: 1, maxItems: 20, uniqueItems: true, items: { type: "string", enum: manifest.previewSurfaces.map((surface) => surface.id) } },
+    },
+    required: ["proposalId", "proposalRevision", "baseRevision"],
+    additionalProperties: false,
   };
 }
 
-function parseValidateInput(value: unknown): ValidateConfigurationInput | null {
-  if (!isRecord(value) || !hasOnlyKeys(value, ["proposalId", "proposalRevision"])) return null;
-  if (value.proposalId !== undefined && (typeof value.proposalId !== "string" || value.proposalId.length < 1 || value.proposalId.length > 200)) return null;
-  if (value.proposalRevision !== undefined && (!Number.isInteger(value.proposalRevision) || (value.proposalRevision as number) < 1)) return null;
+const VALIDATE_SCHEMA: JsonSchema = {
+  type: "object", properties: { proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 } }, additionalProperties: false,
+};
+
+function capabilitiesSchema(manifest: ConfiguratorManifest): JsonSchema {
   return {
-    ...(value.proposalId === undefined ? {} : { proposalId: value.proposalId as string }),
-    ...(value.proposalRevision === undefined ? {} : { proposalRevision: value.proposalRevision as number }),
+    type: "object",
+    properties: {
+      variantId: SAFE_ID_SCHEMA, elementId: SAFE_ID_SCHEMA,
+      controlIds: { type: "array", minItems: 1, maxItems: 50, uniqueItems: true, items: { type: "string", enum: manifest.controls.map((control) => control.id) } },
+      categories: { type: "array", minItems: 1, maxItems: 5, uniqueItems: true, items: { type: "string", enum: ["controls", "variants", "assets", "previews", "dependencies"] } },
+    },
+    additionalProperties: false,
   };
 }
 
 function invalidInput(message: string) {
-  return {
-    ok: false,
-    persisted: false,
-    error: { code: "INVALID_INPUT", message, retryable: false, affectedOptions: [] },
-  };
+  return { ok: false, persisted: false, error: { code: "INVALID_INPUT", message, retryable: false } };
 }
 
 function adapterFailure(message: string) {
+  return { ok: false, persisted: false, error: { code: "ADAPTER_FAILURE", message, retryable: true } };
+}
+
+const PUBLIC_ERROR_CODES: Record<string, string> = {
+  STALE_REVISION: "STALE_COMMITTED_REVISION", UNKNOWN_VARIANT: "UNKNOWN_TARGET", UNKNOWN_ELEMENT: "UNKNOWN_TARGET",
+  UNKNOWN_ASSET: "UNKNOWN_TARGET", UNKNOWN_ASSET_SLOT: "UNKNOWN_TARGET", ASSET_BINDING_MISMATCH: "UNKNOWN_TARGET",
+  CONTROL_NOT_WRITABLE: "UNAVAILABLE_CONTROL", VARIANT_OPERATION_UNAVAILABLE: "CAPABILITY_UNAVAILABLE", VARIANT_LIMIT: "CAPABILITY_UNAVAILABLE",
+  DUPLICATE_ID: "INVALID_VALUE", ASSET_STAGE_FAILED: "ADAPTER_FAILURE", ASSET_EXPIRED: "ASSET_SOURCE_REJECTED",
+  PREVIEW_REQUIRED: "PREVIEW_FAILED", COMMIT_ALREADY_STARTED: "COMMIT_IN_PROGRESS", COMMIT_STATUS_UNKNOWN: "COMMIT_UNCERTAIN",
+};
+
+function publicResult<T>(result: T): T {
+  if (!isRecord(result) || result.ok !== false || !isRecord(result.error) || typeof result.error.code !== "string") return result;
+  return { ...result, error: { ...result.error, code: PUBLIC_ERROR_CODES[result.error.code] ?? result.error.code } } as T;
+}
+
+function parseCapabilities(value: unknown, manifest: ConfiguratorManifest): ListCapabilitiesInput | null {
+  if (!isRecord(value) || !hasOnlyKeys(value, ["variantId", "elementId", "controlIds", "categories"])) return null;
+  if (value.variantId !== undefined && !safeId(value.variantId)) return null;
+  if (value.elementId !== undefined && (!safeId(value.elementId) || value.variantId === undefined)) return null;
+  const knownControls = new Set(manifest.controls.map((control) => control.id));
+  if (value.controlIds !== undefined && (!Array.isArray(value.controlIds) || value.controlIds.length < 1 || value.controlIds.length > 50 || new Set(value.controlIds).size !== value.controlIds.length || !value.controlIds.every((entry) => typeof entry === "string" && knownControls.has(entry)))) return null;
+  const knownCategories = new Set<CapabilityCategory>(["controls", "variants", "assets", "previews", "dependencies"]);
+  if (value.categories !== undefined && (!Array.isArray(value.categories) || value.categories.length < 1 || value.categories.length > 5 || new Set(value.categories).size !== value.categories.length || !value.categories.every((entry) => knownCategories.has(entry as CapabilityCategory)))) return null;
   return {
-    ok: false,
-    persisted: false,
-    error: { code: "ADAPTER_FAILURE", message, retryable: true, affectedOptions: [] },
+    ...(value.variantId === undefined ? {} : { variantId: value.variantId as string }),
+    ...(value.elementId === undefined ? {} : { elementId: value.elementId as string }),
+    ...(value.controlIds === undefined ? {} : { controlIds: value.controlIds as string[] }),
+    ...(value.categories === undefined ? {} : { categories: value.categories as CapabilityCategory[] }),
   };
 }
 
-export function createCoDesignTools<Snapshot>(dependencies: CoDesignToolDependencies<Snapshot>): WebMcpTool[] {
-  const { session } = dependencies;
-  const manifest = validateManifest(structuredClone(session.manifest));
-  const adapter = session.adapter;
+function targetExists(workspace: WorkspaceState, input: ListCapabilitiesInput): boolean {
+  if (!input.variantId) return true;
+  const variant = workspace.variants.find((candidate) => candidate.id === input.variantId);
+  if (!variant) return false;
+  return !input.elementId || variant.elements.some((element) => element.id === input.elementId);
+}
+
+function controlCapability(control: ControlDefinition, availability: Map<string, { available: boolean; values?: unknown; reason?: string }>) {
+  const current = availability.get(control.id);
+  return {
+    controlId: control.id, label: control.label, agentDescription: control.agentDescription, scope: control.scope, kind: control.kind,
+    agentWritable: control.agentWritable, requirement: control.requirement, available: current?.available ?? true,
+    ...(current?.values === undefined && control.values === undefined ? {} : { values: current?.values ?? control.values }),
+    ...(current?.reason === undefined ? {} : { reason: current.reason }),
+    ...(control.minimum === undefined ? {} : { minimum: control.minimum }), ...(control.maximum === undefined ? {} : { maximum: control.maximum }),
+    ...(control.maximumLength === undefined ? {} : { maximumLength: control.maximumLength }),
+    ...(control.xMinimum === undefined ? {} : { xMinimum: control.xMinimum, xMaximum: control.xMaximum, yMinimum: control.yMinimum, yMaximum: control.yMaximum }),
+    ...(control.assetSlotId === undefined ? {} : { assetSlotId: control.assetSlotId }), ...(control.targetType === undefined ? {} : { targetType: control.targetType }),
+    ...(control.affectedPreviewRegion === undefined ? {} : { affectedPreviewRegion: control.affectedPreviewRegion }),
+  };
+}
+
+export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesignToolDependencies<Snapshot, PrivateAsset>): WebMcpTool[] {
+  const engine = dependencies.engine;
+  const manifest = validateManifest(structuredClone(engine.manifest));
 
   const readTool: WebMcpTool = {
-    name: "codesign_read_configuration",
-    title: "Read product configuration",
-    description: "Read the current allowlisted made-to-order configuration and revision before proposing changes. This tool never saves, orders, quotes, or exposes pricing.",
-    inputSchema: EMPTY_OBJECT_SCHEMA,
-    annotations: { readOnlyHint: true, untrustedContentHint: true },
-    async execute(input) {
-      if (!isRecord(input) || Object.keys(input).length !== 0) {
-        return { ok: false, persisted: false, error: { code: "INVALID_INPUT", message: "This tool does not accept arguments", retryable: false } };
-      }
-      try {
-        const state = await adapter.readState();
-        return {
-          ok: true,
-          state,
-          variantPolicy: manifest.variantPolicy,
-          pendingProposal: session.proposalId === null
-            ? null
-            : {
-                proposalId: session.proposalId,
-                proposalRevision: session.proposalRevision,
-                status: session.status,
-                persisted: false,
-              },
-        };
-      } catch {
-        return adapterFailure("The public configuration could not be read safely");
-      }
-    },
-  };
-
-  const listOptionsTool: WebMcpTool = {
-    name: "codesign_list_options",
-    title: "List configuration options",
-    description: "List allowlisted option values, public dependencies, and current availability for the visible made-to-order configuration. This tool never saves or exposes pricing.",
-    inputSchema: optionRequestSchema(manifest),
-    annotations: { readOnlyHint: true, untrustedContentHint: true },
-    async execute(input) {
-      const parsed = parseOptionRequest(input, manifest);
-      if (!parsed) return invalidInput("The option request did not match the bounded public schema");
-      try {
-        const state = session.proposedState ?? await adapter.readState();
-        if (parsed.designId && !state.designs.some((design) => design.id === parsed.designId)) {
-          return {
-            ok: false,
-            persisted: false,
-            currentRevision: state.revision,
-            error: { code: "UNKNOWN_DESIGN", message: `Unknown design ${parsed.designId}`, retryable: false, affectedOptions: parsed.optionIds ?? [] },
-          };
-        }
-        const dynamic = await adapter.listOptions(parsed);
-        const availability = new Map(dynamic.options.map((option) => [option.optionId, option]));
-        const requested = parsed.optionIds ? new Set(parsed.optionIds) : null;
-        return {
-          ok: true,
-          revision: dynamic.revision,
-          designId: parsed.designId ?? null,
-          options: manifest.controls
-            .filter((option) => !requested || requested.has(option.id))
-            .map((option) => {
-              const current = availability.get(option.id);
-              return {
-                optionId: option.id,
-                label: option.label,
-                agentDescription: option.agentDescription,
-                scope: option.scope,
-                kind: option.kind,
-                role: option.role ?? "selection",
-                agentWritable: option.agentWritable,
-                allowed: current?.allowed ?? true,
-                values: current?.values ?? option.values ?? [],
-                ...(current?.reason === undefined ? {} : { reason: current.reason }),
-                ...(option.minimum === undefined ? {} : { minimum: option.minimum }),
-                ...(option.maximum === undefined ? {} : { maximum: option.maximum }),
-                ...(option.maximumLength === undefined ? {} : { maximumLength: option.maximumLength }),
-              };
-            }),
-          dependencies: manifest.dependencyDescriptions,
-        };
-      } catch {
-        return adapterFailure("The public option list could not be read safely");
-      }
-    },
-  };
-
-  const proposeTool: WebMcpTool = {
-    name: "codesign_propose_configuration",
-    title: "Propose product configuration changes",
-    description: "Temporarily apply one atomic batch of allowlisted changes to existing designs in the merchant's visible preview. Nothing is saved; a person must choose Keep or Revert in the page.",
-    inputSchema: proposalInputSchema(manifest),
-    annotations: { readOnlyHint: false, untrustedContentHint: true },
+    name: "codesign_read_workspace", title: "Read custom product workspace",
+    description: "Read the sanitized committed custom-product workspace and any temporary proposal metadata. Never returns pricing, customer data, private snapshots, or raw artwork.",
+    inputSchema: EMPTY_OBJECT_SCHEMA, annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options) {
-      const parsed = parseProposalInput(input);
-      if (!parsed) return invalidInput("The proposal input did not match the bounded public schema");
-      return session.propose(parsed, options?.signal === undefined ? {} : { signal: options.signal });
+      if (!isRecord(input) || Object.keys(input).length !== 0) return invalidInput("This tool does not accept arguments");
+      if (options?.signal?.aborted) return { ok: false, persisted: false, error: { code: "CANCELLED", message: "The workspace read was cancelled", retryable: true } };
+      try {
+        const workspace = await engine.adapter.readWorkspace();
+        if (options?.signal?.aborted) return { ok: false, persisted: false, error: { code: "CANCELLED", message: "The workspace read was cancelled", retryable: true } };
+        const snapshot = engine.snapshot;
+        return {
+          ok: true, persisted: false,
+          configurator: { id: manifest.id, version: manifest.version, displayName: manifest.displayName, productType: manifest.productType }, workspace,
+          pendingProposal: snapshot.proposalId === null ? null : { proposalId: snapshot.proposalId, proposalRevision: snapshot.proposalRevision, baseRevision: snapshot.baseRevision, status: snapshot.status, previewStatus: snapshot.previewStatus, persisted: false },
+          capabilities: { variantOperations: [...manifest.variantPolicy.operations], assetSlots: manifest.assetSlots.map((slot) => slot.id), previewSurfaces: manifest.previewSurfaces.map((surface) => surface.id) },
+        };
+      } catch { return adapterFailure("The public workspace could not be read safely"); }
     },
   };
 
-  const createDesignTool: WebMcpTool = {
-    name: "codesign_create_design",
-    title: "Create a design or colourway",
-    description: "Clone one existing design inside the current temporary proposal and apply coordinated, allowlisted overrides. This does not create a Shopify product or save anything; a person must choose Keep or Revert in the page.",
-    inputSchema: createDesignInputSchema(manifest),
-    annotations: { readOnlyHint: false, untrustedContentHint: true },
+  const capabilitiesTool: WebMcpTool = {
+    name: "codesign_list_capabilities", title: "List customizer capabilities",
+    description: "List declared customer controls, current availability, variants, temporary asset slots, preview surfaces, and public dependencies for the current customizer.",
+    inputSchema: capabilitiesSchema(manifest), annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options) {
-      const parsed = parseCreateDesignInput(input, manifest);
-      if (!parsed) return invalidInput("The design creation input did not match the bounded public schema");
-      return session.createDesign(parsed, options?.signal === undefined ? {} : { signal: options.signal });
+      const parsed = parseCapabilities(input, manifest);
+      if (!parsed) return invalidInput("The capability request did not match the bounded public schema");
+      if (options?.signal?.aborted) return { ok: false, persisted: false, error: { code: "CANCELLED", message: "The capability read was cancelled", retryable: true } };
+      try {
+        const workspace = engine.proposedWorkspace ?? await engine.adapter.readWorkspace();
+        if (!targetExists(workspace, parsed)) return { ok: false, persisted: false, error: { code: "UNKNOWN_TARGET", message: "The requested visible target is unavailable", retryable: false } };
+        const categories = new Set(parsed.categories ?? ["controls", "variants", "assets", "previews", "dependencies"] as CapabilityCategory[]);
+        const dynamic = categories.has("controls")
+          ? await engine.adapter.listAvailability({ ...(parsed.variantId ? { variantId: parsed.variantId } : {}), ...(parsed.elementId ? { elementId: parsed.elementId } : {}), ...(parsed.controlIds ? { controlIds: parsed.controlIds } : {}) })
+          : { committedRevision: workspace.committedRevision, controls: [] };
+        const availability = new Map(dynamic.controls.map((control) => [control.controlId, control]));
+        const requested = parsed.controlIds ? new Set(parsed.controlIds) : null;
+        return {
+          ok: true, persisted: false, committedRevision: dynamic.committedRevision,
+          target: { variantId: parsed.variantId ?? null, elementId: parsed.elementId ?? null },
+          ...(categories.has("controls") ? { controls: manifest.controls.filter((control) => !requested || requested.has(control.id)).map((control) => controlCapability(control, availability)) } : {}),
+          ...(categories.has("variants") ? { variantPolicy: structuredClone(manifest.variantPolicy) } : {}),
+          ...(categories.has("assets") ? { assetSlots: structuredClone(manifest.assetSlots) } : {}),
+          ...(categories.has("previews") ? { previewSurfaces: structuredClone(manifest.previewSurfaces) } : {}),
+          ...(categories.has("dependencies") ? { dependencies: structuredClone(manifest.dependencyDescriptions) } : {}),
+        };
+      } catch { return adapterFailure("The public capabilities could not be listed safely"); }
+    },
+  };
+
+  const stageTool: WebMcpTool = {
+    name: "codesign_stage_asset", title: "Stage temporary product artwork",
+    description: "Stage one bounded asset for a declared customizer slot. Returns an opaque temporary handle; it does not create a normal upload or save the product.",
+    inputSchema: stageAssetSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
+    async execute(input, options) { return publicResult(await engine.stageAsset(input, options?.signal ? { signal: options.signal } : {})); },
+  };
+
+  const applyTool: WebMcpTool = {
+    name: "codesign_apply_proposal", title: "Apply a temporary custom-product proposal",
+    description: "Apply one atomic batch of typed customer changes to the merchant's visible renderer. Nothing persists until a person uses the visible page Keep control.",
+    inputSchema: applyProposalSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
+    async execute(input, options) { return publicResult(await engine.apply(input, options?.signal ? { signal: options.signal } : {})); },
+  };
+
+  const previewsTool: WebMcpTool = {
+    name: "codesign_get_previews", title: "Get current proposal previews",
+    description: "Capture verified renderer images for the exact current proposal revision and requested variants. A stale image is never returned as current.",
+    inputSchema: previewSchema(manifest), annotations: { readOnlyHint: true, untrustedContentHint: true },
+    async execute(input, options) {
+      const result = await engine.capturePreviews(input, options?.signal ? { signal: options.signal } : {});
+      if (!result.ok) return publicResult(result);
+      const validation = await engine.validate({ proposalId: result.proposalId, proposalRevision: result.proposalRevision }, options?.signal ? { signal: options.signal } : {});
+      if (!validation.ok) return publicResult(validation);
+      return { ...result, validation: validation.validation };
     },
   };
 
   const validateTool: WebMcpTool = {
-    name: "codesign_validate_configuration",
-    title: "Validate product configuration",
-    description: "Validate the current committed configuration or open temporary proposal for consistency and production readiness. This tool never saves, orders, quotes, or accepts a proof.",
-    inputSchema: VALIDATE_INPUT_SCHEMA,
-    annotations: { readOnlyHint: true, untrustedContentHint: true },
-    async execute(input) {
-      const parsed = parseValidateInput(input);
-      if (!parsed) return invalidInput("The validation request did not match the bounded public schema");
-      return session.validateConfiguration(parsed);
-    },
+    name: "codesign_validate_proposal", title: "Validate custom-product readiness",
+    description: "Validate the committed workspace or one exact temporary proposal with merchant-authoritative configuration and production-readiness rules. This never persists changes.",
+    inputSchema: VALIDATE_SCHEMA, annotations: { readOnlyHint: true, untrustedContentHint: true },
+    async execute(input, options) { return publicResult(await engine.validate(input, options?.signal ? { signal: options.signal } : {})); },
   };
 
-  return [readTool, listOptionsTool, proposeTool, createDesignTool, validateTool];
+  return [readTool, capabilitiesTool, stageTool, applyTool, previewsTool, validateTool];
 }
 
-export function registerCoDesignTools<Snapshot>(document: DocumentWithModelContext, dependencies: CoDesignToolDependencies<Snapshot>): WebMcpRegistration {
+export function registerCoDesignTools<Snapshot, PrivateAsset>(document: DocumentWithModelContext, dependencies: CoDesignToolDependencies<Snapshot, PrivateAsset>): WebMcpRegistration {
   const controller = new AbortController();
-  const tools = createCoDesignTools(dependencies);
-  if (!document.modelContext?.registerTool) {
-    return { supported: false, toolNames: [], unregister: () => controller.abort(), ready: Promise.resolve() };
+  if (dependencies.enabled === false) return { supported: false, toolNames: [], reason: "disabled", unregister: () => controller.abort(), ready: Promise.resolve() };
+  let tools: WebMcpTool[];
+  try { tools = createCoDesignTools(dependencies); } catch {
+    return { supported: false, toolNames: [], reason: "invalid-manifest", unregister: () => controller.abort(), ready: Promise.resolve() };
   }
-
-  const ready = Promise.all(tools.map((tool) => document.modelContext!.registerTool(tool, { signal: controller.signal }))).then(() => undefined);
+  if (!document.modelContext?.registerTool) return { supported: false, toolNames: [], reason: "unsupported-host", unregister: () => controller.abort(), ready: Promise.resolve() };
+  const ready = Promise.all(tools.map((tool) => Promise.resolve().then(() => document.modelContext!.registerTool(tool, { signal: controller.signal }))))
+    .then(() => undefined)
+    .catch(() => { controller.abort(); throw new Error("WebMCP tool registration failed"); });
+  let unregistered = false;
   return {
     supported: true,
     toolNames: tools.map((tool) => tool.name),
-    unregister: () => controller.abort(),
+    unregister() {
+      if (unregistered) return;
+      unregistered = true;
+      controller.abort();
+      void dependencies.engine.destroy();
+    },
     ready,
   };
 }

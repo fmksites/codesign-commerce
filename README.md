@@ -6,46 +6,18 @@ The 2026 WebMCP Challenge entry will use KORRHAUS's existing Custom Sock Designe
 
 ## Current status
 
-Local implementation began on 26 August 2026 after explicit approval. The current implementation contains:
+The public package and studio-tote reference now use Manifest 2.0 end to end:
 
-- A canonical, allowlisted configuration state.
-- A bounded manifest contract and validation.
-- An in-memory configurator adapter.
-- A proposal transaction with revisions, retry IDs, temporary preview, Revert, and human Keep.
-- Exactly five focused webpage tools registered through the current imperative WebMCP API: read configuration, list options, propose changes, create a design/colourway, and validate configuration.
-- Atomic proposal extension and idempotent design cloning for multi-colourway briefs.
-- Deterministic tests proving that proposal previews do not cross the persistence boundary.
-- A framework-neutral, accessible Keep/Revert review component.
-- A narrow private bridge that connects the same public runtime to KORRHAUS's
-  existing Sock Designer. While a proposal awaits review, only its colourway
-  tabs remain interactive: they switch the same live sock proof without saving,
-  while every edit and upload path stays locked. The corrected snapshot passed
-  local regression and fresh-origin zero-traffic actual-browser verification.
-  Production traffic remains unchanged, so live-Shopify WebMCP is not yet
-  claimed.
-- A materially different studio-tote example with its own manifest, adapter,
-  renderer, real product assets, coupled canvas/print rules, anonymous reset,
-  and the same unchanged five-tool core and review UI.
-- 95 deterministic public tests and prior clean-clone proof. The current private
-  integration passes syntax and focused lint, 41 Vitest files with 199 tests,
-  strict typecheck, production build, and the complete 142-case desktop/mobile
-  Designer run with 141 passes and one expected skip.
-- Cloud Build `2985b639-7524-4a09-85ac-f367b78865e7` produced immutable image
-  `sha256:1819173f…d9e3c`. Tagged acceptance revision
-  `codesign-review-qa2` passed the fresh-origin five-tool and read-only
-  colourway-switching flow at `0%` ordinary traffic. The older fixtures-off
-  `codesign-prod2` is superseded and must not be promoted; live traffic remains
-  `100%` on feature-off rollback revision `sock-logo-v2`.
+- A field-by-field guarded `WorkspaceState` with typed workspace, variant, element, asset, and transform controls.
+- An atomic operation reducer with proposal/base revisions, operation-ID idempotency, variants, validation, stale recovery, and exact Revert.
+- A bounded temporary-asset sandbox and revision-bound renderer preview bridge.
+- Exactly six webpage tools: `codesign_read_workspace`, `codesign_list_capabilities`, `codesign_stage_asset`, `codesign_apply_proposal`, `codesign_get_previews`, and `codesign_validate_proposal`.
+- No WebMCP Keep, Revert, save, order, quote, checkout, payment, upload, customer, pricing, supplier, or administration tool.
+- One accessible page review controller. Ordinary controls stay visible and lock only while a proposal is open; Keep stays disabled until the current visual preview exists.
+- A materially different studio-tote adapter using its existing visual renderer, real supplied artwork, coupled production rules, deterministic reset, browser-local Keep, and zero-write temporary proposals.
+- Deterministic unit, schema, lifecycle, safety, review, asset, and preview tests. Native Chrome 151 and the Codex in-app browser both discovered the exact six tools and executed a visible proposal/preview/Revert flow with zero writes.
 
-The repository is public and licensed under Apache-2.0. The corrected
-landing-plus-tote topology is published on `main`. Guarded-evidence commit
-`3c14a005ff126399a875873928a378ee22085384` is publicly reachable and passed
-hosted CI run `33073677187`; the exact final submission commit will be recorded
-after the remaining live and hosting gates. Public hosting, KORRHAUS production
-promotion, video publication, and Devpost submission remain incomplete or
-approval-gated.
-The API-backed 78-run model evaluation was explicitly removed as a submission
-gate; its corpus and scorer remain optional quality tooling.
+This is local implementation evidence, not a release claim. The full tote product pass, private KORRHAUS Manifest 2 adapter, public deployment/publication, literal ChatGPT release validation, production traffic, and Devpost submission remain incomplete or separately approval-gated. The optional model-evaluation corpus and scorer are quality tooling, not proof of an actual model run.
 
 ## Local verification
 
@@ -106,6 +78,7 @@ See:
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for runtime, transaction, and trust boundaries.
 - [docs/MANIFEST_AND_ADAPTER.md](./docs/MANIFEST_AND_ADAPTER.md) for merchant integration obligations.
 - [docs/WORKSPACE_AND_OPERATIONS.md](./docs/WORKSPACE_AND_OPERATIONS.md) for the Manifest 2.0 canonical state guard and atomic operation model.
+- [docs/WEBMCP_TOOLS.md](./docs/WEBMCP_TOOLS.md) for the exact six tools, schemas, review boundary, and browser lifecycle.
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the private flagship integration map and safety boundary.
 - [docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md](./docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md) for the distinction between on-page WebMCP capability and traffic acquisition.
 - [docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)

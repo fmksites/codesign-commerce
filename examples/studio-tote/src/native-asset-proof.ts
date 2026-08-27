@@ -4,7 +4,7 @@ import type { StudioToteAdapter } from "./configurator";
 
 interface NativeInvokingModelContext {
   getTools(): Promise<Array<{ name: string }>>;
-  executeTool(tool: { name: string }, input: string): Promise<unknown>;
+  executeTool(tool: { name: string }, input: unknown): Promise<unknown>;
 }
 interface NativeAssetProofOptions {
   document: Document & DocumentWithModelContext;
@@ -93,38 +93,48 @@ export function mountNativeAssetProof(options: NativeAssetProofOptions): HTMLEle
           if (!tool) throw new Error(`Native Chrome did not discover ${name}`);
           return tool;
         };
+        const executeTool = async (tool: { name: string }, toolInput: unknown) => {
+          try { return await modelContext.executeTool(tool, toolInput); }
+          catch (error) {
+            if (typeof toolInput !== "string") return modelContext.executeTool(tool, JSON.stringify(toolInput));
+            throw error;
+          }
+        };
 
+        const read = asRecord(await executeTool(findTool("codesign_read_workspace"), {}));
+        const baseRevision = read.workspace?.committedRevision;
+        if (typeof baseRevision !== "string") throw new Error("Native workspace read returned no revision");
         const source = await fileAsDataUrl(file);
-        const stage = asRecord(await modelContext.executeTool(findTool("codesign_stage_asset"), JSON.stringify({
+        const stage = asRecord(await executeTool(findTool("codesign_stage_asset"), {
+          baseRevision,
           slotId: "print-artwork",
           source: { kind: "data-url", data: source },
           filename: file.name,
           altText: "Supplied North Form NF mark",
-        })));
+        }));
         if (stage.ok !== true || typeof stage.asset?.assetHandle !== "string") throw new Error(`Native asset stage failed: ${JSON.stringify(stage)}`);
 
-        const read = asRecord(await modelContext.executeTool(findTool("codesign_read_configuration"), "{}"));
-        const baseRevision = read.state?.revision;
-        if (typeof baseRevision !== "string") throw new Error("Native configuration read returned no revision");
-        const proposal = asRecord(await modelContext.executeTool(findTool("codesign_propose_configuration"), JSON.stringify({
+        const proposal = asRecord(await executeTool(findTool("codesign_apply_proposal"), {
           baseRevision,
           operationId: "chrome-native-supplied-artwork-proof",
-          changes: [
-            { designId: "tote-1", optionId: "design.name", value: "North Form supplied artwork" },
-            { designId: "tote-1", optionId: "bag.color", value: "charcoal" },
-            { designId: "tote-1", optionId: "print.position", value: "upper-left" },
-            { designId: "tote-1", optionId: "branding.artwork_ref", value: stage.asset.assetHandle },
+          operations: [
+            { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.name", value: "North Form supplied artwork" },
+            { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "bag.color", value: "charcoal" },
+            { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "print.position", value: "upper-left" },
+            { type: "attach-asset", target: { scope: "variant", variantId: "tote-1" }, controlId: "branding.artwork_ref", assetHandle: stage.asset.assetHandle },
           ],
           assumptions: ["The selected raster file is temporary until visible page Keep."],
-        })));
+        }));
         if (proposal.ok !== true || typeof proposal.proposalId !== "string" || typeof proposal.proposalRevision !== "number") {
           throw new Error(`Native asset proposal failed: ${JSON.stringify(proposal)}`);
         }
-        const preview = asRecord(await modelContext.executeTool(findTool("codesign_get_previews"), JSON.stringify({
+        const preview = asRecord(await executeTool(findTool("codesign_get_previews"), {
           proposalId: proposal.proposalId,
           proposalRevision: proposal.proposalRevision,
-          variantId: "tote-1",
-        })));
+          baseRevision,
+          variantIds: ["tote-1"],
+          surfaceIds: ["product-preview"],
+        }));
         const artifact = preview.artifacts?.[0];
         if (preview.ok !== true || artifact?.transport?.kind !== "data-url" || typeof artifact.transport.value !== "string") {
           throw new Error(`Native supplied-artwork preview failed: ${JSON.stringify(preview)}`);

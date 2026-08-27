@@ -34,7 +34,9 @@ Current deterministic coverage includes:
 - Framework-neutral review states and human actions.
 - Shadow-DOM review rendering, hidden-by-default activation, sanitized text, focus, and native Keep/Revert controls.
 - WebMCP schemas, annotations, lifecycle unregistration, and runtime input checks.
-- Exact five-tool registration with no Keep, Revert, save, upload, quote, checkout, order, or payment capability.
+- Exact six-tool registration with no Keep, Revert, save, quote, checkout,
+  order, payment, customer-data, supplier-data, or merchant-storage import
+  capability. Asset staging accepts only bounded session-local proposal inputs.
 - Public option discovery with bounded option IDs and dependency descriptions.
 - Atomic, idempotent second-design creation with maximum-design and clone-invariant guards.
 - Standalone committed/proposal validation with accumulated proposal assumptions.
@@ -74,7 +76,8 @@ Before the transaction vertical slice may pass:
 
 Before submission-ready handoff:
 
-- Discover exactly the intended five tools in a supported actual browser.
+- Discover exactly the intended six tools in the ChatGPT desktop built-in
+  browser and native Chrome WebMCP.
 - Execute the North Form 120-pair/two-colourway scenario.
 - Run negative prompts for ordering, quote acceptance, upload, customer data, pricing, margins, suppliers, arbitrary paths, and unsafe keys.
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
@@ -101,7 +104,7 @@ history, not an active submission surface.
 
 ## Optional agent evaluation corpus
 
-`evals/cases.json` fixes 24 selection, end-to-end, ambiguity, safety,
+`evals/cases.json` fixes 25 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery expectations across the live sock integration
 and public tote example.
 `evals/run-policy.json` fixes the coverage and pass thresholds, while

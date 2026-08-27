@@ -2,6 +2,7 @@ import {
   AssetSandbox,
   AssetSandboxError,
   type AdapterAssetStageRequest,
+  type AssetResolver,
   type AssetStagingAdapter,
   ConfigurationState,
   DocumentWithModelContext,
@@ -107,6 +108,7 @@ export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioTote
   #committed = new Map<string, StudioToteResolvedAsset>();
   #sandbox: AssetSandbox<StudioToteResolvedAsset>;
   #baseRevision = () => "tote-revision-1";
+  #proposalAssets: AssetResolver<StudioToteResolvedAsset> | null = null;
 
   constructor(committedAssets: unknown = []) {
     this.#sandbox = new AssetSandbox(toteManifest, this);
@@ -137,6 +139,10 @@ export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioTote
 
   setBaseRevisionProvider(provider: () => string): void {
     this.#baseRevision = provider;
+  }
+
+  setProposalAssetResolver(resolver: AssetResolver<StudioToteResolvedAsset> | null): void {
+    this.#proposalAssets = resolver;
   }
 
   async stage(input: StudioToteAssetStageInput): Promise<StudioToteAssetReceipt> {
@@ -199,7 +205,23 @@ export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioTote
   resolve(assetReference: unknown): StudioToteResolvedAsset | null {
     if (typeof assetReference !== "string") return null;
     const asset = this.#temporary.get(assetReference) ?? this.#committed.get(assetReference);
-    return asset ? structuredClone(asset) : null;
+    if (asset) return structuredClone(asset);
+    const resolved = this.#proposalAssets?.resolve(assetReference);
+    if (!resolved) return null;
+    return structuredClone({
+      ...resolved.privateAsset,
+      assetHandle: resolved.receipt.assetHandle,
+      slotId: "print-artwork",
+      mediaType: resolved.receipt.mediaType as StudioToteProofMediaType,
+      byteLength: resolved.receipt.byteLength,
+      ...(resolved.receipt.filename === undefined ? {} : { filename: resolved.receipt.filename }),
+      altText: resolved.receipt.altText,
+      integrity: resolved.receipt.integrity,
+      temporary: true,
+      sourceIntegrity: resolved.receipt.sourceIntegrity,
+      expiresAt: resolved.receipt.expiresAt,
+      persisted: false,
+    });
   }
 
   commitState(state: ConfigurationState): ConfigurationState {
@@ -208,16 +230,19 @@ export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioTote
       const currentReference = design.selections["branding.artwork_ref"];
       if (typeof currentReference !== "string") continue;
       const temporary = this.#temporary.get(currentReference);
-      const existing = temporary ?? this.#committed.get(currentReference);
+      const external = temporary ? null : this.#proposalAssets?.resolve(currentReference) ?? null;
+      const externalAsset = external ? this.resolve(currentReference) : null;
+      const existing = temporary ?? this.#committed.get(currentReference) ?? externalAsset;
       if (!existing) throw new AssetProofError("UNKNOWN_ASSET", "The temporary artwork was no longer available at Keep.");
       let committedReference = currentReference;
-      if (temporary) {
-        committedReference = `saved-${temporary.integrity.slice("sha256:".length, "sha256:".length + 24)}`;
-        const { sourceIntegrity: _sourceIntegrity, expiresAt: _expiresAt, persisted: _persisted, ...persistable } = temporary;
+      if (temporary || externalAsset) {
+        const imported = temporary ?? externalAsset!;
+        committedReference = `saved-${imported.integrity.slice("sha256:".length, "sha256:".length + 24)}`;
+        const { sourceIntegrity: _sourceIntegrity, expiresAt: _expiresAt, persisted: _persisted, ...persistable } = imported;
         this.#committed.set(committedReference, { ...persistable, assetHandle: committedReference, temporary: false });
         this.#temporary.delete(currentReference);
         this.counters.importCalls += 1;
-        void this.#sandbox.releaseHandle(currentReference);
+        if (temporary) void this.#sandbox.releaseHandle(currentReference);
       }
       design.selections["branding.artwork_ref"] = committedReference;
       design.assets = design.assets.map((asset) => asset.slot === "print-artwork" ? { ...asset, status: "ready" } : asset);

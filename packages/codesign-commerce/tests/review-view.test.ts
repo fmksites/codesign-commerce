@@ -1,151 +1,118 @@
 // @vitest-environment happy-dom
 
 import { afterEach, describe, expect, test, vi } from "vitest";
-import {
-  InMemoryConfiguratorAdapter,
-  mountProposalReview,
-  ProposalReviewController,
-  ProposalSession,
-} from "../src/index.js";
-import { testManifest, testState } from "./fixtures.js";
+import { mountProposalReview, PreviewBridge, ProposalEngine, ProposalReviewController } from "../src/index.js";
+import { workspaceTestManifest } from "./workspace-fixtures.js";
+import { V2TestAdapter } from "./v2-test-adapter.js";
 
 function setup() {
   const container = document.createElement("div");
   document.body.append(container);
-  const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState));
-  const session = new ProposalSession(structuredClone(testManifest), adapter);
-  const controller = new ProposalReviewController(testManifest, session);
+  const adapter = new V2TestAdapter();
+  const previewBridge = new PreviewBridge(workspaceTestManifest, adapter);
+  const engine = new ProposalEngine(workspaceTestManifest, adapter, { previewBridge });
+  const controller = new ProposalReviewController(workspaceTestManifest, engine);
   const view = mountProposalReview(container, controller, {
-    formatSummary: ({ designCount, totalQuantity }) => `${designCount} ${designCount === 1 ? "design" : "designs"} · ${totalQuantity} pairs`,
+    formatSummary: ({ variantCount, activeVariantName }) => `${variantCount} ${variantCount === 1 ? "design" : "designs"} · ${activeVariantName}`,
   });
-  return { adapter, container, controller, session, view };
+  return { adapter, container, controller, engine, view };
 }
 
-afterEach(() => {
-  document.body.replaceChildren();
-  vi.restoreAllMocks();
+const proposalInput = (operationId = "view-direction", assumptions?: string[]) => ({
+  baseRevision: "workspace-revision-1",
+  operationId,
+  operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "body.color", value: "navy" }],
+  ...(assumptions ? { assumptions } : {}),
 });
 
-async function waitFor(check: () => void): Promise<void> {
-  await vi.waitFor(check, { timeout: 1_000, interval: 5 });
+async function capture(engine: ProposalEngine<any, any>) {
+  const snapshot = engine.snapshot;
+  if (!snapshot.proposalId || !snapshot.baseRevision) throw new Error("expected proposal");
+  await engine.capturePreviews({ proposalId: snapshot.proposalId, proposalRevision: snapshot.proposalRevision, baseRevision: snapshot.baseRevision });
 }
 
+afterEach(() => { document.body.replaceChildren(); vi.restoreAllMocks(); });
+
+async function waitFor(check: () => void): Promise<void> { await vi.waitFor(check, { timeout: 1_000, interval: 5 }); }
+
 describe("mountProposalReview", () => {
-  test("stays hidden during ordinary page use and reveals only a ready agent proposal", async () => {
-    const { session, view } = setup();
-
+  test("stays hidden during ordinary use and reveals a successful agent proposal", async () => {
+    const { engine, view } = setup();
     expect(view.element.hidden).toBe(true);
-    expect(view.element.shadowRoot?.querySelector(".panel")).toBeNull();
-
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "view-visible-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-      assumptions: ["Logo artwork will be supplied later."],
-    });
-
+    await engine.apply(proposalInput("view-visible", ["Logo artwork will be supplied later."]));
     const root = view.element.shadowRoot!;
     expect(view.element.hidden).toBe(false);
     expect(root.textContent).toContain("Temporary · Not saved");
     expect(root.textContent).toContain("Agent proposal");
-    expect(root.textContent).toContain("1 design · 60 pairs");
-    expect(root.textContent).toContain("Body colour");
+    expect(root.textContent).toContain("1 design · Cream direction");
+    expect(root.textContent).toContain("Cream direction · Body colour");
     expect(root.textContent).toContain("Cream");
     expect(root.textContent).toContain("Navy");
     expect(root.textContent).toContain("Assumption: Logo artwork will be supplied later.");
-    expect(root.textContent).toContain("Not production ready");
-    expect(root.activeElement).toBe(root.querySelector(".panel"));
+    expect(root.textContent).toContain("Waiting for a current visual preview.");
+    expect((root.querySelector("button.primary") as HTMLButtonElement).disabled).toBe(true);
   });
 
   test("renders untrusted proposal text as text rather than HTML", async () => {
-    const { session, view } = setup();
+    const { engine, view } = setup();
     const payload = `<img src=x onerror="globalThis.compromised=true">`;
-
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "view-safe-text-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-      assumptions: [payload],
-    });
-
+    await engine.apply(proposalInput("view-safe-text", [payload]));
     const root = view.element.shadowRoot!;
     expect(root.querySelector("img")).toBeNull();
     expect(root.textContent).toContain(payload);
   });
 
-  test("shows a newly created colourway in the human review surface", async () => {
-    const { session, view } = setup();
-    await session.createDesign({
-      baseRevision: "revision-1",
-      operationId: "view-created-design-1",
-      sourceDesignId: "design-1",
-      changes: [{ designId: "design-1", optionId: "design.quantity", value: 30 }],
-      newDesignChanges: [
-        { optionId: "design.name", value: "North Form Rose" },
-        { optionId: "design.quantity", value: 30 },
-        { optionId: "body.color", value: "rose" },
+  test("shows a newly created variant in the review surface", async () => {
+    const { engine, view } = setup();
+    await engine.apply({
+      baseRevision: "workspace-revision-1",
+      operationId: "view-created-variant",
+      operations: [
+        { type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "design.quantity", value: 30 },
+        { type: "duplicate-variant", sourceVariantId: "variant-1", variantId: "variant-2", name: "North Form Rose", initialControls: { "design.quantity": 30, "body.color": "rose" } },
       ],
     });
-
-    const root = view.element.shadowRoot!;
-    expect(root.textContent).toContain("2 designs · 60 pairs");
-    expect(root.textContent).toContain("New colourway");
-    expect(root.textContent).toContain("North Form Rose");
-    expect(root.textContent).toContain("Temporary · Not saved");
+    const text = view.element.shadowRoot!.textContent;
+    expect(text).toContain("2 designs · Cream direction");
+    expect(text).toContain("New colourway");
+    expect(text).toContain("North Form Rose");
   });
 
-  test("Revert restores the preview without persistence and publishes the outcome", async () => {
-    const { adapter, session, view } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "view-revert-1",
-      changes: [{ designId: "design-1", optionId: "accent.color", value: "berry" }],
-    });
-
-    const revert = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Revert");
-    expect(revert).toBeDefined();
-    (revert as HTMLButtonElement).click();
-
+  test("Revert restores the preview without persistence", async () => {
+    const { adapter, engine, view } = setup();
+    await engine.apply(proposalInput("view-revert"));
+    const revert = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Revert") as HTMLButtonElement;
+    revert.click();
     await waitFor(() => expect(view.element.shadowRoot!.textContent).toContain("Proposal reverted"));
-    expect(adapter.visibleState).toEqual(adapter.committedState);
+    expect(adapter.visible).toEqual(adapter.committed);
     expect(adapter.counters.localWrites).toBe(0);
-    expect(adapter.counters.serverWrites).toBe(0);
   });
 
-  test("Keep is a visible page action and persists exactly once", async () => {
-    const { adapter, session, view } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "view-keep-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
-
-    const keep = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Keep proposal");
-    expect(keep).toBeDefined();
-    (keep as HTMLButtonElement).click();
-
+  test("Keep becomes available only after preview capture and persists once", async () => {
+    const { adapter, engine, view } = setup();
+    await engine.apply(proposalInput("view-keep"));
+    let keep = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Keep proposal") as HTMLButtonElement;
+    expect(keep.disabled).toBe(true);
+    await capture(engine);
+    keep = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Keep proposal") as HTMLButtonElement;
+    expect(keep.disabled).toBe(false);
+    keep.click();
     await waitFor(() => expect(view.element.shadowRoot!.textContent).toContain("Proposal kept"));
     expect(adapter.counters.localWrites).toBe(1);
     expect(adapter.counters.serverWrites).toBe(1);
   });
 
-  test("shows a human retry after an expected server-save failure", async () => {
-    const { adapter, session, view } = setup();
-    await session.propose({
-      baseRevision: "revision-1",
-      operationId: "view-retry-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
+  test("shows a retry without Revert after a partial save", async () => {
+    const { adapter, engine, view } = setup();
+    await engine.apply(proposalInput("view-retry"));
+    await capture(engine);
     adapter.failServerSave = true;
-
-    const keep = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Keep proposal");
-    (keep as HTMLButtonElement).click();
-
+    const keep = [...view.element.shadowRoot!.querySelectorAll("button")].find((candidate) => candidate.textContent === "Keep proposal") as HTMLButtonElement;
+    keep.click();
     await waitFor(() => expect(view.element.shadowRoot!.textContent).toContain("Save needs attention"));
     expect(view.element.shadowRoot!.textContent).toContain("Retry save");
     expect(view.element.shadowRoot!.textContent).not.toContain("Revert");
     expect(adapter.counters.localWrites).toBe(1);
-    expect(adapter.counters.serverWrites).toBe(0);
   });
 
   test("destroy removes the host and subscription", () => {

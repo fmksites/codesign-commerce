@@ -18,16 +18,16 @@ document.modelContext.registerTool(...)
 CoDesign tool handlers
     │ revisions, operation IDs, one active proposal
     ▼
-ProposalSession ─────── ConfiguratorManifest
+ProposalEngine ──────── ConfiguratorManifest 2.0
     │                         │
-    │ canonical state         └── semantic options and public constraints
+    │ canonical workspace     └── typed controls, assets, variants, previews
     ▼
-Runtime adapter guard
+GuardedWorkspaceAdapter
     │ field-by-field reconstruction; malformed output fails closed
     ▼
 Merchant adapter
-    ├── allowlisted state mapping
-    ├── public-safe draft design cloning
+    ├── allowlisted workspace mapping
+    ├── typed variant operations
     ├── persistence quiescence
     ├── private raw snapshot
     ├── zero-write preview and restore
@@ -38,21 +38,20 @@ Merchant adapter
 Existing configurator UI, renderer, and persistence
 ```
 
-The generic core never reads merchant raw state. A private snapshot may contain raw state, but it stays inside the adapter. The core receives only serializable canonical values.
+The generic core never reads merchant raw state. A private snapshot may contain raw state, but it stays inside the adapter. The core receives only a field-by-field reconstructed `WorkspaceState` and opaque temporary asset handles.
 
 ## Proposal transaction
 
 ```text
-IDLE
-  │ propose against current committed revision
-  ▼
-APPLYING ── failure/cancel ──► restore snapshot ──► IDLE
-  │ zero-write preview
-  ▼
-AWAITING HUMAN
-  ├── Revert ────────────────► zero-write restore ──► IDLE
-  ├── external revision ─────► INVALIDATED ─────────► restore latest ─► IDLE
-  └── Keep
+IDLE ─► BUILDING ─► VALIDATING ─► RENDERING ─► REVIEWABLE
+                                                │
+                                  capture exact current previews
+                                                │
+                                                ▼
+                                      HUMAN KEEP / REVERT
+  ├── Revert ───────────────────────► zero-write restore ─► IDLE
+  ├── external revision ────────────► STALE ─► restore latest ─► IDLE
+  └── visible page Keep
          ▼
      COMMITTING
        ├── local + server success ────────────────► IDLE
@@ -64,12 +63,13 @@ Rules enforced by the core:
 
 - One proposal session at a time.
 - Every mutating operation names its committed base revision.
-- An extension also names the current proposal ID and proposal revision.
+- A refinement also names the current proposal ID and proposal revision.
 - Operation IDs are bounded safe identifiers and deduplicate successful retries.
-- Every batch is validated on a detached copy before any preview update.
+- Every typed operation batch is validated on a detached workspace before any preview update.
 - External changes are rechecked after every asynchronous draft, validation,
   and preview boundary.
-- Keep and Revert are controller methods intended only for visible page controls; they are not WebMCP tools.
+- Current renderer artifacts are bound to the exact proposal, revision, variant, surface, and workspace hash; stale or failed capture blocks Keep.
+- Keep and Revert are controller methods used only by visible page controls; they are not WebMCP tools.
 - Keep is rejected when another operation is in flight or the committed state changed.
 - Keep passes the proposal's base revision to the adapter, which must compare it
   with current committed state immediately before the first local write.
@@ -82,25 +82,26 @@ Rules enforced by the core:
 
 The complete public runtime registers exactly:
 
-- `codesign_read_configuration` — read-only canonical state and proposal metadata.
-- `codesign_list_options` — read-only public option values, availability, bounds, and dependency descriptions.
-- `codesign_propose_configuration` — a temporary, visible, zero-write change to existing designs.
-- `codesign_create_design` — a zero-write clone inside the same proposal, with coordinated source, order, and new-design changes.
-- `codesign_validate_configuration` — read-only consistency and production-readiness validation for the committed state or open proposal.
+- `codesign_read_workspace` — read-only committed workspace plus bounded proposal metadata.
+- `codesign_list_capabilities` — read-only controls, availability, variant operations, asset slots, preview surfaces, and public dependencies.
+- `codesign_stage_asset` — stage one bounded temporary asset and return only an opaque handle.
+- `codesign_apply_proposal` — apply an atomic typed operation batch to the existing visible renderer with zero writes.
+- `codesign_get_previews` — capture current revision-bound renderer images and validation.
+- `codesign_validate_proposal` — read-only configuration and production-readiness validation for committed or proposed state.
 
-`codesign_create_design` does not create a Shopify product or catalog variant. The adapter supplies a detached canonical clone, the core verifies clone invariants, applies all changes atomically, validates the complete state, and only then renders the temporary preview.
+Variant creation is a typed `codesign_apply_proposal` operation. It creates a temporary customizer variant, never a Shopify catalog variant. The core reduces the complete batch on a detached workspace, validates it, and only then invokes the merchant renderer.
 
 The implementation follows the current imperative API documented by [Chrome](https://developer.chrome.com/docs/ai/webmcp/imperative-api) and the [WebMCP Community Group specification](https://webmachinelearning.github.io/webmcp/). WebMCP remains experimental, so actual supported-browser verification is a release gate.
 
 ## Trust model
 
-Tool inputs are untrusted even when a browser is expected to enforce their JSON Schema. Handlers repeat essential structural checks at runtime. Schemas reject additional properties, arbitrary paths, URLs, HTML, file content, and unbounded arrays or text.
+Tool inputs are untrusted even when a browser is expected to enforce their JSON Schema. Handlers repeat essential structural checks at runtime. Schemas use `additionalProperties: false` throughout and reject arbitrary paths, undeclared sources, HTML, unbounded arrays, and oversized text or assets.
 
 Tool output is an allowlist, not a redacted raw object. A runtime adapter guard
-rebuilds every public state, option, validation, clone, and commit result from
+rebuilds every public workspace, availability, validation, preview, and commit result from
 declared canonical fields; extra nested fields never pass through and malformed
-results become generic failures. The tool factory uses the proposal session's
-detached, validated manifest rather than trusting a second caller-supplied
+results become generic failures. The tool factory uses the proposal engine's
+detached, validated manifest rather than accepting a second caller-supplied
 reference. User-originated names, text, assumptions, or selections are marked
 with `untrustedContentHint: true`. Errors use public codes and never return
 stack traces.
@@ -124,17 +125,21 @@ packages/codesign-commerce/
   src/
     types.ts                 canonical contracts
     manifest.ts              structural and semantic validation
-    adapter-boundary.ts      runtime output reconstruction and fail-closed guards
-    proposal-session.ts      transaction and concurrency rules
+    workspace.ts             canonical workspace reconstruction
+    operations.ts            atomic typed-operation reducer
+    workspace-adapter.ts     runtime output reconstruction and fail-closed guards
+    proposal-engine.ts       transaction, resources, and concurrency rules
+    asset-sandbox.ts         bounded temporary-asset lifecycle
+    preview-bridge.ts        revision-bound renderer artifacts
     review-controller.ts     framework-neutral human-review state
     review-view.ts           accessible Keep/Revert web component
-    webmcp.ts                tool definitions and page lifecycle
+    webmcp.ts                exact six-tool registry and shared lifecycle
     in-memory-adapter.ts     deterministic reference adapter
   tests/
-    adapter-contract.test.ts
-    adapter-boundary.test.ts
+    workspace-adapter.test.ts
+    proposal-engine.test.ts
+    proposal-resources.test.ts
     manifest.test.ts
-    proposal-session.test.ts
     review-controller.test.ts
     review-view.test.ts
     webmcp.test.ts

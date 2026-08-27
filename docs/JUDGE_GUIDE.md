@@ -60,7 +60,7 @@ Open the verified English KORRHAUS flagship URL from the judge landing. In a new
 anonymous Designer session, choose the normal fully-custom route and wait for
 the existing Designer to finish saving its baseline before asking the agent:
 
-The route chooser deliberately remains the normal human interface. The five
+The route chooser deliberately remains the normal human interface. The six
 CoDesign tools register on that same page only after Route 02 is open with
 catalog-supported choices. An agent may reach that route through ordinary
 browser interaction, but WebMCP itself does not silently choose a product route
@@ -70,14 +70,21 @@ or create a draft on page load.
 
 The intended tool sequence is:
 
-1. `codesign_read_configuration` reads the current allowlisted Designer state
-   and its committed revision.
-2. `codesign_list_options` requests only the option groups needed for the brief.
-3. `codesign_propose_configuration` stages the first colourway against that
-   exact revision without invoking the existing autosave path.
-4. `codesign_create_design` extends the same temporary proposal, creates the
-   second colourway, and splits the quantity 60/60.
-5. `codesign_validate_configuration` validates the temporary proposal.
+1. `codesign_read_workspace` reads the current allowlisted workspace and its
+   committed revision.
+2. `codesign_list_capabilities` requests only the controls, variants, assets,
+   previews, and dependencies needed for the brief.
+3. `codesign_apply_proposal` stages coherent atomic passes against that exact
+   revision: foundation first, then branding and the second colourway. Neither
+   pass invokes the existing autosave path.
+4. `codesign_get_previews` captures revision-bound raster previews from the
+   same renderer the customer sees.
+5. `codesign_validate_proposal` checks the complete temporary collection.
+
+If final artwork is supplied, `codesign_stage_asset` validates it into a
+session-local opaque handle before the branding pass. The page renders that
+actual temporary asset, but it is imported into merchant storage only after a
+person chooses Keep.
 
 Expected visible and structured result:
 
@@ -102,9 +109,11 @@ Open a fresh `/tote/?reset=true` URL and use this exact prompt:
 
 > Create 100 studio totes split evenly across two variants. Make the first natural 12 oz canvas with long handles and a centered one-colour print. Make the second charcoal with short handles and an upper-left print. Leave final artwork for later.
 
-The intended sequence uses the same five tools. The option values, dependencies,
+The intended sequence uses the same six tools. The option values, dependencies,
 renderer, persisted human fixture, and validation belong to the tote adapter
-rather than the CoDesign core.
+rather than the CoDesign core. A judge run with supplied artwork must stage and
+visibly render the actual image; the studio name is the typography fallback
+when no artwork is supplied.
 
 Expected result:
 

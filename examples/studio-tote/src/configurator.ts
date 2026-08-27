@@ -2,18 +2,26 @@ import {
   validateOptionValue,
   type CommitMetadata,
   type CommitResult,
+  type AssetResolver,
+  type AvailabilityRequest,
+  type AvailabilityResult,
   type ConfigurationState,
   type ConfiguratorAdapter,
   type ConfiguratorManifest,
   type CreateDesignDraftRequest,
   type CreateDesignDraftResult,
   type JsonPrimitive,
+  type ProposalContext,
+  type ProposalEndReason,
   type OptionRequest,
   type OptionResult,
   type ValidationIssue,
   type ValidationResult,
+  type WorkspaceAdapter,
+  type WorkspaceState,
+  type WorkspaceValidationResult,
 } from "@codesign-commerce/core";
-import type { StudioToteAssetProofStore } from "./asset-proof";
+import type { StudioToteAssetProofStore, StudioToteResolvedAsset } from "./asset-proof";
 
 export const toteManifest: ConfiguratorManifest = {
   schemaVersion: "2.0",
@@ -253,7 +261,53 @@ export interface ToteAdapterCounters {
 
 const clone = <T>(value: T): T => structuredClone(value);
 
-export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
+export function configurationToWorkspace(state: ConfigurationState): WorkspaceState {
+  return {
+    configuratorId: toteManifest.id,
+    manifestVersion: toteManifest.version,
+    committedRevision: state.revision,
+    activeVariantId: state.activeDesignId,
+    workspaceControls: { "order.total_quantity": state.order.totalQuantity },
+    variants: state.designs.map((design) => ({
+      id: design.id,
+      name: design.name,
+      controls: {
+        ...clone(design.selections),
+        "design.quantity": design.quantity,
+        "branding.artwork_status": design.assets.find((asset) => asset.slot === "print-artwork")?.status ?? "missing",
+      },
+      elements: [],
+    })),
+  };
+}
+
+export function workspaceToConfiguration(workspace: WorkspaceState): ConfigurationState {
+  return {
+    configuratorId: toteManifest.id,
+    manifestVersion: toteManifest.version,
+    revision: workspace.committedRevision,
+    activeDesignId: workspace.activeVariantId,
+    order: { totalQuantity: Number(workspace.workspaceControls["order.total_quantity"]) },
+    designs: workspace.variants.map((variant) => {
+      const quantity = Number(variant.controls["design.quantity"]);
+      const status = variant.controls["branding.artwork_status"];
+      const selections: Record<string, JsonPrimitive> = {};
+      for (const [controlId, value] of Object.entries(variant.controls)) {
+        if (controlId === "design.quantity" || controlId === "branding.artwork_status" || (typeof value === "object" && value !== null)) continue;
+        selections[controlId] = value;
+      }
+      return {
+        id: variant.id,
+        name: variant.name,
+        quantity,
+        selections,
+        assets: [{ slot: "print-artwork", status: status === "ready" || status === "missing" ? status : "placeholder", agentWritable: false }],
+      };
+    }),
+  };
+}
+
+export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, WorkspaceAdapter<ToteSnapshot, StudioToteResolvedAsset> {
   #committed: ConfigurationState;
   #visible: ConfigurationState;
   #revisionNumber = 1;
@@ -289,6 +343,24 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
   get committedState(): ConfigurationState { return clone(this.#committed); }
 
   async readState(): Promise<ConfigurationState> { return this.committedState; }
+
+  async readWorkspace(): Promise<WorkspaceState> { return configurationToWorkspace(this.committedState); }
+
+  async listAvailability(request: AvailabilityRequest): Promise<AvailabilityResult> {
+    const result = await this.listOptions({
+      ...(request.variantId === undefined ? {} : { designId: request.variantId }),
+      ...(request.controlIds === undefined ? {} : { optionIds: request.controlIds }),
+    });
+    return {
+      committedRevision: result.revision,
+      controls: result.options.map((option) => ({
+        controlId: option.optionId,
+        available: option.allowed,
+        ...(option.values === undefined ? {} : { values: option.values }),
+        ...(option.reason === undefined ? {} : { reason: option.reason }),
+      })),
+    };
+  }
 
   async listOptions(request: OptionRequest): Promise<OptionResult> {
     const requested = request.optionIds ? new Set(request.optionIds) : null;
@@ -327,10 +399,17 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
 
   async quiescePersistence(): Promise<void> { this.counters.quiesceCalls += 1; }
   async captureSnapshot(): Promise<ToteSnapshot> { return { committed: this.committedState }; }
+  async beginProposalMode(_context: ProposalContext): Promise<void> {}
+  async endProposalMode(_reason: ProposalEndReason): Promise<void> { this.#assetStore?.setProposalAssetResolver(null); }
 
   async previewState(state: ConfigurationState): Promise<void> {
     this.counters.previewCalls += 1;
     this.#visible = clone(state);
+  }
+
+  async previewWorkspace(workspace: WorkspaceState, assets?: AssetResolver<StudioToteResolvedAsset>): Promise<void> {
+    this.#assetStore?.setProposalAssetResolver(assets ?? null);
+    await this.previewState(workspaceToConfiguration(workspace));
   }
 
   async validateState(state: ConfigurationState): Promise<ValidationResult> {
@@ -409,6 +488,23 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
     };
   }
 
+  async validateWorkspace(workspace: WorkspaceState, assets?: AssetResolver<StudioToteResolvedAsset>): Promise<WorkspaceValidationResult> {
+    this.#assetStore?.setProposalAssetResolver(assets ?? null);
+    const result = await this.validateState(workspaceToConfiguration(workspace));
+    return {
+      configurationValid: result.configurationValid,
+      productionReady: result.productionReady,
+      issues: result.issues.map((issue) => ({
+        code: issue.code,
+        severity: issue.severity,
+        message: issue.message,
+        ...(issue.optionIds === undefined ? {} : { controlIds: issue.optionIds }),
+        ...(issue.designIds === undefined ? {} : { variantIds: issue.designIds }),
+      })),
+      assumptions: [...result.assumptions],
+    };
+  }
+
   async restoreSnapshot(snapshot: ToteSnapshot): Promise<void> {
     this.counters.restoreCalls += 1;
     this.#visible = clone(snapshot.committed);
@@ -438,6 +534,11 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot> {
       for (const listener of this.#listeners) listener(revision);
     }
     return { revision, localPersisted: true, serverPersisted: true };
+  }
+
+  async commitWorkspace(workspace: WorkspaceState, metadata: CommitMetadata, assets?: AssetResolver<StudioToteResolvedAsset>): Promise<CommitResult> {
+    this.#assetStore?.setProposalAssetResolver(assets ?? null);
+    return this.commitState(workspaceToConfiguration(workspace), metadata);
   }
 
   subscribeToExternalChanges(listener: (revision: string) => void): () => void {

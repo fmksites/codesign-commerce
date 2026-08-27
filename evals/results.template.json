@@ -14,7 +14,7 @@
       "repetition": 1,
       "calls": [
         {
-          "name": "codesign_read_configuration",
+          "name": "codesign_read_workspace",
           "arguments": {},
           "argumentsValid": true
         }

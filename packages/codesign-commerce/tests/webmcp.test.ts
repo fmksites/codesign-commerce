@@ -1,316 +1,234 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import {
+  AssetSandbox,
+  CODESIGN_TOOL_NAMES,
   createCoDesignTools,
-  InMemoryConfiguratorAdapter,
-  ProposalSession,
+  PreviewBridge,
+  ProposalEngine,
   registerCoDesignTools,
   type WebMcpTool,
 } from "../src/index.js";
-import { testManifest, testState } from "./fixtures.js";
+import { workspaceTestManifest } from "./workspace-fixtures.js";
+import { tinyPng, V2TestAdapter } from "./v2-test-adapter.js";
 
 function isRecord(value: unknown): value is Record<string, any> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function setup() {
-  const adapter = new InMemoryConfiguratorAdapter(structuredClone(testState), structuredClone(testManifest));
-  const session = new ProposalSession(structuredClone(testManifest), adapter);
-  const tools = createCoDesignTools({ manifest: testManifest, adapter, session });
-  return { adapter, session, tools };
+  const adapter = new V2TestAdapter();
+  const assetSandbox = new AssetSandbox(workspaceTestManifest, adapter);
+  const previewBridge = new PreviewBridge(workspaceTestManifest, adapter);
+  const engine = new ProposalEngine(workspaceTestManifest, adapter, { assetSandbox, previewBridge });
+  const tools = createCoDesignTools({ engine });
+  return { adapter, engine, tools };
 }
 
-describe("CoDesign WebMCP tools", () => {
+function applyInput(operationId = "change-colour") {
+  return {
+    baseRevision: "workspace-revision-1",
+    operationId,
+    operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "body.color", value: "navy" }],
+  };
+}
+
+function assertClosedObjects(schema: unknown): void {
+  if (!isRecord(schema)) return;
+  if (schema.type === "object") expect(schema.additionalProperties).toBe(false);
+  for (const value of Object.values(schema)) {
+    if (Array.isArray(value)) value.forEach(assertClosedObjects);
+    else assertClosedObjects(value);
+  }
+}
+
+describe("CoDesign WebMCP six-tool surface", () => {
   afterEach(() => vi.restoreAllMocks());
-  test("exposes exactly the five approved CoDesign tools", () => {
+
+  test("exposes exactly the six reusable tools and no persistence or commerce tool", () => {
     const { tools } = setup();
-    expect(tools.map((tool) => tool.name)).toEqual([
-      "codesign_read_configuration",
-      "codesign_list_options",
-      "codesign_propose_configuration",
-      "codesign_create_design",
-      "codesign_validate_configuration",
-    ]);
-    expect(tools[0]!.annotations).toMatchObject({ readOnlyHint: true, untrustedContentHint: true });
-    expect(tools[1]!.annotations).toMatchObject({ readOnlyHint: true, untrustedContentHint: true });
-    expect(tools[2]!.annotations).toMatchObject({ readOnlyHint: false, untrustedContentHint: true });
-    expect(tools[3]!.annotations).toMatchObject({ readOnlyHint: false, untrustedContentHint: true });
-    expect(tools[4]!.annotations).toMatchObject({ readOnlyHint: true, untrustedContentHint: true });
-    expect(tools.every((tool) => tool.inputSchema.additionalProperties === false)).toBe(true);
+    expect(tools.map((tool) => tool.name)).toEqual([...CODESIGN_TOOL_NAMES]);
+    expect(tools.map((tool) => tool.annotations.readOnlyHint)).toEqual([true, true, false, false, true, true]);
+    expect(tools.every((tool) => tool.annotations.untrustedContentHint)).toBe(true);
     expect(tools.map((tool) => tool.name).join(" ")).not.toMatch(/keep|revert|save|upload|quote|checkout|order|payment/);
+    tools.forEach((tool) => assertClosedObjects(tool.inputSchema));
   });
 
-  test("reads only canonical configuration and pending proposal metadata", async () => {
+  test("reads a sanitized committed workspace and bounded proposal metadata", async () => {
     const { tools } = setup();
-    const result = await tools[0]!.execute({}, {});
-    expect(result).toMatchObject({
+    const read = await tools[0]!.execute({});
+    expect(read).toMatchObject({
       ok: true,
-      state: { configuratorId: "codesign.test-configurator", revision: "revision-1" },
+      persisted: false,
+      configurator: { id: workspaceTestManifest.id, version: workspaceTestManifest.version },
+      workspace: { committedRevision: "workspace-revision-1", activeVariantId: "variant-1" },
       pendingProposal: null,
     });
-    expect(JSON.stringify(result)).not.toContain("price");
-    expect(JSON.stringify(result)).not.toContain("token");
+    expect(JSON.stringify(read)).not.toMatch(/price|margin|supplier|customer|token/i);
   });
 
-  test("accepts Chrome-native execution without an options object and persists nothing", async () => {
-    const { adapter, tools } = setup();
-    const result = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "webmcp-proposal-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    });
-    expect(result).toMatchObject({ ok: true, persisted: false, proposalRevision: 1 });
-    expect(adapter.visibleState.designs[0]!.selections["body.color"]).toBe("navy");
-    expect(adapter.counters.localWrites).toBe(0);
-    expect(adapter.counters.serverWrites).toBe(0);
-  });
-
-  test("rejects extra properties even when called without browser schema enforcement", async () => {
-    const { adapter, tools } = setup();
-    const result = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "unsafe-input-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy", rawPath: "state.secret" }],
-    }, {});
-    expect(result).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
-    expect(adapter.counters.quiesceCalls).toBe(0);
-    expect(adapter.counters.previewCalls).toBe(0);
-  });
-
-  test.each(["__proto__", "prototype", "constructor", "rawPath", "serverProject", "apiUrl"])(
-    "rejects hostile or private change field %s without adapter work",
-    async (field) => {
-      const { adapter, tools } = setup();
-      const change = JSON.parse(JSON.stringify({ designId: "design-1", optionId: "body.color", value: "navy" }));
-      Object.defineProperty(change, field, { value: "private-value", enumerable: true });
-      const result = await tools[2]!.execute({
-        baseRevision: "revision-1",
-        operationId: `hostile-field-${field.replaceAll("_", "-")}`,
-        changes: [change],
-      }, {});
-      expect(result).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
-      expect(adapter.counters.quiesceCalls).toBe(0);
-      expect(adapter.counters.previewCalls).toBe(0);
-    },
-  );
-
-  test("rejects oversized inputs before adapter work", async () => {
-    const { adapter, tools } = setup();
-    const oversizedText = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "oversized-text-1",
-      changes: [{ designId: "design-1", optionId: "design.name", value: "x".repeat(1_001) }],
-    }, {});
-    const oversizedChanges = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "oversized-changes-1",
-      changes: Array.from({ length: 41 }, () => ({ designId: "design-1", optionId: "body.color", value: "navy" })),
-    }, {});
-    const oversizedAssumptions = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "oversized-assumptions-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-      assumptions: Array.from({ length: 21 }, (_, index) => `Assumption ${index}`),
-    }, {});
-
-    expect(oversizedText).toMatchObject({ ok: false, error: { code: "INVALID_VALUE" } });
-    expect(oversizedChanges).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
-    expect(oversizedAssumptions).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
-    expect(adapter.counters.previewCalls).toBe(0);
-    expect(adapter.counters.localWrites).toBe(0);
-  });
-
-  test.each([
-    "https://example.invalid/collect",
-    "www.example.invalid/collect",
-    "data:text/plain,private-file",
-    "javascript:alert(1)",
-    "file:///etc/passwd",
-  ])("rejects URL-like text option value %s before preview", async (value) => {
-    const { adapter, tools } = setup();
-    const result = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "external-reference-1",
-      changes: [{ designId: "design-1", optionId: "design.name", value }],
-    }, {});
-
-    expect(result).toMatchObject({ ok: false, persisted: false, error: { code: "INVALID_VALUE" } });
-    expect(adapter.counters.quiesceCalls).toBe(0);
-    expect(adapter.counters.previewCalls).toBe(0);
-    expect(adapter.counters.localWrites).toBe(0);
-    expect(adapter.counters.serverWrites).toBe(0);
-  });
-
-  test("does not fetch an arbitrary artwork URL or expose a thrown adapter message", async () => {
-    const fetchSpy = vi.spyOn(globalThis, "fetch");
-    const { adapter, session, tools } = setup();
-    const uploadAttempt = await tools[3]!.execute({
-      baseRevision: "revision-1",
-      operationId: "remote-artwork-attempt-1",
-      sourceDesignId: "design-1",
-      newDesignChanges: [],
-      artworkUrl: "https://example.invalid/private-logo.svg",
-    }, {});
-    expect(uploadAttempt).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
-    expect(fetchSpy).not.toHaveBeenCalled();
-
-    adapter.readState = async () => { throw new Error("PRIVATE_TOKEN at merchant-adapter.ts:999"); };
-    const failedRead = await createCoDesignTools({ manifest: testManifest, adapter, session })[0]!.execute({}, {});
-    expect(failedRead).toMatchObject({ ok: false, error: { code: "ADAPTER_FAILURE" } });
-    expect(JSON.stringify(failedRead)).not.toMatch(/PRIVATE_TOKEN|merchant-adapter|stack/i);
-  });
-
-  test("validation is read-only for both committed and proposed state", async () => {
-    const { adapter, tools } = setup();
-    const committed = await tools[4]!.execute({}, {});
-    expect(committed).toMatchObject({ ok: true, source: "committed", persisted: false });
-    const proposed = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "read-only-validation-proposal-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    }, {});
-    if (!isRecord(proposed) || proposed.ok !== true) throw new Error("Expected proposal");
-    const validation = await tools[4]!.execute({
-      proposalId: proposed.proposalId,
-      proposalRevision: proposed.proposalRevision,
-    }, {});
-    expect(validation).toMatchObject({ ok: true, source: "proposal", persisted: false });
-    expect(adapter.counters.localWrites).toBe(0);
-    expect(adapter.counters.serverWrites).toBe(0);
-  });
-
-  test("lists bounded public options and dependency descriptions", async () => {
+  test("lists filtered controls, variants, assets, previews, and dependencies", async () => {
     const { tools } = setup();
     const result = await tools[1]!.execute({
-      designId: "design-1",
-      optionIds: ["body.color", "design.quantity", "branding.artwork_status"],
-    }, {});
+      variantId: "variant-1",
+      controlIds: ["body.color", "mark.artwork"],
+      categories: ["controls", "variants", "assets", "previews", "dependencies"],
+    });
     expect(result).toMatchObject({
       ok: true,
-      revision: "revision-1",
-      designId: "design-1",
-      options: [
-        { optionId: "body.color", agentWritable: true, allowed: true },
-        { optionId: "design.quantity", minimum: 20, maximum: 10000 },
-        { optionId: "branding.artwork_status", agentWritable: false },
-      ],
-      dependencies: [],
+      persisted: false,
+      target: { variantId: "variant-1", elementId: null },
+      controls: [{ controlId: "body.color", available: true }, { controlId: "mark.artwork", available: true }],
+      variantPolicy: { maximumVariants: 5 },
+      assetSlots: [{ id: "mark-artwork" }],
+      previewSurfaces: [{ id: "product-preview" }],
     });
-    expect(JSON.stringify(result)).not.toMatch(/price|token|supplier|margin/i);
+    expect(await tools[1]!.execute({ variantId: "missing" })).toMatchObject({ ok: false, error: { code: "UNKNOWN_TARGET" } });
   });
 
-  test("creates a second colourway inside the same zero-write proposal and validates it", async () => {
+  test("applies atomic visible changes with zero writes and reports a cumulative diff", async () => {
     const { adapter, tools } = setup();
-    const first = await tools[2]!.execute({
-      baseRevision: "revision-1",
-      operationId: "north-form-first-colourway",
-      changes: [
-        { designId: "design-1", optionId: "design.name", value: "North Form Cream" },
-        { designId: "design-1", optionId: "body.color", value: "navy" },
-      ],
-      assumptions: ["Final logo artwork will be supplied later."],
-    }, {});
-    expect(first).toMatchObject({ ok: true, proposalRevision: 1 });
-    if (!isRecord(first) || first.ok !== true) throw new Error("Expected first proposal");
-
-    const created = await tools[3]!.execute({
-      baseRevision: "revision-1",
-      proposalId: first.proposalId,
-      proposalRevision: first.proposalRevision,
-      operationId: "north-form-second-colourway",
-      sourceDesignId: "design-1",
-      changes: [{ designId: "design-1", optionId: "design.quantity", value: 30 }],
-      newDesignChanges: [
-        { optionId: "design.name", value: "North Form Rose" },
-        { optionId: "design.quantity", value: 30 },
-        { optionId: "body.color", value: "rose" },
-        { optionId: "accent.color", value: "berry" },
-      ],
-    }, {});
-
-    expect(created).toMatchObject({
+    const result = await tools[3]!.execute(applyInput());
+    expect(result).toMatchObject({
       ok: true,
       persisted: false,
-      proposalRevision: 2,
-      createdDesigns: [{ designId: "design-2", sourceDesignId: "design-1", name: "North Form Rose" }],
+      proposalRevision: 1,
+      diff: { controlChanges: [{ controlId: "body.color", before: "cream", after: "navy" }] },
       confirmation: { required: true, choices: ["keep", "revert"] },
     });
-    expect(adapter.visibleState.designs).toHaveLength(2);
-    expect(adapter.visibleState.designs.map((design) => design.quantity)).toEqual([30, 30]);
-    expect(adapter.counters.createDesignDraftCalls).toBe(1);
+    expect(adapter.visible.variants[0]!.controls["body.color"]).toBe("navy");
+    expect(adapter.committed.variants[0]!.controls["body.color"]).toBe("cream");
     expect(adapter.counters.localWrites).toBe(0);
     expect(adapter.counters.serverWrites).toBe(0);
-
-    if (!isRecord(created) || created.ok !== true) throw new Error("Expected created proposal");
-    const validated = await tools[4]!.execute({
-      proposalId: created.proposalId,
-      proposalRevision: created.proposalRevision,
-    }, {});
-    expect(validated).toMatchObject({
-      ok: true,
-      persisted: false,
-      source: "proposal",
-      validation: {
-        configurationValid: true,
-        productionReady: false,
-        assumptions: ["Final logo artwork will be supplied later."],
-      },
-    });
   });
 
-  test("rejects private design-creation fields before touching the adapter", async () => {
+  test("creates and coordinates a second variant inside the same temporary proposal", async () => {
     const { adapter, tools } = setup();
     const result = await tools[3]!.execute({
-      baseRevision: "revision-1",
-      operationId: "unsafe-create-1",
-      sourceDesignId: "design-1",
-      newDesignChanges: [{ optionId: "body.color", value: "rose", rawArtworkUrl: "https://invalid.test/private" }],
-    }, {});
-    expect(result).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
-    expect(adapter.counters.createDesignDraftCalls).toBe(0);
-    expect(adapter.counters.previewCalls).toBe(0);
+      baseRevision: "workspace-revision-1",
+      operationId: "two-directions",
+      operations: [
+        { type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "design.quantity", value: 30 },
+        { type: "duplicate-variant", sourceVariantId: "variant-1", variantId: "variant-2", name: "Rose direction", initialControls: { "design.quantity": 30, "body.color": "rose", "accent.color": "berry" } },
+        { type: "set-active-variant", variantId: "variant-2" },
+      ],
+      assumptions: ["Studio-name typography is temporary until final artwork is supplied."],
+    });
+    expect(result).toMatchObject({
+      ok: true,
+      persisted: false,
+      workspace: { activeVariantId: "variant-2", variants: [{ id: "variant-1" }, { id: "variant-2", name: "Rose direction" }] },
+      diff: { createdVariants: [{ variantId: "variant-2", name: "Rose direction" }], activeVariantAfter: "variant-2" },
+    });
+    expect(adapter.visible.variants.map((variant) => variant.controls["design.quantity"])).toEqual([30, 30]);
+    expect(adapter.counters.localWrites).toBe(0);
   });
 
-  test("cancellation after preview begins restores the committed snapshot", async () => {
-    const { adapter, session } = setup();
-    const controller = new AbortController();
-    const originalPreview = adapter.previewState.bind(adapter);
-    adapter.previewState = async (state) => {
-      await originalPreview(state);
-      controller.abort();
-    };
+  test("stages opaque temporary artwork, renders it, and captures the exact proposal preview", async () => {
+    const { adapter, tools } = setup();
+    const staged = await tools[2]!.execute({
+      baseRevision: "workspace-revision-1",
+      slotId: "mark-artwork",
+      source: { kind: "data-url", data: tinyPng },
+      filename: "north-form.png",
+      altText: "North Form NF mark",
+    });
+    expect(staged).toMatchObject({ ok: true, persisted: false, asset: { slotId: "mark-artwork", mediaType: "image/png" } });
+    if (!isRecord(staged) || !isRecord(staged.asset)) throw new Error("expected staged asset");
+    expect(JSON.stringify(staged)).not.toContain(tinyPng);
 
-    const result = await session.propose({
-      baseRevision: "revision-1",
-      operationId: "cancel-preview-1",
-      changes: [{ designId: "design-1", optionId: "body.color", value: "navy" }],
-    }, { signal: controller.signal });
+    const proposal = await tools[3]!.execute({
+      baseRevision: "workspace-revision-1",
+      operationId: "attach-artwork",
+      operations: [{ type: "attach-asset", target: { scope: "element", variantId: "variant-1", elementId: "mark-1" }, controlId: "mark.artwork", assetHandle: staged.asset.assetHandle }],
+    });
+    if (!isRecord(proposal) || proposal.ok !== true) throw new Error("expected proposal");
+    const previews = await tools[4]!.execute({ proposalId: proposal.proposalId, proposalRevision: 1, baseRevision: proposal.baseRevision });
+    expect(previews).toMatchObject({
+      ok: true,
+      persisted: false,
+      previewStatus: "available",
+      proposalRevision: 1,
+      artifacts: [{ variantId: "variant-1", surfaceId: "product-preview", mediaType: "image/webp" }],
+      validation: { configurationValid: true, productionReady: true },
+    });
+    expect(adapter.counters).toMatchObject({ stage: 1, preview: 1, capturePreview: 1, localWrites: 0, serverWrites: 0 });
+  });
 
-    expect(result).toMatchObject({ ok: false, error: { code: "CANCELLED" } });
-    expect(adapter.visibleState).toEqual(adapter.committedState);
+  test("validates committed or exact proposed state without persistence", async () => {
+    const { adapter, tools } = setup();
+    expect(await tools[5]!.execute({})).toMatchObject({ ok: true, source: "committed", persisted: false });
+    const proposal = await tools[3]!.execute(applyInput("validate-proposal"));
+    if (!isRecord(proposal) || proposal.ok !== true) throw new Error("expected proposal");
+    expect(await tools[5]!.execute({ proposalId: proposal.proposalId, proposalRevision: proposal.proposalRevision })).toMatchObject({ ok: true, source: "proposal", persisted: false });
     expect(adapter.counters.localWrites).toBe(0);
     expect(adapter.counters.serverWrites).toBe(0);
-    expect(session.status).toBe("idle");
   });
 
-  test("feature-detects registration and unregisters with one lifecycle signal", async () => {
-    const { adapter, session } = setup();
-    const registered: Array<{ tool: WebMcpTool; signal?: AbortSignal }> = [];
-    const registration = registerCoDesignTools({
-      modelContext: {
-        registerTool(tool, options) {
-          registered.push({ tool, ...(options?.signal ? { signal: options.signal } : {}) });
-        },
-      },
-    }, { manifest: testManifest, adapter, session });
+  test("rejects nested extras, hostile keys, oversized input, and stale targets before writes", async () => {
+    const { adapter, tools } = setup();
+    const extra = await tools[3]!.execute({
+      ...applyInput("nested-extra"),
+      operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1", rawPath: "private.token" }, controlId: "body.color", value: "navy" }],
+    });
+    const hostile = await tools[3]!.execute({ ...applyInput("hostile"), rawPath: "private.token" });
+    const oversized = await tools[3]!.execute({ ...applyInput("oversized"), operations: Array.from({ length: 81 }, () => applyInput().operations[0]) });
+    expect(extra).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+    expect(hostile).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+    expect(oversized).toMatchObject({ ok: false, error: { code: "INVALID_INPUT" } });
+    expect(adapter.counters.quiesce).toBe(0);
+    expect(adapter.counters.localWrites).toBe(0);
+  });
 
+  test("maps internal errors to generic public codes and never leaks adapter messages", async () => {
+    const { adapter, tools } = setup();
+    adapter.failRead = true;
+    const failedRead = await tools[0]!.execute({});
+    expect(failedRead).toMatchObject({ ok: false, error: { code: "ADAPTER_FAILURE" } });
+    expect(JSON.stringify(failedRead)).not.toMatch(/PRIVATE_TOKEN|merchant-adapter|stack/i);
+    adapter.failRead = false;
+    const stale = await tools[3]!.execute({ ...applyInput("stale"), baseRevision: "old-revision" });
+    expect(stale).toMatchObject({ ok: false, error: { code: "STALE_COMMITTED_REVISION" } });
+  });
+
+  test("honours cancellation without opening a persistent proposal", async () => {
+    const { adapter, engine, tools } = setup();
+    const controller = new AbortController();
+    controller.abort();
+    expect(await tools[3]!.execute(applyInput("cancelled"), { signal: controller.signal })).toMatchObject({ ok: false, error: { code: "CANCELLED" } });
+    expect(engine.status).toBe("idle");
+    expect(adapter.visible).toEqual(adapter.committed);
+    expect(adapter.counters.localWrites).toBe(0);
+  });
+
+  test("registers all six tools with one lifecycle signal and fails closed", async () => {
+    const { engine } = setup();
+    const registered: Array<{ tool: WebMcpTool; signal?: AbortSignal }> = [];
+    const registration = registerCoDesignTools({ modelContext: { registerTool(tool, options) { registered.push({ tool, ...(options?.signal ? { signal: options.signal } : {}) }); } } }, { engine });
     await registration.ready;
     expect(registration.supported).toBe(true);
-    expect(registered).toHaveLength(5);
-    expect(registered.every((entry) => entry.signal?.aborted === false)).toBe(true);
+    expect(registration.toolNames).toEqual([...CODESIGN_TOOL_NAMES]);
+    expect(registered).toHaveLength(6);
+    expect(new Set(registered.map((entry) => entry.signal)).size).toBe(1);
     registration.unregister();
-    expect(registered.every((entry) => entry.signal?.aborted === true)).toBe(true);
+    expect(registered.every((entry) => entry.signal?.aborted)).toBe(true);
 
-    const unsupported = registerCoDesignTools({}, { manifest: testManifest, adapter, session });
-    expect(unsupported).toMatchObject({ supported: false, toolNames: [] });
+    const unsupported = registerCoDesignTools({}, { engine: setup().engine });
+    expect(unsupported).toMatchObject({ supported: false, reason: "unsupported-host", toolNames: [] });
+    const disabled = registerCoDesignTools({ modelContext: { registerTool() {} } }, { engine: setup().engine, enabled: false });
+    expect(disabled).toMatchObject({ supported: false, reason: "disabled", toolNames: [] });
+  });
+
+  test("aborts every registration when one host registration fails", async () => {
+    const { engine } = setup();
+    const signals: AbortSignal[] = [];
+    let call = 0;
+    const registration = registerCoDesignTools({ modelContext: { registerTool(_tool, options) {
+      if (options?.signal) signals.push(options.signal);
+      call += 1;
+      if (call === 3) throw new Error("private host failure");
+    } } }, { engine });
+    await expect(registration.ready).rejects.toThrow("WebMCP tool registration failed");
+    expect(signals).toHaveLength(6);
+    expect(signals.every((signal) => signal.aborted)).toBe(true);
   });
 });

@@ -487,9 +487,32 @@ export interface ProposalEngineSuccessResult {
   appliedOperations: number;
   deduplicated: boolean;
   workspace: WorkspaceState;
+  diff: WorkspaceDiff;
   validation: WorkspaceValidationResult;
   previewStatus: "ready-for-capture";
   confirmation: HumanConfirmationRequirement;
+}
+
+export interface WorkspaceControlChange {
+  target: ControlTarget;
+  controlId: string;
+  before?: ControlValue;
+  after?: ControlValue;
+}
+
+export interface WorkspaceVariantSummary {
+  variantId: string;
+  name: string;
+}
+
+export interface WorkspaceDiff {
+  controlChanges: WorkspaceControlChange[];
+  createdVariants: WorkspaceVariantSummary[];
+  removedVariants: WorkspaceVariantSummary[];
+  orderBefore: string[];
+  orderAfter: string[];
+  activeVariantBefore: string;
+  activeVariantAfter: string;
 }
 
 export interface AssetStageSuccessResult {
@@ -505,6 +528,27 @@ export interface PreviewCaptureSuccessResult {
   proposalId: string;
   proposalRevision: number;
   artifacts: PreviewArtifact[];
+}
+
+export interface ProposalValidationInput {
+  proposalId?: string;
+  proposalRevision?: number;
+}
+
+export interface ProposalValidationSuccessResult {
+  ok: true;
+  persisted: false;
+  source: "committed" | "proposal";
+  baseRevision: string;
+  proposalId: string | null;
+  proposalRevision: number;
+  validation: WorkspaceValidationResult;
+}
+
+export type CapabilityCategory = "controls" | "variants" | "assets" | "previews" | "dependencies";
+
+export interface ListCapabilitiesInput extends AvailabilityRequest {
+  categories?: CapabilityCategory[];
 }
 
 export type ValidationSeverity = "constraint-error" | "decision-required" | "warning" | "information";

@@ -2,11 +2,12 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const ALLOWED_TOOLS = new Set([
-  "codesign_read_configuration",
-  "codesign_list_options",
-  "codesign_propose_configuration",
-  "codesign_create_design",
-  "codesign_validate_configuration",
+  "codesign_read_workspace",
+  "codesign_list_capabilities",
+  "codesign_stage_asset",
+  "codesign_apply_proposal",
+  "codesign_get_previews",
+  "codesign_validate_proposal",
 ]);
 
 function readJson(path) {

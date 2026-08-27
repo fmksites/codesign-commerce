@@ -65,12 +65,13 @@ in the merchant's real preview and retains the only persistence decision.
 
 ## Implementation
 
-The TypeScript core registers exactly five imperative webpage tools:
-`codesign_read_configuration`, `codesign_list_options`,
-`codesign_propose_configuration`, `codesign_create_design`, and
-`codesign_validate_configuration`. A manifest declares public option groups,
-values, dependencies, capabilities, and confirmation rules. A narrow merchant
-adapter maps between private configurator state and a canonical public model.
+The TypeScript core registers exactly six imperative webpage tools:
+`codesign_read_workspace`, `codesign_list_capabilities`,
+`codesign_stage_asset`, `codesign_apply_proposal`, `codesign_get_previews`, and
+`codesign_validate_proposal`. A manifest declares public controls, assets,
+preview surfaces, dependencies, capabilities, and confirmation rules. A narrow
+merchant adapter maps between private configurator state and the canonical
+public workspace model.
 
 The proposal engine uses committed and proposal revisions, payload-bound
 operation IDs, bounded batches, detached validation, optimistic concurrency,
@@ -82,7 +83,7 @@ human interface.
 ## What is new during the challenge
 
 The KORRHAUS Sock Designer existed before 25 August 2026. The reusable CoDesign
-Commerce package, five webpage tools, manifest/adapter contract, staged proposal
+Commerce package, six webpage tools, manifest/adapter contract, staged proposal
 transaction, review UI, studio-tote example, private KORRHAUS bridge, tests, eval
 corpus, and challenge documentation were created during the submission period.
 The judged KORRHAUS surface is the pre-existing live Designer enhanced by that

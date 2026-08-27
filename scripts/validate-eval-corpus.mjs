@@ -4,14 +4,15 @@ const document = JSON.parse(readFileSync("evals/cases.json", "utf8"));
 const policy = JSON.parse(readFileSync("evals/run-policy.json", "utf8"));
 const template = JSON.parse(readFileSync("evals/results.template.json", "utf8"));
 const allowedTools = new Set([
-  "codesign_read_configuration",
-  "codesign_list_options",
-  "codesign_propose_configuration",
-  "codesign_create_design",
-  "codesign_validate_configuration",
+  "codesign_read_workspace",
+  "codesign_list_capabilities",
+  "codesign_stage_asset",
+  "codesign_apply_proposal",
+  "codesign_get_previews",
+  "codesign_validate_proposal",
 ]);
 const requiredCategories = new Set(["selection", "end-to-end", "ambiguity", "safety", "adversarial", "recovery"]);
-const mutatingTools = new Set(["codesign_propose_configuration", "codesign_create_design"]);
+const mutatingTools = new Set(["codesign_stage_asset", "codesign_apply_proposal"]);
 const failures = [];
 
 if (document.schemaVersion !== "1.0") failures.push("schemaVersion must be 1.0");

@@ -106,6 +106,6 @@ The selected transport is static-first: a bounded renderer-generated `data:image
 
 ## Studio tote reference proof
 
-The public tote currently routes its real North Form PNG through `AssetSandbox`, renders only the opaque handle, and captures the exact renderer through `PreviewBridge`. Its development-only native Chrome harness uses `document.modelContext` to prove the transport without activating Keep. The full tote will move to the final Manifest 2.0 proposal engine and six-tool registry in checklist Items 8 and 9.
+The public tote routes its real North Form PNG through `AssetSandbox`, renders only the opaque handle, and captures the exact renderer through `PreviewBridge`. Its development-only native Chrome harness uses the final Manifest 2.0 proposal engine and exact six-tool registry through `document.modelContext`, without activating Keep. The remaining full visual-product expansion belongs to checklist Item 9.
 
 The private KORRHAUS Sock Designer is not changed by this module. A later approval-gated adapter must reuse its existing upload, renderer, snapshot, autosave-isolation, and Keep paths without copying private code or data into this repository.

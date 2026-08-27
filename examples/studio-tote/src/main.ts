@@ -1,21 +1,25 @@
 import {
+  AssetSandbox,
   mountProposalReview,
+  PreviewBridge,
+  ProposalEngine,
   ProposalReviewController,
-  ProposalSession,
   registerCoDesignTools,
+  reviewLocksHumanControls,
   type ConfigurationDesign,
   type ConfigurationState,
   type DocumentWithModelContext,
   type JsonPrimitive,
+  type PreviewArtifactCandidate,
+  type PreviewCaptureRequest,
 } from "@codesign-commerce/core";
-import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
+import { StudioToteAdapter, toteInitialState, toteManifest, type ToteSnapshot } from "./configurator";
 import {
-  registerStudioToteAssetProof,
   StudioToteAssetProofStore,
+  type StudioToteResolvedAsset,
 } from "./asset-proof";
 import {
   PreviewProofError,
-  registerStudioTotePreviewProof,
   type StudioTotePreviewArtifact,
   type StudioTotePreviewRequest,
 } from "./preview-proof";
@@ -150,8 +154,8 @@ const adapter = new StudioToteAdapter(seed, (state) => {
   }));
 }, assetStore);
 assetStore.setBaseRevisionProvider(() => adapter.committedState.revision);
-const session = new ProposalSession(toteManifest, adapter);
-const controller = new ProposalReviewController(toteManifest, session);
+let engine: ProposalEngine<ToteSnapshot, StudioToteResolvedAsset>;
+let controller: ProposalReviewController<ToteSnapshot, StudioToteResolvedAsset>;
 
 const reviewContainer = document.querySelector<HTMLElement>("#proposal-review");
 const tabs = document.querySelector<HTMLElement>("[data-variant-tabs]");
@@ -186,7 +190,7 @@ const sha256 = async (value: string): Promise<string> => {
 const capturePreviewProof = async (
   request: StudioTotePreviewRequest,
 ): Promise<StudioTotePreviewArtifact> => {
-  const proposal = session.snapshot;
+  const proposal = engine.snapshot;
   if (request.proposalId !== undefined && request.proposalId !== proposal.proposalId) {
     throw new PreviewProofError("PREVIEW_STALE", "The requested proposal is no longer current.");
   }
@@ -246,7 +250,7 @@ const capturePreviewProof = async (
   return {
     artifactId: `preview-${identity}-${design.id}`,
     proposalId: proposal.proposalId,
-    proposalRevision: proposal.proposalRevision,
+    proposalRevision: proposal.proposalId === null ? null : proposal.proposalRevision,
     workspaceRevision: state.revision,
     variantId: design.id,
     mediaType: "image/webp",
@@ -257,6 +261,32 @@ const capturePreviewProof = async (
     transport: { kind: "data-url", value: dataUrl },
   };
 };
+
+const assetSandbox = new AssetSandbox(toteManifest, assetStore);
+const previewBridge = new PreviewBridge<StudioToteResolvedAsset>(toteManifest, {
+  async capturePreviews(request: PreviewCaptureRequest, assets): Promise<PreviewArtifactCandidate[]> {
+    assetStore.setProposalAssetResolver(assets);
+    render(true);
+    const variantIds = request.variantIds ?? [adapter.visibleState.activeDesignId];
+    const surfaceId = request.surfaceIds?.[0] ?? "product-preview";
+    const results: PreviewArtifactCandidate[] = [];
+    for (const variantId of variantIds) {
+      const artifact = await capturePreviewProof({ proposalId: request.proposalId, proposalRevision: request.proposalRevision, variantId });
+      results.push({
+        variantId: artifact.variantId,
+        surfaceId,
+        mediaType: artifact.mediaType,
+        width: artifact.width,
+        height: artifact.height,
+        altText: artifact.altText,
+        transport: artifact.transport,
+      });
+    }
+    return results;
+  },
+});
+engine = new ProposalEngine(toteManifest, adapter, { assetSandbox, previewBridge });
+controller = new ProposalReviewController(toteManifest, engine);
 
 const renderTabs = (followVisible = false) => {
   const state = adapter.visibleState;
@@ -277,7 +307,7 @@ const renderTabs = (followVisible = false) => {
   add.className = "add-variant";
   add.setAttribute("aria-label", "Add tote variant");
   add.textContent = "+";
-  add.disabled = session.status !== "idle" || state.designs.length >= toteManifest.variantPolicy.maximumVariants;
+  add.disabled = engine.status !== "idle" || state.designs.length >= toteManifest.variantPolicy.maximumVariants;
   add.addEventListener("click", () => {
     const created = adapter.addHumanVariant(activeDesignId);
     if (created) { activeDesignId = created; render(); }
@@ -326,14 +356,14 @@ const render = (followVisible = false) => {
 };
 
 mountProposalReview(reviewContainer, controller, {
-  formatSummary: ({ designCount, totalQuantity }) => `${designCount} ${designCount === 1 ? "variant" : "variants"} · ${totalQuantity} totes`,
+  formatSummary: ({ variantCount, activeVariantName }) => `${variantCount} ${variantCount === 1 ? "variant" : "variants"} · ${activeVariantName} · ${adapter.visibleState.order.totalQuantity} totes`,
 });
 
 controller.subscribe((state) => {
-  const locked = ["temporary", "busy", "invalidated", "commit-retry", "commit-uncertain"].includes(state.kind);
+  const locked = reviewLocksHumanControls(state);
   for (const control of controls.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement>("button, input, select")) control.disabled = locked;
   nameInput.disabled = locked;
-  saveStatus.textContent = ["temporary", "busy", "invalidated"].includes(state.kind)
+  saveStatus.textContent = ["temporary", "busy", "stale"].includes(state.kind)
     ? "Temporary proposal not saved"
     : "Draft saved on this device";
   if (state.kind === "reverted") assetStore.releaseTemporary();
@@ -376,18 +406,14 @@ for (const step of document.querySelectorAll<HTMLButtonElement>("[data-step-targ
 const webMcpDocument = import.meta.env.DEV && query.has("disable-webmcp")
   ? {} as DocumentWithModelContext
   : document as DocumentWithModelContext;
-const registration = registerCoDesignTools(webMcpDocument, {
-  manifest: toteManifest,
-  adapter,
-  session,
-});
-const previewRegistration = registerStudioTotePreviewProof(webMcpDocument, {
-  capture: capturePreviewProof,
-});
-const assetRegistration = registerStudioToteAssetProof(webMcpDocument, assetStore);
-const allToolsReady = Promise.all([registration.ready, previewRegistration.ready, assetRegistration.ready]);
+const registration = registerCoDesignTools(webMcpDocument, { engine });
+const allToolsReady = registration.ready;
 void allToolsReady;
 if (import.meta.env.DEV) document.documentElement.dataset.webmcpRegistration = registration.supported ? "supported" : "unsupported";
+window.addEventListener("pagehide", () => {
+  registration.unregister();
+  controller.destroy();
+}, { once: true });
 
 render();
 
@@ -435,11 +461,11 @@ if (import.meta.env.DEV && query.has("native-webmcp-proof")) {
       resultNode.textContent = "Discovering native tools…";
       proof.dataset.status = "running";
       try {
-        await Promise.all([registration.ready, previewRegistration.ready]);
+        await registration.ready;
         const modelContext = (document as DocumentWithModelContext & {
           modelContext?: {
             getTools(): Promise<Array<{ name: string }>>;
-            executeTool(tool: { name: string }, input: string): Promise<unknown>;
+            executeTool(tool: { name: string }, input: unknown): Promise<unknown>;
           };
         }).modelContext;
         if (!modelContext?.getTools || !modelContext.executeTool) throw new Error("document.modelContext invocation APIs are unavailable");
@@ -450,31 +476,38 @@ if (import.meta.env.DEV && query.has("native-webmcp-proof")) {
           if (!tool) throw new Error(`Native Chrome did not discover ${name}`);
           return tool;
         };
-        const read = asRecord(await modelContext.executeTool(findTool("codesign_read_configuration"), "{}"));
-        const state = asRecord(read.state);
-        const baseRevision = state.revision;
+        const executeTool = async (tool: { name: string }, input: unknown) => {
+          try { return await modelContext.executeTool(tool, input); }
+          catch (error) {
+            if (typeof input !== "string") return modelContext.executeTool(tool, JSON.stringify(input));
+            throw error;
+          }
+        };
+        const read = asRecord(await executeTool(findTool("codesign_read_workspace"), {}));
+        const state = asRecord(read.workspace);
+        const baseRevision = state.committedRevision;
         if (typeof baseRevision !== "string") throw new Error("Native configuration read returned no revision");
 
-        const proposal = asRecord(await modelContext.executeTool(
-          findTool("codesign_propose_configuration"),
-          JSON.stringify({
+        const proposal = asRecord(await executeTool(
+          findTool("codesign_apply_proposal"),
+          {
             baseRevision,
             operationId: "chrome-native-preview-proof",
-            changes: [
-              { designId: "tote-1", optionId: "design.name", value: "Chrome native proof" },
-              { designId: "tote-1", optionId: "bag.color", value: "charcoal" },
-              { designId: "tote-1", optionId: "print.position", value: "upper-left" },
+            operations: [
+              { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.name", value: "Chrome native proof" },
+              { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "bag.color", value: "charcoal" },
+              { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "print.position", value: "upper-left" },
             ],
             assumptions: ["This is a temporary native Chrome feasibility proof."],
-          }),
+          },
         ));
         if (proposal.ok !== true || typeof proposal.proposalId !== "string" || typeof proposal.proposalRevision !== "number") {
           throw new Error(`Native proposal failed: ${JSON.stringify(proposal)}`);
         }
 
-        const previewResult = asRecord(await modelContext.executeTool(
+        const previewResult = asRecord(await executeTool(
           findTool("codesign_get_previews"),
-          JSON.stringify({ proposalId: proposal.proposalId, proposalRevision: proposal.proposalRevision, variantId: "tote-1" }),
+          { proposalId: proposal.proposalId, proposalRevision: proposal.proposalRevision, baseRevision, variantIds: ["tote-1"], surfaceIds: ["product-preview"] },
         ));
         const artifacts = Array.isArray(previewResult.artifacts) ? previewResult.artifacts : [];
         const artifact = asRecord(artifacts[0]);
@@ -516,31 +549,26 @@ if (import.meta.env.DEV && query.has("native-webmcp-proof")) {
 
 if (import.meta.env.DEV && query.has("agent-preview")) {
   void (async () => {
-    const first = await session.propose({
+    const first = await engine.apply({
       baseRevision: adapter.committedState.revision,
       operationId: "tote-visual-first",
-      changes: [
-        { designId: "tote-1", optionId: "design.name", value: "Natural long-handle" },
-        { designId: "tote-1", optionId: "canvas.weight", value: "12oz" },
-        { designId: "tote-1", optionId: "bag.color", value: "natural" },
-        { designId: "tote-1", optionId: "handles.length", value: "long" },
+      operations: [
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.name", value: "Natural long-handle" },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "canvas.weight", value: "12oz" },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "bag.color", value: "natural" },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "handles.length", value: "long" },
       ],
       assumptions: ["Split the 100 totes evenly across two variants.", "Final print artwork will be supplied later."],
     });
     if (!first.ok) return;
-    await session.createDesign({
+    await engine.apply({
       baseRevision: first.baseRevision,
       proposalId: first.proposalId,
       proposalRevision: first.proposalRevision,
       operationId: "tote-visual-second",
-      sourceDesignId: "tote-1",
-      changes: [{ designId: "tote-1", optionId: "design.quantity", value: 50 }],
-      newDesignChanges: [
-        { optionId: "design.name", value: "Charcoal short-handle" },
-        { optionId: "design.quantity", value: 50 },
-        { optionId: "bag.color", value: "charcoal" },
-        { optionId: "handles.length", value: "short" },
-        { optionId: "print.position", value: "upper-left" },
+      operations: [
+        { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.quantity", value: 50 },
+        { type: "duplicate-variant", sourceVariantId: "tote-1", variantId: "tote-2", name: "Charcoal short-handle", initialControls: { "design.quantity": 50, "bag.color": "charcoal", "handles.length": "short", "print.position": "upper-left" } },
       ],
     });
   })();

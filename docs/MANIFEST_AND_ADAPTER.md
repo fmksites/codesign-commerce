@@ -106,30 +106,34 @@ The committed revision is opaque. It must change whenever committed public state
 
 `sanitizeWorkspaceState()` reconstructs this contract field by field, drops undeclared safe adapter fields and controls, and rejects unsafe keys, malformed IDs, duplicate variants/elements, unknown element types, invalid values/assets/transforms, oversized arrays, and manifest identity mismatches.
 
-The guarded-adapter migration in checklist Item 6 wraps every merchant adapter at runtime. Its read,
-`listOptions()`, `createDesignDraft()`, `validateState()`, and `commitState()`
-are reconstructed field by field into the canonical public contract. Unknown
-fields are dropped; malformed values fail closed with a generic
-`ADAPTER_FAILURE`. TypeScript types alone are not treated as a data boundary.
+The guarded adapter wraps every merchant adapter at runtime. Its workspace,
+availability, validation, preview, and commit results are reconstructed field
+by field into the canonical public contract. Unknown fields are dropped;
+malformed values fail closed with a generic `ADAPTER_FAILURE`. TypeScript types
+alone are not treated as a data boundary.
 
 ## Adapter obligations
 
-`ConfiguratorAdapter` has ten responsibilities:
+`WorkspaceAdapter` has eleven responsibilities:
 
-1. `readState()` returns a detached canonical committed state.
-2. `listOptions()` returns public availability and reasons.
-3. Optional `createDesignDraft()` clones one variant in detached draft state, assigns a safe unique public ID, makes it active, and performs no preview or persistence side effect. It is required when `variantPolicy.operations` includes `duplicate`.
-4. `quiescePersistence()` flushes or awaits recent human saves before snapshotting.
-5. `captureSnapshot()` keeps a private exact raw snapshot inside the adapter.
-6. `previewState()` updates the existing visible renderer with zero storage/network writes.
-7. `validateState()` applies public and merchant-specific rules without leaking private explanations.
+1. `readWorkspace()` returns a detached canonical committed workspace.
+2. `listAvailability()` returns public control availability and reasons.
+3. `quiescePersistence()` flushes or awaits recent human saves before snapshotting.
+4. `captureSnapshot()` keeps a private exact raw snapshot inside the adapter.
+5. `beginProposalMode()` isolates agent rendering from normal autosave.
+6. `validateWorkspace()` applies public and merchant-specific rules without leaking private explanations.
+7. `previewWorkspace()` updates the existing visible renderer with zero storage/network writes.
 8. `restoreSnapshot()` performs an exact zero-write Revert.
-9. `commitState()` compares `metadata.baseRevision` with the adapter's current
+9. `commitWorkspace()` compares `metadata.baseRevision` with the adapter's current
    committed revision immediately before its first local write, then crosses
    local persistence once and securely saves idempotently per proposal ID.
-10. `subscribeToExternalChanges()` invalidates stale proposals.
+10. `endProposalMode()` unlocks the human interface and releases proposal-only state.
+11. `subscribeToExternalChanges()` invalidates stale proposals.
 
-The core rejects a draft clone if it changes the committed revision, order total, existing designs, configurator identity, or manifest version; fails to add exactly one uniquely identified design; exposes an agent-writable asset; or does not make the new design active. Source/order changes and new-design overrides are then applied and validated as one transaction.
+Variant creation, duplication, removal, reordering, activation, control edits,
+asset binding, and transforms are expressed as one bounded atomic operations
+batch. The core applies that batch to detached canonical state, rejects any
+invalid intermediate result, and previews only the fully validated outcome.
 
 Expected server-save failure is data, not an exception:
 

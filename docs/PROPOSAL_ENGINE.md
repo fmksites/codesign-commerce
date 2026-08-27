@@ -15,11 +15,11 @@ committed merchant state
   -> shopper inspects Keep / Revert
 ```
 
-No WebMCP save tool is created by this engine. A future page review controller calls `keep()` only after the page-owned confirmation boundary has been satisfied.
+No WebMCP save tool is created by this engine. The shipped page review controller calls `keep()` only through the visible confirmation boundary and disables it until the exact current renderer preview is available.
 
 ## Merchant adapter contract
 
-`WorkspaceAdapter<Snapshot>` is deliberately narrow. An integration owns:
+`WorkspaceAdapter<Snapshot, PrivateAsset>` is deliberately narrow. An integration owns:
 
 - Reading a detached public `WorkspaceState`.
 - Listing public control availability.
@@ -40,12 +40,16 @@ The private `Snapshot` is never inspected, serialized, or returned by the core.
 
 ```text
 idle -> building -> validating -> rendering -> reviewable
-                                                |     |
-                                             Revert  Keep
-                                                |     |
-                                               idle  committing
-                                                      |       |
-                                               commit-retry  commit-uncertain
+                                                |      |
+                                  capture exact preview  Revert
+                                                |        |
+                                           reviewable   idle
+                                                |
+                                               Keep
+                                                |
+                                           committing
+                                             |       |
+                                    commit-retry  commit-uncertain
 
 any open temporary state + external committed revision -> stale -> resynchronize -> idle
 ```
@@ -86,4 +90,4 @@ Commit outcomes remain explicit:
 
 ## Integration status
 
-This is the new Manifest 2.0 transaction foundation. The studio tote still uses its earlier feasibility controller until checklist Items 7–9 add the asset/preview lifecycle, exact six WebMCP tools, unified review controller, and final tote adapter. The private KORRHAUS integration remains a separately approval-gated checklist item.
+The public studio tote now uses this engine, `AssetSandbox`, `PreviewBridge`, the exact six-tool registry, and one shared review controller. Native Chrome and the Codex in-app browser have executed the same public flow with zero writes before the visible page Keep boundary. The remaining full visual product work is checklist Item 9; the private KORRHAUS integration remains a separately approval-gated checklist item.

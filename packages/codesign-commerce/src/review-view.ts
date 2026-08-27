@@ -1,8 +1,8 @@
 import type { ProposalReviewController, ReviewState } from "./review-controller.js";
 
 export interface ProposalReviewSummary {
-  designCount: number;
-  totalQuantity: number;
+  variantCount: number;
+  activeVariantName: string;
 }
 
 export interface ProposalReviewViewOptions {
@@ -225,9 +225,8 @@ const stylesheet = String.raw`
 `;
 
 function defaultSummary(summary: ProposalReviewSummary): string {
-  const designLabel = summary.designCount === 1 ? "design" : "designs";
-  const unitLabel = summary.totalQuantity === 1 ? "unit" : "units";
-  return `${summary.designCount} ${designLabel} · ${summary.totalQuantity} ${unitLabel}`;
+  const variantLabel = summary.variantCount === 1 ? "variant" : "variants";
+  return `${summary.variantCount} ${variantLabel} · ${summary.activeVariantName}`;
 }
 
 function element(document: Document, tag: string, className?: string, text?: string): HTMLElement {
@@ -287,14 +286,14 @@ export function mountProposalReview<Snapshot = unknown>(
     status.append(element(document, "span", "status-dot"), document.createTextNode("Temporary · Not saved"));
     const heading = element(document, "h2", undefined, "Agent proposal");
     heading.id = "codesign-review-heading";
-    const summary = options.formatSummary?.({ designCount: state.designCount, totalQuantity: state.totalQuantity })
-      ?? defaultSummary({ designCount: state.designCount, totalQuantity: state.totalQuantity });
+    const summary = options.formatSummary?.({ variantCount: state.variantCount, activeVariantName: state.activeVariantName })
+      ?? defaultSummary({ variantCount: state.variantCount, activeVariantName: state.activeVariantName });
     identity.append(status, heading, element(document, "p", "summary", summary));
 
     const changes = element(document, "div", "changes");
     changes.setAttribute("aria-label", "Proposed changes");
     const changeList = element(document, "ul", "change-list");
-    for (const created of state.createdDesigns) {
+    for (const created of state.createdVariants) {
       const row = element(document, "li", "change-row");
       row.append(
         element(document, "span", "change-label", "New colourway"),
@@ -304,10 +303,20 @@ export function mountProposalReview<Snapshot = unknown>(
       );
       changeList.append(row);
     }
+    for (const removed of state.removedVariants) {
+      const row = element(document, "li", "change-row");
+      row.append(
+        element(document, "span", "change-label", "Removed variant"),
+        element(document, "span", "change-before", removed.name),
+        element(document, "span", "change-arrow", "→"),
+        element(document, "span", "change-after", "Removed"),
+      );
+      changeList.append(row);
+    }
     for (const change of state.changes) {
       const row = element(document, "li", "change-row");
       row.append(
-        element(document, "span", "change-label", change.label),
+        element(document, "span", "change-label", `${change.targetLabel} · ${change.label}`),
         element(document, "span", "change-before", change.before),
         element(document, "span", "change-arrow", "→"),
         element(document, "span", "change-after", change.after),
@@ -341,6 +350,15 @@ export function mountProposalReview<Snapshot = unknown>(
       button(document, options.revertLabel ?? "Revert", "secondary", () => run(() => controller.revert())),
       button(document, options.keepLabel ?? "Keep proposal", "primary", () => run(() => controller.keep())),
     );
+    const keepButton = actions.lastElementChild as HTMLButtonElement;
+    keepButton.disabled = !state.canKeep;
+    if (state.keepDisabledReason) {
+      keepButton.title = state.keepDisabledReason;
+      keepButton.setAttribute("aria-describedby", "codesign-keep-reason");
+      const reason = element(document, "p", "readiness", state.keepDisabledReason);
+      reason.id = "codesign-keep-reason";
+      details.append(reason);
+    }
     panel.append(identity, changes, details, actions);
     return panel;
   };
@@ -375,7 +393,7 @@ export function mountProposalReview<Snapshot = unknown>(
       panel = renderOutcome("Agent proposal", state.message);
       panel.setAttribute("aria-busy", "true");
       live.textContent = state.message;
-    } else if (state.kind === "invalidated") {
+    } else if (state.kind === "stale") {
       panel = renderOutcome("Proposal expired", state.message, { label: state.refreshLabel, run: () => controller.restoreLatest() });
       live.textContent = state.message;
     } else if (state.kind === "commit-retry") {

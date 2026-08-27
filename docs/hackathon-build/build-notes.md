@@ -318,3 +318,18 @@
 - The new engine is not yet called the final tote integration: Items 7–9 add the production asset/preview lifecycle, exact six tools, unified review control and complete tote wiring.
 - No private KORRHAUS mutation, deployment, publication, traffic change or submission occurred.
 - Item 7 is next: production-safe asset sandbox and revision-bound preview bridge.
+
+## 27 August 2026 — Item 8 completed with exact six tools and one review controller
+
+- Replaced the transitional five-tool registry with exactly six stable WebMCP tools: read workspace, list capabilities, stage asset, apply proposal, get previews, and validate proposal.
+- Added strict generated schemas, runtime input guards, sanitized public results, annotations, a shared abort lifecycle, and deterministic registration disposal.
+- Unified the tote onto the Manifest 2.0 `ProposalEngine`, `AssetSandbox`, `PreviewBridge`, and one visible page-owned Keep/Revert controller; no WebMCP persistence or commercial action exists.
+- Actual Codex in-app-browser and native Chrome 151 runs discovered the exact six names, rendered visible temporary changes, captured 640 by 640 revision-bound WebP previews, and verified zero-write Revert.
+- A separate visible Keep run produced exactly one local write, one server-simulation write, and one adapter commit after preview availability.
+- The final registry staged and visibly rendered a real 214,745-byte North Form PNG. Its asset integrity and resulting preview integrity were distinct; Revert released it once with zero import, writes, or commits.
+- Ordinary non-agent browsing remained fully usable, with no unsolicited review panel, no locked controls, and no horizontal overflow.
+- Final local verification passed 20 test files / 172 tests, strict typecheck, full production build, browser-bundle verification, 156-candidate public-boundary scan, documentation links, 16/16 tote parity, 25-case eval-corpus validation/scorer self-test, judge-site verification, and `git diff --check`.
+- Dated evidence: `docs/evidence/CODESIGN_V2_ITEM8_SIX_TOOLS_2026-08-27.md`.
+- Literal normal-ChatGPT-conversation verification remains explicitly deferred to Item 11 and is not claimed here.
+- No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
+- Item 9 is next: complete the public studio-tote visual product experience and full judge flow.
