@@ -43,7 +43,9 @@ proceed without the owner.
 
 ## KORRHAUS flagship
 
-- `APPROVAL` — deploy a zero-traffic Cloud Run revision.
+- `APPROVAL` — execute the two-revision zero-traffic sequence in
+  `docs/evidence/KORRHAUS_DEPLOYMENT_PREFLIGHT.md`: tagged synthetic QA first,
+  then the exact same image as a fixtures-off production candidate.
 - `PENDING` — verify revision health, logs, HTML, bundle hash, and browser flow.
 - `APPROVAL` — promote production traffic.
 - `PENDING` — verify the actual public English route and normal human fallback.

@@ -29,14 +29,18 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 1. Build the single release artifact with the verified repository and flagship
    URLs; `npm run build:release` fails if either HTTPS link is absent.
 2. Deploy `dist/judge-site/` from that public commit over HTTPS. Its root is the
-   English judge landing; `/korrhaus/` and `/tote/` are the two deterministic
-   examples under the same origin.
+   English judge landing and `/tote/` is the deterministic portability example.
+   The KORRHAUS call to action must open the real live KORRHAUS shop. Keep the
+   public KORRHAUS reference in the repository for reproducibility and local
+   testing rather than presenting it as a second hosted KORRHAUS business.
 3. Do not add secrets, authentication, analytics, customer data, or private APIs.
 4. Show the commit SHA in the deployed app and `site-metadata.json`.
-5. Preserve anonymous deterministic reset paths for both examples.
-6. Verify logged-out access, cache headers, asset hashes, exactly five tools,
-   North Form, tote, safety prompts, Keep/Revert, responsive layout, navigation,
-   reload, and browser-without-WebMCP fallback.
+5. Preserve the tote's anonymous deterministic reset path and the repository's
+   local KORRHAUS-reference instructions.
+6. Verify logged-out access, cache headers, asset hashes, tote tools and flow,
+   responsive layout, navigation, reload, and browser-without-WebMCP fallback.
+   Verify the North Form flagship flow on the real KORRHAUS shop after its
+   separately approved traffic promotion.
 7. Retain the provider URL as a fallback even if a branded domain is added.
 
 ## 4. Build the private flagship release candidate
@@ -49,12 +53,17 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 
 ## 5. No-traffic KORRHAUS deployment — separate approval required
 
-1. Deploy a new Cloud Run revision with zero traffic.
+1. Build one tagged QA revision with zero traffic, WebMCP enabled, and synthetic
+   acceptance fixtures enabled.
 2. Verify revision identity, image digest, configuration, health, HTTP behavior,
-   logs, script cache key, bundle hash, tool discovery, and full flagship flow on
-   the revision URL.
-3. Confirm ordinary production traffic is unchanged.
-4. Stop and present the evidence before requesting traffic approval.
+   logs, script cache key, bundle hash, tool discovery, full flagship fixture
+   flow, and normal no-WebMCP fallback on the tagged revision URL.
+3. Deploy the exact immutable QA image digest as a second tagged zero-traffic
+   production candidate with acceptance fixtures disabled and WebMCP enabled.
+4. Verify the production candidate's identity, configuration, health, logs, and
+   asset hash. Confirm ordinary production traffic still targets the recorded
+   rollback revision at 100%.
+5. Stop and present the evidence before requesting traffic approval.
 
 ## 6. Production promotion — explicit approval required
 

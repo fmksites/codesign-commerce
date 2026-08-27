@@ -1090,15 +1090,18 @@ Do not build the tote or broad polish until this passes.
 - Deploy the public judge application after publication authority is granted.
 - Build the exact public release asset.
 - Pin that asset in the private adapter integration.
-- Deploy KORRHAUS revision with no traffic.
+- Build a tagged KORRHAUS QA revision with no traffic and synthetic fixtures.
 - Verify health, logs, headers, page HTML, tools, browser behavior, and regressions.
+- Deploy the exact same image as a fixtures-off production candidate with no
+  traffic and verify that ordinary traffic remains on the rollback revision.
 
 **Acceptance**
 
 - Public URL works logged out.
 - Exact commit and asset hash are visible.
-- KORRHAUS no-traffic revision is healthy.
-- Full flagship behavior works against the no-traffic revision.
+- Both KORRHAUS no-traffic revisions are healthy and share one image digest.
+- Full synthetic flagship behavior works against the tagged QA revision.
+- The production candidate has fixtures disabled and the exact verified bundle.
 - No production traffic has been changed.
 
 **Evidence**
@@ -1581,7 +1584,7 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | API-backed WebMCP evals | `CUT` | Owner decision on 27 Aug 2026; fixed 24-case corpus, run policy, evidence format, result template, and fail-closed scorer remain in `evals/` and pass structural/self-tests | Not a challenge requirement or submission gate. No API key was created and no model cost was incurred. |
 | Actual-browser verification | `IN_PROGRESS` | The exact clean-clone `10a02ee` judge artifact presents the English landing, exact metadata, responsive layouts, subpath-safe assets, five tools on both configurators, complete two-design proposal/validation/Revert flows, and clean consoles; final public bundle `e3f95e6e…db324` also passes URL rejection, stale/pending/conflict recovery, navigation cleanup, and five consecutive North Form rehearsals; the matching private feature-on/off flows and connected-native-Chrome fallback pass | Deployed in-app-browser checks remain; feature-enabled Chrome 149+ is an additional compatibility check if configured. |
 | Public deployment | `IN_PROGRESS` | Public repository, Apache-2.0 detection, unauthenticated source access, and exact-commit hosted CI pass in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md` | Hosted judge site remains approval-gated. The deployed topology will use the real KORRHAUS shop as flagship and the public tote as portability proof; the KORRHAUS reference remains reproducibility source/test evidence. |
-| KORRHAUS no-traffic proof | `NOT_STARTED` | — | — |
+| KORRHAUS no-traffic proof | `WAITING_FOR_APPROVAL` | Current production revision/digest, safe 296-file build context, 13 focused tests, typecheck, production build, exact private hashes, and the two-revision verification sequence are recorded in `docs/evidence/KORRHAUS_DEPLOYMENT_PREFLIGHT.md` | No deployment has occurred. Approval would create tagged QA and production-candidate revisions with zero ordinary traffic; production promotion remains a separate gate. |
 | Production promotion | `NOT_STARTED` | — | Explicit approval required. |
 | Submission-ready handoff | `IN_PROGRESS` | English Devpost draft, deployment runbook, evaluation report, submission checklist, human-owned 2:45 video script, and verified provider-neutral judge artifact are present | Final URLs, hosted release evidence, human video, attestations, and submission remain. |
 
