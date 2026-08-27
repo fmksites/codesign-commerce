@@ -43,10 +43,13 @@ proceed without the owner.
 
 ## KORRHAUS flagship
 
-- `APPROVAL` — execute the two-revision zero-traffic sequence in
-  `docs/evidence/KORRHAUS_DEPLOYMENT_PREFLIGHT.md`: tagged synthetic QA first,
-  then the exact same image as a fixtures-off production candidate.
-- `PENDING` — verify revision health, logs, HTML, bundle hash, and browser flow.
+- `PASS` — approved two-revision zero-traffic sequence completed: tagged
+  synthetic QA first, then the exact same image as a fixtures-off production
+  candidate.
+- `PASS` — QA and production-candidate revision identity, health, logs, HTTP,
+  bundle hash, five-tool browser flow, Revert, fallback, and unchanged 100%
+  production traffic are recorded in
+  `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`.
 - `APPROVAL` — promote production traffic.
 - `PENDING` — verify the actual public English route and normal human fallback.
 

@@ -2,6 +2,9 @@
 
 Date: 27 August 2026
 
+Status: approved and executed. Final evidence is in
+`docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`.
+
 ## Current production baseline
 
 - Google Cloud project: `korrhaus-blog-studio-2026`
