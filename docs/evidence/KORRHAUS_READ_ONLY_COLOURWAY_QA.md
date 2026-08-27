@@ -83,7 +83,7 @@ After QA deployment, untagged zero-traffic revision
 template to production runtime, fixtures off and
 `CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED=false`. It was retired without traffic.
 
-## Actual in-app ChatGPT/WebMCP proof
+## Actual Codex/WebMCP agent-browser proof
 
 The fresh-origin user QA surface is:
 
@@ -123,6 +123,43 @@ fresh user-test tab so the owner can inspect both renders and exercise the
 visible Keep/Revert decision. No Keep, quote, upload, order, checkout or real
 customer-data action was performed by Codex.
 
+This is a real Codex site-tools run in the shared in-app browser. It proves the
+page, schemas, tool execution and live review behavior. It does not replace or
+claim the owner's separate ChatGPT Desktop browser-shell test, including its
+site-tools indicator, website-access prompt and recent-tool activity UI.
+
+## Natural-language Codex rehearsal
+
+After the owner asked whether Codex could exercise the same journey from the
+conversation, a separate clean QA page session was opened through the normal
+Route 02 control. Codex interpreted this customer brief without being given a
+tool sequence:
+
+> Help me design 120 pairs of North Form socks, split evenly across two
+> colourways. Make one cream with studio-blue accents and one dusty rose with
+> berry accents. Use standard grip and leave the final logo artwork for later.
+> Don't save anything until I have reviewed it.
+
+Codex discovered all five site tools, read committed revision
+`korrhaus-5772028f`, and listed the eight relevant option groups. Its first
+atomic attempt correctly failed with `INVALID_VALUE` because it combined one
+60-pair design with a 120-pair order total. The failure returned
+`persisted: false`. Codex recovered without human or source-level intervention:
+
+1. stage Cream as a consistent 60-pair temporary proposal;
+2. extend that proposal with Rose and raise the total to 120;
+3. validate revision 2; and
+4. switch Cream → Rose in the existing live proof.
+
+The final proposal is configuration-valid but not production-ready only because
+`FINAL_LOGO_ARTWORK_REQUIRED` remains. The Cream proof contained the expected
+`#e7dfce` sole colour and the Rose proof the expected `#b98f88` sole colour;
+`Temporary proposal not saved` survived both states. A fresh tool read still
+returned one committed design, 20 pairs and exact revision
+`korrhaus-5772028f`; the pending proposal remained `awaiting-human` and
+`persisted: false`. The browser reported no errors or warnings. Codex again did
+not click Keep or Revert.
+
 ## Superseded and still-closed paths
 
 - `korrhaus-admin-app-codesign-review-qa1` and cache key `v=20260827-9` are
@@ -136,4 +173,3 @@ customer-data action was performed by Codex.
   `korrhaus-admin-app-sock-logo-v2`, whose WebMCP flag is off.
 - No live-Shopify WebMCP claim, judge-site release, quote, order or checkout
   automation is made by this evidence.
-

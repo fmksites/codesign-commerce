@@ -28,7 +28,9 @@ URLs, URL-like text values before adapter access, and read-only validation.
 ## Actual-browser evidence
 
 The studio-tote example and the existing private KORRHAUS Designer bridge have
-each completed their five-tool flows in ChatGPT's WebMCP-capable in-app browser.
+each completed their five-tool flows in Codex's WebMCP-capable in-app browser.
+This is real supported agent-browser evidence, but it is not mislabeled as the
+owner's still-pending ChatGPT Desktop shell and permission-flow check.
 A retired synthetic KORRHAUS development harness completed the same flow before
 the live bridge was ready; it is historical runtime evidence, not a submitted
 or hosted Sock Designer. The current private bridge is pinned to bundle:
