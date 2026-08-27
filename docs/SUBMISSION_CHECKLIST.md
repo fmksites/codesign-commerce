@@ -13,7 +13,10 @@ proceed without the owner.
 - `PASS` — actual in-app-browser discovery and core flows on all three surfaces.
 - `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
   private feature-off fallback browser checks.
-- `PENDING` — complete private Designer E2E on the final bundle.
+- `PASS` — complete private Designer E2E on the final bundle: 95 passed and 1
+  intentionally skipped desktop duplicate of a mobile-only overflow case.
+- `PASS` — five consecutive frozen-build KORRHAUS North Form WebMCP rehearsals;
+  each restored the exact baseline through human Revert with no console output.
 - `CUT` — API-backed 78-run model eval; optional tooling retained, but the
   owner removed it as a submission gate on 27 August 2026.
 - `PASS` — clean clone of evidence commit `aeba23e` passes all local public gates.

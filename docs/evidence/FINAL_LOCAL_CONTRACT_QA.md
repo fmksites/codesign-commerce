@@ -57,9 +57,12 @@ Current byte-exact private gates are:
 | Private TypeScript typecheck | PASS |
 | Private production build | PASS |
 | Feature-off actual-browser fallback | PASS — normal UI, no CoDesign script, review host, tools, or console errors |
+| Complete private Designer E2E | PASS — 95 passed, 1 intentionally skipped desktop duplicate of a mobile-only overflow case |
+| Feature-on actual-browser flow | PASS — exact `e3f95e6e…db324` bytes, five tools, two temporary colourways, validation, and exact Revert |
 
-The latest feature-enabled private actual-browser run used the immediately
-preceding `3ba5118e…f6db` bundle and recorded:
+The final feature-enabled private actual-browser run used the exact current
+`e3f95e6e…db324` bytes. From fresh committed revision `korrhaus-8bbd9b55` it
+recorded:
 
 | Gate | Result |
 |---|---|
@@ -68,9 +71,17 @@ preceding `3ba5118e…f6db` bundle and recorded:
 | Public dependency references | PASS — quantities and artwork option IDs only |
 | Two-colourway proposal | PASS — two 60-pair designs, `persisted: false` |
 | Validation | PASS — coherent, not production-ready, final artwork missing |
-| Human Revert | PASS — exact `korrhaus-8a39d439` one-design/20-pair baseline |
+| Human Revert | PASS — exact `korrhaus-8bbd9b55` one-design baseline, no pending proposal |
 | Proposal and Revert network trace | PASS — no new server requests after the normal human baseline save |
 | Browser console | PASS — no errors or warnings |
+
+The Revert outcome remains visible and states that nothing was saved; normal
+editing is unlocked. The review surface was absent before the successful agent
+proposal, so ordinary human-only use remains unchanged.
+
+For historical traceability, the immediately preceding `3ba5118e…f6db` bundle
+also passed the same five-tool feature-enabled flow against baseline
+`korrhaus-8a39d439` before the external-reference hardening patch.
 
 The first attempted sequence deliberately demonstrated atomic rule enforcement:
 setting the order total to 120 before creating the second 60-pair design failed
@@ -89,11 +100,8 @@ the total to 120.
 | `app/custom-socks/designer-page.server.ts` | `3fa88662ce0e1479a3d20c0ff7ee38d8e78a1f39096839483bb1363af1826859` |
 | `app/custom-socks/designer-page.test.ts` | `f6837c8f12ee6b1ae150b121e4d697d00db8b61173f37a9c85e9ebc9983dc857` |
 
-The complete private Designer E2E suite and feature-enabled private browser
-flow have not yet been rerun against the current `e3f95e6e…db324` contract
-bundle. No deployment, public repository, public hosting,
-production activation, traffic change, DNS change, video upload, or Devpost
-submission occurred.
+No deployment, public repository, public hosting, production activation,
+traffic change, DNS change, video upload, or Devpost submission occurred.
 
 The fresh-origin check intentionally separated the normal human Route 02
 baseline save from the agent transaction. The server recorded the normal
@@ -113,3 +121,22 @@ five tools on each origin.
   50 each, returned `persisted: false`, reported final print artwork missing,
   showed human Keep/Revert, and Reverted to `tote-revision-1`.
 - Both consoles remained free of errors and warnings.
+
+## Frozen-build repeatability rehearsal
+
+The KORRHAUS public production artifact completed the full North Form sequence
+five consecutive times in the actual WebMCP-capable in-app browser. Every run:
+
+- discovered exactly five tools;
+- staged `North Form Cream` and `North Form Rose` at 60 pairs each;
+- returned `persisted: false` for proposal and design creation;
+- validated the configuration as coherent but not production-ready because
+  final artwork was missing;
+- exposed both human Keep and Revert controls;
+- Reverted to the exact `reference-revision-1` one-design baseline with no
+  pending proposal; and
+- produced no browser-console output.
+
+These were operator-driven deterministic WebMCP rehearsals. They demonstrate
+runtime repeatability but are not independent natural-language model-selection
+evaluations.

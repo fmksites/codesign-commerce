@@ -10,7 +10,10 @@ assets and no copyrighted background music.
 - Use the English anonymous reset URL.
 - Keep the KORRHAUS Designer, agent conversation, public tote, and repository
   ready in tabs before recording.
-- Rehearse the exact prompt five consecutive times on the frozen build.
+- Five operator-driven WebMCP rehearsals already pass consecutively on the
+  frozen local build. Rehearse the final narrated agent prompt on the deployed
+  immutable build before recording; do not relabel the local scripted calls as
+  independent model runs.
 - Zoom so the preview, design tabs, validation summary, and Keep/Revert controls
   remain readable in the final YouTube player.
 

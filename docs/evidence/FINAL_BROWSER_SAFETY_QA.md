@@ -35,7 +35,9 @@ server-write calls.
 
 The rebuilt bytes were synced into the approved local, disabled-by-default
 KORRHAUS bridge as `codesign-commerce.js?v=e3f95e6e`. The private focused page
-suite passed 13 tests, followed by private typecheck and production build.
+suite passed 13 tests, followed by private typecheck and production build. The
+complete private Designer Playwright suite then passed 95 tests with one
+intentional desktop skip of a mobile-only overflow case.
 
 ## Final actual-browser results
 
@@ -63,6 +65,31 @@ configurator, navigated the same tab to `about:blank`, and then could no longer
 obtain a page origin or WebMCP tool context. This proves the registrations do
 not survive navigation outside the configurator document.
 
+## Feature-enabled private flagship
+
+The local private KORRHAUS production build was also started with synthetic
+acceptance fixtures and the feature flag explicitly enabled. The exact current
+`e3f95e6e…db324` bundle:
+
+- exposed exactly five tools and no review UI before a successful proposal;
+- listed only public allowed values and public dependency option IDs;
+- staged `North Form Cream`, created `North Form Rose`, and kept both at 60
+  pairs with `persisted: false`;
+- validated the 120-pair configuration as coherent but not production-ready
+  because final logo artwork was missing;
+- exposed human Keep/Revert only after proposal success; and
+- human-Reverted to exact committed revision `korrhaus-8bbd9b55`, one design,
+  and no pending proposal.
+
+There were no proposal, creation, validation, or Revert server requests after
+the normal human baseline, and the browser console remained empty. The visible
+post-Revert outcome explicitly states that nothing was saved.
+
+Five consecutive operator-driven rehearsals of the same North Form flow also
+passed against the frozen public build, each ending at exact baseline
+`reference-revision-1` with no pending proposal and an empty console. These are
+runtime repeatability checks, not model-evaluation results.
+
 ## Feature-disabled fallback
 
 The private KORRHAUS production build was started locally with synthetic
@@ -78,4 +105,4 @@ document contained:
 
 This is local browser evidence only. It does not authorize or imply a private
 deployment, production enablement, public release, optional independent
-model-eval pass, or completed final private Playwright suite.
+model-eval pass, video publication, or Devpost submission.

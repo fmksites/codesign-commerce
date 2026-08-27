@@ -265,8 +265,21 @@ The same bundle was pinned locally into the disabled-by-default private bridge
 as `codesign-commerce.js?v=e3f95e6e`. Thirteen focused page tests, private
 typecheck, and private production build passed. With the feature flag explicitly
 off, an actual browser found the normal KORRHAUS route, eight route controls,
-and no CoDesign script, review host, WebMCP tools, or console errors. The
-feature-enabled private full-suite rerun remains pending.
+and no CoDesign script, review host, WebMCP tools, or console errors.
+
+The current byte-exact feature-enabled private bridge then passed the complete
+Designer Playwright suite with 95 passes and one intentional desktop skip of a
+mobile-only case. In the actual WebMCP-capable browser it exposed five tools,
+kept review hidden until a successful proposal, staged two 60-pair North Form
+colourways without persistence, reported the missing final artwork, and
+human-Reverted to exact committed revision `korrhaus-8bbd9b55` with no pending
+proposal, proposal/Revert server writes, or console output.
+
+The frozen public KORRHAUS artifact also passed five consecutive
+operator-driven North Form rehearsals. Each run returned `persisted: false`,
+showed both colourways and human Keep/Revert, and restored exact baseline
+`reference-revision-1`. These calls verify runtime repeatability and are not
+represented as independent model-selection results.
 
 Evidence commit `aeba23e` was cloned without local-object shortcuts into
 `/private/tmp/codesign-final-hardened.bpqpg0/repo`. The fresh clone installed

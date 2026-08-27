@@ -31,15 +31,15 @@ capable in-app browser. The current private bridge is pinned to bundle:
 
 `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
 
-The latest feature-enabled private browser run used the immediately preceding
-`3ba5118e…f6db` bundle. It found exactly five tools, hid review controls before
+The feature-enabled private browser run used the exact current
+`e3f95e6e…db324` bundle. It found exactly five tools, hid review controls before
 a successful agent proposal, returned dependency rules with bounded option
 IDs, created two temporary 60-pair colourways, reported the missing final
-artwork, and restored the exact one-design 20-pair baseline through human
-Revert with no proposal/Revert network writes and no browser console errors.
-The current `e3f95e6e…db324` private bytes pass 13 focused tests, typecheck,
-production build, and a feature-disabled actual-browser fallback; their
-feature-enabled full browser/E2E rerun remains pending.
+artwork, and restored the exact `korrhaus-8bbd9b55` one-design baseline through
+human Revert with no proposal/Revert network writes and no browser console
+errors. The same bytes pass 13 focused tests, typecheck, production build, the
+feature-disabled actual-browser fallback, and the complete private Designer
+suite with 95 passes and one intentional desktop skip of a mobile-only case.
 
 Against the exact final public bundle, both public examples rejected an HTTPS
 text value with `INVALID_VALUE`, accepted and Reverted a normal temporary
@@ -54,6 +54,12 @@ tools. Full evidence is in
 This browser proof validates page registration and runtime behavior. It does
 not measure whether an independent model consistently selects the right tool,
 and no such claim is made.
+
+Five consecutive operator-driven North Form rehearsals also passed on the
+frozen public KORRHAUS build: each discovered five tools, staged both 60-pair
+colourways with `persisted: false`, reported the missing artwork, and Reverted
+to the exact `reference-revision-1` baseline with a clean console. These are
+repeatability evidence for the WebMCP runtime, not model-selection results.
 
 ## Optional model-evaluation tooling
 
