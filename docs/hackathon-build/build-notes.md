@@ -351,3 +351,15 @@
 - Dated evidence: `docs/evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md`.
 - No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
 - Item 10 is next and begins with the required explicit owner approval before any private KORRHAUS edit.
+
+## 28 August 2026 — Item 10 completed in the local private KORRHAUS app
+
+- Felix explicitly authorized edits to the local KORRHAUS repository only; no deployment, publication, traffic or production feature change was authorized or performed.
+- Replaced the live integration path with the public Manifest 2.0 browser runtime and a narrow private KORRHAUS adapter while retaining the old five-tool source only as inert local rollback material.
+- Registered exactly six non-commercial tools and mapped the current customer-editable Route 02 surface: more than 50 controls, temporary artwork, actual proof-board previews and up to four colourways.
+- Preserved page-owned Keep/Revert, normal human autosave/upload/notification behavior, zero-write Revert, exactly-once Keep, external-change staleness and disabled-by-default activation.
+- Synthetic actual-browser evidence visibly created two 60-pair North Form colourways from a 120-pair brief and returned two distinct WebP previews from the existing sock/grip/packaging renderer.
+- Final private verification passed changed-file lint, 43 files / 220 Vitest tests, typecheck, production build, 8 active CoDesign V2 Playwright tests, 6 localization tests, the full active 107-test Playwright suite and a fresh targeted visual repeat. Full lint retains one unrelated pre-existing `no-explicit-any` error in the ABOUT YOU test.
+- Public/browser runtime parity digest: `7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`.
+- Dated public-safe evidence: `docs/evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`.
+- Item 11 is next. Local release preparation may continue, but any public deployment/publication, KORRHAUS zero-traffic deployment, production traffic change or feature enablement remains a separate explicit approval gate.

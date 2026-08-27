@@ -27,7 +27,7 @@
   "rules_acknowledged": true,
   "learning": {
     "status": "active",
-    "current_step": "build",
+    "current_step": "release-verification",
     "completed_steps": [
       "onboard",
       "scope",
@@ -42,5 +42,5 @@
     "draft_file": "devpost-submission.md",
     "status": "not-started"
   },
-  "next_command": "build-project"
+  "next_command": "build-project-item-11"
 }
