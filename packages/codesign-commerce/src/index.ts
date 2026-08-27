@@ -3,6 +3,8 @@ export * from "./manifest.js";
 export * from "./inventory.js";
 export * from "./workspace.js";
 export * from "./operations.js";
+export * from "./workspace-adapter.js";
+export * from "./proposal-engine.js";
 export * from "./adapter-boundary.js";
 export * from "./proposal-session.js";
 export * from "./in-memory-adapter.js";

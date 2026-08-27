@@ -240,6 +240,117 @@ export type OperationErrorCode =
   | "STALE_REVISION"
   | "OPERATION_ID_CONFLICT";
 
+export interface AvailabilityRequest {
+  variantId?: string;
+  elementId?: string;
+  controlIds?: string[];
+}
+
+export interface ControlAvailability {
+  controlId: string;
+  available: boolean;
+  values?: ControlChoice[];
+  reason?: string;
+}
+
+export interface AvailabilityResult {
+  committedRevision: string;
+  controls: ControlAvailability[];
+}
+
+export interface WorkspaceValidationIssue {
+  code: string;
+  severity: ValidationSeverity;
+  message: string;
+  controlIds?: string[];
+  variantIds?: string[];
+  elementIds?: string[];
+}
+
+export interface WorkspaceValidationResult {
+  configurationValid: boolean;
+  productionReady: boolean;
+  issues: WorkspaceValidationIssue[];
+  assumptions: string[];
+}
+
+export interface ProposalContext {
+  proposalId: string;
+  baseRevision: string;
+}
+
+export type ProposalEndReason = "kept" | "reverted" | "invalid" | "cancelled" | "stale" | "teardown";
+
+export interface WorkspaceAdapter<Snapshot = unknown> {
+  readWorkspace(): Promise<WorkspaceState>;
+  listAvailability(request: AvailabilityRequest): Promise<AvailabilityResult>;
+  quiescePersistence(): Promise<void>;
+  captureSnapshot(): Promise<Snapshot>;
+  beginProposalMode(context: ProposalContext): Promise<void>;
+  validateWorkspace(workspace: WorkspaceState): Promise<WorkspaceValidationResult>;
+  previewWorkspace(workspace: WorkspaceState): Promise<void>;
+  restoreSnapshot(snapshot: Snapshot): Promise<void>;
+  commitWorkspace(workspace: WorkspaceState, metadata: CommitMetadata): Promise<CommitResult>;
+  endProposalMode(reason: ProposalEndReason): Promise<void>;
+  subscribeToExternalChanges(listener: (revision: string) => void): () => void;
+}
+
+export type ProposalEngineStatus =
+  | "idle"
+  | "building"
+  | "validating"
+  | "rendering"
+  | "reviewable"
+  | "stale"
+  | "reverting"
+  | "committing"
+  | "commit-retry"
+  | "commit-uncertain";
+
+export interface ProposalEngineSnapshot {
+  status: ProposalEngineStatus;
+  proposalId: string | null;
+  proposalRevision: number;
+  baseRevision: string | null;
+  committedRevision: string | null;
+}
+
+export type ProposalEngineErrorCode =
+  | OperationErrorCode
+  | "PROPOSAL_PENDING"
+  | "STALE_PROPOSAL_REVISION"
+  | "NO_PROPOSAL"
+  | "OPERATION_IN_PROGRESS"
+  | "CANCELLED"
+  | "ADAPTER_FAILURE"
+  | "COMMIT_ALREADY_STARTED"
+  | "COMMIT_STATUS_UNKNOWN";
+
+export interface ProposalEngineErrorResult {
+  ok: false;
+  persisted: false;
+  error: {
+    code: ProposalEngineErrorCode;
+    message: string;
+    retryable: boolean;
+    outcome?: "unknown";
+  };
+  currentRevision?: string;
+}
+
+export interface ProposalEngineSuccessResult {
+  ok: true;
+  proposalId: string;
+  proposalRevision: number;
+  baseRevision: string;
+  persisted: false;
+  appliedOperations: number;
+  deduplicated: boolean;
+  workspace: WorkspaceState;
+  validation: WorkspaceValidationResult;
+  confirmation: HumanConfirmationRequirement;
+}
+
 export type ValidationSeverity = "constraint-error" | "decision-required" | "warning" | "information";
 
 export interface ValidationIssue {

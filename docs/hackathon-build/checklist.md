@@ -59,7 +59,7 @@
   Acceptance: Valid mixed batches create complete detached candidates; invalid values/targets/operations leave the prior state byte-equivalent; adapter extras and malformed nested data cannot cross the public boundary; identical retries deduplicate and conflicting operation IDs fail; no product-specific tote or sock branch enters the core.
   Verify: Run canonical-state, operation, fuzz/boundary, prototype-pollution, idempotency, and unchanged-state tests; run `npm test`, `npm run typecheck`, `npm run build`, `npm run check:public-boundary`, and `git diff --check` before commit.
 
-- [ ] **6. Build the guarded adapter and proposal transaction engine**
+- [x] **6. Build the guarded adapter and proposal transaction engine**
   Spec ref: `spec.md > Components And Responsibilities > Guarded merchant adapter` and `Proposal engine`
   What to build: Implement the manifest 2.0 adapter contract, runtime output guards, persistence quiescence, private snapshot lifecycle, explicit proposal mode, external-revision subscription, detached validation/preview, exact restore, compare-and-swap Keep metadata, proposal states/revisions, cancellation, stale handling, retryable commit, and commit-uncertain behavior. Migrate only proven transaction logic from the current implementation.
   Acceptance: One proposal is active; every async boundary rechecks revisions; invalid first proposals restore baseline; invalid refinements preserve the last inspected proposal; preview/Revert perform zero writes; external changes block Keep; duplicate Keep saves once; expected server failure does not repeat the local write; unknown outcome never auto-retries or claims success.

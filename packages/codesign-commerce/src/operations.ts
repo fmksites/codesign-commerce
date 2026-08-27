@@ -183,7 +183,7 @@ function parseOperation(value: unknown, operationIndex: number): ProposalOperati
   }
 }
 
-function parseInput(value: unknown): ApplyOperationsInput {
+export function validateApplyOperationsInput(value: unknown): ApplyOperationsInput {
   if (!isRecord(value) || !hasOnlyKeys(value, ["baseRevision", "proposalId", "proposalRevision", "operationId", "operations", "assumptions"])) {
     fail("INVALID_INPUT", "Proposal batch contains unknown or missing fields");
   }
@@ -365,8 +365,22 @@ export class AtomicOperationReducer {
     this.manifest = validateManifest(structuredClone(manifest));
   }
 
+  /**
+   * Creates an isolated ledger for a candidate batch. The caller promotes the
+   * fork only after merchant validation and rendering both succeed, so a
+   * rejected or cancelled refinement cannot consume an operation ID or budget.
+   */
+  fork(): AtomicOperationReducer {
+    const fork = new AtomicOperationReducer(this.manifest);
+    fork.#successfulOperations = this.#successfulOperations;
+    for (const [operationId, stored] of this.#results) {
+      fork.#results.set(operationId, structuredClone(stored));
+    }
+    return fork;
+  }
+
   apply(current: WorkspaceState, rawInput: unknown): OperationBatchResult {
-    const input = parseInput(rawInput);
+    const input = validateApplyOperationsInput(rawInput);
     const fingerprint = canonical(input);
     const prior = this.#results.get(input.operationId);
     if (prior) {

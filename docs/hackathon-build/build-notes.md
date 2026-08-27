@@ -305,3 +305,16 @@
 - The old proposal/adapter engine is intentionally not yet called the final architecture; Item 6 migrates it onto this guarded workspace and operation foundation.
 - No private KORRHAUS mutation, deployment, publication, traffic change, or submission occurred.
 - Item 6 is next: the guarded adapter and proposal transaction engine.
+
+## 27 August 2026 — Item 6 completed with guarded adapter and proposal transaction safety
+
+- Added the Manifest 2.0 `WorkspaceAdapter` contract and a guarded wrapper that reconstructs workspace, availability, validation and commit outputs into bounded public fields while keeping private snapshots opaque.
+- Added the replacement proposal engine with explicit proposal mode, private snapshot lifecycle, detached validation/preview, monotonic proposal revisions, external-change staleness, cancellation, exact Revert, pre-write compare-and-swap Keep and teardown cleanup.
+- Added explicit commit outcomes: expected server failure enters a deliberate retry state without repeating the local write; an unknown outcome enters `commit-uncertain` and cannot retry or claim success.
+- Candidate operation ledgers are forked and promoted only after validation and rendering succeed, preventing failed/cancelled refinements from consuming an operation ID or becoming a false deduplicated result.
+- Hardened partial-begin failure, failed-restore quarantine and pre-commit-read classification during review.
+- Focused verification passed 3 files / 37 tests. Full verification passed 17 files / 148 tests, strict typecheck, production build, public-boundary scan, 16/16 tote parity, documentation checks and `git diff --check`.
+- Added `docs/PROPOSAL_ENGINE.md` and dated evidence in `docs/evidence/CODESIGN_V2_ITEM6_PROPOSAL_ENGINE_2026-08-27.md`.
+- The new engine is not yet called the final tote integration: Items 7–9 add the production asset/preview lifecycle, exact six tools, unified review control and complete tote wiring.
+- No private KORRHAUS mutation, deployment, publication, traffic change or submission occurred.
+- Item 7 is next: production-safe asset sandbox and revision-bound preview bridge.
