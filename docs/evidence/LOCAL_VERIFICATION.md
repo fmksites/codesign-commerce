@@ -324,32 +324,40 @@ completed their full two-design proposal and validation flows with
 `persisted: false`, exposed human Keep/Revert, and Reverted to their exact
 baselines. Full evidence is in `JUDGE_SITE_RELEASE_CANDIDATE.md`.
 
-## 27 August 2026 — replacement guarded private candidate
+## 27 August 2026 — final guarded private candidate
 
-After the older zero-traffic candidate was superseded, the existing private
-KORRHAUS Sock Designer integration was hardened without changing the public
-CoDesign core bundle. The replacement local candidate passed:
+After the older zero-traffic candidate and an intermediate guarded snapshot
+were superseded, the final merged integration retained the unchanged public
+CoDesign core bundle and passed:
 
-- `node --check public/custom-socks/designer-claude.js`;
+- JavaScript syntax and focused ESLint;
 - private production build and strict typecheck;
-- 40 Vitest files and 192 tests;
-- 6 focused desktop/mobile artwork-hydration, solid-mask packaging, and unsafe
-  SVG preview cases; and
-- the complete 128-case Playwright run with 127 passes and one intentional
-  desktop skip of a mobile-only overflow case.
+- 40 Vitest files and 194 tests;
+- the exact focused WebMCP desktop/mobile slice, 18/18; and
+- the complete 138-case Playwright run with 137 passes, one expected skip, and
+  zero failures.
 
-The current private Designer source is
-`sha256:e54835c9c05a9c6500d03d25b31c93ee0f62b8065716e36f628bd4b0776036de`;
+The final private Designer source is
+`sha256:41e49ee9d3a26e1cc7112f7f6279262b20d8524172ed2a2f947e7fbb2abc6688`;
 its rebuilt minified asset is
-`sha256:13ffa7d5f239126b1dc8b884d068f4430e272fce752f2c15e669c89d862fee74`;
-and both CSS/JavaScript asset URLs use the fresh `20260827-3` cache key. The
-embedded public core remains
+`sha256:1d1f53c9447bcdf0bf15a244224d188432d5593c7583f313bb3d47b10272b970`;
+the source and minified CSS hashes are respectively
+`sha256:709ed9481889cd93ab57b94e5d6ad333e2af9b8248b800b19165389fd915c3b9`
+and
+`sha256:d044d25feb31bf4419824071542dbae6730d304b7921652a3cd646e2829c9e57`;
+and both Designer asset URLs use cache key `v=20260827-8`. The embedded public
+core remains
 `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`.
 
-This is local candidate evidence only. No guarded-candidate image was deployed,
-no customer traffic changed, and the public Shopify route was not claimed as
-updated or live-verified by this run. Full hashes and boundary evidence are in
-`KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
+Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8` produced immutable image
+`sha256:aa9c591b5efbe945d68cb1edbfd5b7c39ab5bc524b041b82d3bc7682bdcb5c4e`.
+Tagged acceptance revision `codesign-qa3` passed the exact five-tool in-app
+browser flow, and fixtures-off candidate `codesign-prod2` passed its
+zero-traffic health, HTTP, exact-asset, and log checks from the same digest.
+Ordinary traffic remains `100%` on feature-off `sock-logo-v2`; the public
+Shopify route is not yet claimed as WebMCP-live. Full evidence is in
+`KORRHAUS_GUARDED_LOCAL_CANDIDATE.md` and
+`KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
 
 ## 27 August 2026 — corrected flagship topology clean clone
 

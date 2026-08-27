@@ -13,7 +13,8 @@ proceed without the owner.
   root-plus-`/tote/` artifact verified with three release-gated KORRHAUS CTA
   slots, verified non-release URL withholding, and a `404` for the retired
   `/korrhaus/` route.
-- `PASS` — local disabled-by-default private flagship bridge.
+- `PASS` — guarded private flagship bridge, with complete local regression and
+  two-revision zero-traffic proof.
 - `PASS` — 95 deterministic public tests and the current local public
   typecheck/build/boundary/docs checks.
 - `PASS` — repository security scan findings remediated.
@@ -23,10 +24,11 @@ proceed without the owner.
   its exact baseline with a clean console.
 - `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
   private feature-off fallback browser checks.
-- `PASS` — current guarded private candidate: production build and typecheck,
-  40 unit files/192 tests, and the complete 128-case Designer browser run with
-  127 passes and 1 intentionally skipped desktop duplicate of a mobile-only
-  overflow case. See `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
+- `PASS` — current guarded private candidate: syntax, focused ESLint,
+  production build, typecheck, 40 unit files/194 tests, complete 138-case
+  Designer browser run with 137 passes and 1 expected skip, and the exact 18/18
+  WebMCP desktop/mobile slice. See
+  `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
 - `HISTORICAL` — five consecutive North Form rehearsals and the connected-native-
   Chrome fallback passed on the retired synthetic harness. They remain runtime
   evidence, not current public-surface or live-flagship proof.
@@ -47,9 +49,8 @@ proceed without the owner.
   CI run `33062478946` passed on that exact commit, and unauthenticated checks
   confirmed public `main`, Apache-2.0, raw README/source access, the tote tree,
   five tool registrations, and absence of the retired reference tree.
-- `APPROVAL` — after the fresh guarded zero-traffic proof, separately approved
-  production promotion, and live-route verification, choose a hosting provider
-  and deploy `dist/judge-site/`.
+- `APPROVAL` — after separately approved production promotion and live-route
+  verification, choose a hosting provider and deploy `dist/judge-site/`.
 - `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;
   additionally repeat in Chrome 149+ if its WebMCP testing flag is configured.
 - `PENDING` — record final public commit, bundle hash, screenshots, and links.
@@ -61,12 +62,15 @@ proceed without the owner.
   candidate predates the current safety fixes and must never be promoted.
 - `PASS` — the replacement guarded candidate is complete and fully verified
   locally in `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`.
-- `PENDING` — deploy the current bytes as a fresh tagged QA revision and then
-  the exact same immutable image as a fixtures-off zero-traffic candidate;
-  verify identity, health, logs, HTTP, privacy boundary, five tools, Revert,
-  fallback, and unchanged production traffic.
-- `APPROVAL` — promote production traffic only after that fresh zero-traffic
-  evidence passes.
+- `PASS` — guarded tagged QA revision `codesign-qa3` and fixtures-off candidate
+  `codesign-prod2` use one immutable image, passed identity, health, logs, HTTP,
+  exact asset, five-tool browser, validation, and Revert checks, and remain at
+  `0%` ordinary traffic. See
+  `docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
+- `PASS` — live traffic remains `100%` on feature-off rollback revision
+  `sock-logo-v2`; the Cloud Run service-template default was reset to
+  WebMCP-off through a retired zero-traffic hold revision.
+- `APPROVAL` — promote production traffic only after explicit owner approval.
 - `PENDING` — verify the actual public English route and normal human fallback.
 
 ## Submission materials

@@ -1,9 +1,11 @@
 # Evaluation report
 
-Status on 27 August 2026: deterministic and actual-browser behavior are
-verified locally. The owner explicitly removed the API-backed 78-run
+Status on 27 August 2026: deterministic behavior is verified locally, and the
+final guarded KORRHAUS bytes completed actual-browser verification on a tagged
+zero-traffic QA revision. The owner explicitly removed the API-backed 78-run
 probabilistic evaluation as a submission gate. It was not run and must not be
-described as passed.
+described as passed. Production traffic and live-Shopify WebMCP remain
+unverified.
 
 ## Deterministic evidence
 
@@ -33,7 +35,7 @@ or hosted Sock Designer. The current private bridge is pinned to bundle:
 
 `sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
 
-The most recent feature-enabled in-app browser run used the exact
+An earlier feature-enabled in-app browser run used the exact
 `e3f95e6e…db324` core bundle. It found exactly five tools, hid review controls before
 a successful agent proposal, returned dependency rules with bounded option
 IDs, created two temporary 60-pair colourways, reported the missing final
@@ -42,14 +44,25 @@ human Revert with no proposal/Revert network writes and no browser console
 errors. This remains historical actual-browser evidence because later private
 adapter and artwork-preview guards changed the host Designer bytes.
 
-The replacement guarded local candidate keeps the same core bundle and now
-passes production build, typecheck, 40 unit files/192 tests, six focused
-desktop/mobile artwork-hydration, packaging-mask, and unsafe-SVG cases, and the
-complete 128-case private Designer run with 127 passes and one intentional
-desktop skip of a mobile-only case. It also uses a fresh `20260827-3` asset key.
-This is local candidate evidence only: it has not been deployed, enabled for
-customers, or verified on the public Shopify route. See
-[`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
+The final guarded snapshot keeps the same core bundle and uses the
+`20260827-8` Designer asset key. It passes syntax, focused ESLint, production
+build, strict typecheck, 40 unit files/194 tests, the complete 138-case private
+Designer run with 137 passes and one expected skip, and the exact 18/18 focused
+WebMCP desktop/mobile slice.
+
+Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8` produced immutable image
+`sha256:aa9c591b5efbe945d68cb1edbfd5b7c39ab5bc524b041b82d3bc7682bdcb5c4e`.
+On tagged QA revision `codesign-qa3`, the real in-app WebMCP browser discovered
+all five tools, rejected an invalid single-design 60/120 allocation, staged two
+60-pair colourways with `persisted: false`, reported only
+`FINAL_LOGO_ARTWORK_REQUIRED`, and Reverted to exact revision
+`korrhaus-3fe7f8ed` with no browser errors. Fixtures-off candidate
+`codesign-prod2` uses the same image and remains healthy at `0%` ordinary
+traffic. Live traffic remains `100%` on feature-off `sock-logo-v2`; therefore
+this is not live-Shopify WebMCP evidence. See
+[`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
+and
+[`evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
 
 Against the exact final public bundle, the tote and the now-retired synthetic
 development harness rejected an HTTPS text value with `INVALID_VALUE`, accepted

@@ -3,8 +3,10 @@
 > **SUPERSEDED — NEVER PROMOTE THIS REVISION.** This file preserves historical
 > evidence for `korrhaus-admin-app-codesign-prod1`. Later private safety changes
 > changed the Designer bytes and asset key. A fresh QA revision and a fresh
-> fixtures-off zero-traffic candidate from one new immutable image are required
-> before any production-traffic decision.
+> fixtures-off zero-traffic candidate from one new immutable image were required
+> before any production-traffic decision. That later guarded proof is now
+> recorded in
+> [`KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
 
 Date: 27 August 2026
 
@@ -13,7 +15,7 @@ Date: 27 August 2026
 The approved two-revision Cloud Run verification sequence passed. Ordinary
 KORRHAUS storefront traffic remained unchanged throughout.
 
-Current production rollback baseline:
+Production rollback baseline at the time of this historical verification:
 
 - revision: `korrhaus-admin-app-00353-rag`
 - ordinary traffic: `100%`
@@ -114,5 +116,5 @@ contained no CoDesign script, review host, or enabled WebMCP marker.
 This historical evidence proves only the superseded image and zero-traffic
 candidate described above. It does not authorize traffic promotion.
 `korrhaus-admin-app-codesign-prod1` must never receive production traffic. The
-next deployment action is a fresh two-revision, zero-traffic sequence for the
-latest guarded bytes; production promotion remains a later explicit owner gate.
+later guarded two-revision proof is recorded separately; production promotion
+remains an explicit owner gate.

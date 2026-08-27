@@ -155,10 +155,12 @@ outside the public model.
   [`evidence/STUDIO_TOTE_PORTABILITY.md`](./evidence/STUDIO_TOTE_PORTABILITY.md).
 - Current guarded private flagship candidate:
   [`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
+- Current guarded immutable-image and zero-traffic browser proof:
+  [`evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
 - Historical private five-tool browser run, predating the current host guards:
   [`evidence/KORRHAUS_LOCAL_FIVE_TOOL.md`](./evidence/KORRHAUS_LOCAL_FIVE_TOOL.md).
-- Historical, superseded zero-traffic candidate (never promote; a fresh guarded
-  candidate is required):
+- Historical, superseded `codesign-prod1` zero-traffic candidate (never
+  promote):
   [`evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md).
 - Deterministic and browser test policy: [`TESTING.md`](./TESTING.md).
 - Trust boundary: [`ARCHITECTURE.md`](./ARCHITECTURE.md).

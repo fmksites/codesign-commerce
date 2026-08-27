@@ -86,11 +86,14 @@ tote portability proof is recorded in
 [evidence/STUDIO_TOTE_PORTABILITY.md](./evidence/STUDIO_TOTE_PORTABILITY.md).
 The current guarded KORRHAUS Designer candidate is recorded in
 [evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
+Its immutable-image, tagged-QA browser, and fixtures-off zero-traffic proof is
+recorded in
+[evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
 The earlier five-tool actual-browser run remains historical evidence in
 [evidence/KORRHAUS_LOCAL_FIVE_TOOL.md](./evidence/KORRHAUS_LOCAL_FIVE_TOOL.md).
 The older
 [zero-traffic release](./evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md) is explicitly
-superseded and must never be promoted; a fresh guarded candidate is required.
+superseded and its `codesign-prod1` candidate must never be promoted.
 The deployable landing-plus-tote artifact is verified in
 [evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./evidence/JUDGE_SITE_RELEASE_CANDIDATE.md).
 The older public-reference browser documents remain dated synthetic-harness

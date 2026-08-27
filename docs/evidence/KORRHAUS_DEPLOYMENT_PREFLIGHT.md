@@ -2,29 +2,30 @@
 
 > **SUPERSEDED PREFLIGHT.** The hashes and candidate sequence below belong to an
 > older private integration. Retain them as dated history, but do not deploy or
-> promote from this file. The latest guarded source requires a new immutable
-> image, QA revision, fixtures-off zero-traffic candidate, and fresh evidence.
+> promote from this file. The later guarded immutable-image proof is recorded in
+> `docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
 
 Date: 27 August 2026
 
 Historical status: approved and executed for the superseded image. Historical
 evidence is in `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`.
 
-## Current production baseline
+## Historical production baseline
 
 - Google Cloud project: `korrhaus-blog-studio-2026`
 - Cloud Run service: `korrhaus-admin-app`
 - Region: `europe-west1`
-- Current 100% traffic revision: `korrhaus-admin-app-00353-rag`
-- Current immutable image digest:
+- 100% traffic revision at the time: `korrhaus-admin-app-00353-rag`
+- Immutable image digest at the time:
   `sha256:9678c2bf5c9f2f979e08fad2a91f6965e8bb07706e361febe3271890d908adfe`
 - Custom Sock runtime: `production`
 - Storefront: enabled
 - Acceptance fixtures: disabled
 - `CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED`: absent, therefore disabled
 
-The existing revision is the rollback baseline. No traffic, DNS, Shopify app
-configuration, or production environment setting changed during this preflight.
+That revision was the rollback baseline during this historical preflight. No
+traffic, DNS, Shopify app configuration, or production environment setting
+changed during it.
 
 ## Build-context safety gate
 
@@ -63,11 +64,12 @@ path audit found none of the excluded categories or local environment files.
 
 These match the already completed local browser and 96-case regression evidence.
 
-## Proposed zero-traffic sequence
+## Historical zero-traffic sequence
 
-This sequence requires explicit owner approval before execution.
+This sequence required and received explicit owner approval before its
+historical execution.
 
-1. Build the current allowlisted private source into a tagged Cloud Run QA
+1. Build the then-current allowlisted private source into a tagged Cloud Run QA
    revision with zero production traffic.
 2. Enable `CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED=true` and synthetic
    `CUSTOM_SOCK_ACCEPTANCE_FIXTURES=true` only on that QA revision.
@@ -78,8 +80,8 @@ This sequence requires explicit owner approval before execution.
    production candidate with acceptance fixtures disabled and the WebMCP flag
    enabled.
 5. Verify the production candidate's identity, configuration, health, logs,
-   asset hash, and that revision `00353-rag` still receives 100% of ordinary
-   traffic.
+   asset hash, and that revision `00353-rag` still received 100% of ordinary
+   traffic at that time.
 6. Stop and present the evidence. Do not promote traffic without a separate
    written approval.
 
@@ -89,7 +91,7 @@ production candidate cannot expose synthetic acceptance fixtures.
 
 ## Boundary
 
-Approval for this sequence would authorize Cloud Build image creation and two
-tagged zero-traffic Cloud Run revisions. It would not authorize production
+Approval for this historical sequence authorized Cloud Build image creation and
+two tagged zero-traffic Cloud Run revisions. It did not authorize production
 traffic, DNS changes, Shopify app configuration changes, customer-data access,
 the public judge-site deployment, YouTube publication, or Devpost submission.

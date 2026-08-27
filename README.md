@@ -16,24 +16,31 @@ Local implementation began on 26 August 2026 after explicit approval. The curren
 - Atomic proposal extension and idempotent design cloning for multi-colourway briefs.
 - Deterministic tests proving that proposal previews do not cross the persistence boundary.
 - A framework-neutral, accessible Keep/Revert review component.
-- A narrow private bridge that connects the same public runtime to KORRHAUS's existing Sock Designer; the current guarded integration has passed local verification while production remains unchanged. Earlier zero-traffic evidence is superseded by this newer candidate until it is repeated.
+- A narrow private bridge that connects the same public runtime to KORRHAUS's
+  existing Sock Designer. The final guarded snapshot passed local regression
+  and two-revision zero-traffic verification from one immutable image.
+  Production traffic remains unchanged, so live-Shopify WebMCP is not yet
+  claimed.
 - A materially different studio-tote example with its own manifest, adapter,
   renderer, real product assets, coupled canvas/print rules, anonymous reset,
   and the same unchanged five-tool core and review UI.
-- 95 deterministic public tests and prior clean-clone proof; the current guarded
-  private integration also passes 192 unit tests and the complete 128-case
-  desktop/mobile Designer run with 127 passes and one intentional desktop skip.
-  Exact-bundle feature-on/off evidence and five frozen-build North Form
-  rehearsals remain clearly identified as historical where they predate the
-  latest private hardening.
+- 95 deterministic public tests and prior clean-clone proof. The current private
+  integration passes syntax and focused lint, 40 Vitest files with 194 tests,
+  strict typecheck, production build, the complete 138-case desktop/mobile
+  Designer run with 137 passes and one expected skip, and an exact 18/18 focused
+  WebMCP desktop/mobile slice.
+- Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8` produced immutable image
+  `sha256:aa9c591b…cb5c4e`. Tagged acceptance revision `codesign-qa3` and
+  fixtures-off candidate `codesign-prod2` passed at `0%` ordinary traffic;
+  live traffic remains `100%` on feature-off rollback revision `sock-logo-v2`.
 
 The repository is public and licensed under Apache-2.0. The corrected
-landing-plus-tote topology is published on `main`; hosted CI passed on exact
-commit `485060654fb9c209df6f7614006875b55d375947`. Public hosting, KORRHAUS
-production promotion, video publication, and Devpost submission remain
-incomplete or approval-gated. The API-backed 78-run model evaluation was
-explicitly removed as a submission gate; its corpus and scorer remain optional
-quality tooling.
+landing-plus-tote topology is published on `main`; the exact final submission
+commit and matching hosted-CI run will be recorded after these evidence updates
+are committed and CI passes. Public hosting, KORRHAUS production promotion,
+video publication, and Devpost submission remain incomplete or approval-gated.
+The API-backed 78-run model evaluation was explicitly removed as a submission
+gate; its corpus and scorer remain optional quality tooling.
 
 ## Local verification
 
@@ -93,10 +100,13 @@ See:
 - [EXECUTION_PLAN.md](./EXECUTION_PLAN.md) for the approved plan and current evidence log.
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for runtime, transaction, and trust boundaries.
 - [docs/MANIFEST_AND_ADAPTER.md](./docs/MANIFEST_AND_ADAPTER.md) for merchant integration obligations.
-- [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the read-only flagship integration map.
+- [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the private flagship integration map and safety boundary.
+- [docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md](./docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md) for the distinction between on-page WebMCP capability and traffic acquisition.
 - [docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
-  for the current private integration hashes, regressions, and explicit
-  no-deployment boundary.
+  for the exact current private snapshot and complete local regression.
+- [docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md](./docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md)
+  for the immutable-image QA and fixtures-off candidate proof, unchanged live
+  traffic, and the still-closed production-promotion gate.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.

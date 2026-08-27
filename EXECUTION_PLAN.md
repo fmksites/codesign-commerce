@@ -2,7 +2,10 @@
 
 ## Document status
 
-- **Status:** Approved for local execution on 26 August 2026. External approval gates remain binding.
+- **Status:** Guarded local verification and the approved two-revision
+  KORRHAUS zero-traffic proof are complete. Production traffic promotion,
+  live-Shopify verification, judge-site hosting, and submission gates remain
+  binding.
 - **Last updated:** 27 August 2026, Europe/Amsterdam.
 - **Execution model:** GPT-5.6 Sol with Extra High reasoning.
 - **Challenge deadline:** 3 September 2026 at 13:00 PDT / 22:00 CEST.
@@ -14,7 +17,11 @@ The persistent Codex goal, when explicitly authorized, should remain short and p
 
 > Execute the approved CoDesign Commerce plan in `EXECUTION_PLAN.md`, satisfy every milestone and acceptance criterion, and stop at every defined approval gate.
 
-This document does not authorize implementation, Git initialization, publication, deployment, production modification, traffic promotion, DNS changes, external uploads, or Devpost submission.
+This document alone does not authorize a new external action. The decision log
+records the separately approved implementation, publication, and zero-traffic
+deployment work already completed. Production traffic promotion, DNS changes,
+external uploads, judge-site hosting, and Devpost submission still require
+their stated approvals.
 
 ### Current topology amendment — 27 August 2026
 
@@ -674,8 +681,12 @@ An agent proposal must not call these normal persistence paths.
 
 ### 7.2 Required sequence
 
-1. **Flush recent human edits.** If a normal save timer is pending, commit the current human state rather than silently discarding it.
-2. **Await active save completion.** Add tracked in-flight save state if the current implementation cannot expose this safely.
+1. **Never start a save for an agent request.** If a normal human autosave is
+   already scheduled, wait for that existing timer and save path to finish. If
+   no securely confirmed baseline exists afterward, decline the proposal and
+   leave normal editing available.
+2. **Await active normal-save completion.** Track in-flight save state so the
+   adapter can wait without creating, retrying, or accelerating a write.
 3. **Read and capture the committed raw snapshot.** Keep it inside the private adapter.
 4. **Construct the canonical committed state.** Export only allowlisted public fields.
 5. **Enter proposal mode.** Mark persistence and commercial refresh paths as suppressed.
@@ -1116,6 +1127,26 @@ Do not build the tote or broad polish until this passes.
 - Health and browser evidence.
 - Asset-hash comparison.
 
+**Current result**
+
+- The KORRHAUS portion passed on one immutable image: tagged acceptance revision
+  `korrhaus-admin-app-codesign-qa3` and fixtures-off production candidate
+  `korrhaus-admin-app-codesign-prod2` are both healthy at `0%` ordinary traffic.
+- The exact five-tool in-app-browser flow passed on `qa3`; the invalid
+  single-design 60/120 allocation was rejected, the valid 2 × 60 allocation was
+  visibly staged with `persisted: false`, validation reported only missing final
+  logo artwork, and Revert restored the exact baseline.
+- Ordinary traffic remains `100%` on feature-off rollback revision
+  `korrhaus-admin-app-sock-logo-v2`.
+- After verification, zero-traffic hold revision
+  `korrhaus-admin-app-codesign-hold1` reset the Cloud Run service-template
+  default to WebMCP-off and was immediately retired. It is not a customer
+  surface.
+- Public judge-site hosting is still approval-gated and is tracked separately.
+
+Exact evidence:
+[`docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
+
 **Approval gate**
 
 Stop for explicit approval before production traffic promotion or DNS changes.
@@ -1444,6 +1475,8 @@ Codex may review the supplied video and final submission text before publication
 - [x] Permit the KORRHAUS name and wordmark, KORRHAUS-owned sock illustrations, and the public Designer UI in the public repository and demo. Customer assets, private data, confidential pricing, margins, supplier data, and private administrative UI remain excluded.
 - [x] Public remote repository creation and push are authorized; hosted judge-site deployment remains a later approval gate.
 - [x] Permit local modification and testing of the private KORRHAUS project after the critical public vertical slice is proven, behind a disabled-by-default feature flag. Deployment, production activation, and publication remain separate gates.
+- [x] Permit the two-revision zero-traffic KORRHAUS verification sequence from
+  one immutable image. Production traffic promotion remains a separate gate.
 
 ### May be decided later
 
@@ -1582,17 +1615,17 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Baseline captured | `PASS` | Pre-start Cloud Run revision/digest and source separation recorded in `docs/evidence/PRE_CHALLENGE_BASELINE.md`; baseline commit `abf2a7829fdd188c2f2492e9c9d53a247a6ede7f` | Baseline commit timestamp is after written authorization. |
 | Public foundation | `PASS` | Security-remediation clean clone of `2f7235b` passed `npm ci`, 73 tests, strict source/test typecheck, core plus both example builds, public-boundary over 91 tracked candidates, 28 docs, 24 eval-corpus cases, browser-bundle digest `sha256:dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b`, and an empty final status; Apache-2.0 is present. Public release evidence is in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md`. | Public repository `fmksites/codesign-commerce`, Apache-2.0 detection, exact-commit hosted CI, and unauthenticated source access now pass. |
 | Transaction vertical slice | `PASS` | 45 deterministic tests; actual WebMCP discovery and proposal in the in-app browser; zero-write Revert and exactly-one-write-boundary Keep; native Chrome keyboard check; desktop/mobile visual comparison in `design-qa.md`; bundle `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a` | The public adapter proves the complete Phase 2 transaction and hides the review surface until a proposal succeeds. |
-| KORRHAUS safety gate | `PASS` | `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`; exact zero-write Revert and one-normal-save Keep assertions; production-catalog privacy checks; private typecheck/build; 40 unit files/192 tests; 127 passed and 1 intentionally skipped complete 128-case E2E | Local and disabled by default. Nothing from the guarded candidate was deployed, enabled in production, or promoted. |
+| KORRHAUS safety gate | `PASS` | `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`; syntax and focused ESLint; 40 Vitest files/194 tests; strict typecheck; production build; complete 138-case Playwright run with 137 passes and 1 expected skip; focused exact WebMCP desktop/mobile slice 18/18 | The tested bytes match immutable image `sha256:aa9c591b…cb5c4e`. Only zero-traffic revisions use the guarded feature; ordinary traffic remains on a feature-off rollback revision. |
 | Complete tool suite | `PASS` | Public source commit `ea54e71` and private pinned bundle register exactly five tools; public and private actual-browser evidence covers discovery, option listing, proposal extension, design creation, validation, and Revert | The complete North Form behavior passed first in the retired synthetic harness and independently in the real private merchant configurator. |
 | Synthetic KORRHAUS reference | `RETIRED` | The former reference completed the exact two-colourway scenario and remains documented in `docs/evidence/NORTH_FORM_FIVE_TOOL.md` | Development evidence only. It is removed from the active package and judge artifact and must not be presented as a submitted or hosted demo. |
 | Tote portability proof | `PASS` | `examples/studio-tote/` and `docs/evidence/STUDIO_TOTE_PORTABILITY.md`; unchanged core diff; actual five-tool browser flow; coupled-rule failure; zero-write Revert; human persistence; responsive product renderer; clean clone of `13a168d` | Fictional public reference, not claimed as a live merchant or universal renderer. Native-size desktop capture remains final QA. |
 | Public judge landing | `PASS` | Corrected commit `e137a3b` removes `/korrhaus/`, retains `/tote/`, withholds all three release-gated KORRHAUS CTA URLs in non-release output, renders responsively with a clean console, exposes five tote tools, and passed the full clean-clone gate set; see `docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md`. | Local immutable artifact is complete. Exact Shopify binding and a release build remain blocked until live verification. |
-| Deterministic QA | `PASS` | Fresh clone of corrected public commit `e137a3b` passes 95 tests, strict typecheck/build, exact bundle verification, boundary/docs/judge/eval checks, `git diff --check`, and empty status. The guarded private integration passes 192 unit tests, typecheck, production build, focused desktop/mobile safety cases, and the complete 128-case browser suite with 127 passes and 1 intentional skip. | Current public and private local candidates have complete deterministic evidence. Deployment surfaces remain separate gates. |
+| Deterministic QA | `PASS` | Fresh clone of corrected public commit `e137a3b` passes 95 tests, strict typecheck/build, exact bundle verification, boundary/docs/judge/eval checks, `git diff --check`, and empty status. The final guarded private snapshot passes syntax, focused ESLint, 40 files/194 tests, typecheck, production build, 18/18 focused WebMCP desktop/mobile cases, and the complete 138-case suite with 137 passes and 1 expected skip. | Current public and private local candidates have complete deterministic evidence. Production activation and live-Shopify verification remain separate gates. |
 | API-backed WebMCP evals | `CUT` | Owner decision on 27 Aug 2026; fixed 24-case corpus, run policy, evidence format, result template, and fail-closed scorer remain in `evals/` and pass structural/self-tests | Not a challenge requirement or submission gate. No API key was created and no model cost was incurred. |
-| Actual-browser verification | `IN_PROGRESS` | Corrected non-release landing renders at 1280px and 390px with all imagery, no overflow, disabled KORRHAUS CTA slots, and a clean console. The sole tote demo exposes exactly five tools, stages and validates two 50-unit variants with `persisted: false`, then Reverts to exact `tote-revision-1` with a clean console. Historical browser evidence covers the retired harness and older private feature-on/off flows. | After separately approved production activation, verify the current private bytes on the real Shopify route. Feature-enabled Chrome 149+ is an additional compatibility check if configured. |
+| Actual-browser verification | `IN_PROGRESS` | The sole tote demo exposes exactly five tools, stages and validates two 50-unit variants with `persisted: false`, and Reverts exactly. On tagged QA revision `codesign-qa3`, the real in-app WebMCP browser discovered all five tools, rejected invalid 60/120 allocation, staged and validated 2 × 60 with only final artwork missing, and Reverted to exact revision `korrhaus-3fe7f8ed` with no browser errors. | Zero-traffic actual-browser evidence passes. After separately approved production activation, verify the same bytes on the real Shopify route; no live-Shopify WebMCP claim exists yet. |
 | Public deployment | `IN_PROGRESS` | Corrected public commit `4850606`, Apache-2.0 detection, unauthenticated source/tree access, and exact-commit hosted CI run `33062478946` pass in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md` | Public source release is complete. Judge-site hosting remains separately approval-gated after the real KORRHAUS shop is live-verified; tote is the only standalone demo. |
-| KORRHAUS no-traffic proof | `SUPERSEDED` | Historical evidence remains in `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md` for QA revision `codesign-qa2` and candidate `codesign-prod1`; neither carried ordinary traffic. | The current guarded integration contains later safety fixes and must be deployed and verified as a fresh zero-traffic immutable image. Revision `00353-rag` still retains 100% ordinary traffic. Never promote `codesign-prod1`. |
-| Production promotion | `NOT_READY` | Rollback target remains `korrhaus-admin-app-00353-rag`; there is no current verified production candidate. | Local regression is complete. First complete a fresh two-revision zero-traffic proof, then request explicit approval before changing traffic. |
+| KORRHAUS no-traffic proof | `PASS` | `docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`; Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8`; one immutable `aa9c…` image; healthy tagged `codesign-qa3` and fixtures-off `codesign-prod2`; exact deployed asset hashes; clean production-candidate logs; `0%` ordinary traffic on both | Live traffic remains `100%` on feature-off `sock-logo-v2`. Historical `codesign-prod1` evidence remains superseded and that revision must never be promoted. |
+| Production promotion | `WAITING_FOR_APPROVAL` | Verified candidate `korrhaus-admin-app-codesign-prod2` remains ready and tagged at `0%`; rollback baseline is `korrhaus-admin-app-sock-logo-v2` at `100%`; post-verification `codesign-hold1` reset the service-template default to WebMCP-off and was retired without traffic | Explicit owner approval is required before traffic changes. The real Shopify route must then be verified in an actual supported WebMCP browser; roll back immediately on a critical failure. |
 | Submission-ready handoff | `IN_PROGRESS` | English Devpost draft, deployment runbook, evaluation report, submission checklist, and human-owned 2:45 video script are present | Corrected immutable judge artifact, final URLs, hosted release evidence, human video, attestations, and submission remain. |
 
 ### Decision log
@@ -1623,7 +1656,7 @@ than rewritten.
 | 27 Aug 2026 | Use the binding earlier Devpost deadline when official pages disagree. | Codex verification | Devpost rules/overview say 3 Sep at 1 PM PT; internal materials use that rather than the OpenAI marketing page's later time. |
 | 27 Aug 2026 | Treat scripted tool calls and synthetic scorer fixtures as runtime/scorer evidence only. | Codex verification | They remain valid tooling/runtime evidence but cannot be relabeled as an independent model result; the next owner decision removes that result as a submission gate. |
 | 27 Aug 2026 | Remove the API-backed 78-run model evaluation as a submission gate. | User | No OpenAI API key or spend is needed; retain the corpus/scorer as optional tooling and prioritize the working judge experience. |
-| 27 Aug 2026 | Close the final local private regression and feature-enabled browser gates. | Codex verification | Exact current bundle `e3f95e6e…db324` passes the 96-case Designer run, the private five-tool North Form flow, zero-write Revert, and the feature-off fallback. |
+| 27 Aug 2026 | Close the then-current local private regression and feature-enabled browser gates. | Codex verification | Historical snapshot: core `e3f95e6e…db324` passed the 96-case Designer run, private five-tool North Form flow, zero-write Revert, and feature-off fallback before later host changes required the final rerun below. |
 | 27 Aug 2026 | Close the frozen-build repeatability rehearsal gate. | Codex verification | Five consecutive operator-driven public North Form runs complete and Revert exactly with clean consoles; this is runtime evidence, not an independent model eval. |
 | 27 Aug 2026 | Close the local public judge-landing and single-artifact gate. | Codex verification | `10a02ee` adds the missing plan-required landing and assembles both examples under one provider-neutral release root; clean-clone desktop/mobile and full WebMCP flow evidence pass. |
 | 27 Aug 2026 | Publish the public repository under `fmksites/codesign-commerce`. | User approval / Codex verification | GitHub recognizes Apache-2.0, hosted CI passes on exact commit `1c58b37`, and repository, README, license, and WebMCP source are publicly accessible. |
@@ -1631,10 +1664,15 @@ than rewritten.
 | 27 Aug 2026 | Retire the synthetic public KORRHAUS reference from the active repository and judge artifact. | User clarification | Supersedes the active effect of the 26 August dual-reference decision and the earlier repository-retention clause above. The challenge has one live KORRHAUS flagship link and one standalone tote demo; dated synthetic-harness evidence stays clearly historical. |
 | 27 Aug 2026 | Approve the two-revision zero-traffic KORRHAUS verification sequence. | User | Tagged synthetic QA and fixtures-off production-candidate revisions may be created from one immutable image; production traffic remains a separate gate. |
 | 27 Aug 2026 | Close the KORRHAUS zero-traffic gate on `codesign-prod1`. | Codex verification | Exact-image QA browser proof, fixtures-off production configuration, clean logs, exact bundle hash, and unchanged 100% traffic on `00353-rag` pass. |
-| 27 Aug 2026 | Supersede `codesign-prod1` after deeper private-integration review. | Codex verification | Later guards preserve hidden production fields, require securely stored artwork for readiness, isolate lifecycle generations, sanitize production-catalog tool output, and remove tools in unsupported exact-colour states. A fresh zero-traffic candidate is required; ordinary traffic remains unchanged. |
-| 27 Aug 2026 | Close the replacement guarded private local candidate. | Codex verification | The unchanged public core bundle plus the hardened private adapter and `20260827-3` Designer assets pass build, typecheck, 192 unit tests, 6 focused artwork/security browser cases, and the complete 128-case desktop/mobile run with 127 passes and 1 intentional skip. No deployment or production traffic change occurred. |
+| 27 Aug 2026 | Supersede `codesign-prod1` after deeper private-integration review. | Codex verification | Later guards preserve hidden production fields, require securely stored artwork for readiness, isolate lifecycle generations, sanitize production-catalog tool output, and remove tools in unsupported exact-colour states. At that point a fresh zero-traffic candidate was required; the later `codesign-prod2` row records its completion. |
+| 27 Aug 2026 | Close the then-current replacement guarded private local candidate. | Codex verification | Historical snapshot only: the unchanged public core plus `20260827-3` Designer assets passed build, typecheck, 192 unit tests, 6 focused artwork/security cases, and the 128-case desktop/mobile run. It was later superseded by the final merged `20260827-8` snapshot below. |
 | 27 Aug 2026 | Close the corrected local judge-topology gate. | Codex verification | Commit `e137a3b` contains only the root landing and sole standalone tote demo, passed the complete clean-clone gate set, and withholds unverified release links. Public push, hosted CI, live KORRHAUS binding, and hosting remain separate gates. |
 | 27 Aug 2026 | Publish the corrected public topology. | User approval / Codex verification | Public `main` resolves to `4850606`; exact-commit hosted CI passes, GitHub detects Apache-2.0, and unauthenticated tree/source checks confirm the tote-only example topology and all five registrations. |
+| 27 Aug 2026 | Interpret “agent proposals must not trigger autosave” literally. | User direction / Codex implementation | The private adapter may wait for an already-scheduled normal human autosave, but the proposal path never initiates a baseline write. It declines when no securely confirmed baseline exists; Revert remains zero-write and Keep is the only proposal-authorized save path. |
+| 27 Aug 2026 | Separate WebMCP capability from traffic acquisition. | User goal / Codex clarification | The existing English Shopify Designer is the agent destination and the tote is only the reproducible package demo. WebMCP improves an open page session; crawlability, supported-agent access, distribution, and privacy-safe funnel measurement are a separate evidence-backed workstream. |
+| 27 Aug 2026 | Close the final merged guarded private snapshot. | Codex verification | Public core `e3f95e6e…db324` plus `20260827-8` Designer assets passed syntax, focused ESLint, 40 files/194 tests, strict typecheck, production build, the full 138-case Playwright run with 137 passes and 1 expected skip, and the exact 18/18 WebMCP desktop/mobile slice. |
+| 27 Aug 2026 | Close the guarded replacement zero-traffic gate on `codesign-prod2`. | Codex verification | Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8` produced immutable image `sha256:aa9c591b…cb5c4e`; tagged `codesign-qa3` passed the real five-tool in-app-browser flow and fixtures-off `codesign-prod2` passed health, HTTP, exact-asset, and clean-log checks. Both remain at `0%`; ordinary traffic remains `100%` on feature-off `sock-logo-v2`. This does not claim live-Shopify WebMCP. |
+| 27 Aug 2026 | Restore the Cloud Run service-template default to WebMCP-off after candidate verification. | Codex safety action | Zero-traffic `codesign-hold1` from the same immutable image set `CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED=false`, received no tag or traffic, and was immediately retired. It is not a customer surface; ready tagged `codesign-prod2` remains unchanged at `0%`. |
 
 ---
 
