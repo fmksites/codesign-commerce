@@ -17,14 +17,13 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 - A materially different studio-tote adapter using its existing visual renderer, real supplied artwork, coupled production rules, deterministic reset, browser-local Keep, and zero-write temporary proposals.
 - Deterministic unit, schema, lifecycle, safety, review, asset, and preview tests. Native Chrome 151 and the Codex in-app browser both discovered the exact six tools and executed a visible proposal/preview/Revert flow with zero writes.
 
-This is local implementation evidence, not a release claim. The complete tote
-product and the private KORRHAUS Manifest 2 adapter are implemented and locally
-verified. The KORRHAUS feature remains disabled by default and has not been
-deployed. Publishing the current public source, deploying the tote site,
-literal ChatGPT release validation, any KORRHAUS release or traffic change, the
-required YouTube video, and Devpost submission remain separate approval-gated
-steps. The optional model-evaluation corpus and scorer are quality tooling, not
-proof of an actual model run.
+The source and complete tote reference are public. The private KORRHAUS
+Manifest 2 adapter is implemented and locally verified, but its WebMCP feature
+remains disabled by default and no KORRHAUS release or traffic change is part
+of this public repository release. Hosted-client verification, the required
+YouTube video, and Devpost submission remain separately evidenced and
+approval-gated. The optional model-evaluation corpus and scorer are quality
+tooling, not proof of an actual model run.
 
 ## Local verification
 

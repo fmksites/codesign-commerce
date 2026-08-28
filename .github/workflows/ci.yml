@@ -13,10 +13,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -30,8 +30,10 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Build
-        run: npm run build
+      - name: Build release artifact
+        run: npm run build:release
+        env:
+          CODESIGN_PUBLIC_REPOSITORY_URL: https://github.com/fmksites/codesign-commerce
 
       - name: Verify browser bundle
         run: npm run verify:browser-bundle
@@ -47,3 +49,6 @@ jobs:
 
       - name: Validate evaluation corpus
         run: npm run check:evals
+
+      - name: Verify tote control parity
+        run: npm run check:parity
