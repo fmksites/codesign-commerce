@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "npm run build:workspaces && npm run build:judge-site",
+    "build:shopify-demo": "npm run build && node scripts/build-shopify-theme-demo.mjs",
     "build:workspaces": "npm run build --workspaces --if-present",
     "build:judge-site": "node scripts/assemble-judge-site.mjs",
     "build:release": "npm run build:workspaces && node scripts/assemble-judge-site.mjs --require-release-links",

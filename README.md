@@ -6,6 +6,8 @@
 
 **Live challenge demo:** <https://codesign-webmcp.pages.dev/>
 
+**Shopify-hosted interoperability proof (password-protected development store):** <https://korrhaus-development.myshopify.com/pages/codesign-webmcp-tote-demo>
+
 **Public source:** <https://github.com/fmksites/codesign-webmcp>
 
 CoDesign WebMCP connects AI agents to the product designer already on your Shopify store, allowing them to create and validate custom-product configurations inside the live customer experience.
@@ -25,6 +27,7 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 - No WebMCP Keep, Revert, save, order, quote, checkout, payment, upload, customer, pricing, supplier, or administration tool.
 - One accessible page review controller. Ordinary controls stay visible and lock only while a proposal is open; Keep stays disabled until the current visual preview exists.
 - A materially different studio-tote adapter using its existing visual renderer, real supplied artwork, coupled production rules, deterministic reset, browser-local Keep, and zero-write temporary proposals.
+- A Shopify Liquid deployment overlay that runs the same tested tote bundle on a real Online Store page while retaining Shopify's own storefront WebMCP adapter and standard actions.
 - Deterministic unit, schema, lifecycle, safety, review, asset, and preview tests. Native Chrome 151 and the Codex in-app browser both discovered the exact six tools and executed a visible proposal/preview/Revert flow with zero writes.
 
 The source and complete tote reference are public. The private KORRHAUS
@@ -49,6 +52,7 @@ npm ci
 npm test
 npm run typecheck
 npm run build
+npm run build:shopify-demo
 npm run verify:browser-bundle
 npm run check:judge-site
 npm run check:public-boundary
@@ -126,6 +130,8 @@ See:
   for the package, copy, responsive-browser, and exact-six runtime verification
   of the CoDesign WebMCP naming change.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
+- [shopify-demo/README.md](./shopify-demo/README.md) for the minimal Shopify Liquid/CDN deployment overlay.
+- [docs/evidence/CODESIGN_SHOPIFY_HOSTED_DEMO_2026-08-28.md](./docs/evidence/CODESIGN_SHOPIFY_HOSTED_DEMO_2026-08-28.md) for the development-store deployment, coexistence, browser and safety evidence.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.
 - [docs/EVALUATION_REPORT.md](./docs/EVALUATION_REPORT.md) for the exact

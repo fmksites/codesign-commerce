@@ -1,0 +1,24 @@
+{% layout none %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A Shopify-hosted reference configurator powered by CoDesign WebMCP.">
+    <title>CoDesign WebMCP Tote Demo — {{ shop.name }}</title>
+    {{ content_for_header }}
+    <link rel="stylesheet" href="{{ 'codesign-tote.css' | asset_url }}">
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.__CODESIGN_TOTE_ASSETS__ = {
+        "tote-natural-long.png": {{ 'codesign-tote-natural-long.png' | asset_url | json }},
+        "tote-natural-short.png": {{ 'codesign-tote-natural-short.png' | asset_url | json }},
+        "tote-charcoal-long.png": {{ 'codesign-tote-charcoal-long.png' | asset_url | json }},
+        "north-form-supplied-mark.png": {{ 'codesign-tote-north-form-supplied-mark.png' | asset_url | json }}
+      };
+    </script>
+    <script type="module" src="{{ 'codesign-tote.js' | asset_url }}"></script>
+  </body>
+</html>

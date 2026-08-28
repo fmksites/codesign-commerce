@@ -25,9 +25,20 @@ import {
   type StudioTotePreviewRequest,
 } from "./preview-proof";
 import { mountNativeAssetProof } from "./native-asset-proof";
+import { resolveStudioToteAsset, type StudioToteAssetMap } from "./public-assets";
 import "./styles.css";
 
-const publicAsset = (name: string): string => `${import.meta.env.BASE_URL}${name}`;
+declare global {
+  interface Window {
+    __CODESIGN_TOTE_ASSETS__?: StudioToteAssetMap;
+  }
+}
+
+const publicAsset = (name: string): string => resolveStudioToteAsset(
+  name,
+  import.meta.env.BASE_URL,
+  window.__CODESIGN_TOTE_ASSETS__,
+);
 
 const app = document.querySelector<HTMLElement>("#app");
 if (!app) throw new Error("Studio tote app root is missing");
