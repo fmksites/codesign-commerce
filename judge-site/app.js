@@ -4,8 +4,8 @@ const supportsWebMcp = typeof document.modelContext?.registerTool === "function"
 if (status) {
   status.classList.add(supportsWebMcp ? "is-supported" : "is-fallback");
   status.textContent = supportsWebMcp
-    ? "Site tools are available. Open the KORRHAUS flagship or the tote demo to discover CoDesign."
-    : "Site tools are not exposed in this browser. KORRHAUS and the tote keep their normal human interfaces.";
+    ? "Site tools are available. Open the tote demo to discover CoDesign's six tools."
+    : "Site tools are not exposed in this browser. The tote keeps its complete normal human interface.";
 }
 
 const safeHttpsUrl = (value) => {
@@ -55,7 +55,7 @@ try {
   setText("[data-version]", metadata.packageVersion);
   setText("[data-commit]", commit.slice(0, 12));
   setText("[data-bundle]", typeof metadata.browserBundleSha256 === "string" ? metadata.browserBundleSha256.slice(0, 16) : "unavailable");
-  setOptionalLink("flagship", verifiedFlagshipUrl, "KORRHAUS flagship pending release");
+  setOptionalLink("flagship", verifiedFlagshipUrl, "KORRHAUS live verification pending");
   setOptionalLink("repository", repositoryUrl, "Public repository pending release");
   setOptionalLink(
     "judge-guide",
@@ -63,7 +63,7 @@ try {
     "Judge guide pending release",
   );
 } catch {
-  setOptionalLink("flagship", null, "KORRHAUS flagship pending release");
+  setOptionalLink("flagship", null, "KORRHAUS live verification pending");
   setOptionalLink("repository", null, "Public repository pending release");
   setOptionalLink("judge-guide", null, "Judge guide pending release");
 }

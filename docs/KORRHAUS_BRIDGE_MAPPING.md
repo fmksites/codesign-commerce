@@ -53,51 +53,50 @@ CoDesign Commerce browser bundle plus a narrow private adapter.
 
 The bridge now:
 
-- Registers exactly five public tools: `codesign_read_configuration`,
-  `codesign_list_options`, `codesign_create_design`,
-  `codesign_propose_configuration`, and
-  `codesign_validate_configuration`.
-- Uses the public `ProposalSession`, `ProposalReviewController`, and tool-registration runtime.
+- Registers the exact six Manifest 2.0 tools: `codesign_read_workspace`,
+  `codesign_list_capabilities`, `codesign_stage_asset`,
+  `codesign_apply_proposal`, `codesign_get_previews`, and
+  `codesign_validate_proposal`.
+- Uses the public `ProposalEngine`, `AssetSandbox`, `PreviewBridge`, review
+  controller, operation reducer and tool-registration runtime.
 - Keeps the private canonical project clone, save queue, API routes, pricing, access state, and renderer implementation private.
 - Shows the review host only after an agent proposal succeeds.
 - Waits for already-scheduled human autosave work without initiating a save for
   an agent proposal.
-- Preserves zero-write staging and Revert, with persistence available only
-  through the visible human Keep control.
+- Stages PNG, JPEG, WebP or SVG artwork temporarily, captures the existing
+  combined proof board as one WebP per colourway, and imports artwork only
+  after the visible human Keep control.
+- Preserves zero-write staging and Revert; one Keep enters the existing local
+  and secure-save paths exactly once.
 - Invalidates open proposals when canonical state changes externally.
 - Leaves the normal Designer unchanged when the feature flag is off or no agent proposal exists.
 
-The final guarded local snapshot and complete regression are recorded in
-[`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
-The same bytes were built into one immutable image and verified on both tagged
-QA and fixtures-off zero-traffic revisions, as recorded in
-[`evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
-Neither revision serves ordinary traffic, and this does not claim live-Shopify
-WebMCP. The earlier two-tool Phase 3 bridge remains dated history in
-[`evidence/KORRHAUS_LOCAL_BRIDGE.md`](./evidence/KORRHAUS_LOCAL_BRIDGE.md).
+The current local exact-six snapshot and complete regression are recorded in
+[`evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).
+It has not been deployed. Earlier five-tool guarded snapshots and zero-traffic
+revisions remain dated history only and must not be promoted or described as
+the current integration.
 
 ## Public canonical mapping
 
-The guarded V1 KORRHAUS semantic options are deliberately limited to the judge
-scenario:
+The versioned private inventory `2026-08-27.1` maps every current Route 02
+customer-editable creative/configuration surface through more than 50 bounded
+Manifest 2.0 controls. The groups include names and quantities; product;
+stocked and exact body/accent colours; pattern and trim; studio typography or
+supplied artwork; logo finish, colour, scale and position; cuff construction,
+colour and label; grip plate, colour, motif, density, text and directions; and
+all editable custom-packaging paper, ink, symbol and copy fields.
 
-| Public option | Private mapping | Agent behavior |
-|---|---|---|
-| `body.color` | Producer yarn code resolved to the private render colour | Writable enum/dynamic option; never expose raw object paths. |
-| `accent.color` | Producer yarn code and explicit non-auto accent mode | Writable enum/dynamic option. |
-| `pattern.id` | Public pattern ID | Writable enum/dynamic option. |
-| `design.name` | Bounded design name | Writable bounded text. |
-| `design.quantity` | Per-design quantity | Writable integer in production-supported increments. |
-| `order.total_quantity` | Sum of design quantities | Writable integer; batch must reconcile design allocation. |
-| `sole.grip_type` | Public grip plate/type ID | Writable only for approved public choices; the demo keeps the standard value. |
-| `branding.artwork_status` | Derived missing/placeholder/ready status | Read-only; no upload contents or URLs. |
-
-No price, quote, access, customer, project, supplier, margin, artwork-content, or API field is mapped.
+Duplicate, remove, reorder and set-active operations are exposed for up to four
+colourways. UI-only route/accordion/search/zoom state, sample requests, prices,
+quotes, applications, orders, proofs, customers, projects, suppliers, margins,
+tokens and administration remain excluded. Private product/yarn identifiers
+are translated inside the adapter and never returned.
 
 ## Second-colourway behavior
 
 The existing human UI duplicates the active design and caps the project at four
-designs. The adapter exposes an equivalent draft-only clone operation without
+designs. The adapter exposes the equivalent typed draft-only operation without
 invoking the button or saving:
 
 1. Clone the selected draft design internally.
@@ -113,10 +112,13 @@ For the North Form scenario, the expected canonical result is two designs at 60 
 
 The public package builds a browser IIFE at
 `packages/codesign-commerce/dist/browser/codesign-commerce.js` and verifies its
-global API and SHA-256. The private app consumes a pinned generated bundle only
+global API and SHA-256. The private app currently consumes the exact Item 9
+bundle `sha256:7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`
+only
 after WebMCP capability is detected and instantiates:
 
-- `ProposalSession`.
+- `ProposalEngine`.
+- `AssetSandbox` and `PreviewBridge`.
 - `ProposalReviewController`.
 - `registerCoDesignTools`.
 - The private adapter defined inside the designer closure.
@@ -125,21 +127,16 @@ The generated asset must carry its public source commit and hash in integration 
 
 ## Current release boundary
 
-The final guarded bytes passed local regression and were built once as immutable
-image
-`sha256:aa9c591b5efbe945d68cb1edbfd5b7c39ab5bc524b041b82d3bc7682bdcb5c4e`.
-Tagged acceptance revision `korrhaus-admin-app-codesign-qa3` and fixtures-off
-production candidate `korrhaus-admin-app-codesign-prod2` are healthy and remain
-at `0%` ordinary traffic. The acceptance revision completed the actual
-five-tool in-app-browser North Form flow and exact Revert.
+The exact-six adapter source and browser assets passed the complete local
+regression at private page asset version `20260827-16`. They have not been
+built into or deployed as a new Cloud Run revision. The feature still requires
+`CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED=true`; false remains the default.
 
-Ordinary traffic remains `100%` on
-`korrhaus-admin-app-sock-logo-v2`, whose WebMCP flag is false. The service
-template was also reset to WebMCP-off after verification. Therefore the guarded
-candidate is deployed but not live, and the real Shopify route is not yet
-claimed as WebMCP-verified. Production promotion remains a separate explicit
-approval gate. The older `codesign-prod1` candidate is obsolete and must never
-be promoted.
+Earlier five-tool zero-traffic revisions are historical and incompatible with
+the current contract. The current local bytes must receive a new isolated
+deployment and exact-hash verification after separate approval. Any production
+traffic change and live-Shopify claim require another explicit approval and
+actual-route verification.
 
 ## Migration checklist result
 
@@ -148,13 +145,13 @@ be promoted.
 3. Replaced the direct tool/session logic with a narrow adapter over the existing safe seams: **done locally**.
 4. Bound the approved review view to `ProposalReviewController`: **done locally**.
 5. Retained and expanded the existing Playwright storage/network assertions: **done**.
-6. Proved the initial two-tool vertical slice, then the exact five-tool North
-   Form flow in the final guarded local snapshot: **done**.
+6. Replaced the spike with exact-six Manifest 2.0 discovery, assets, atomic
+   proposals, previews and validation across the full control inventory:
+   **done locally**.
 7. Added regression coverage proving that proposal staging never initiates a
    baseline save, Revert remains zero-write, and only the visible human Keep
    control uses the authorized normal save path: **done**.
-8. Built one immutable image, verified a tagged acceptance revision and a
-   fixtures-off production candidate at zero ordinary traffic, and kept live
-   traffic on the feature-off rollback baseline: **done**.
+8. Built and verified a new exact-six immutable image and zero-traffic
+   candidate: **pending separate deployment approval**.
 9. Production traffic promotion and live-Shopify WebMCP verification:
-   **pending separate owner approval**.
+   **pending separate owner approval after step 8**.

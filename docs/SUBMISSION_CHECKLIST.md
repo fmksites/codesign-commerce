@@ -1,111 +1,126 @@
 # Submission checklist
 
-Status meanings: `PASS` is evidenced, `PENDING` needs work, and `APPROVAL` cannot
-proceed without the owner.
+**Current status:** local release preparation, 28 August 2026
 
-## Local engineering
+Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
+and `APPROVAL` is an external action that cannot proceed without Felix.
 
-- `PASS` — reusable public core and exactly six webpage tools.
-- `PASS` — materially different studio tote as the sole standalone public demo,
-  with every shipped customer control mapped, actual supplied artwork, two
-  named variants, three visible proposal passes, and current per-variant
-  previews.
-- `CUT` — synthetic public KORRHAUS reference retired from the package and judge
-  artifact; the existing Shopify Designer is the only KORRHAUS proof surface.
-- `PASS` — local anonymous English judge landing and provider-neutral
-  root-plus-`/tote/` artifact verified with three release-gated KORRHAUS CTA
-  slots, verified non-release URL withholding, and a `404` for the retired
-  `/korrhaus/` route.
-- `PASS` — guarded private flagship bridge, with complete current local
-  regression and fresh-origin zero-traffic proof.
-- `PASS` — 175 deterministic public tests and the current local public
-  typecheck/build/boundary/docs/parity/eval-corpus checks.
-- `PASS` — repository security scan findings remediated.
-- `PASS` — current non-release landing and final tote rendered at desktop and
-  native 390-pixel mobile width; the tote exposes exactly six tools in the
-  supported in-app browser, completes its temporary two-variant artwork flow,
-  Reverts with zero writes, and Keeps with one state commit.
-- `PASS` — final hostile-input, stale/conflict recovery, navigation cleanup, and
-  private feature-off fallback browser checks.
-- `PASS` — current guarded private candidate: syntax, focused ESLint,
-  production build, typecheck, 41 unit files/199 tests, complete 142-case
-  Designer browser run with 141 passes and 1 expected skip, plus the deployed
-  read-only Cream/Rose live-proof flow with persistent temporary status and
-  locked edits/uploads. See
-  `docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`.
-- `HISTORICAL` — five consecutive North Form rehearsals and the connected-native-
-  Chrome fallback passed on the retired synthetic harness. They remain runtime
-  evidence, not current public-surface or live-flagship proof.
-- `CUT` — API-backed 78-run model eval; optional tooling retained, but the
-  owner removed it as a submission gate on 27 August 2026.
-- `SUPERSEDED` — clean-clone evidence for judge-site commit `10a02ee` covered the
-  retired `/korrhaus/` subpath and remains historical only.
-- `PASS` — corrected topology commit `e137a3b` passed a fresh `--no-local`
-  clone: 95 tests, typecheck, build, bundle/judge/boundary/docs/eval checks,
-  `git diff --check`, exact non-release metadata, and an empty final status.
+## Official requirements
+
+Verified against the [WebMCP Challenge official rules](https://webmcp.devpost.com/rules)
+on 28 August 2026:
+
+- `PASS` — project uses `document.modelContext.registerTool(...)` and is a
+  non-trivial WebMCP implementation.
+- `PENDING` — working live URL accessible to judges in ChatGPT's in-app browser
+  or Chrome with WebMCP enabled.
+- `PENDING` — current source and history publicly available with all runnable
+  code, assets and instructions.
+- `PASS` — visible Apache-2.0 `LICENSE` exists locally.
+- `PASS` — English text draft explains WebMCP fit, user experience, joint
+  human-agent work and implementation.
+- `PENDING` — public YouTube demonstration with audio, clearly functioning and
+  shorter than three minutes. This is mandatory even though recording is not a
+  useful Codex-only engineering task.
+- `PENDING` — clear final evidence distinguishing the pre-existing KORRHAUS
+  Designer from work added after 25 August 2026.
+- `PENDING` — entrant/representative, eligibility, IP and third-party
+  authorization attestations by Felix.
+
+Binding submission deadline: **3 September 2026, 1:00 PM PT**. The project and
+test access must remain available through **21 September 2026, 5:00 PM PT**.
+
+## Local public implementation
+
+- `PASS` — reusable Manifest 2.0 core and exactly six webpage tools.
+- `PASS` — no WebMCP Keep, Revert, save, upload, quote, checkout, order,
+  payment, customer, supplier, margin or administrative tool.
+- `PASS` — complete public studio-tote reference with 25/25 surface parity,
+  actual supplied artwork, typography, transform controls, two named variants,
+  coupled production rules, live renderer previews and page-owned Keep/Revert.
+- `PASS` — local tote actual-browser flows cover staged changes, distinct
+  previews, targeted refinement, zero-write Revert, one-state-commit Keep,
+  ordinary human fallback, desktop and 390 px mobile.
+- `PASS` — clean `--no-local` clone of commit
+  `afa8b598e1af5ddb6d82afd90f18430a99d81326`: offline `npm ci`, zero reported
+  vulnerabilities, 20 files / 175 tests, typecheck, build, bundle, judge,
+  boundary, docs, parity and eval-structure checks.
+- `PASS` — browser bundle digest
+  `7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`.
+- `PASS` — retired public synthetic KORRHAUS configurator is absent; `/tote/`
+  is the sole standalone product demo.
+- `PASS` — current release builder can publish the tote honestly without
+  requiring or claiming a live KORRHAUS deployment; a flagship link is exposed
+  only after separate live verification.
 
 ## Public release
 
-- `PASS` — public repository exists at
-  <https://github.com/fmksites/codesign-commerce>.
-- `PASS` — GitHub detects the root license as Apache-2.0.
-- `PASS` — corrected topology and evidence commit `4850606` are public; hosted
-  CI run `33062478946` passed on that exact commit, and unauthenticated checks
-  confirmed public `main`, Apache-2.0, raw README/source access, the tote tree,
-  five tool registrations, and absence of the retired reference tree.
-- `PASS` — guarded-evidence commit `3c14a00` is public; exact hosted CI run
-  `33073677187` passed, its three new/updated public evidence documents return
-  `200` anonymously, and the retired KORRHAUS example path still returns `404`.
-- `APPROVAL` — after separately approved production promotion and live-route
-  verification, choose a hosting provider and deploy `dist/judge-site/`.
-- `PENDING` — verify the public URL logged out in ChatGPT's in-app browser;
-  additionally repeat in Chrome 149+ if its WebMCP testing flag is configured.
-- `PENDING` — record final public commit, bundle hash, screenshots, and links.
+- `PASS` — repository URL exists at
+  <https://github.com/fmksites/codesign-commerce> and currently exposes
+  historical baseline commit `e986e12b9448491c2e34b302c1c4ddcf12320047` on
+  `main`.
+- `APPROVAL` — push the current local branch/history. No current Manifest 2.0
+  commit is public yet.
+- `PENDING` — verify anonymous clone, visible Apache-2.0 license, source tree,
+  README and hosted CI on the exact pushed commit.
+- `APPROVAL` — choose a hosting provider and deploy `dist/judge-site/`.
+- `PENDING` — verify the public tote URL logged out, on desktop/mobile ordinary
+  browsers, in normal ChatGPT desktop and in native Chrome WebMCP.
+- `PENDING` — record exact served commit, bundle hash, asset hashes, headers,
+  screenshots and functional links.
 
-## KORRHAUS flagship
+## Local KORRHAUS integration
 
-- `SUPERSEDED` — the earlier two-revision zero-traffic sequence is preserved in
-  `docs/evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`, but its `codesign-prod1`
-  candidate predates the current safety fixes and must never be promoted.
-- `SUPERSEDED` — the replacement guarded candidate was complete and fully verified
-  locally in `docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`, but predates
-  the proposed-colourway review refinement.
-- `SUPERSEDED` — guarded tagged QA revision `codesign-qa3` and fixtures-off candidate
-  `codesign-prod2` use one immutable image, passed identity, health, HTTP,
-  exact asset, five-tool browser, validation, Revert, and explained-log checks,
-  and remain at `0%` ordinary traffic. They must not be promoted. The sole later error entry is a
-  documented self-induced `404` probe to a nonexistent asset path. See
-  `docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`.
-- `PASS` — current immutable image `sha256:181917…d9e3c`, zero-traffic revision
-  `codesign-review-qa2`, fresh `codesign-user-qa` origin, exact asset identity,
-  full local suite, five-tool browser flow and read-only Cream/Rose live-proof
-  switching pass. See
-  `docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`.
-- `PASS` — live traffic remains `100%` on feature-off rollback revision
-  `sock-logo-v2`; the Cloud Run service-template default was reset to
-  WebMCP-off through a retired zero-traffic hold revision.
-- `PENDING` — owner hands-on QA on the fresh tagged surface.
-- `PENDING` — deploy and verify a new fixtures-off zero-traffic candidate from
-  exact image `181917…d9e3c` after owner QA.
-- `APPROVAL` — promote production traffic only after those checks and explicit
-  owner approval.
-- `PENDING` — verify the actual public English route and normal human fallback.
+- `PASS` — exact-six Manifest 2.0 adapter integrated locally into the existing
+  private Route 02 Designer, not a second sock designer.
+- `PASS` — versioned inventory maps more than 50 existing customer-editable
+  creative/configuration controls plus up to four colourways.
+- `PASS` — temporary PNG/JPEG/WebP/SVG, existing proof-board WebP previews,
+  zero-write Revert, exactly-once Keep, stale protection, non-agent fallback,
+  autosave isolation and mobile behavior.
+- `PASS` — changed-file lint, 43 files / 220 unit tests, typecheck, production
+  build, 8 active CoDesign V2 tests, 6 localization tests and 107-test complete
+  active Playwright suite. Full lint retains one unrelated pre-existing ABOUT
+  YOU test error.
+- `PASS` — feature remains disabled by default; no exact-six deployment or
+  traffic change occurred.
+- `APPROVAL` — optional new isolated/zero-traffic KORRHAUS deployment.
+- `PENDING` — if approved, verify exact image/config/hash/logs and the same
+  normal-human plus exact-six synthetic flow without ordinary traffic.
+- `APPROVAL` — any production traffic or feature enablement, separately after
+  zero-traffic proof.
+- `PENDING` — actual public English Shopify route verification before calling
+  KORRHAUS a live WebMCP flagship.
+
+The public tote release does not depend on KORRHAUS production promotion.
+
+## Browser and agent evidence
+
+- `PASS` — ordinary desktop/mobile browser fallback.
+- `PASS` — Codex in-app browser exact-six runtime evidence on the final local
+  tote product.
+- `PASS` — native Chrome 151 exact-six runtime evidence on the Item 8 build.
+- `PENDING` — native Chrome repeat on the immutable deployed tote build.
+- `PENDING` — literal normal ChatGPT desktop conversation on the deployed tote,
+  including artwork transport, inline image previews, refinement and explicit
+  action-time Keep confirmation.
+- `NOT CLAIMED` — ChatGPT website in ordinary Chrome, Claude and other clients
+  until separately documented and actually verified.
 
 ## Submission materials
 
 - `PASS` — English Devpost copy draft.
-- `PASS` — exact judge prompts and recovery guide.
-- `PASS` — human-owned sub-three-minute script and shot list.
-- `PENDING` — entrant/representative and eligibility confirmation.
-- `PENDING` — final asset/IP and third-party integration authorization review.
+- `PASS` — exact judge prompt and recovery guide.
+- `PASS` — mandatory sub-three-minute video script and shot list updated to
+  tote-first exact-six behavior.
+- `PENDING` — final screenshots and thumbnail/cover selection.
 - `PENDING` — human recording and narration.
 - `APPROVAL` — public YouTube upload.
-- `PENDING` — logged-out check of repository, app, flagship, and video URLs.
+- `PENDING` — logged-out check of repository, app and video URLs.
 - `APPROVAL` — legal attestations and final Devpost submission.
 
-## Availability
+## Availability and rollback
 
 - `PENDING` — monitoring/ownership plan through 21 September 2026, 5:00 PM PT.
-- `PENDING` — rollback owner and immutable fallback URL recorded.
-- `PENDING` — final submission completed before the binding earlier deadline:
-  3 September 2026, 1:00 PM PT / 22:00 CEST.
+- `PENDING` — immutable public fallback URL and rollback owner.
+- `PENDING` — submit before 3 September 2026, 1:00 PM PT.

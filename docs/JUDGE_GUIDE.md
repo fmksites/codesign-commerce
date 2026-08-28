@@ -170,26 +170,21 @@ outside the public model.
 
 ## Evidence map
 
-- Tote portability and coupled-rule run:
-  [`evidence/STUDIO_TOTE_PORTABILITY.md`](./evidence/STUDIO_TOTE_PORTABILITY.md).
-- Current guarded private flagship candidate:
-  [`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
-- Current guarded immutable-image and zero-traffic browser proof:
-  [`evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
-- Historical private five-tool browser run, predating the current host guards:
-  [`evidence/KORRHAUS_LOCAL_FIVE_TOOL.md`](./evidence/KORRHAUS_LOCAL_FIVE_TOOL.md).
-- Historical, superseded `codesign-prod1` zero-traffic candidate (never
-  promote):
-  [`evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md`](./evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md).
+- Complete public tote product and coupled-rule run:
+  [`evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md`](./evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md).
+- Current local exact-six private KORRHAUS integration:
+  [`evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).
+- Current client/browser claim matrix:
+  [`BROWSER_SUPPORT.md`](./BROWSER_SUPPORT.md).
 - Deterministic and browser test policy: [`TESTING.md`](./TESTING.md).
 - Trust boundary: [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 - Public/private exclusions:
   [`../PUBLIC_PRIVATE_BOUNDARY.md`](../PUBLIC_PRIVATE_BOUNDARY.md).
 
-The dated `NORTH_FORM_FIVE_TOOL.md` and `ACTUAL_BROWSER_REVIEW_UI.md` files use a
-retired local synthetic development harness. They remain historical engineering
-evidence and must not be presented as a submitted or hosted KORRHAUS demo. Live
-status must come from explicit flagship release evidence.
+All earlier five-tool KORRHAUS, synthetic-harness, tagged-QA and zero-traffic
+files are historical engineering evidence. They must not be presented as the
+current integration or a submitted live KORRHAUS demo. Live status must come
+from a new exact-six production release and actual-route evidence.
 
 The current model-evaluation status and evidence format are in
 [`EVALUATION_REPORT.md`](./EVALUATION_REPORT.md). Direct scripted tool calls and

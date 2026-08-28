@@ -18,11 +18,13 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 - Deterministic unit, schema, lifecycle, safety, review, asset, and preview tests. Native Chrome 151 and the Codex in-app browser both discovered the exact six tools and executed a visible proposal/preview/Revert flow with zero writes.
 
 This is local implementation evidence, not a release claim. The complete tote
-product pass is implemented and locally verified; the private KORRHAUS Manifest
-2 adapter, public deployment/publication, literal ChatGPT release validation,
-production traffic, and Devpost submission remain incomplete or separately
-approval-gated. The optional model-evaluation corpus and scorer are quality
-tooling, not proof of an actual model run.
+product and the private KORRHAUS Manifest 2 adapter are implemented and locally
+verified. The KORRHAUS feature remains disabled by default and has not been
+deployed. Publishing the current public source, deploying the tote site,
+literal ChatGPT release validation, any KORRHAUS release or traffic change, the
+required YouTube video, and Devpost submission remain separate approval-gated
+steps. The optional model-evaluation corpus and scorer are quality tooling, not
+proof of an actual model run.
 
 ## Local verification
 
@@ -52,9 +54,17 @@ npm run preview:judge-site
 
 The landing shows package `v0.1.0`, the exact source commit and browser-bundle
 digest. Public repository and live-flagship links remain visibly disabled in a
-local build. A release build fails closed unless the working tree is clean, the
-repository URL is present, the exact English Shopify Designer URL is present,
-and the real route has already passed live verification:
+local build. A release build fails closed unless the working tree is clean and
+the exact public repository URL is present. This deliberately lets the required
+public tote site ship without claiming that KORRHAUS is live:
+
+```bash
+CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
+npm run build:release
+```
+
+Only after a separately approved KORRHAUS production release passes actual
+live-route verification may the same build expose the flagship link:
 
 ```bash
 CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
@@ -86,22 +96,20 @@ See:
 - [docs/WEBMCP_TOOLS.md](./docs/WEBMCP_TOOLS.md) for the exact six tools, schemas, review boundary, and browser lifecycle.
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the private flagship integration map and safety boundary.
 - [docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md](./docs/AGENT_DISCOVERY_AND_DISTRIBUTION.md) for the distinction between on-page WebMCP capability and traffic acquisition.
-- [docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./docs/evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
-  for the historical `v=20260827-8` guarded snapshot and local regression.
-- [docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md](./docs/evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md)
-  for the historical guarded image proof.
-- [docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md](./docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md)
-  for the current immutable QA image, read-only proposed-colourway UX, exact
-  zero-write browser evidence, unchanged live traffic, and owner-test gate.
+- [docs/BROWSER_SUPPORT.md](./docs/BROWSER_SUPPORT.md) for the exact supported,
+  verified, and still-pending browser/client claims.
+- [docs/evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md](./docs/evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md)
+  for the current exact-six local KORRHAUS integration and synthetic browser
+  evidence.
+- [docs/evidence/CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md](./docs/evidence/CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md)
+  for the clean-clone, release-builder, official-rule and local visual
+  checkpoint before public push/deployment.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.
 - [docs/EVALUATION_REPORT.md](./docs/EVALUATION_REPORT.md) for the exact
   distinction between verified evidence and the optional model eval that was
   intentionally not run.
-- [docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./docs/evidence/JUDGE_SITE_RELEASE_CANDIDATE.md)
-  for the corrected local topology checks and clearly marked superseded
-  two-subpath history.
 - [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) for the gated public
   and flagship release sequence.
 - [docs/SUBMISSION_COPY.md](./docs/SUBMISSION_COPY.md) for the English Devpost

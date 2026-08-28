@@ -1,5 +1,12 @@
 # Public repository release evidence
 
+> **Historical archive:** these commits and CI runs describe the earlier
+> five-tool repository history. Read-only verification on 28 August 2026 found
+> public `main` at baseline `e986e12b9448491c2e34b302c1c4ddcf12320047`; the
+> current Manifest 2.0 history remains local. Use
+> [`CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md`](./CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md)
+> for current status.
+
 ## Read-only colourway QA evidence update — active companion evidence
 
 Commit `4592aea5dc58bee66da089b00f0abba197b2c135` publishes the

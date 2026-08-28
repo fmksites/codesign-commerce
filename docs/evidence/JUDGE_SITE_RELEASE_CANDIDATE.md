@@ -1,5 +1,11 @@
 # Judge-site release evidence
 
+> **Historical archive:** this file records the earlier five-tool release
+> candidate. The active exact-six release checkpoint, updated tote-first
+> landing and decoupled KORRHAUS gate are in
+> [`CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md`](./CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md).
+> Do not use the hashes, counts or release requirements below as current.
+
 ## Current topology correction — 27 August 2026
 
 The active release topology is one English landing, one internal `/tote/`

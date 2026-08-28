@@ -28,27 +28,37 @@ const requestedRepositoryUrl = readHttpsUrl("CODESIGN_PUBLIC_REPOSITORY_URL");
 const requestedFlagshipUrl = readHttpsUrl("CODESIGN_FLAGSHIP_URL");
 const flagshipVerified =
   process.env.CODESIGN_FLAGSHIP_VERIFIED?.trim().toLowerCase() === "true";
-if (requireReleaseLinks && (!requestedRepositoryUrl || !requestedFlagshipUrl)) {
-  throw new Error("Release builds require CODESIGN_PUBLIC_REPOSITORY_URL and CODESIGN_FLAGSHIP_URL");
+if (requireReleaseLinks && !requestedRepositoryUrl) {
+  throw new Error("Release builds require CODESIGN_PUBLIC_REPOSITORY_URL");
 }
 if (requireReleaseLinks && requestedRepositoryUrl !== verifiedRepositoryUrl) {
   throw new Error(
     `Release builds require the verified public repository URL: ${verifiedRepositoryUrl}`,
   );
 }
-if (requireReleaseLinks && requestedFlagshipUrl !== verifiedFlagshipUrl) {
+if (
+  requireReleaseLinks &&
+  requestedFlagshipUrl !== null &&
+  requestedFlagshipUrl !== verifiedFlagshipUrl
+) {
   throw new Error(
     `Release builds require the verified KORRHAUS flagship URL: ${verifiedFlagshipUrl}`,
   );
 }
 
-const repositoryUrl = requireReleaseLinks ? requestedRepositoryUrl : null;
-const flagshipUrl = requireReleaseLinks ? requestedFlagshipUrl : null;
-if (requireReleaseLinks && !flagshipVerified) {
+if (requireReleaseLinks && flagshipVerified && !requestedFlagshipUrl) {
   throw new Error(
-    "Release builds require CODESIGN_FLAGSHIP_VERIFIED=true after the live Shopify route passes production verification",
+    "CODESIGN_FLAGSHIP_VERIFIED=true requires CODESIGN_FLAGSHIP_URL",
   );
 }
+if (requireReleaseLinks && requestedFlagshipUrl && !flagshipVerified) {
+  throw new Error(
+    "A release build may expose CODESIGN_FLAGSHIP_URL only after CODESIGN_FLAGSHIP_VERIFIED=true",
+  );
+}
+const repositoryUrl = requireReleaseLinks ? requestedRepositoryUrl : null;
+const flagshipUrl =
+  requireReleaseLinks && flagshipVerified ? requestedFlagshipUrl : null;
 if (requireReleaseLinks) {
   const worktreeStatus = execFileSync(
     "git",
@@ -88,7 +98,7 @@ console.log(`Judge site assembled at ${path.relative(root, output)}`);
 console.log(`Commit: ${commitSha}`);
 console.log(`Browser bundle: sha256:${browserBundleSha256}`);
 console.log(
-  repositoryUrl && flagshipUrl
-    ? "Release links: configured"
+  repositoryUrl
+    ? `Release repository: configured; KORRHAUS flagship: ${flagshipUrl ? "verified" : "withheld pending separate live verification"}`
     : "Release links: withheld until verified release build",
 );

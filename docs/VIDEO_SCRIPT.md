@@ -1,37 +1,47 @@
-# Human-owned demo video script
+# Mandatory demonstration video script
 
-Target: 2 minutes 45 seconds. Hard limit: under 3 minutes. The final recording,
-voice, upload, and publication are human-owned. Use only owned/authorized visual
-assets and no copyrighted background music.
+Target: 2 minutes 35 seconds. The official rules require a public YouTube video
+with audio, a clear functioning demo, and a duration under three minutes.
+Recording, voice, upload and publication are human-owned. Use only
+owned/authorized visual assets and no copyrighted music.
 
 ## Recording setup
 
-- Record the verified immutable build, not a hot-reloading development state.
-- Use the English anonymous reset URL.
-- Keep the KORRHAUS Designer, agent conversation, public tote, and repository
-  ready in tabs before recording.
-- Five operator-driven WebMCP rehearsals already pass consecutively on the
-  frozen local build. Rehearse the final narrated agent prompt on the deployed
-  immutable build before recording; do not relabel the local scripted calls as
-  independent model runs.
-- Zoom so the preview, design tabs, validation summary, and Keep/Revert controls
-  remain readable in the final YouTube player.
+- Record the exact deployed tote release, not a hot-reloading local build.
+- Use the anonymous English reset URL and supplied North Form demo artwork.
+- Keep the ChatGPT conversation, background browser, public landing, tote and
+  repository ready before recording.
+- Rehearse the final natural-language run on the exact deployed build. Do not
+  call direct scripted tool calls an agent run.
+- Keep progress messages, the visible tote canvas, inline chat previews and
+  Keep/Revert decision readable in the YouTube player.
+- Include KORRHAUS only as the real-business integration proof. If its live
+  WebMCP release is not separately verified, show the dated local evidence and
+  say “integrated locally,” not “live.”
 
 ## Timed script and shot list
 
 | Time | Screen | Narration |
-|---|---|---|
-| 0:00–0:12 | Existing KORRHAUS Designer | “Made-to-order products are difficult for browser agents because choices interact inside specialized visual configurators.” |
-| 0:12–0:25 | Shopify/WebMCP context | “Shopify already covers catalog, navigation, cart, checkout, and orders. CoDesign Commerce begins where ordinary SKU selection ends.” |
-| 0:25–0:36 | Choose normal Route 02; show five discovered tools | “The route chooser stays unchanged. Once fully custom is open, this existing page registers five focused WebMCP tools for reading, option discovery, temporary proposals, colourway creation, and validation.” |
-| 0:36–1:12 | Run the North Form prompt | “I’m asking for 120 pairs split across two colourways. The agent reads the live state, uses public option IDs, stages the first design, clones the second, and validates the whole order.” |
-| 1:12–1:32 | Two visible previews and validation | “Both colourways appear in the same Designer the customer uses. Quantities total 120; the configuration is coherent; production is not ready because the final logo is missing.” |
-| 1:32–1:48 | Revert | “Nothing has been saved. The agent cannot Keep or Revert. I choose Revert, and the exact original design returns.” |
-| 1:48–2:07 | Short reapply and Keep, if stable | “When I choose Keep, the page crosses the existing persistence boundary once. This human step is deliberately absent from WebMCP.” |
-| 2:07–2:28 | Studio tote | “The same core also powers this different tote configurator. Its canvas, print, handle, quantity, and artwork rules live in its own manifest and adapter.” |
-| 2:28–2:42 | Repository | “The public Apache-2.0 repository contains the reusable package, the tote demo, tests, evals, safety boundary, and the adapter contract used by the live KORRHAUS Designer.” |
-| 2:42–2:45 | Closing title | “CoDesign Commerce: agent-ready configuration without rebuilding the merchant experience.” |
+| --- | --- | --- |
+| 0:00–0:10 | Chat brief beside empty tote customizer | “I want custom studio products without learning another complex designer. I describe the collection once and the agent works in the merchant's real visual page.” |
+| 0:10–0:22 | Agent discovers exact six tools | “CoDesign Commerce gives the page six bounded WebMCP tools: read, capabilities, temporary assets, atomic proposals, renderer previews and validation.” |
+| 0:22–0:58 | Foundation and Branding passes update the tote live | “The agent reads the committed state, chooses only declared values, stages my real artwork without uploading it, and builds the first direction. The browser canvas changes while the work remains temporary.” |
+| 0:58–1:18 | Variants pass creates Natural and Charcoal | “It creates a second named variant, preserves the 100-tote total, and applies different material, handles, placement, scale and rotation through one merchant adapter.” |
+| 1:18–1:36 | Two inline chat previews plus validation | “Both renderer previews return to chat at the exact proposal revision. The merchant's coupled production rules say the collection is ready.” |
+| 1:36–1:51 | Conversational refinement | “I ask for only the charcoal tote to feel bolder. The natural design stays unchanged while the charcoal preview updates.” |
+| 1:51–2:05 | Human decision | “Nothing is saved yet. WebMCP has no save or order tool. After explicit confirmation, the page's own Keep control commits once; Revert would restore the exact baseline with zero writes.” |
+| 2:05–2:22 | KORRHAUS evidence and existing Sock Designer | “This is not just a tote. The same unchanged core is integrated into KORRHAUS's existing Shopify Sock Designer, mapping more than 50 real controls without replacing its renderer or autosave.” |
+| 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 175 tests, safety cases and clean-clone instructions.” |
+| 2:31–2:35 | Closing title | “CoDesign Commerce: chat to custom products on Shopify.” |
 
-If a second live agent turn makes the cut unreliable, keep one complete live
-proposal plus the human Revert. Show Keep through a short verified replay and
-label it accurately. Never describe a direct scripted tool call as an agent run.
+## Contingencies
+
+- If a live Keep creates avoidable recording risk, use Revert in the main take
+  and insert a clearly labeled, exact-build Keep replay that shows the one
+  commit counter.
+- If KORRHAUS is still feature-off, show the local exact-six evidence screenshot
+  and say so plainly. The tote is the submitted working live URL.
+- If normal ChatGPT does not display the renderer images inline, do not hide the
+  limitation. Fix or narrow the claim before recording.
+- The finished export must stay under three minutes; judges are not required to
+  watch beyond that limit.

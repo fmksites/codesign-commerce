@@ -90,4 +90,11 @@ Commit outcomes remain explicit:
 
 ## Integration status
 
-The public studio tote now uses this engine, `AssetSandbox`, `PreviewBridge`, the exact six-tool registry, and one shared review controller. Native Chrome and the Codex in-app browser have executed the same public flow with zero writes before the visible page Keep boundary. The remaining full visual product work is checklist Item 9; the private KORRHAUS integration remains a separately approval-gated checklist item.
+The complete public studio-tote product uses this engine, `AssetSandbox`,
+`PreviewBridge`, the exact six-tool registry, and one shared review controller.
+Native Chrome and the Codex in-app browser have executed its two-variant
+actual-artwork flow with zero writes before the visible page Keep boundary.
+After explicit owner approval, the private KORRHAUS Designer also integrated
+the same engine and exact-six runtime through its full Route 02 control
+inventory. That work is local only, disabled by default, and remains separately
+approval-gated for deployment and production traffic.

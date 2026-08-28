@@ -13,6 +13,7 @@ const requiredFiles = [
   "styles.css",
   "app.js",
   "favicon.svg",
+  "_headers",
   "site-metadata.json",
   "assets/korrhaus-sock-cream.svg",
   "tote/index.html",
@@ -21,18 +22,19 @@ const requiredFiles = [
 ];
 await Promise.all(requiredFiles.map((file) => access(path.join(site, file))));
 
-const [landingHtml, landingJs, toteHtml, metadataText] = await Promise.all([
+const [landingHtml, landingJs, toteHtml, metadataText, headersText] = await Promise.all([
   readFile(path.join(site, "index.html"), "utf8"),
   readFile(path.join(site, "app.js"), "utf8"),
   readFile(path.join(site, "tote", "index.html"), "utf8"),
   readFile(path.join(site, "site-metadata.json"), "utf8"),
+  readFile(path.join(site, "_headers"), "utf8"),
 ]);
 const metadata = JSON.parse(metadataText);
 const legacyKorrhausPathExists = await access(path.join(site, "korrhaus")).then(() => true).catch(() => false);
 
 const requiredLandingText = [
-  "Open the KORRHAUS flagship",
-  "KORRHAUS flagship",
+  "Open the tote demo",
+  "KORRHAUS integration",
   "Fictional studio tote",
   "The agent never gets the last click",
   "We need 120 pairs for North Form",
@@ -55,9 +57,20 @@ if (!landingHtml.includes('./tote/north-form-supplied-mark.png')) {
 if (legacyKorrhausPathExists || landingHtml.includes("./korrhaus/") || landingHtml.includes("KORRHAUS public reference")) {
   throw new Error("Judge artifact still exposes the retired synthetic KORRHAUS configurator");
 }
+for (const requiredHeader of [
+  "Content-Security-Policy:",
+  "Permissions-Policy:",
+  "Referrer-Policy: no-referrer",
+  "X-Content-Type-Options: nosniff",
+  "X-Frame-Options: DENY",
+]) {
+  if (!headersText.includes(requiredHeader)) {
+    throw new Error(`Judge artifact lacks required static security header: ${requiredHeader}`);
+  }
+}
 const flagshipLinkCount = landingHtml.match(/data-link="flagship"/g)?.length ?? 0;
-if (flagshipLinkCount < 3) {
-  throw new Error("Judge landing lacks release-gated KORRHAUS calls to action");
+if (flagshipLinkCount < 1) {
+  throw new Error("Judge landing lacks its release-gated KORRHAUS call to action");
 }
 if (/\b(?:src|href)="\/(?!\/)/.test(toteHtml)) {
   throw new Error("The tote build still contains a root-absolute HTML asset URL");
@@ -88,11 +101,12 @@ if (metadata.releaseBuild) {
   if (metadata.repositoryUrl !== verifiedRepositoryUrl) {
     throw new Error("Release judge metadata lacks the exact verified public repository URL");
   }
-  if (metadata.flagshipUrl !== verifiedFlagshipUrl) {
-    throw new Error("Release judge metadata lacks the exact verified KORRHAUS flagship URL");
-  }
-  if (!metadata.flagshipVerified) {
-    throw new Error("Release judge metadata does not attest a verified live flagship");
+  if (metadata.flagshipVerified) {
+    if (metadata.flagshipUrl !== verifiedFlagshipUrl) {
+      throw new Error("Verified release metadata lacks the exact KORRHAUS flagship URL");
+    }
+  } else if (metadata.flagshipUrl !== null) {
+    throw new Error("Unverified release metadata must withhold the KORRHAUS flagship URL");
   }
 } else if (
   metadata.flagshipVerified ||

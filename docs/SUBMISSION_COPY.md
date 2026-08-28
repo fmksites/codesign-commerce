@@ -49,13 +49,19 @@ CoDesign Commerce covers the difficult configuration work before an item can
 become cart-ready: interdependent choices, multiple coordinated designs, the
 merchant's live preview, and production-readiness validation.
 
-KORRHAUS's real Custom Sock Designer is the flagship merchant integration. A
-second, materially different studio-tote configurator uses the same unchanged
-core package with its own manifest, adapter, renderer, actual-artwork handling,
-typography and transform controls, and coupled print/canvas rules. In the judge
-flow, one brief visibly builds two named variants through Foundation, Branding,
-and Variants passes and returns one visual preview per variant. This demonstrates
-portability without claiming that CoDesign Commerce is a universal renderer.
+KORRHAUS's existing Custom Sock Designer is the real-business merchant
+integration. The materially different studio-tote configurator is the public
+runnable reference and uses the same unchanged core package with its own
+manifest, adapter, renderer, actual-artwork handling, typography and transform
+controls, and coupled print/canvas rules. In the judge flow, one brief visibly
+builds two named variants through Foundation, Branding, and Variants passes and
+returns one visual preview per variant. This demonstrates portability without
+claiming that CoDesign Commerce is a universal renderer.
+
+Use “live KORRHAUS flagship” in the final submission only if the exact-six
+production route has passed its separate live verification. Otherwise describe
+it accurately as a completed local integration and use the deployed tote as the
+working challenge URL.
 
 ## Why WebMCP
 

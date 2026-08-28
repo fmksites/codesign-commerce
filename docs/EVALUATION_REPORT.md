@@ -1,126 +1,114 @@
 # Evaluation report
 
-> Historical evidence note: the detailed KORRHAUS rows below document earlier
-> guarded five-tool private candidates and remain intentionally dated. The
-> current public Manifest 2 implementation registers exactly six tools; its
-> deterministic evidence is recorded in
-> [`evidence/CODESIGN_V2_ITEM8_SIX_TOOLS_2026-08-27.md`](./evidence/CODESIGN_V2_ITEM8_SIX_TOOLS_2026-08-27.md)
-> and the Item 9 tote evidence. Historical private candidates are not current
-> release claims.
+**Current local evidence date:** 28 August 2026
 
-Status on 27 August 2026: deterministic behavior is verified locally, and the
-final guarded KORRHAUS bytes completed actual-browser verification on a tagged
-zero-traffic QA revision. The owner explicitly removed the API-backed 78-run
-probabilistic evaluation as a submission gate. It was not run and must not be
-described as passed. Production traffic and live-Shopify WebMCP remain
-unverified.
+This report distinguishes deterministic tests, direct native-tool execution,
+actual agent-browser evidence, clean-clone reproducibility and still-pending
+release checks. None is used as a substitute for another.
 
-## Deterministic evidence
+## Public core and tote
 
-At public source commit `6fc792644a568d2dee318ad2457639911873cbfd`:
+At local commit `afa8b598e1af5ddb6d82afd90f18430a99d81326`:
 
-- 95 tests pass across eight files.
-- Strict source and test typechecking passes.
-- Core and the public studio-tote example build.
-- Public-boundary and documentation-link checks pass.
-- The 24-case, six-category eval corpus passes structural validation.
-- The eval scorer passes synthetic self-tests; synthetic data is never written
-  as evidence.
+- `npm ci --offline` completed from a fresh `--no-local` clone and reported
+  zero dependency vulnerabilities.
+- 20 test files / 175 tests passed.
+- Strict TypeScript checks passed for the core and studio tote.
+- The package, browser bundle, tote and combined judge artifact built.
+- The public-boundary check passed for 166 clean-clone candidates.
+- Documentation links passed for 65 files.
+- The 25-case corpus across six categories and its synthetic scorer self-test
+  passed structural validation.
+- Tote parity accounted for all 25 human surfaces: 14 manifest controls, four
+  variant operations, one asset slot and six legitimate exclusions.
+- The judge artifact bound package `0.1.0`, the exact commit and browser bundle
+  `sha256:7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`.
+- The clean clone remained unmodified after build and verification.
 
-The tests cover manifest semantics and limits, adapter-output reconstruction,
-private-field dropping, atomic proposals, stale revisions, payload-bound
-operation IDs, cumulative proposal limits, cancellation, concurrent Keep,
-zero-write Revert, exactly-once Keep, WebMCP schemas, negative inputs, hostile
-URLs, URL-like text values before adapter access, and read-only validation.
+Deterministic coverage includes strict Manifest 2.0 validation; public-state
+reconstruction; prototype/unknown-field rejection; atomic mixed operations;
+revision and operation-ID conflict handling; cancellation; external-change
+staleness; asset source/size/network policy; preview integrity; zero-write
+Revert; exactly-once Keep and retry/uncertain outcomes; exact-six WebMCP schemas
+and lifecycle; forbidden-action absence; complete tote controls; actual
+artwork; variants; coupled production rules; responsive review UI; and
+ordinary-browser fallback.
 
-## Actual-browser evidence
+The current tote flow has also run in the Codex in-app browser with two named
+variants, real supplied artwork, live merchant-renderer changes, distinct
+revision-bound WebP previews, zero-write Revert and one page-owned Keep commit.
+Native Chrome 151 discovered and executed the same exact-six contract on the
+Item 8 build. Those are actual runtime results, but the final deployed-build
+Chrome repeat and the literal normal-ChatGPT conversation remain pending.
 
-The studio-tote example and the existing private KORRHAUS Designer bridge have
-each completed their five-tool flows in Codex's WebMCP-capable in-app browser.
-This is real supported agent-browser evidence, but it is not mislabeled as the
-owner's still-pending ChatGPT Desktop shell and permission-flow check.
-A retired synthetic KORRHAUS development harness completed the same flow before
-the live bridge was ready; it is historical runtime evidence, not a submitted
-or hosted Sock Designer. The current private bridge is pinned to bundle:
+## Private KORRHAUS integration
 
-`sha256:e3f95e6e51bb6b6044654fa846d1d902e1b921b89979394625be418a2f9db324`
+The exact-six Manifest 2.0 adapter is integrated locally into the existing
+private Route 02 Designer at page asset version `20260827-16`. It consumes the
+same public browser-bundle digest as the tote and maps more than 50 current
+customer-editable controls plus four-colourway operations.
 
-An earlier feature-enabled in-app browser run used the exact
-`e3f95e6e…db324` core bundle. It found exactly five tools, hid review controls before
-a successful agent proposal, returned dependency rules with bounded option
-IDs, created two temporary 60-pair colourways, reported the missing final
-artwork, and restored the exact `korrhaus-8bbd9b55` one-design baseline through
-human Revert with no proposal/Revert network writes and no browser console
-errors. This remains historical actual-browser evidence because later private
-adapter and artwork-preview guards changed the host Designer bytes.
+Final local evidence:
 
-The now-superseded guarded snapshot kept the same core bundle and used the
-`20260827-8` Designer asset key. It passes syntax, focused ESLint, production
-build, strict typecheck, 40 unit files/194 tests, the complete 138-case private
-Designer run with 137 passes and one expected skip, and the exact 18/18 focused
-WebMCP desktop/mobile slice.
+- changed integration/test files pass ESLint;
+- 43 Vitest files / 220 tests pass;
+- strict typecheck and production build pass;
+- 8 active CoDesign V2 Playwright tests pass, with four intentional
+  project/device skips;
+- 6 localization regressions pass;
+- the complete active Playwright suite passes 107 tests with five intentional
+  device skips;
+- a fresh desktop visual repeat creates two 60-pair colourways, changes the
+  existing sock/grip/packaging proof, returns two distinct WebP previews and
+  Reverts with zero writes;
+- a supplied SVG remains temporary and imports/saves exactly once after page
+  Keep;
+- invalid, stale, ordinary-browser, mobile and autosave-isolation cases pass.
 
-Cloud Build `4d51ae1b-5594-4e18-8696-16f27da8cdf8` produced immutable image
-`sha256:aa9c591b5efbe945d68cb1edbfd5b7c39ab5bc524b041b82d3bc7682bdcb5c4e`.
-On tagged QA revision `codesign-qa3`, the real in-app WebMCP browser discovered
-all five tools, rejected an invalid single-design 60/120 allocation, staged two
-60-pair colourways with `persisted: false`, reported only
-`FINAL_LOGO_ARTWORK_REQUIRED`, and Reverted to exact revision
-`korrhaus-3fe7f8ed` with no browser errors. Fixtures-off candidate
-`codesign-prod2` uses the same image and remains healthy at `0%` ordinary
-traffic, but both are now historical and must not be promoted.
+Full private lint still reports one unrelated pre-existing
+`@typescript-eslint/no-explicit-any` issue in
+`app/about-you/about-you.test.ts:76`. It is not a CoDesign failure and has not
+been hidden or modified.
 
-The current `20260827-10` snapshot preserves the unchanged public core, adds
-read-only inspection of proposed colourways, and passes 41 unit files/199
-tests plus the complete 142-case private Designer run with 141 passes and one
-expected skip. Immutable image `sha256:1819173f…d9e3c` serves zero-traffic
-revision `codesign-review-qa2`. On its fresh `codesign-user-qa` origin, the
-actual browser completed the five-tool 2 × 60 flow, changed the same live proof
-Rose → Cream → Rose, preserved `Temporary proposal not saved`, kept mutation
-and upload controls disabled, and re-read the unchanged one-design/20-pair
-committed state with no browser errors or warnings. Live traffic remains `100%`
-on feature-off `sock-logo-v2`; therefore this is not live-Shopify WebMCP
-evidence. See
-[`evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md`](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md)
-and
-[`evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`](./evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md).
-
-Against the exact final public bundle, the tote and the now-retired synthetic
-development harness rejected an HTTPS text value with `INVALID_VALUE`, accepted
-and Reverted a normal temporary proposal, and retained clean consoles. The
-synthetic harness also returned the expected `STALE_REVISION`,
-`PROPOSAL_PENDING`, `OPERATION_ID_CONFLICT`, and `STALE_PROPOSAL_REVISION`
-recovery errors. Navigation away from a configurator removed its page-scoped
-WebMCP context. The private feature-off fallback rendered the normal Designer
-with no CoDesign script, review host, or tools. Full historical evidence is in
-[`evidence/FINAL_BROWSER_SAFETY_QA.md`](./evidence/FINAL_BROWSER_SAFETY_QA.md).
-
-This browser proof validates page registration and runtime behavior. It does
-not measure whether an independent model consistently selects the right tool,
-and no such claim is made.
-
-Five consecutive operator-driven North Form rehearsals also passed on the
-retired frozen synthetic harness: each discovered five tools, staged both
-60-pair colourways with `persisted: false`, reported the missing artwork, and
-Reverted to the exact `reference-revision-1` baseline with a clean console.
-These remain repeatability evidence for the WebMCP runtime, not
-model-selection results or proof of the live merchant route.
+This KORRHAUS result is local only. No exact-six image or revision has been
+deployed, production traffic is unchanged and the feature remains disabled by
+default. Earlier five-tool zero-traffic revisions are historical evidence and
+must not be promoted or called current.
 
 ## Optional model-evaluation tooling
 
-The fixed corpus is `evals/cases.json`; the binding thresholds are
-`evals/run-policy.json`; the evidence contract is documented in
-`evals/RESULTS_FORMAT.md`. A real run must be captured as `runType:
-"actual-model"` and scored with:
+The fixed corpus is `evals/cases.json`; thresholds are in
+`evals/run-policy.json`; the evidence format is documented in
+`evals/RESULTS_FORMAT.md`. Structural validation and scorer self-tests do not
+execute a model and are not reported as model-selection success.
+
+The owner removed the API-backed 78-run evaluation as a submission gate on 27
+August 2026. No key or model spend is required. If separately authorized, an
+actual run must identify the model, date, exact tool definitions, immutable
+build, prompt, tool calls, arguments and classification, then score with:
 
 ```bash
 npm run score:evals -- path/to/actual-results.json
 ```
 
-If separately authorized later, passing requires coverage of all 24 cases,
-9/10 correct selection and valid arguments for every core case, zero forbidden
-CoDesign calls in safety cases, and five consecutive full North Form successes.
+No result file will be fabricated from direct scripted calls or synthetic
+fixtures.
 
-No result file will be fabricated from deterministic tests or direct manual
-tool calls. The current execution goal does not require this optional result,
-no API key was created, and no model spend occurred.
+## Remaining binding release checks
+
+Before submission claims are final:
+
+1. Publish the current local source to the public repository after approval and
+   verify anonymous clean-clone instructions and hosted CI on the exact commit.
+2. Deploy the static landing plus tote after approval and verify the exact
+   served hashes, links, headers, desktop/mobile ordinary UI and WebMCP tools.
+3. Run the complete normal ChatGPT desktop conversation on that deployed build,
+   including supplied artwork, inline preview, refinement and action-time Keep
+   confirmation.
+4. Repeat the native Chrome WebMCP flow on the same deployed build.
+5. Treat KORRHAUS zero-traffic deployment, production traffic and live-route
+   verification as separate optional flagship gates; the tote release does not
+   depend on them.
+
+See [`BROWSER_SUPPORT.md`](./BROWSER_SUPPORT.md) and
+[`evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).

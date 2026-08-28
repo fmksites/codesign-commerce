@@ -363,3 +363,14 @@
 - Public/browser runtime parity digest: `7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`.
 - Dated public-safe evidence: `docs/evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`.
 - Item 11 is next. Local release preparation may continue, but any public deployment/publication, KORRHAUS zero-traffic deployment, production traffic change or feature enablement remains a separate explicit approval gate.
+
+## 28 August 2026 — Item 11 local release checkpoint reached
+
+- Rechecked the official rules: judges require a working live URL, public licensed source, English explanation and a public YouTube demo with audio under three minutes.
+- A fresh `--no-local` clone of Item 10 commit `afa8b59` installed offline with zero reported vulnerabilities and passed 175 tests, typecheck, build, bundle, judge, public-boundary, documentation, eval-structure and 25/25 tote parity checks.
+- Decoupled the required tote release from optional KORRHAUS production promotion. A clean tote-only release build now succeeds while withholding the KORRHAUS URL; incomplete or inconsistent flagship attestations fail closed.
+- Updated the judge landing to make the tote the primary runnable action, show the exact six tools and 175 tests, and label KORRHAUS honestly as a separately gated integration.
+- Actual local Chromium inspection passed at 1440 px and 390 px with no horizontal overflow or console errors; all reveal sections, disabled KORRHAUS actions and the deterministic tote route were checked.
+- Rewrote current release, browser-support, testing, evaluation, KORRHAUS mapping, submission checklist and mandatory-video documents to remove stale five-tool/current-deployment claims.
+- Read-only remote verification found public `main` still at historical baseline `e986e12`; current Manifest 2.0 work has not been pushed.
+- Item 11 remains open. The next action is an explicit owner decision on public source publication and tote hosting; no external mutation occurred.

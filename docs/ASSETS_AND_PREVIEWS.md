@@ -104,8 +104,17 @@ The selected transport is static-first: a bounded renderer-generated `data:image
 
 `ProposalEngine.keep()` requires current preview receipts whenever a preview bridge is configured. The receipts' IDs and integrity values enter commit metadata, while the page-owned Keep controller remains the only route to persistence. There is no WebMCP save, upload, order, or checkout tool.
 
-## Studio tote reference proof
+## Shipped integration proof
 
-The public tote routes its real North Form PNG through `AssetSandbox`, renders only the opaque handle, and captures the exact renderer through `PreviewBridge`. Its development-only native Chrome harness uses the final Manifest 2.0 proposal engine and exact six-tool registry through `document.modelContext`, without activating Keep. The remaining full visual-product expansion belongs to checklist Item 9.
+The public tote routes its real North Form PNG through `AssetSandbox`, renders
+only the opaque handle, and captures the exact merchant renderer through
+`PreviewBridge`. Its complete Manifest 2.0 adapter supports artwork, typography,
+placement, scale, rotation, multiple variants and page-owned Keep/Revert.
 
-The private KORRHAUS Sock Designer is not changed by this module. A later approval-gated adapter must reuse its existing upload, renderer, snapshot, autosave-isolation, and Keep paths without copying private code or data into this repository.
+The private KORRHAUS adapter uses the same public runtime with the existing sock,
+grip and packaging proof board. It prepares supplied artwork temporarily through
+the existing client pipeline, returns only an opaque handle, captures bounded
+WebP previews per colourway, and imports the asset only after visible page Keep.
+That adapter remains private; only the generic lifecycle and sanitized evidence
+belong in this repository. See the current local integration evidence in
+[`evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).

@@ -90,24 +90,19 @@ surfaces accounted for: 14 manifest-control mappings, four variant-operation
 mappings, one asset-slot mapping, and six explicit non-configurational or
 human-confirmation exclusions.
 
-The latest local reproducibility evidence is recorded in
-[evidence/LOCAL_VERIFICATION.md](./evidence/LOCAL_VERIFICATION.md). The public
-tote portability proof is recorded in
-[evidence/STUDIO_TOTE_PORTABILITY.md](./evidence/STUDIO_TOTE_PORTABILITY.md).
-The current guarded KORRHAUS Designer candidate is recorded in
-[evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md](./evidence/KORRHAUS_GUARDED_LOCAL_CANDIDATE.md).
-Its immutable-image, tagged-QA browser, and fixtures-off zero-traffic proof is
-recorded in
-[evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md](./evidence/KORRHAUS_GUARDED_ZERO_TRAFFIC_RELEASE.md).
-The earlier five-tool actual-browser run remains historical evidence in
-[evidence/KORRHAUS_LOCAL_FIVE_TOOL.md](./evidence/KORRHAUS_LOCAL_FIVE_TOOL.md).
-The older
-[zero-traffic release](./evidence/KORRHAUS_ZERO_TRAFFIC_RELEASE.md) is explicitly
-superseded and its `codesign-prod1` candidate must never be promoted.
+The current public tote evidence is recorded in
+[evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md](./evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md).
+The current local exact-six KORRHAUS integration is recorded in
+[evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).
+All earlier five-tool KORRHAUS local, tagged-QA and zero-traffic documents are
+historical only; none identifies a current deployable candidate.
 The deployable landing-plus-tote artifact is verified in
 [evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./evidence/JUDGE_SITE_RELEASE_CANDIDATE.md).
 The older public-reference browser documents remain dated synthetic-harness
 history, not an active submission surface.
+
+The exact client/browser claim matrix and final-release repeats are tracked in
+[BROWSER_SUPPORT.md](./BROWSER_SUPPORT.md).
 
 ## Optional agent evaluation corpus
 
