@@ -33,10 +33,12 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 The final deployed tote was also rerun through the page-scoped WebMCP client:
 real PNG artwork, two atomic proposal passes, two distinct 640 x 640 previews,
 production-ready validation, atomic invalid-value rejection, and zero-write
-Revert all passed. The Shopify development-store page serves the same tested
-application digest and preserves Shopify's own storefront scripts, but the
-repository does not claim a native Shopify-page agent run until a supported
-client exposes WebMCP on that password-protected page.
+Revert all passed. The same flow then passed from the password-protected Shopify
+development-store page itself. CoDesign's six tools and Shopify's native
+catalog/cart tools were available together, and read-only Shopify catalog and
+cart calls succeeded while the CoDesign proposal remained temporary. This does
+not claim that the consumer ChatGPT website in ordinary Chrome supports site
+tools; client claims remain separated in the browser support matrix.
 
 The source and complete tote reference are public. The private KORRHAUS
 Manifest 2 adapter is implemented and locally verified, but its WebMCP feature

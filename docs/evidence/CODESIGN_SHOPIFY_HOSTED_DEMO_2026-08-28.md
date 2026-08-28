@@ -42,7 +42,48 @@ The rendered top-level page contained all of the following simultaneously:
 
 This proves that the CoDesign layer can be hosted inside Shopify without replacing Shopify's native storefront capability scripts or the merchant renderer.
 
-The connected Chrome 152 session still returned `undefined` for `document.modelContext`. Therefore this checkpoint does **not** claim a native Chrome exact-six execution on the Shopify page. The exact-six implementation remains covered by deterministic tests and the already-recorded supported-client evidence; a current-release native Chrome invocation must be repeated when the browser exposes that API.
+## Exact Shopify-origin WebMCP invocation
+
+The password-protected Shopify page was authenticated in the Codex in-app
+browser without changing or saving the storefront credential. The client then
+discovered and invoked the tools directly from
+`https://korrhaus-development.myshopify.com/pages/codesign-webmcp-tote-demo`:
+
+- All six CoDesign tools were registered from the Shopify origin.
+- Shopify's native `search_catalog`, `browse_store`, `get_product`,
+  `show_variant`, `get_cart`, `update_cart`, `cancel_cart`,
+  `proceed_to_checkout`, `manage_orders`, and policy-search tools were present
+  on the same page. Read-only `search_catalog` and `get_cart` calls succeeded
+  alongside the CoDesign proposal.
+- The initial state was the clean `tote-revision-1` workspace with one natural
+  12 oz tote, 100 units, no pending proposal and `persisted: false`.
+- The public 214,745-byte PNG artwork fixture was staged temporarily with
+  integrity
+  `sha256:593cf3b82185b91ee8a1e5dbfa9169b4e4b66713fe0c3828e2378751a856a3c5`.
+- Two atomic passes created `North Form Natural` and `North Form Charcoal`,
+  50 units each, with distinct colour, handle, placement, scale and rotation
+  settings.
+- The Shopify-hosted renderer returned two distinct 640 x 640 WebP artifacts:
+  `sha256:1ca78940440854e2b018799ecb496751c879e0eb0eaa01178a42c963751e5d4e`
+  and `sha256:1fd4f07eb22bbcbcc6f838bf55b578db815211fbb63558624561f215f8e16545`.
+- Validation returned `configurationValid: true`, `productionReady: true`, no
+  issues and `persisted: false`.
+- The visible Shopify page showed the live renderer, disabled ordinary controls
+  while the proposal was open, both preview cards, and human-only
+  `Keep proposal` and `Revert` controls.
+- A mixed batch containing one valid name change and one undeclared colour was
+  rejected with `INVALID_VALUE`; the proposal remained on revision 2 and no
+  partial change was applied.
+- At 390 px there was no horizontal overflow, every CoDesign button remained at
+  least 44 px high, and the Keep/Revert controls remained present in the mobile
+  document.
+- Revert restored one `Canvas tote` at `tote-revision-1`, cleared the pending
+  proposal and left `persisted: false`.
+- No browser console errors were recorded.
+
+This is a real Shopify-origin WebMCP run in a supported page-scoped client. It
+does not imply that the consumer ChatGPT website in ordinary Chrome supports
+site tools, and it does not replace the separate native-Chrome evidence gate.
 
 ## Current deployed WebMCP runtime cross-check
 
@@ -76,8 +117,8 @@ TypeScript functions:
   high.
 
 The Shopify page serves the same `codesign-tote.js` application digest as this
-verified public runtime. This establishes code identity and Shopify coexistence,
-but it is deliberately not relabelled as a native Shopify-page agent invocation.
+verified public runtime. The separate exact Shopify-origin run above confirms
+that the deployed overlay also registers and executes the tool contract itself.
 
 ## Actual-browser verification
 
@@ -106,5 +147,7 @@ After adding the Shopify asset boundary and deployment overlay:
 - Browser bundle verification: passed.
 - Deployed public exact-six invocation, two previews, validation, atomic
   rejection and zero-write Revert: passed.
+- Password-protected Shopify-origin exact-six invocation plus coexistence with
+  Shopify's native catalog/cart tools: passed.
 
 Shopify Theme Check also reported two pre-existing missing translation entries and nine pre-existing warnings in the cloned theme. It reported no finding in the CoDesign template or assets. Those unrelated theme defects were deliberately not changed.
