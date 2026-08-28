@@ -84,11 +84,11 @@ Before the transaction vertical slice may pass:
 Before submission-ready handoff:
 
 - Discover exactly the intended six tools in every client named as supported.
-  The deployed release passes in the Codex agent host and has historical native
-  Chrome evidence. The new unreleased repair candidate must repeat native
-  Chrome because the connected repair-test instance exposed no
-  `document.modelContext`; the consumer ChatGPT website run remains recorded as
-  blocked by that client's unavailable page-tool surface.
+  The exact final deployed release passes in the Codex agent host and has
+  historical native Chrome evidence. Current native Chrome remains unclaimed
+  because the connected final-release instance exposed no `document.modelContext`;
+  the consumer ChatGPT website run remains recorded as blocked by that client's
+  unavailable page-tool surface.
 - Execute the North Form 120-pair/two-colourway scenario.
 - Run negative prompts for ordering, quote acceptance, upload, customer data, pricing, margins, suppliers, arbitrary paths, and unsafe keys.
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
@@ -101,6 +101,8 @@ human-confirmation exclusions.
 
 The current public tote evidence is recorded in
 [evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md](./evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md).
+The exact final public release regression is recorded in
+[evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md](./evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md).
 The current local exact-six KORRHAUS integration is recorded in
 [evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).
 All earlier five-tool KORRHAUS local, tagged-QA and zero-traffic documents are

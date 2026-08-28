@@ -8,9 +8,9 @@ release checks. None is used as a substitute for another.
 
 ## Public core and tote
 
-The newest unreleased local repair candidate is based on commit
-`8a5d3e175d5977d8689fb22d779d3dc592b4af3e`. Its working-tree changes are not
-yet an immutable commit or public release:
+The final public tote implementation is deployed from commit
+`ceec9fd3eab9d5c0959b6f5618c61863d562fad0` at the stable and immutable
+Cloudflare Pages authorities:
 
 - `npm ci --offline` completed from a fresh `--no-local` clone and reported
   zero dependency vulnerabilities.
@@ -26,7 +26,7 @@ yet an immutable commit or public release:
 - The judge artifact bound package `0.1.0`, browser bundle
   `sha256:03c98c4be01c9928dfd70b119d2567061ca30cdf6d4a4d1195c3bb1d429becc0`
   and tote application bundle
-  `sha256:dd3e5cfaa87fdc272ab9b0e7512881ce4c5730118ba784f0b9e3e25bd4d40d01`.
+  `sha256:8025f8544513b2fac1a848ff11276dd77cbbd32ba1d41ff5a8cb807fb9f34274`.
 
 Deterministic coverage includes strict Manifest 2.0 validation; public-state
 reconstruction; prototype/unknown-field rejection; atomic mixed operations;
@@ -52,10 +52,20 @@ reload, truthful unsaved-reload recovery, narrow-rail review details, 390 px
 mobile focus/target checks and an empty console. See
 [`evidence/TOTE_TRANSACTION_REPAIR_QA_2026-08-28.md`](./evidence/TOTE_TRANSACTION_REPAIR_QA_2026-08-28.md).
 
-The connected ordinary Chrome used for the final local smoke exposed no
-`document.modelContext`. Historical Chrome 151 native proof remains valid for
-its named older build, but is not substituted for a native-WebMCP pass on this
-unreleased repair bundle.
+The final stable/immutable black-box release regression then repeated the exact
+six-tool North Form flow with supplied artwork, byte-addressed previews,
+production validation, targeted single-variant refinement, invalid-operation
+atomicity, zero-write Revert, Keep across reload, exact retry/conflict,
+cross-tab stale recovery, 390 px reflow/focus, parity, empty consoles and final
+reset. The release report is
+[`evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md`](./evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md).
+
+The connected ordinary Chrome used for the exact final deployed smoke exposed
+no `document.modelContext`. Historical Chrome 151 native proof remains valid
+for its named older build, but is not substituted for a native-WebMCP pass on
+the final bundle. Ordinary Chrome fallback on that bundle did pass with no
+overflow or console errors, explicit browser-only save scope and 44 px section
+navigation targets.
 
 ## Private KORRHAUS integration
 
@@ -110,19 +120,21 @@ npm run score:evals -- path/to/actual-results.json
 No result file will be fabricated from direct scripted calls or synthetic
 fixtures.
 
-## Remaining binding release checks
+## Remaining binding submission checks
 
 Before submission claims are final:
 
-1. Publish the current local source to the public repository after approval and
-   verify anonymous clean-clone instructions and hosted CI on the exact commit.
-2. Deploy the static landing plus tote after approval and verify the exact
-   served hashes, links, headers, desktop/mobile ordinary UI and WebMCP tools.
-3. Run each consumer client intended for a compatibility claim on that deployed
-   build. The 28 August ChatGPT website run in ordinary Chrome is recorded as
-   blocked by its unavailable webpage-tool surface; the separate ChatGPT
-   desktop-app path remains untested and unclaimed.
-4. Repeat the native Chrome WebMCP flow on the same deployed build.
+1. Record/upload the mandatory public sub-three-minute video and verify it
+   logged out; this is participant-owned.
+2. Run only consumer clients intended for a compatibility claim. The 28 August
+   ChatGPT website run in ordinary Chrome remains blocked by that client's
+   unavailable webpage-tool surface; the separate ChatGPT desktop-app path is
+   untested and unclaimed.
+3. Repeat native Chrome WebMCP on commit `ceec9fd3eab9` only if native Chrome is
+   named as current support. The deployed ordinary Chrome fallback is already
+   verified.
+4. Complete entrant/IP attestations and explicitly approve the final Devpost
+   submission.
 5. Treat KORRHAUS zero-traffic deployment, production traffic and live-route
    verification as separate optional flagship gates; the tote release does not
    depend on them.

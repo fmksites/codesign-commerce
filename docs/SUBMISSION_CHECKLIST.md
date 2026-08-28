@@ -1,9 +1,8 @@
 # Submission checklist
 
-**Current status:** deployed release remains available, but a newer local
-transaction/usability repair candidate is not yet pushed or deployed; consumer
-ChatGPT web is blocked by that client, while video and human submission gates
-remain, 28 August 2026
+**Current status:** final public tote implementation is pushed, deployed and
+black-box verified; consumer ChatGPT web is blocked by that client, while the
+participant-owned video and human submission gates remain, 28 August 2026
 
 Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
 `BLOCKED BY CLIENT` needs a compatible external client, and `APPROVAL` is an
@@ -45,19 +44,19 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 - `PASS` — local tote actual-browser flows cover staged changes, distinct
   previews, targeted refinement, zero-write Revert, one-state-commit Keep,
   ordinary human fallback, desktop and 390 px mobile.
-- `PASS` — the unreleased repair candidate passes initial-request retry,
+- `PASS` — the released repair passes initial-request retry,
   cross-tab stale protection, Keep-after-reload, unsaved-reload recovery,
   visible narrow-rail details and mobile keyboard/target-size checks.
-- `PENDING` — commit, push, clean-clone and deploy that repair candidate before
-  treating it as the submission build.
-- `PASS` — clean `--no-local` release clone of release `1150c4070381`:
-  offline `npm ci`, zero reported vulnerabilities, 20 files / 177 tests,
+- `PASS` — two audit-driven polish changes clarify browser-only persistence and
+  make every desktop section-navigation target at least 44 px.
+- `PASS` — clean public release clone of deployed commit `ceec9fd3eab9`:
+  offline `npm ci`, zero reported vulnerabilities, 20 files / 180 tests,
   typecheck, build, bundle, judge,
   boundary, docs, parity and eval-structure checks.
 - `PASS` — public core WebMCP bundle digest
-  `0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`.
+  `03c98c4be01c9928dfd70b119d2567061ca30cdf6d4a4d1195c3bb1d429becc0`.
 - `PASS` — public tote application bundle digest
-  `c6fd8b068c94d3ab521e83132b1670e53e5031950a949d2244a56c652c2da0eb`.
+  `8025f8544513b2fac1a848ff11276dd77cbbd32ba1d41ff5a8cb807fb9f34274`.
 - `PASS` — exhaustive tool/control matrix found and locally verified fixes for
   visible coupled-rule validation, rule-specific agent diagnostics, and
   per-batch versus per-proposal operation limits.
@@ -75,12 +74,14 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
   README and hosted CI on the exact pushed commit.
 - `PASS` — Cloudflare Pages serves `dist/judge-site/` at
   <https://codesign-commerce.pages.dev/> with immutable fallback
-  <https://26193628.codesign-commerce.pages.dev/>.
+  <https://0e840311.codesign-commerce.pages.dev/>.
 - `PASS` — public tote verified logged out on desktop/mobile ordinary browsers,
   the Codex in-app browser exact-six flow, and ordinary Chrome.
-- `PASS` — final immutable-release exact-six agent flow created both exact
-  North Form variants, returned two real previews, validated production, proved
-  rule-specific atomic rejection, and caused zero persistence.
+- `PASS` — final public exact-six agent regression created both North Form
+  variants with supplied artwork, returned two real previews, validated
+  production, refined only the requested variant, proved atomic rejection,
+  Revert, Keep/reload, idempotency and cross-tab recovery, then reset both
+  authorities to revision 1.
 - `PASS` — record exact served commit, bundle hash, asset hashes, headers,
   screenshots and functional links.
 - `PASS` — both advertised bundle paths are public and their independently
@@ -120,8 +121,8 @@ The public tote release does not depend on KORRHAUS production promotion.
   six current tools through `document.modelContext`, executed temporary
   proposal and real-artwork paths, produced real previews, and recorded zero
   writes/imports/commits.
-- `PENDING` — repeat native Chrome on the repair release. The connected Chrome
-  used for its final local ordinary-browser smoke exposed no
+- `PENDING` — repeat native Chrome on the exact final release. The connected
+  Chrome used for the final deployed ordinary-browser smoke exposed no
   `document.modelContext`, so the historical pass is not relabeled as a pass on
   the new bundle.
 - `PASS` — the exact immutable public release completed the same exact-six

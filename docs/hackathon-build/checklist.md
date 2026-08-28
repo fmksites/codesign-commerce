@@ -136,6 +136,21 @@
   12 gates. Evidence:
   `docs/evidence/TOTE_FINAL_CONTROL_QA_2026-08-28.md`.
 
+  Transaction-repair release checkpoint (28 August 2026): The public repair
+  now protects exact initial retries, rejects changed operation-ID payloads,
+  invalidates proposals after external-tab changes, preserves visible Keep
+  across reload, and truthfully reports unsaved proposals after reload. The
+  exact final deploy is commit `ceec9fd3eab9d5c0959b6f5618c61863d562fad0`
+  at `https://codesign-commerce.pages.dev/` with immutable authority
+  `https://0e840311.codesign-commerce.pages.dev/`. A clean clone passes 180
+  tests and every release check. The full stable/immutable black-box regression
+  passed exact-six discovery, two real previews, production validation,
+  targeted refinement, Revert, Keep/reload, atomicity, idempotency, stale
+  recovery, 390 px behavior, console checks and final reset. The remaining
+  challenge gates are the participant-owned video, legal attestations and
+  explicit Devpost submission approval. Evidence:
+  `docs/evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md`.
+
 - [ ] **12. Prepare Devpost handoff**
   Spec ref: `spec.md > Demo And Submission Flow` and `prd.md > Submission Proof Points`
   What to build: Gather the verified product story, first-15-seconds tote sequence, judge instructions, stable demo URL, public repository link, exact commit/build hashes, screenshots or officially required media, clean-clone commands, browser-support limitations, test/eval evidence, public/private architecture explanation, pre-existing KORRHAUS distinction, real-business proof, Codex/AI usage summary, license, and learning documents. Draft only from verified facts and stop before Devpost submission for explicit approval.
