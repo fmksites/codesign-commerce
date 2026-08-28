@@ -15,11 +15,15 @@ on 28 August 2026:
 
 - `PASS` — project uses `document.modelContext.registerTool(...)` and is a
   non-trivial WebMCP implementation.
-- `PASS` — working live URL at <https://codesign-commerce.pages.dev/> is
-  accessible to the Codex in-app browser and ordinary Chrome.
+- `PENDING REBRAND RELEASE` — working target URL at
+  <https://codesign-webmcp.pages.dev/> must pass the same deployed browser
+  verification before submission.
 - `PASS` — current source and history publicly available with all runnable
   code, assets and instructions.
 - `PASS` — visible Apache-2.0 `LICENSE` exists in the public repository.
+- `PASS` — explicit `ASSET_NOTICES.md` distinguishes Apache-2.0 code,
+  KORRHAUS-owned marks/assets, fictional North Form demo material and merchant
+  asset responsibilities.
 - `PASS` — English text draft explains WebMCP fit, user experience, joint
   human-agent work and implementation.
 - `PENDING` — public YouTube demonstration with audio, clearly functioning and
@@ -74,9 +78,9 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
   and push are separately approved and completed.
 - `PASS` — verify anonymous clone, visible Apache-2.0 license, source tree,
   README and hosted CI on the exact pushed commit.
-- `PASS` — Cloudflare Pages serves `dist/judge-site/` at
-  <https://codesign-commerce.pages.dev/> with immutable fallback
-  <https://0e840311.codesign-commerce.pages.dev/>.
+- `PENDING REBRAND RELEASE` — deploy `dist/judge-site/` at
+  <https://codesign-webmcp.pages.dev/>. The pre-rebrand deployment remains
+  available as historical evidence and rollback continuity.
 - `PASS` — public tote verified logged out on desktop/mobile ordinary browsers,
   the Codex in-app browser exact-six flow, and ordinary Chrome.
 - `PASS` — final public exact-six agent regression created both North Form

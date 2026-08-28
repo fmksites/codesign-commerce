@@ -145,7 +145,7 @@ proposal stale instead of being silently overwritten.
 
 ### Fast judge path
 
-1. Open <https://codesign-commerce.pages.dev/tote/?reset=true> in a WebMCP-capable
+1. Open <https://codesign-webmcp.pages.dev/tote/?reset=true> in a WebMCP-capable
    ChatGPT in-app browser.
 2. Download `north-form-supplied-mark.png` from the judge landing and attach it
    to the conversation.
@@ -196,9 +196,9 @@ the public-boundary and documentation scans pass, and the tote inventory reports
 
 ## Public Demo Link
 
-<https://codesign-commerce.pages.dev/>
+<https://codesign-webmcp.pages.dev/>
 
-Deterministic tote URL: <https://codesign-commerce.pages.dev/tote/?reset=true>
+Deterministic tote URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
 Immutable verified deployment: <https://26193628.codesign-commerce.pages.dev/>
 
@@ -294,7 +294,7 @@ Official fields fetched from Devpost on 28 August 2026:
 - **If Existing, what changed:** Not applicable if `New` is selected. If Devpost
   treats the entry as existing, use the “What was created during the challenge”
   answer below.
-- **Live URL (required):** <https://codesign-commerce.pages.dev/>
+- **Live URL (required):** <https://codesign-webmcp.pages.dev/>
 - **Testing instructions (optional):** use the Fast judge path above.
 - **Public code repository (required):**
   <https://github.com/fmksites/codesign-webmcp>

@@ -4,7 +4,7 @@
 
 > **Make your Shopify product configurator agent-ready.**
 
-**Live challenge demo:** <https://codesign-commerce.pages.dev/>
+**Live challenge demo:** <https://codesign-webmcp.pages.dev/>
 
 **Public source:** <https://github.com/fmksites/codesign-webmcp>
 
@@ -140,3 +140,5 @@ See:
 - [docs/SUBMISSION_CHECKLIST.md](./docs/SUBMISSION_CHECKLIST.md) for the final
   evidence and approval checklist.
 - [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md) for the repository boundary.
+- [ASSET_NOTICES.md](./ASSET_NOTICES.md) for code-license, brand, demo-artwork,
+  and merchant-asset ownership boundaries.
