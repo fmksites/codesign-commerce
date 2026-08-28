@@ -33,7 +33,7 @@ owned/authorized visual assets and no copyrighted music.
 | 1:36–1:51 | Conversational refinement | “I ask for only the charcoal tote to feel bolder. The natural design stays unchanged while the charcoal preview updates.” |
 | 1:51–2:05 | Human decision | “Nothing is saved yet. WebMCP has no save or order tool. After explicit confirmation, the page's own Keep control commits once; Revert would restore the exact baseline with zero writes.” |
 | 2:05–2:22 | KORRHAUS evidence and existing Sock Designer | “This is not just a tote. The same unchanged core is integrated into KORRHAUS's existing Shopify Sock Designer, mapping more than 50 real controls without replacing its renderer or autosave.” |
-| 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 175 tests, safety cases and clean-clone instructions.” |
+| 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 180 tests, safety cases and clean-clone instructions.” |
 | 2:31–2:35 | Closing title | “CoDesign Commerce: chat to custom products on Shopify.” |
 
 ## Contingencies

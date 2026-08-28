@@ -109,6 +109,14 @@ authorities. It produced five screenshots; its local report digest is
 and structured-results digest is
 `1debe6073c350dee7839c92a330bc7b233dc35ca8423bfbef1ba60749bf54f77`.
 
+The final user-facing rehearsal began with the natural-language North Form
+brief, showed concise progress across two coherent passes, returned both exact
+640 by 640 renderer WebP files visibly in the Codex conversation, reported
+production-ready with no missing decisions, and then Reverted and Reset. The
+conversation ended at revision 1 with no pending proposal, `persisted: false`
+and no console errors. The preview files independently matched the Natural and
+Charcoal renderer digests recorded above.
+
 The connected exact-final Chrome instance did not expose
 `document.modelContext`. Native Chrome WebMCP is therefore not claimed for this
 exact release. This does not invalidate the public implementation: the exact
