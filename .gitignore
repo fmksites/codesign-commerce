@@ -8,10 +8,15 @@ dist/
 coverage/
 playwright-report/
 test-results/
+.playwright-cli/
+output/
 *.log
 
 # Private registration correspondence is evidence for the owner, not public source.
 reference/
+
+# Local market research is maintained separately from the challenge source.
+research/
 
 # Local Codex/project metadata must not enter the public challenge repository.
 .agents/

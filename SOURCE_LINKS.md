@@ -6,7 +6,6 @@
 - Devpost resources: https://webmcp.devpost.com/resources
 - Devpost rules: https://webmcp.devpost.com/rules
 - OpenAI challenge page: https://openai.com/webmcp-challenge/
-- Registration email PDF: `reference/The WebMCP Challenge - You are in.pdf`
 
 ## WebMCP
 

@@ -2,17 +2,17 @@
 
 ## Deterministic local gates
 
-Run from the repository root:
+Run the complete deterministic suite from the repository root:
 
 ```bash
 npm ci
-npm test
-npm run typecheck
-npm run build
-npm run verify:browser-bundle
-npm run check:judge-site
-npm run check:public-boundary
+npm run verify
 ```
+
+Individual scripts remain available when diagnosing one gate. `npm run verify`
+runs tests, strict typecheck, the standalone and Shopify-overlay builds, browser
+bundle verification, judge-site verification, the public-boundary scan,
+documentation links, eval structure, and tote control parity.
 
 `npm run typecheck` checks both source and tests under strict TypeScript settings. The public-boundary check scans tracked and untracked public candidates while respecting `.gitignore`.
 

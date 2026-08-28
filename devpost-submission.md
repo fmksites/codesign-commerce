@@ -186,13 +186,13 @@ npm run check:evals
 npm run check:parity
 ```
 
-Expected deterministic result: 20 test files / 177 tests pass, strict typecheck
+Expected deterministic result: 22 test files / 186 tests pass, strict typecheck
 and build pass, the core WebMCP bundle matches SHA-256
-`0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`,
+`aa195de70a5c0a2a7db0a929e038212f485d70db309f0538914dad7c1da7371f`,
 the tote application bundle matches SHA-256
-`c6fd8b068c94d3ab521e83132b1670e53e5031950a949d2244a56c652c2da0eb`,
+`4f115aee2d97895a715495d842ec0830e5470d033570699613599074686b304b`,
 the public-boundary and documentation scans pass, and the tote inventory reports
-25/25 accounted surfaces.
+25/25 accounted surfaces. Recheck these values after any application-code change.
 
 ## Public Demo Link
 
@@ -200,14 +200,14 @@ the public-boundary and documentation scans pass, and the tote inventory reports
 
 Deterministic tote URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
-Current verified deployment: <https://78c60433.codesign-webmcp.pages.dev/>
+Final immutable deployment URL: `TODO after the final source-synchronized deployment.`
 
 ## Public Repository Link
 
 <https://github.com/fmksites/codesign-webmcp>
 
 Verified implementation release commit:
-`8322698e3b1a8924f331e78d18c2750c784e9816`
+`TODO record the final source-synchronized deployment commit.`
 
 License: Apache-2.0
 
@@ -227,7 +227,7 @@ Target script: `docs/VIDEO_SCRIPT.md` (2 minutes 35 seconds).
    validation.
 4. Visible human Keep/Revert boundary while ordinary design controls are locked.
 5. Architecture/repository proof showing the exact six tools, Manifest 2.0,
-   Apache-2.0 license, and 175 passing tests.
+   Apache-2.0 license, and 186 passing tests.
 
 Existing public-repository captures:
 
@@ -239,11 +239,13 @@ Existing public-repository captures:
 ## Submission Readiness Notes
 
 - Public repository: ready and anonymously accessible.
-- Hosted CI: passing on release commit `1150c40`.
-- Stable and immutable demo: byte-for-byte matched to the fresh public clone.
+- Hosted CI: passing on the current public `main` branch.
+- Stable demo: available; the final immutable URL and source match must be
+  recorded after the last repository cleanup deployment.
 - WebMCP runtime: exact-six public flow verified in the Codex in-app browser.
-- Chrome: ordinary UI plus native exact-six and supplied-artwork paths verified
-  on the current source with the official testing flag.
+- Chrome: ordinary UI verified on the public configurator. Historical native
+  Chrome 151 exact-six and supplied-artwork paths passed with the official
+  testing flag; repeat that proof on the final deployed commit before submission.
 - Release integrity: independently fetched stable/immutable core and tote
   bundles match their separately labelled metadata digests.
 - KORRHAUS: real private integration is locally complete and feature-off; it is
@@ -298,10 +300,11 @@ Official fields fetched from Devpost on 28 August 2026:
 - **Testing instructions (optional):** use the Fast judge path above.
 - **Public code repository (required):**
   <https://github.com/fmksites/codesign-webmcp>
-- **Agents/clients tested (required):** Codex desktop agent exact-six WebMCP on
-  the final immutable public release; native Chrome 151 exact-six plus real
-  supplied artwork on the current source using the official testing flag; and
-  ordinary Chrome on the public configurator. The consumer ChatGPT website was
+- **Agents/clients tested (required):** Codex desktop page-scoped exact-six
+  WebMCP on the deployed public release; historical native Chrome 151 exact-six
+  plus real supplied artwork using the official testing flag; and ordinary
+  Chrome on the public configurator. Repeat native Chrome or ChatGPT in-app on
+  the final source-synchronized deployment before copying this answer. The consumer ChatGPT website was
   also tested in ordinary Chrome, but its plugin search returned no `WebMCP`
   integration and no webpage tools; that path is explicitly not claimed as
   supported. The separate ChatGPT desktop-app route remains untested.

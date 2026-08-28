@@ -57,4 +57,5 @@ Chrome was used for visual fidelity and native keyboard behavior. Its page conte
 - `screenshots/review-panel-desktop-comparison-final.png`
 - `screenshots/review-panel-mobile-comparison-final.png`
 
-See the repository-root `design-qa.md` for the source-to-implementation comparison and resolved differences.
+See [`../archive/project-history/design-qa.md`](../archive/project-history/design-qa.md)
+for the historical source-to-implementation comparison and resolved differences.

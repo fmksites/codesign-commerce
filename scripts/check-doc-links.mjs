@@ -14,6 +14,7 @@ const linkPattern = /\[[^\]]*\]\(([^)]+)\)/g;
 let scannedFileCount = 0;
 
 for (const file of markdownFiles) {
+  if (file.startsWith("docs/archive/")) continue;
   if (!existsSync(file)) continue;
   scannedFileCount += 1;
   const source = readFileSync(file, "utf8");

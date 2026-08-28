@@ -6,9 +6,7 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 ## 1. Freeze the public release candidate
 
 1. Confirm a clean working tree and immutable commit SHA.
-2. Run `npm ci`, tests, typecheck, build, bundle verification, boundary check,
-   judge-site verification, documentation check, and eval-corpus/scorer check
-   from a clean clone.
+2. Run `npm ci` and `npm run verify` from a clean clone.
 3. Record the core browser-bundle SHA-256 and public example asset hashes.
 4. Optionally run the retained model-eval corpus only if API access and budget
    are separately authorized; it is not a release or submission gate.
@@ -57,8 +55,9 @@ production promotion.
    human fallback and every public link.
 6. Run the final journey in each client named as supported on this exact build;
    record unavailable clients as limitations instead of substituting scripted
-   calls. Native Chrome and the Codex host are currently verified, while the
-   consumer ChatGPT website path is not supported in the tested session.
+   calls. The Codex page-scoped host is verified on the current release;
+   historical native Chrome proof must be repeated on the final deployment.
+   The consumer ChatGPT website path is not supported in the tested session.
 7. Retain the provider URL as a fallback even if a branded domain is added.
 
 ## 5. Optional no-traffic KORRHAUS deployment — separate approval required

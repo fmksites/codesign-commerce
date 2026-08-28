@@ -27,6 +27,7 @@
     "check:judge-site": "node scripts/check-judge-site.mjs",
     "check:evals": "node scripts/validate-eval-corpus.mjs && node scripts/score-eval-results.mjs --self-test",
     "check:parity": "node scripts/verify-control-parity.mjs",
+    "verify": "npm test && npm run typecheck && npm run build:shopify-demo && npm run verify:browser-bundle && npm run check:judge-site && npm run check:public-boundary && npm run check:docs && npm run check:evals && npm run check:parity",
     "score:evals": "node scripts/score-eval-results.mjs"
   },
   "devDependencies": {

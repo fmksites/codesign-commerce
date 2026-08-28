@@ -20,15 +20,19 @@ CoDesign WebMCP is designed around a narrow webpage capability boundary, not bro
 
 Inputs use bounded JSON schemas with `additionalProperties: false`, semantic IDs, fixed counts and lengths, and prototype-pollution guards. Outputs and error messages are sanitized. Text that may originate with a user is marked untrusted.
 
-The public manifest is also bounded to 100 option groups, 200 values per option,
-and 100 dependency rules. Every dependency rule names one to 30 known option
-IDs. Enum/color, integer, and text bounds must be compatible with their option
-kind. Malformed or oversized manifests fail before any tool is registered.
+The Manifest 2 contract is bounded to 120 controls, 200 values per control, 20
+asset slots, 20 preview surfaces, and 100 dependency descriptions. Enum/color,
+integer, number, text, asset, position, scale, and rotation bounds must match
+their declared control kind. Malformed or oversized manifests fail before any
+tool is registered.
 
-A pending proposal accepts at most 20 successful operations and 20 unique
-assumptions. Every operation ID is bound to the exact operation kind and
-payload that first used it; reusing the ID with different changes fails closed
-without another preview or write.
+One Manifest 2 proposal batch accepts at most 80 typed operations, and one
+temporary proposal accepts at most 240 successful operations across coherent
+refinements plus 20 unique assumptions. Every operation ID is bound to the
+exact operation kind and payload that first used it; reusing the ID with
+different changes fails closed without another preview or write. The exported
+legacy proposal-session helper retains its independent 20-operation limit and
+is not the current tote or KORRHAUS Manifest 2 path.
 
 Merchant adapter output is untrusted at runtime even when the adapter is
 written in TypeScript. The core reconstructs canonical state, option,

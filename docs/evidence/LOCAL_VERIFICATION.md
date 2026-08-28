@@ -73,7 +73,9 @@ Verified browser bundle digest:
 
 `sha256:f4e5c0961e8d2289993ac5e228919d5cfc77cd6c0b6b1fa6b63f712ae9d3dd55`
 
-Browser details, counters, limitations, and screenshots are in `ACTUAL_BROWSER_REVIEW_UI.md`; the visual comparison is in the repository-root `design-qa.md`.
+Browser details, counters, limitations, and screenshots are in
+`ACTUAL_BROWSER_REVIEW_UI.md`; the historical visual comparison is in
+[`../archive/project-history/design-qa.md`](../archive/project-history/design-qa.md).
 
 ## 26 August 2026 — proposal-success visibility invariant and local flagship bridge
 

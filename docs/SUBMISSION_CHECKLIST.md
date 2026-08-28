@@ -1,169 +1,92 @@
 # Submission checklist
 
-**Current status:** final public tote implementation is pushed, deployed and
-black-box verified; consumer ChatGPT web is blocked by that client, while the
-participant-owned video and human submission gates remain, 28 August 2026
+Status meanings:
 
-Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
-`BLOCKED BY CLIENT` needs a compatible external client, and `APPROVAL` is an
-external action that cannot proceed without Felix.
+- `PASS` — evidenced on the named current source or public surface.
+- `REPEAT AFTER FINAL DEPLOY` — implementation exists, but the final submitted
+  deployment must be tested again.
+- `HUMAN` — requires the participant's decision, recording, attestation, or
+  external submission action.
 
-## Official requirements
+Last official Devpost recheck: 28 August 2026. No organizer announcements were
+available. Submission deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 
-Verified against the [WebMCP Challenge official rules](https://webmcp.devpost.com/rules)
-on 28 August 2026:
+## Product and WebMCP
 
-- `PASS` — project uses `document.modelContext.registerTool(...)` and is a
-  non-trivial WebMCP implementation.
-- `PASS` — working rebranded URL at <https://codesign-webmcp.pages.dev/> passed
-  the exact six-tool Codex in-app-browser flow and ordinary Chrome QA.
-- `PASS` — current source and history publicly available with all runnable
-  code, assets and instructions.
-- `PASS` — visible Apache-2.0 `LICENSE` exists in the public repository.
-- `PASS` — explicit `ASSET_NOTICES.md` distinguishes Apache-2.0 code,
-  KORRHAUS-owned marks/assets, fictional North Form demo material and merchant
-  asset responsibilities.
-- `PASS` — English text draft explains WebMCP fit, user experience, joint
-  human-agent work and implementation.
-- `PENDING` — public YouTube demonstration with audio, clearly functioning and
-  shorter than three minutes. This is mandatory even though recording is not a
-  useful Codex-only engineering task.
-- `PASS` — clear final evidence distinguishing the pre-existing KORRHAUS
-  Designer from work added after 25 August 2026.
-- `PENDING` — entrant/representative, eligibility, IP and third-party
-  authorization attestations by Felix.
+- `PASS` — reusable Manifest 2 core with exactly six webpage tools.
+- `PASS` — visible imperative `document.modelContext.registerTool(...)`
+  implementation and lifecycle unregistration.
+- `PASS` — complete anonymous studio-tote configurator with real artwork,
+  multiple variants, live renderer previews, and coupled production rules.
+- `PASS` — temporary proposals, exact Revert, page-owned Keep, optimistic
+  concurrency, stale-state protection, and atomic invalid-batch rejection.
+- `PASS` — no CoDesign tool for Keep, Revert, save, upload, quote, order,
+  checkout, payment, customer data, pricing, margins, suppliers, or admin.
+- `PASS` — ordinary desktop/mobile human experience remains functional without
+  WebMCP.
 
-Binding submission deadline: **3 September 2026, 1:00 PM PT**. The project and
-test access must remain available through **21 September 2026, 5:00 PM PT**.
+## Public repository
 
-## Local public implementation
+- `PASS` — <https://github.com/fmksites/codesign-webmcp> is public.
+- `PASS` — GitHub detects the Apache-2.0 license.
+- `PASS` — source, public assets, tests, setup instructions, and reproducible
+  tote example are included.
+- `PASS` — hosted CI is green on current `main`.
+- `PASS` — fresh public clone passes 22 test files / 186 tests, strict
+  typecheck, build, browser-bundle verification, judge-site verification,
+  public-boundary scan, documentation check, eval structure, and 25/25 tote
+  surface parity.
+- `PASS` — pre-challenge KORRHAUS work and post-25-August WebMCP work are
+  separated by documentation and timestamped Git history.
 
-- `PASS` — reusable Manifest 2.0 core and exactly six webpage tools.
-- `PASS` — no WebMCP Keep, Revert, save, upload, quote, checkout, order,
-  payment, customer, supplier, margin or administrative tool.
-- `PASS` — complete public studio-tote reference with 25/25 surface parity,
-  actual supplied artwork, typography, transform controls, two named variants,
-  coupled production rules, live renderer previews and page-owned Keep/Revert.
-- `PASS` — local tote actual-browser flows cover staged changes, distinct
-  previews, targeted refinement, zero-write Revert, one-state-commit Keep,
-  ordinary human fallback, desktop and 390 px mobile.
-- `PASS` — the released repair passes initial-request retry,
-  cross-tab stale protection, Keep-after-reload, unsaved-reload recovery,
-  visible narrow-rail details and mobile keyboard/target-size checks.
-- `PASS` — two audit-driven polish changes clarify browser-only persistence and
-  make every desktop section-navigation target at least 44 px.
-- `PASS` — clean public release clone of deployed commit `8322698e3b1a`:
-  offline `npm ci`, zero reported vulnerabilities, 21 files / 184 tests,
-  typecheck, build, bundle, judge,
-  boundary, docs, parity and eval-structure checks.
-- `PASS` — public core WebMCP bundle digest
-  `aa195de70a5c0a2a7db0a929e038212f485d70db309f0538914dad7c1da7371f`.
-- `PASS` — public tote application bundle digest
-  `28ccc028f0ed455e5606570b159d67e4ff297958f249bcba6d3305af04a8a18a`.
-- `PASS` — exhaustive tool/control matrix found and locally verified fixes for
-  visible coupled-rule validation, rule-specific agent diagnostics, and
-  per-batch versus per-proposal operation limits.
-- `PASS` — retired public synthetic KORRHAUS configurator is absent; `/tote/`
-  is the sole standalone product demo.
-- `PASS` — current release builder can publish the tote honestly without
-  requiring or claiming a live KORRHAUS deployment; a flagship link is exposed
-  only after separate live verification.
+## Public URL and browser evidence
 
-## Public release
+- `PASS` — stable anonymous judge URL:
+  <https://codesign-webmcp.pages.dev/tote/?reset=true>.
+- `PASS` — public tote has completed deployed page-scoped exact-six flows with
+  artwork, multiple proposal passes, two previews, validation, refinement,
+  rejection, Revert, and Keep/reload evidence.
+- `PASS` — Shopify development-store page has executed CoDesign tools alongside
+  Shopify native catalog/cart tools.
+- `REPEAT AFTER FINAL DEPLOY` — deploy the final repository commit so live
+  metadata and source `main` identify the same release.
+- `REPEAT AFTER FINAL DEPLOY` — repeat exact-six discovery and the judge flow in
+  native Chrome with the WebMCP testing flag or ChatGPT's in-app browser.
+- `REPEAT AFTER FINAL DEPLOY` — record the final immutable deployment URL,
+  commit, core bundle hash, tote bundle hash, browser/client, and date.
+- `PASS` — unsupported consumer ChatGPT website behavior is documented without
+  being mislabeled as a supported client.
+- `PASS` — Claude and other untested clients are not claimed.
 
-- `PASS` — public repository is renamed to
-  <https://github.com/fmksites/codesign-webmcp>, with current description,
-  homepage, public visibility, detected Apache-2.0 license and passing hosted
-  CI on commit `8322698e3b1a`.
-- `PASS` — verify anonymous clone, visible Apache-2.0 license, source tree,
-  README and hosted CI on the exact pushed commit.
-- `PASS` — Cloudflare Pages serves `dist/judge-site/` at
-  <https://codesign-webmcp.pages.dev/> with deployment URL
-  <https://78c60433.codesign-webmcp.pages.dev/>. The pre-rebrand project
-  remains historical evidence and rollback continuity.
-- `PASS` — public tote verified logged out on desktop/mobile ordinary browsers,
-  the Codex in-app browser exact-six flow, and ordinary Chrome.
-- `PASS` — final public exact-six agent regression created both North Form
-  variants with supplied artwork, returned two real previews, validated
-  production, refined only the requested variant, proved atomic rejection,
-  Revert, Keep/reload, idempotency and cross-tab recovery, then reset both
-  authorities to revision 1.
-- `PASS` — record exact served commit, bundle hash, asset hashes, headers,
-  screenshots and functional links.
-- `PASS` — both advertised bundle paths are public and their independently
-  downloaded stable/immutable bytes match release metadata.
+## KORRHAUS and Shopify boundary
 
-## Local KORRHAUS integration
-
-- `PASS` — exact-six Manifest 2.0 adapter integrated locally into the existing
-  private Route 02 Designer, not a second sock designer.
-- `PASS` — versioned inventory maps more than 50 existing customer-editable
-  creative/configuration controls plus up to four colourways.
-- `PASS` — temporary PNG/JPEG/WebP/SVG, existing proof-board WebP previews,
-  zero-write Revert, exactly-once Keep, stale protection, non-agent fallback,
-  autosave isolation and mobile behavior.
-- `PASS` — changed-file lint, 43 files / 220 unit tests, typecheck, production
-  build, 8 active CoDesign V2 tests, 6 localization tests and 107-test complete
-  active Playwright suite. Full lint retains one unrelated pre-existing ABOUT
-  YOU test error.
-- `PASS` — feature remains disabled by default; no exact-six deployment or
-  traffic change occurred.
-- `APPROVAL` — optional new isolated/zero-traffic KORRHAUS deployment.
-- `PENDING` — if approved, verify exact image/config/hash/logs and the same
-  normal-human plus exact-six synthetic flow without ordinary traffic.
-- `APPROVAL` — any production traffic or feature enablement, separately after
-  zero-traffic proof.
-- `PENDING` — actual public English Shopify route verification before calling
-  KORRHAUS a live WebMCP flagship.
-
-The public tote release does not depend on KORRHAUS production promotion.
-
-## Browser and agent evidence
-
-- `PASS` — ordinary desktop/mobile browser fallback.
-- `PASS` — Codex in-app browser exact-six runtime evidence on the deployed tote
-  product.
-- `PASS` — native Chrome 151 with the official testing flag discovered the exact
-  six current tools through `document.modelContext`, executed temporary
-  proposal and real-artwork paths, produced real previews, and recorded zero
-  writes/imports/commits.
-- `PENDING CLIENT RELAUNCH` — repeat native Chrome on the current rebranded
-  release. The connected Chrome passed ordinary desktop/mobile QA but exposed
-  no `document.modelContext`, so the historical native pass is not relabeled as
-  current.
-- `PASS` — the current rebranded public release completed the exact-six
-  contract through the Codex in-app browser. Chrome native proof and Codex
-  in-app-browser proof are recorded separately rather than conflated.
-- `BLOCKED BY CLIENT` — a literal ChatGPT website run in ordinary Chrome on 28
-  August 2026 reached the public tote and artwork, but ChatGPT only searched its
-  plugin directory for `WebMCP`, received an empty result, exposed no webpage
-  tools, created no proposal and returned no previews. This is evidence about
-  that consumer client, not a tote implementation failure.
-- `NOT TESTED` — the separate ChatGPT desktop-app in-app-browser path on the
-  current rebranded release. It must not be inferred from either the failed ChatGPT
-  website run or the passing Codex/native-Chrome evidence.
-- `PASS` — the existing Codex task independently executed the exact two-variant
-  North Form flow and the focused final diagnostics/operation-limit regression;
-  this is strong engineering evidence and is kept distinct from the blocked
-  consumer ChatGPT website check above.
-- `NOT CLAIMED` — Claude and other clients until separately documented and
-  actually verified.
+- `PASS` — the public tote is the sole anonymous standalone product demo.
+- `PASS` — private KORRHAUS Manifest 2 integration is documented as locally
+  verified, disabled by default, and not a live production claim.
+- `PASS` — no private KORRHAUS source, credentials, customer records, pricing,
+  supplier data, or administrative logic is included.
+- `PASS` — the password-protected Shopify development-store proof is clearly
+  optional interoperability evidence rather than the judge's required URL.
 
 ## Submission materials
 
-- `PASS` — English Devpost copy draft.
-- `PASS` — exact judge prompt and recovery guide.
-- `PASS` — mandatory sub-three-minute video script and shot list updated to
-  tote-first exact-six behavior.
-- `PASS` — final deployed desktop and mobile screenshots captured; thumbnail
-  selection remains part of the Devpost handoff.
-- `PENDING` — human recording and narration.
-- `APPROVAL` — public YouTube upload.
-- `PENDING` — logged-out check of repository, app and video URLs.
-- `APPROVAL` — legal attestations and final Devpost submission.
+- `PASS` — English Devpost copy draft and exact judge instructions exist.
+- `PASS` — video script exists and targets less than three minutes.
+- `HUMAN` — record a clear public YouTube demo with audio after the final
+  deployment/client repeat.
+- `HUMAN` — choose the final thumbnail and verify it uses current CoDesign
+  WebMCP branding.
+- `HUMAN` — choose submitter type and country, confirm eligibility, IP,
+  third-party rights, and required Devpost answers.
+- `HUMAN` — add the final public YouTube URL.
+- `HUMAN` — submit the project before the deadline.
 
-## Availability and rollback
+## Judging availability
 
-- `PENDING` — monitoring/ownership plan through 21 September 2026, 5:00 PM PT.
-- `PASS` — immutable public fallback URL recorded; deployment owner is Felix.
-- `PENDING` — submit before 3 September 2026, 1:00 PM PT.
+- `HUMAN` — keep the public URL, repository, and video freely accessible
+  through **21 September 2026, 5:00 PM PT**.
+- `HUMAN` — avoid changing the submitted project after the deadline except as
+  explicitly permitted by the official rules.
+
+The official challenge website and rules remain authoritative:
+<https://webmcp.devpost.com/rules>.

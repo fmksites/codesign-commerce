@@ -139,8 +139,11 @@ After adding the Shopify asset boundary and deployment overlay:
 - `npm test`: 22 files, 186 tests passed.
 - `npm run typecheck`: passed for core and studio tote.
 - `npm run build:shopify-demo`: passed.
-- Public-boundary scan: 229 candidates passed.
-- Documentation links: 80 files passed.
+- Local workspace public-boundary scan: 229 candidates passed, including
+  untracked local research/output candidates present during that run. The fresh
+  public GitHub clone contained 191 tracked files.
+- Documentation links: 80 local Markdown candidates passed during the run; the
+  fresh public GitHub clone contained 78 tracked Markdown files.
 - Judge-site verification: passed.
 - Tote parity: 14 controls, 4 variant operations, 1 asset slot and 6 legitimate exclusions passed.
 - Eval corpus: 25 cases across 6 categories passed structural validation; scorer self-test passed without saving synthetic evidence.

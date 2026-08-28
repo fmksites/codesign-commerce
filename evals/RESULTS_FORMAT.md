@@ -14,7 +14,7 @@ The scorer refuses `runType: "template"`. An evidence-bearing result must use
 
 - the exact model identifier and UTC execution time;
 - the immutable Git commit and browser-bundle SHA-256;
-- a SHA-256 of the exact five tool definitions supplied to the model;
+- a SHA-256 of the exact six tool definitions supplied to the model;
 - each case ID and repetition number;
 - the observed CoDesign tool-call sequence and arguments;
 - whether every called tool's arguments passed the tool's real input schema;

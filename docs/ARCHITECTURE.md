@@ -114,7 +114,7 @@ The following are absent by design:
 - Tokens, raw API locations, broad application boot objects, or uploaded file contents.
 - Remote proposal history or full natural-language-brief logging.
 
-See [SECURITY.md](../SECURITY.md) and [PUBLIC_PRIVATE_BOUNDARY.md](../PUBLIC_PRIVATE_BOUNDARY.md).
+See [SECURITY.md](../SECURITY.md) and [PUBLIC_PRIVATE_BOUNDARY.md](./PUBLIC_PRIVATE_BOUNDARY.md).
 
 ## Package layout
 

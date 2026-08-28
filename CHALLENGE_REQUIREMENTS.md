@@ -1,8 +1,8 @@
 # Challenge Requirements
 
-Snapshot rechecked against the official Devpost rules, Devpost overview,
-OpenAI challenge page, Chrome guidance, OpenAI site-tools guide, and Shopify
-WebMCP documentation on 27 August 2026. Recheck again immediately before final
+Snapshot rechecked against the official Devpost rules, overview, submission
+requirements, announcements, Chrome guidance, and Shopify WebMCP documentation
+on 28 August 2026. Recheck again immediately before final
 submission because the standard and challenge pages can change.
 
 ## Deadline
@@ -50,7 +50,9 @@ An existing application may be entered when it is meaningfully extended with Web
 - Prefer an anonymous judge path; provide credentials only if authentication is unavoidable.
 - Keep the submission available throughout judging.
 - Keep access free and unrestricted through 21 September 2026 at 5:00 PM PT.
-- An entrant may submit only one entry.
+- An entrant may submit multiple entries, but each must be unique and
+  substantially different. CoDesign WebMCP is this repository's only planned
+  submission.
 
 ## Important Interpretation
 

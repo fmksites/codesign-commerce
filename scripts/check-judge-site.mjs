@@ -43,7 +43,7 @@ const requiredLandingText = [
   "Make your Shopify product configurator",
   "Agent-Ready Configurator Pilot",
   "Open the tote demo",
-  "KORRHAUS integration",
+  "KORRHAUS private integration",
   "Fictional studio tote",
   "The agent never gets the last click",
   "We need 120 pairs for North Form",
