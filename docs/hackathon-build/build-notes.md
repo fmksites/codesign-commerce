@@ -387,3 +387,11 @@
 - KORRHAUS production remained untouched. The public release metadata keeps `flagshipUrl: null` and `flagshipVerified: false`.
 - Item 11 now waits only on the explicitly deferred literal normal-ChatGPT desktop conversation repeat. The public YouTube video and final Devpost actions remain human-owned Item 12 gates.
 - Dated evidence: `docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md`.
+
+## 28 August 2026 — Item 12 Devpost handoff drafted
+
+- Confirmed through the live Devpost connection that Felix is authenticated, registered for The WebMCP Challenge, and the event is accepting submissions.
+- Fetched the exact current submission fields, mandatory video requirement, four judging criteria and 3 September 2026 1:00 PM PT deadline.
+- Created `devpost-submission.md` from verified repository and runtime evidence with real public links, exact release identifiers, testing instructions, screenshots, limitations, Built With technologies, and field-specific draft answers.
+- Kept the packet honest: literal consumer ChatGPT remains unverified, current Chrome did not expose native WebMCP, KORRHAUS is locally integrated but not live-WebMCP-enabled, and the optional model eval was not run.
+- The draft remains open for participant-owned form choices, normal ChatGPT validation, video recording/upload, thumbnail selection, legal attestations and explicit Devpost submission approval. Nothing was sent to Devpost.
