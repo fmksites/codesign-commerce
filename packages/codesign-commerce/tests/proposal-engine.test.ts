@@ -178,7 +178,17 @@ describe("Manifest 2 proposal transaction engine", () => {
       operationId: "invalid-total",
       operations: [{ type: "set-control", target: { scope: "workspace" }, controlId: "order.total_quantity", value: 100 }],
     });
-    expect(invalidFirst).toMatchObject({ ok: false, error: { code: "INVALID_VALUE" } });
+    expect(invalidFirst).toMatchObject({
+      ok: false,
+      error: {
+        code: "INVALID_VALUE",
+        message: expect.stringContaining("QUANTITY_TOTAL_MISMATCH"),
+      },
+      validation: {
+        configurationValid: false,
+        issues: [expect.objectContaining({ code: "QUANTITY_TOTAL_MISMATCH", severity: "constraint-error" })],
+      },
+    });
     expect(engine.status).toBe("idle");
     expect(adapter.counters.restore).toBe(1);
     expect(adapter.endReasons).toEqual(["invalid"]);

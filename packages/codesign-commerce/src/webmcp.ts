@@ -1,4 +1,5 @@
 import { isSafeIdentifier, validateManifest } from "./manifest.js";
+import { MAX_OPERATIONS_PER_BATCH, MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL } from "./operations.js";
 import type { ProposalEngine } from "./proposal-engine.js";
 import type {
   CapabilityCategory,
@@ -197,7 +198,7 @@ function applyProposalSchema(manifest: ConfiguratorManifest): JsonSchema {
     type: "object",
     properties: {
       baseRevision: REVISION_SCHEMA, proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 }, operationId: SAFE_ID_SCHEMA,
-      operations: { type: "array", minItems: 1, maxItems: 80, items: operationSchema(manifest) },
+      operations: { type: "array", minItems: 1, maxItems: MAX_OPERATIONS_PER_BATCH, items: operationSchema(manifest) },
       assumptions: { type: "array", maxItems: 20, items: { type: "string", maxLength: 500 } },
     },
     required: ["baseRevision", "operationId", "operations"],
@@ -270,6 +271,7 @@ const PUBLIC_ERROR_CODES: Record<string, string> = {
   STALE_REVISION: "STALE_COMMITTED_REVISION", UNKNOWN_VARIANT: "UNKNOWN_TARGET", UNKNOWN_ELEMENT: "UNKNOWN_TARGET",
   UNKNOWN_ASSET: "UNKNOWN_TARGET", UNKNOWN_ASSET_SLOT: "UNKNOWN_TARGET", ASSET_BINDING_MISMATCH: "UNKNOWN_TARGET",
   CONTROL_NOT_WRITABLE: "UNAVAILABLE_CONTROL", VARIANT_OPERATION_UNAVAILABLE: "CAPABILITY_UNAVAILABLE", VARIANT_LIMIT: "CAPABILITY_UNAVAILABLE",
+  OPERATION_LIMIT: "CAPABILITY_UNAVAILABLE",
   DUPLICATE_ID: "INVALID_VALUE", ASSET_STAGE_FAILED: "ADAPTER_FAILURE", ASSET_EXPIRED: "ASSET_SOURCE_REJECTED",
   PREVIEW_REQUIRED: "PREVIEW_FAILED", COMMIT_ALREADY_STARTED: "COMMIT_IN_PROGRESS", COMMIT_STATUS_UNKNOWN: "COMMIT_UNCERTAIN",
 };
@@ -336,7 +338,12 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
           ok: true, persisted: false,
           configurator: { id: manifest.id, version: manifest.version, displayName: manifest.displayName, productType: manifest.productType }, workspace,
           pendingProposal: snapshot.proposalId === null ? null : { proposalId: snapshot.proposalId, proposalRevision: snapshot.proposalRevision, baseRevision: snapshot.baseRevision, status: snapshot.status, previewStatus: snapshot.previewStatus, persisted: false },
-          capabilities: { variantOperations: [...manifest.variantPolicy.operations], assetSlots: manifest.assetSlots.map((slot) => slot.id), previewSurfaces: manifest.previewSurfaces.map((surface) => surface.id) },
+          capabilities: {
+            variantOperations: [...manifest.variantPolicy.operations],
+            assetSlots: manifest.assetSlots.map((slot) => slot.id),
+            previewSurfaces: manifest.previewSurfaces.map((surface) => surface.id),
+            operationLimits: { perBatch: MAX_OPERATIONS_PER_BATCH, perProposal: MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL },
+          },
         };
       } catch { return adapterFailure("The public workspace could not be read safely"); }
     },
@@ -362,6 +369,7 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
         return {
           ok: true, persisted: false, committedRevision: dynamic.committedRevision,
           target: { variantId: parsed.variantId ?? null, elementId: parsed.elementId ?? null },
+          operationLimits: { perBatch: MAX_OPERATIONS_PER_BATCH, perProposal: MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL },
           ...(categories.has("controls") ? { controls: manifest.controls.filter((control) => !requested || requested.has(control.id)).map((control) => controlCapability(control, availability)) } : {}),
           ...(categories.has("variants") ? { variantPolicy: structuredClone(manifest.variantPolicy) } : {}),
           ...(categories.has("assets") ? { assetSlots: structuredClone(manifest.assetSlots) } : {}),
@@ -381,7 +389,7 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
 
   const applyTool: WebMcpTool = {
     name: "codesign_apply_proposal", title: "Apply a temporary custom-product proposal",
-    description: "Apply one atomic batch of typed customer changes to the merchant's visible renderer. Nothing persists until a person uses the visible page Keep control.",
+    description: `Apply one atomic batch of up to ${MAX_OPERATIONS_PER_BATCH} typed customer changes to the merchant's visible renderer. A temporary proposal supports up to ${MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL} successful operations across refinements. Nothing persists until a person uses the visible page Keep control.`,
     inputSchema: applyProposalSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
     async execute(input, options) { return publicResult(await engine.apply(input, options?.signal ? { signal: options.signal } : {})); },
   };

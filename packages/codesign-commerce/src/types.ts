@@ -371,7 +371,8 @@ export type OperationErrorCode =
   | "VARIANT_LIMIT"
   | "DUPLICATE_ID"
   | "STALE_REVISION"
-  | "OPERATION_ID_CONFLICT";
+  | "OPERATION_ID_CONFLICT"
+  | "OPERATION_LIMIT";
 
 export interface AvailabilityRequest {
   variantId?: string;
@@ -476,6 +477,7 @@ export interface ProposalEngineErrorResult {
     outcome?: "unknown";
   };
   currentRevision?: string;
+  validation?: WorkspaceValidationResult;
 }
 
 export interface ProposalEngineSuccessResult {

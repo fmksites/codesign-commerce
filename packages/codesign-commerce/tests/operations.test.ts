@@ -164,7 +164,7 @@ describe("atomic typed proposal operations", () => {
     expect(() => reducer().apply(workspaceTestState, unknownCreatedControl)).toThrowError(expect.objectContaining({ code: "UNKNOWN_CONTROL" }));
   });
 
-  test("caps successful operations across one reducer/proposal ledger", () => {
+  test("allows three bounded refinement batches and caps the full proposal ledger", () => {
     const engine = reducer();
     const operations = Array.from({ length: 80 }, (_, index) => ({
       type: "set-control" as const,
@@ -172,12 +172,15 @@ describe("atomic typed proposal operations", () => {
       controlId: "design.name",
       value: `Direction ${index}`,
     }));
-    const first = engine.apply(workspaceTestState, { baseRevision: "workspace-revision-1", operationId: "eighty-operations", operations });
+    const first = engine.apply(workspaceTestState, { baseRevision: "workspace-revision-1", operationId: "eighty-operations-1", operations });
     expect(first.appliedOperations).toBe(80);
-    expect(() => engine.apply(first.state, {
+    const second = engine.apply(first.state, { baseRevision: "workspace-revision-1", operationId: "eighty-operations-2", operations });
+    const third = engine.apply(second.state, { baseRevision: "workspace-revision-1", operationId: "eighty-operations-3", operations });
+    expect(third.appliedOperations).toBe(80);
+    expect(() => engine.apply(third.state, {
       baseRevision: "workspace-revision-1",
       operationId: "one-too-many",
       operations: [{ type: "set-active-variant", variantId: "variant-1" }],
-    })).toThrowError(expect.objectContaining({ code: "INVALID_INPUT" }));
+    })).toThrowError(expect.objectContaining({ code: "OPERATION_LIMIT" }));
   });
 });

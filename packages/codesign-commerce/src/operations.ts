@@ -14,7 +14,8 @@ import type {
   WorkspaceState,
 } from "./types.js";
 
-const MAX_OPERATIONS_PER_PROPOSAL = 80;
+export const MAX_OPERATIONS_PER_BATCH = 80;
+export const MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL = 240;
 const MAX_ASSUMPTIONS = 20;
 
 export class OperationValidationError extends Error {
@@ -193,7 +194,7 @@ export function validateApplyOperationsInput(value: unknown): ApplyOperationsInp
   const proposalId = value.proposalId === undefined ? undefined : safeId(value.proposalId, "proposalId");
   const proposalRevision = value.proposalRevision === undefined ? undefined : value.proposalRevision;
   if (proposalRevision !== undefined && (!Number.isInteger(proposalRevision) || (proposalRevision as number) < 1)) fail("INVALID_INPUT", "proposalRevision must be a positive integer");
-  if (!Array.isArray(value.operations) || value.operations.length < 1 || value.operations.length > MAX_OPERATIONS_PER_PROPOSAL) fail("INVALID_INPUT", `operations must contain between 1 and ${MAX_OPERATIONS_PER_PROPOSAL} entries`);
+  if (!Array.isArray(value.operations) || value.operations.length < 1 || value.operations.length > MAX_OPERATIONS_PER_BATCH) fail("INVALID_INPUT", `operations must contain between 1 and ${MAX_OPERATIONS_PER_BATCH} entries`);
   const operations = value.operations.map(parseOperation);
   let assumptions: string[] | undefined;
   if (value.assumptions !== undefined) {
@@ -387,8 +388,8 @@ export class AtomicOperationReducer {
       if (prior.fingerprint !== fingerprint) fail("OPERATION_ID_CONFLICT", `Operation ID ${input.operationId} was reused with a different payload`);
       return { ...structuredClone(prior.result), deduplicated: true };
     }
-    if (this.#successfulOperations + input.operations.length > MAX_OPERATIONS_PER_PROPOSAL) {
-      fail("INVALID_INPUT", `A proposal may contain at most ${MAX_OPERATIONS_PER_PROPOSAL} successful operations`);
+    if (this.#successfulOperations + input.operations.length > MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL) {
+      fail("OPERATION_LIMIT", `A proposal may contain at most ${MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL} successful operations`);
     }
     const baseline = sanitizeWorkspaceState(current, this.manifest);
     if (baseline.committedRevision !== input.baseRevision) fail("STALE_REVISION", "The proposal base revision is stale");

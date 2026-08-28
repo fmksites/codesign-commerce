@@ -62,6 +62,7 @@ describe("CoDesign WebMCP six-tool surface", () => {
       configurator: { id: workspaceTestManifest.id, version: workspaceTestManifest.version },
       workspace: { committedRevision: "workspace-revision-1", activeVariantId: "variant-1" },
       pendingProposal: null,
+      capabilities: { operationLimits: { perBatch: 80, perProposal: 240 } },
     });
     expect(JSON.stringify(read)).not.toMatch(/price|margin|supplier|customer|token/i);
   });
@@ -77,6 +78,7 @@ describe("CoDesign WebMCP six-tool surface", () => {
       ok: true,
       persisted: false,
       target: { variantId: "variant-1", elementId: null },
+      operationLimits: { perBatch: 80, perProposal: 240 },
       controls: [{ controlId: "body.color", available: true }, { controlId: "mark.artwork", available: true }],
       variantPolicy: { maximumVariants: 5 },
       assetSlots: [{ id: "mark-artwork" }],
@@ -97,6 +99,36 @@ describe("CoDesign WebMCP six-tool surface", () => {
     });
     expect(adapter.visible.variants[0]!.controls["body.color"]).toBe("navy");
     expect(adapter.committed.variants[0]!.controls["body.color"]).toBe("cream");
+    expect(adapter.counters.localWrites).toBe(0);
+    expect(adapter.counters.serverWrites).toBe(0);
+  });
+
+  test("returns rule-specific validation diagnostics for atomically rejected proposals", async () => {
+    const { adapter, tools } = setup();
+    const result = await tools[3]!.execute({
+      baseRevision: "workspace-revision-1",
+      operationId: "invalid-quantity-total",
+      operations: [{
+        type: "set-control",
+        target: { scope: "workspace" },
+        controlId: "order.total_quantity",
+        value: 100,
+      }],
+    });
+
+    expect(result).toMatchObject({
+      ok: false,
+      persisted: false,
+      error: { code: "INVALID_VALUE", message: expect.stringContaining("QUANTITY_TOTAL_MISMATCH") },
+      validation: {
+        configurationValid: false,
+        issues: [expect.objectContaining({
+          code: "QUANTITY_TOTAL_MISMATCH",
+          controlIds: ["order.total_quantity", "design.quantity"],
+        })],
+      },
+    });
+    expect(adapter.committed.workspaceControls["order.total_quantity"]).toBe(60);
     expect(adapter.counters.localWrites).toBe(0);
     expect(adapter.counters.serverWrites).toBe(0);
   });

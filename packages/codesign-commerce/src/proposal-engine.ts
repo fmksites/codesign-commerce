@@ -41,6 +41,7 @@ const OPERATION_MESSAGES: Record<OperationValidationError["code"], string> = {
   DUPLICATE_ID: "The operation would create a duplicate public identifier",
   STALE_REVISION: "The committed workspace revision is stale",
   OPERATION_ID_CONFLICT: "The operation identifier was already used for different input",
+  OPERATION_LIMIT: "The proposal has reached its successful-operation limit",
 };
 
 class ProposalCancelledError extends Error {}
@@ -85,12 +86,14 @@ function errorResult(
   retryable: boolean,
   currentRevision?: string,
   outcome?: "unknown",
+  validation?: WorkspaceValidationResult,
 ): ProposalEngineErrorResult {
   return {
     ok: false,
     persisted: false,
     error: { code, message, retryable, ...(outcome === undefined ? {} : { outcome }) },
     ...(currentRevision === undefined ? {} : { currentRevision }),
+    ...(validation === undefined ? {} : { validation: structuredClone(validation) }),
   };
 }
 
@@ -439,14 +442,20 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
       const validation = await this.adapter.validateWorkspace(reduced.state, assets as AssetResolver<PrivateAsset>);
       this.#checkBoundary(execution.signal, this.#active.baseRevision);
       if (!validation.configurationValid) {
+        const constraintCodes = validation.issues
+          .filter((issue) => issue.severity === "constraint-error")
+          .map((issue) => issue.code);
+        const message = constraintCodes.length > 0
+          ? `The operation batch violates public configuration constraints: ${constraintCodes.join(", ")}`
+          : "The operation batch violates a public configuration constraint";
         if (opened) {
           const restored = await this.#closeProposal("invalid", true);
           return restored
-            ? errorResult("INVALID_VALUE", "The operation batch violates a public configuration constraint", false, input.baseRevision)
+            ? errorResult("INVALID_VALUE", message, false, input.baseRevision, undefined, validation)
             : errorResult("ADAPTER_FAILURE", "The invalid proposal could not be restored safely", true, input.baseRevision);
         }
         this.#setStatus("reviewable");
-        return errorResult("INVALID_VALUE", "The operation batch violates a public configuration constraint", false, this.#active.baseRevision);
+        return errorResult("INVALID_VALUE", message, false, this.#active.baseRevision, undefined, validation);
       }
 
       this.#setStatus("rendering");
