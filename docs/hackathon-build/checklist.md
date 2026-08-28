@@ -107,6 +107,19 @@
 
   Public checkpoint (28 August 2026): Public source and CI are live at `fmksites/codesign-commerce`; Cloudflare Pages serves the release at `https://codesign-commerce.pages.dev/` with an immutable fallback. The exact deployed six-tool North Form flow passed read, capabilities, staged real PNG, three coherent proposal revisions, distinct inline previews, production validation, stale retry, invalid-value rejection, zero-write Revert and exactly-once visible Keep. Desktop and 390 px ordinary-browser passes, persistence/reset, zero console errors, restrictive headers and explicit 404s passed. Ordinary Chrome also completed a human edit/duplicate/reset flow, but the connected release-test Chrome did not expose `document.modelContext`, so no native-WebMCP repeat is claimed for that instance. Item 11 remains open only for the explicitly deferred participant-owned literal normal-ChatGPT desktop conversation. The mandatory public video remains an Item 12 submission gate. Evidence: `docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md`.
 
+  Final-control checkpoint (28 August 2026): An exhaustive deployed control and
+  atomic-failure matrix found two contract defects: generic coupled-rule errors
+  and an unintended proposal-lifetime 80-operation ceiling. Candidate
+  `a8a734044f24524776b767c1b005d7a8db087de1` now exposes rule-specific
+  validation diagnostics, documents 80 operations per batch and 240 per
+  proposal, and uses the same coupled validator in the visible readiness panel.
+  An independent Codex-task regression and an exact clean clone passed 177
+  tests, all release checks, 25/25 parity and zero reported dependency
+  vulnerabilities. Exhaustive ordinary Chrome behavior passed; final-candidate
+  native WebMCP remains blocked until the testing flag/origin-trial path is
+  enabled. The candidate is not yet pushed or deployed. Evidence:
+  `docs/evidence/TOTE_FINAL_CONTROL_QA_2026-08-28.md`.
+
 - [ ] **12. Prepare Devpost handoff**
   Spec ref: `spec.md > Demo And Submission Flow` and `prd.md > Submission Proof Points`
   What to build: Gather the verified product story, first-15-seconds tote sequence, judge instructions, stable demo URL, public repository link, exact commit/build hashes, screenshots or officially required media, clean-clone commands, browser-support limitations, test/eval evidence, public/private architecture explanation, pre-existing KORRHAUS distinction, real-business proof, Codex/AI usage summary, license, and learning documents. Draft only from verified facts and stop before Devpost submission for explicit approval.

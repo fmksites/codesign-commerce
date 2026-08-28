@@ -1,6 +1,7 @@
 # Submission checklist
 
-**Current status:** public release verified; normal ChatGPT/video gates remain, 28 August 2026
+**Current status:** corrected local candidate verified; public promotion,
+normal ChatGPT, final Chrome and video gates remain, 28 August 2026
 
 Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
 `BLOCKED BY CLIENT` needs a compatible external client, and `APPROVAL` is an
@@ -42,11 +43,15 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 - `PASS` — local tote actual-browser flows cover staged changes, distinct
   previews, targeted refinement, zero-write Revert, one-state-commit Keep,
   ordinary human fallback, desktop and 390 px mobile.
-- `PASS` — clean `--no-local` release clone: offline `npm ci`, zero reported
-  vulnerabilities, 20 files / 175 tests, typecheck, build, bundle, judge,
+- `PASS` — clean `--no-local` release clone of candidate `a8a734044f24`:
+  offline `npm ci`, zero reported vulnerabilities, 20 files / 177 tests,
+  typecheck, build, bundle, judge,
   boundary, docs, parity and eval-structure checks.
-- `PASS` — browser bundle digest
-  `7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`.
+- `PASS` — candidate browser bundle digest
+  `0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`.
+- `PASS` — exhaustive tool/control matrix found and locally verified fixes for
+  visible coupled-rule validation, rule-specific agent diagnostics, and
+  per-batch versus per-proposal operation limits.
 - `PASS` — retired public synthetic KORRHAUS configurator is absent; `/tote/`
   is the sole standalone product demo.
 - `PASS` — current release builder can publish the tote honestly without
@@ -68,6 +73,9 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
   not expose `document.modelContext`.
 - `PASS` — record exact served commit, bundle hash, asset hashes, headers,
   screenshots and functional links.
+- `PENDING` — push/deploy candidate `a8a734044f24`, then repeat exact served
+  hash, runtime, ordinary-browser and agent checks before calling it the final
+  public submission build.
 
 ## Local KORRHAUS integration
 
@@ -100,12 +108,17 @@ The public tote release does not depend on KORRHAUS production promotion.
 - `PASS` — Codex in-app browser exact-six runtime evidence on the deployed tote
   product.
 - `PASS` — native Chrome 151 exact-six runtime evidence on the Item 8 build.
-- `BLOCKED BY CLIENT` — native Chrome repeat on the immutable deployed tote;
-  the connected Chrome works as a normal configurator but does not expose
-  `document.modelContext`.
+- `BLOCKED BY CLIENT` — native Chrome repeat on the final candidate; exhaustive
+  ordinary Chrome UI behavior passed, but the connected profile does not expose
+  `document.modelContext`. Enable Chrome's official WebMCP testing flag or use
+  its origin-trial path, relaunch, and repeat before making the final claim.
 - `PENDING` — literal normal ChatGPT desktop conversation on the deployed tote,
   including artwork transport, inline image previews, refinement and explicit
   action-time Keep confirmation.
+- `PASS` — the existing Codex task independently executed the exact two-variant
+  North Form flow and the focused final diagnostics/operation-limit regression;
+  this is strong engineering evidence but does not replace the literal consumer
+  ChatGPT check above.
 - `NOT CLAIMED` — ChatGPT website in ordinary Chrome, Claude and other clients
   until separately documented and actually verified.
 
