@@ -17,8 +17,8 @@ yet an immutable commit or public release:
 - 20 test files / 180 tests passed.
 - Strict TypeScript checks passed for the core and studio tote.
 - The package, browser bundle, tote and combined judge artifact built.
-- The public-boundary check passed for 216 public candidates.
-- Documentation links passed for 73 files.
+- A fresh public clone passed the boundary check for 178 candidates.
+- A fresh public clone passed documentation links for 71 files.
 - The 25-case corpus across six categories and its synthetic scorer self-test
   passed structural validation.
 - Tote parity accounted for all 25 human surfaces: 14 manifest controls, four

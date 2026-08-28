@@ -60,8 +60,8 @@ is retained at `/private/tmp/codesign-repair-regression-2026-08-28/`, including
 - Core, tote and combined judge artifacts built.
 - Browser-bundle verification passed.
 - Judge-site metadata and assets passed.
-- Public-boundary scan passed for 216 candidates after adding this report.
-- Documentation links passed for 73 files after adding this report.
+- Fresh public clone boundary scan passed for 178 candidates.
+- Fresh public clone documentation links passed for 71 files.
 - The 25-case eval corpus and scorer self-test passed structural validation.
 - Tote parity passed: 14 manifest controls, four variant operations, one asset
   slot, six deliberate exclusions, 25 total human/review surfaces.
