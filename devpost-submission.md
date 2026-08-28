@@ -200,14 +200,14 @@ the public-boundary and documentation scans pass, and the tote inventory reports
 
 Deterministic tote URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
-Immutable verified deployment: <https://26193628.codesign-commerce.pages.dev/>
+Current verified deployment: <https://78c60433.codesign-webmcp.pages.dev/>
 
 ## Public Repository Link
 
 <https://github.com/fmksites/codesign-webmcp>
 
 Verified implementation release commit:
-`1150c40703816f3729ec9f8de6f93db9e172a5e1`
+`8322698e3b1a8924f331e78d18c2750c784e9816`
 
 License: Apache-2.0
 

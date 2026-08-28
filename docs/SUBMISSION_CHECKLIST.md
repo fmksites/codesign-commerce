@@ -15,9 +15,8 @@ on 28 August 2026:
 
 - `PASS` — project uses `document.modelContext.registerTool(...)` and is a
   non-trivial WebMCP implementation.
-- `PENDING REBRAND RELEASE` — working target URL at
-  <https://codesign-webmcp.pages.dev/> must pass the same deployed browser
-  verification before submission.
+- `PASS` — working rebranded URL at <https://codesign-webmcp.pages.dev/> passed
+  the exact six-tool Codex in-app-browser flow and ordinary Chrome QA.
 - `PASS` — current source and history publicly available with all runnable
   code, assets and instructions.
 - `PASS` — visible Apache-2.0 `LICENSE` exists in the public repository.
@@ -53,14 +52,14 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
   visible narrow-rail details and mobile keyboard/target-size checks.
 - `PASS` — two audit-driven polish changes clarify browser-only persistence and
   make every desktop section-navigation target at least 44 px.
-- `PASS` — clean public release clone of deployed commit `ceec9fd3eab9`:
-  offline `npm ci`, zero reported vulnerabilities, 20 files / 180 tests,
+- `PASS` — clean public release clone of deployed commit `8322698e3b1a`:
+  offline `npm ci`, zero reported vulnerabilities, 21 files / 184 tests,
   typecheck, build, bundle, judge,
   boundary, docs, parity and eval-structure checks.
 - `PASS` — public core WebMCP bundle digest
-  `03c98c4be01c9928dfd70b119d2567061ca30cdf6d4a4d1195c3bb1d429becc0`.
+  `aa195de70a5c0a2a7db0a929e038212f485d70db309f0538914dad7c1da7371f`.
 - `PASS` — public tote application bundle digest
-  `8025f8544513b2fac1a848ff11276dd77cbbd32ba1d41ff5a8cb807fb9f34274`.
+  `28ccc028f0ed455e5606570b159d67e4ff297958f249bcba6d3305af04a8a18a`.
 - `PASS` — exhaustive tool/control matrix found and locally verified fixes for
   visible coupled-rule validation, rule-specific agent diagnostics, and
   per-batch versus per-proposal operation limits.
@@ -72,15 +71,16 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 
 ## Public release
 
-- `PENDING REBRAND RELEASE` — target repository URL
-  <https://github.com/fmksites/codesign-webmcp>. The verified pre-rebrand
-  repository remains `fmksites/codesign-commerce` until the external rename
-  and push are separately approved and completed.
+- `PASS` — public repository is renamed to
+  <https://github.com/fmksites/codesign-webmcp>, with current description,
+  homepage, public visibility, detected Apache-2.0 license and passing hosted
+  CI on commit `8322698e3b1a`.
 - `PASS` — verify anonymous clone, visible Apache-2.0 license, source tree,
   README and hosted CI on the exact pushed commit.
-- `PENDING REBRAND RELEASE` — deploy `dist/judge-site/` at
-  <https://codesign-webmcp.pages.dev/>. The pre-rebrand deployment remains
-  available as historical evidence and rollback continuity.
+- `PASS` — Cloudflare Pages serves `dist/judge-site/` at
+  <https://codesign-webmcp.pages.dev/> with deployment URL
+  <https://78c60433.codesign-webmcp.pages.dev/>. The pre-rebrand project
+  remains historical evidence and rollback continuity.
 - `PASS` — public tote verified logged out on desktop/mobile ordinary browsers,
   the Codex in-app browser exact-six flow, and ordinary Chrome.
 - `PASS` — final public exact-six agent regression created both North Form
@@ -127,20 +127,20 @@ The public tote release does not depend on KORRHAUS production promotion.
   six current tools through `document.modelContext`, executed temporary
   proposal and real-artwork paths, produced real previews, and recorded zero
   writes/imports/commits.
-- `PENDING` — repeat native Chrome on the exact final release. The connected
-  Chrome used for the final deployed ordinary-browser smoke exposed no
-  `document.modelContext`, so the historical pass is not relabeled as a pass on
-  the new bundle.
-- `PASS` — the exact immutable public release completed the same exact-six
-  contract through the Codex agent host. Chrome native main-world proof and
-  immutable public agent proof are recorded separately rather than conflated.
+- `PENDING CLIENT RELAUNCH` — repeat native Chrome on the current rebranded
+  release. The connected Chrome passed ordinary desktop/mobile QA but exposed
+  no `document.modelContext`, so the historical native pass is not relabeled as
+  current.
+- `PASS` — the current rebranded public release completed the exact-six
+  contract through the Codex in-app browser. Chrome native proof and Codex
+  in-app-browser proof are recorded separately rather than conflated.
 - `BLOCKED BY CLIENT` — a literal ChatGPT website run in ordinary Chrome on 28
   August 2026 reached the public tote and artwork, but ChatGPT only searched its
   plugin directory for `WebMCP`, received an empty result, exposed no webpage
   tools, created no proposal and returned no previews. This is evidence about
   that consumer client, not a tote implementation failure.
 - `NOT TESTED` — the separate ChatGPT desktop-app in-app-browser path on the
-  exact final release. It must not be inferred from either the failed ChatGPT
+  current rebranded release. It must not be inferred from either the failed ChatGPT
   website run or the passing Codex/native-Chrome evidence.
 - `PASS` — the existing Codex task independently executed the exact two-variant
   North Form flow and the focused final diagnostics/operation-limit regression;
