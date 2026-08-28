@@ -20,14 +20,13 @@ The development-store theme is a clone of the previous development-store theme w
 
 The page template includes Shopify's `content_for_header`, maps renderer assets to Shopify CDN URLs, and starts the same production tote bundle used by the public challenge demo. The repository command `npm run build:shopify-demo` reproducibly assembles this overlay.
 
-All six binary/text assets were pulled back from theme `205741359446` and
-matched the tested local files byte for byte. Shopify's pull API normalized the
-Liquid template by adding one trailing newline; its executable/template content
-otherwise matched the repository source. The deployed JavaScript bundle digest
-is:
+After explicit owner approval, the current overlay was pushed with `--nodelete`
+and an exact seven-file `--only` list. All seven files were then pulled back from
+theme `205741359446` and matched the tested local files byte for byte. The
+deployed JavaScript bundle digest is:
 
 ```text
-sha256:4f115aee2d97895a715495d842ec0830e5470d033570699613599074686b304b
+sha256:4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e
 ```
 
 ## Shopify and CoDesign coexistence
@@ -85,6 +84,36 @@ This is a real Shopify-origin WebMCP run in a supported page-scoped client. It
 does not imply that the consumer ChatGPT website in ordinary Chrome supports
 site tools, and it does not replace the separate native-Chrome evidence gate.
 
+## Refreshed zero-incantation Shopify-origin invocation
+
+After the current shopper-oriented metadata bundle was uploaded and pulled back
+byte for byte, a separate Codex task received only an ordinary customer brief.
+The prompt named the Shopify page and requested 100 North Form totes split
+between a natural customer version and darker staff version. It did not mention
+WebMCP, any CoDesign tool, option IDs, schemas, or a tool-call sequence.
+
+The agent independently selected:
+
+1. `codesign_read_workspace`
+2. `codesign_list_capabilities`
+3. `codesign_apply_proposal`
+4. `codesign_get_previews`
+5. `codesign_validate_proposal`
+6. `codesign_read_workspace`
+
+It created `North Form Customer` and `North Form Staff` at 50 units each. The
+Shopify-hosted renderer returned and the chat displayed two genuine 640 by 640
+previews:
+
+- `sha256:02373901e18cbdbc5022c2dd140da129697877d46f4c29552b7ee44eb8dee77f`
+- `sha256:91a357897fc3e5396441f0fc9e860366e1da4a4e17598f22a83b2bdfb81060f1`
+
+Validation returned `configuration_valid: true` and `production_ready: false`
+with the truthful `FINAL_PRINT_ARTWORK_REQUIRED` decision because studio-name
+typography is a design fallback, not final production artwork. The committed
+workspace remained `tote-revision-1`; `persisted`, `saved`, and Keep were all
+false. No tool error occurred.
+
 ## Current deployed WebMCP runtime cross-check
 
 The public tote deployment was reset and exercised through the Codex in-app
@@ -134,23 +163,21 @@ The published page was exercised as a top-level Shopify storefront page:
 
 ## Repository verification
 
-After adding the Shopify asset boundary and deployment overlay:
+The refreshed repository candidate passed `npm run verify`:
 
-- `npm test`: 22 files, 186 tests passed.
+- `npm test`: 22 files, 189 tests passed.
 - `npm run typecheck`: passed for core and studio tote.
 - `npm run build:shopify-demo`: passed.
-- Local workspace public-boundary scan: 229 candidates passed, including
-  untracked local research/output candidates present during that run. The fresh
-  public GitHub clone contained 191 tracked files.
-- Documentation links: 80 local Markdown candidates passed during the run; the
-  fresh public GitHub clone contained 78 tracked Markdown files.
+- Public-boundary scan: 196 public candidates passed.
+- Documentation links: 75 Markdown files passed.
 - Judge-site verification: passed.
 - Tote parity: 14 controls, 4 variant operations, 1 asset slot and 6 legitimate exclusions passed.
-- Eval corpus: 25 cases across 6 categories passed structural validation; scorer self-test passed without saving synthetic evidence.
+- Eval corpus: 26 cases across 6 categories passed structural validation; scorer self-test passed without saving synthetic evidence.
 - Browser bundle verification: passed.
 - Deployed public exact-six invocation, two previews, validation, atomic
   rejection and zero-write Revert: passed.
 - Password-protected Shopify-origin exact-six invocation plus coexistence with
   Shopify's native catalog/cart tools: passed.
 
-Shopify Theme Check also reported two pre-existing missing translation entries and nine pre-existing warnings in the cloned theme. It reported no finding in the CoDesign template or assets. Those unrelated theme defects were deliberately not changed.
+Shopify Theme Check passed all seven CoDesign overlay files in the refreshed
+bundle. Unrelated theme files were not changed.

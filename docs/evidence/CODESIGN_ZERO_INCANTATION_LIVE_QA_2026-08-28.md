@@ -92,11 +92,33 @@ official storefront WebMCP script and the Shopify-CDN-hosted CoDesign bundle.
 No product, cart, order, customer, checkout, price, or production KORRHAUS state
 was changed.
 
-The development-store theme was not changed during this checkpoint. Shopify
-reported that theme `205741359446` is the active theme of the password-protected
-development store, so the proposed scoped asset refresh was deliberately not
-performed without a new explicit active-theme approval. The already deployed
-Shopify page nevertheless passed the independent ordinary-language flow.
+After explicit owner approval, the current seven-file CoDesign overlay was
+uploaded to active theme `205741359446` on the password-protected development
+store. The push used `--nodelete` and an exact `--only` list, so no unrelated
+theme file was replaced or deleted. A scoped pullback then matched all seven
+local files byte for byte. The deployed tote application bundle SHA-256 is
+`4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`.
+
+A separate Codex task then received only this ordinary shopper request:
+
+> Open
+> https://korrhaus-development.myshopify.com/pages/codesign-webmcp-tote-demo?reset=true.
+> I need 100 premium branded studio totes for North Form. Make one natural
+> customer version and one darker staff version, split the quantity evenly,
+> use the studio name as the branding, show me both visual options in this chat,
+> and tell me if they are ready to make. Do not save anything.
+
+Without being told to use WebMCP, it independently selected read, capabilities,
+apply, previews, validate, and final reread. It created two 50-unit temporary
+variants and displayed two genuine 640 by 640 renderer previews:
+
+- `sha256:02373901e18cbdbc5022c2dd140da129697877d46f4c29552b7ee44eb8dee77f`
+- `sha256:91a357897fc3e5396441f0fc9e860366e1da4a4e17598f22a83b2bdfb81060f1`
+
+Validation was configuration-valid but production-not-ready because studio-name
+typography is not final print artwork. The proposal remained temporary at
+committed revision `tote-revision-1`; Keep was not invoked and nothing was
+saved. No tool errors occurred.
 
 ## Rendered browser QA
 
@@ -110,9 +132,8 @@ The public and Shopify-hosted pages both passed:
 - desktop visual inspection; and
 - 390 px mobile inspection without horizontal overflow.
 
-The public page measured 390 px client and scroll width. Inside Shopify's
-mobile wrapper the page measured 354 px client and scroll width, also without
-horizontal overflow.
+The public page measured 390 px client and scroll width. The refreshed Shopify
+page also measured 390 px client and scroll width, without horizontal overflow.
 
 ## Clean-clone and hosted verification
 
