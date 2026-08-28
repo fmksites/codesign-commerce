@@ -496,7 +496,15 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
     await this.previewState(workspaceToConfiguration(workspace));
   }
 
+  validateVisibleState(): ValidationResult {
+    return this.#validateState(this.visibleState);
+  }
+
   async validateState(state: ConfigurationState): Promise<ValidationResult> {
+    return this.#validateState(state);
+  }
+
+  #validateState(state: ConfigurationState): ValidationResult {
     const issues: ValidationIssue[] = [];
     const quantitySum = state.designs.reduce((total, design) => total + design.quantity, 0);
     if (quantitySum !== state.order.totalQuantity) {

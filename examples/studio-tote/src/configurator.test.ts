@@ -47,6 +47,21 @@ describe("studio tote portability adapter", () => {
     expect(result.issues).toEqual(expect.arrayContaining([expect.objectContaining({ code })]));
   });
 
+  it("exposes the current visible validation result for the human readiness panel", () => {
+    const invalid = clone(toteInitialState);
+    invalid.designs[0]!.selections["canvas.weight"] = "8oz";
+    invalid.designs[0]!.selections["print.method"] = "embroidery";
+    const adapter = new StudioToteAdapter(invalid);
+
+    expect(adapter.validateVisibleState()).toMatchObject({
+      configurationValid: false,
+      issues: expect.arrayContaining([expect.objectContaining({
+        code: "EMBROIDERY_REQUIRES_SUBSTANTIAL_CANVAS",
+        message: "Embroidery requires 12 oz or 16 oz canvas",
+      })]),
+    });
+  });
+
   it("creates two temporary variants, reverts without writes, and keeps once", async () => {
     const adapter = new StudioToteAdapter();
     const session = new ProposalSession(toteManifest, adapter);

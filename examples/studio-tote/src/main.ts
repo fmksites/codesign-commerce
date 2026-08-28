@@ -499,7 +499,15 @@ const render = (followVisible = false) => {
   mark.classList.toggle("upper-left", upperLeft);
   mark.classList.toggle("light", colour === "charcoal");
   artworkMark.classList.toggle("upper-left", upperLeft);
-  productionNote.textContent = artwork ? "Artwork is attached and ready for review." : "Studio-name typography is shown; production artwork can be supplied later.";
+  const validation = adapter.validateVisibleState();
+  const blockingMessages = validation.issues
+    .filter((issue) => issue.severity === "constraint-error")
+    .map((issue) => issue.message);
+  productionNote.textContent = blockingMessages.length > 0
+    ? blockingMessages.join(". ")
+    : artwork
+      ? "Artwork is attached and ready for review."
+      : "Studio-name typography is shown; production artwork can be supplied later.";
   artworkName.textContent = artwork?.filename ?? (artwork ? "Supplied artwork" : "Use studio-name typography");
   artworkRemove.hidden = artwork === null;
   nameInput.value = design.name;
