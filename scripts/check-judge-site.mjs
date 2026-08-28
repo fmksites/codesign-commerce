@@ -50,6 +50,11 @@ if (!landingJs.includes("document.modelContext?.registerTool")) throw new Error(
 if (!landingJs.includes('querySelectorAll(`[data-link="${name}"]`)')) {
   throw new Error("Judge landing does not update every metadata-bound release link");
 }
+for (const activeLabel of ["Open public repository", "Open judge guide"]) {
+  if (!landingJs.includes(activeLabel)) {
+    throw new Error(`Judge landing lacks its active release label: ${activeLabel}`);
+  }
+}
 if (!landingHtml.includes('./tote/?reset=true')) {
   throw new Error("Judge landing lacks the deterministic tote demo link");
 }

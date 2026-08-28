@@ -18,7 +18,7 @@ const safeHttpsUrl = (value) => {
   }
 };
 
-const setOptionalLink = (name, value, fallbackLabel) => {
+const setOptionalLink = (name, value, fallbackLabel, activeLabel) => {
   const links = document.querySelectorAll(`[data-link="${name}"]`);
   const href = safeHttpsUrl(value);
   for (const link of links) {
@@ -33,6 +33,7 @@ const setOptionalLink = (name, value, fallbackLabel) => {
     link.target = "_blank";
     link.rel = "noreferrer";
     link.removeAttribute("aria-disabled");
+    if (activeLabel) link.textContent = activeLabel;
   }
 };
 
@@ -55,12 +56,23 @@ try {
   setText("[data-version]", metadata.packageVersion);
   setText("[data-commit]", commit.slice(0, 12));
   setText("[data-bundle]", typeof metadata.browserBundleSha256 === "string" ? metadata.browserBundleSha256.slice(0, 16) : "unavailable");
-  setOptionalLink("flagship", verifiedFlagshipUrl, "KORRHAUS live verification pending");
-  setOptionalLink("repository", repositoryUrl, "Public repository pending release");
+  setOptionalLink(
+    "flagship",
+    verifiedFlagshipUrl,
+    "KORRHAUS live verification pending",
+    "Open KORRHAUS Sock Designer ↗",
+  );
+  setOptionalLink(
+    "repository",
+    repositoryUrl,
+    "Public repository pending release",
+    "Open public repository ↗",
+  );
   setOptionalLink(
     "judge-guide",
     repositoryUrl ? `${repositoryUrl.replace(/\/$/, "")}/blob/${encodeURIComponent(commit)}/docs/JUDGE_GUIDE.md` : null,
     "Judge guide pending release",
+    "Open judge guide ↗",
   );
 } catch {
   setOptionalLink("flagship", null, "KORRHAUS live verification pending");
