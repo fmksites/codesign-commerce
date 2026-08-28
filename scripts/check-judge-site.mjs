@@ -18,6 +18,7 @@ const requiredFiles = [
   "site-metadata.json",
   "assets/korrhaus-sock-cream.svg",
   "tote/index.html",
+  "tote/favicon.svg",
   "tote/tote-natural-long.png",
   "tote/north-form-supplied-mark.png",
 ];
