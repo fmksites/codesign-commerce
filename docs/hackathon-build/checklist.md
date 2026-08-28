@@ -97,7 +97,7 @@
 
   Build note (28 August 2026): Completed locally after explicit owner approval, without deployment or traffic changes. The real Route 02 Designer now consumes the identical public CoDesign browser bundle through a private Manifest 2.0 adapter, exposes the exact six non-commercial tools, maps more than 50 existing creative/configuration controls plus four-colourway operations, stages artwork temporarily, and captures the existing sock/grip/packaging proof as revision-bound WebP artifacts. Synthetic actual-browser evidence created two visible 60-pair colourways, produced distinct previews, and proved zero-write Revert; staged SVG artwork imported and saved once only after visible Keep. Ordinary browsing and human autosave remain on their prior path, and the feature stays disabled by default. Changed-file lint, 43 files / 220 unit tests, typecheck, build, 8 active CoDesign V2 browser tests, 6 localization tests, and the complete active 107-test Playwright suite passed. Full lint still reports one pre-existing unrelated `no-explicit-any` in `app/about-you/about-you.test.ts:76`. Evidence: `docs/evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`.
 
-- [ ] **11. Complete cross-host verification, documentation, and approval-gated releases**
+- [x] **11. Complete cross-host verification, documentation, and approval-gated releases**
   Spec ref: `spec.md > Risks And Verification`, `External APIs And Dependencies`, and `Build Order For Checklist > Phase 3` through `Phase 6`
   What to build: Finish deterministic/model/safety evals, Playwright and visual coverage, integration/manifest/browser/security/testing/judge documentation, pre-existing-versus-challenge evidence, release hashes, and one static tote/judge release candidate. Stop for approval before public deployment/publication and separately before any KORRHAUS isolated/zero-traffic deployment or production traffic change. After approval, deploy with no traffic where applicable, verify exact hashes/config/logs/URLs, then request any promotion separately.
   Acceptance: Clean clone builds/tests/runs; public boundary scan is clean; the explicitly deferred literal normal-ChatGPT-conversation check plus native Chrome, ordinary-browser, mobile, asset, inline-preview, stale, invalid, Keep/Revert, and forbidden-action evidence pass on the exact release; stable tote URL is reproducible; KORRHAUS evidence is versioned and honest; deployed, public, and live states are never conflated.
@@ -150,6 +150,23 @@
   challenge gates are the participant-owned video, legal attestations and
   explicit Devpost submission approval. Evidence:
   `docs/evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md`.
+
+  Technical-hardening checkpoint (28 August 2026): A final usability review
+  fixed the remaining proposal-review and asset-lifecycle defects before the
+  submission phase. Newly created variants now disclose every agent-writable
+  setting in the human review, scale and rotation values render in human units,
+  and the tote preserves exact hundredth-scale values with accessible range
+  metadata. Proposal assets now transition atomically between revisions, so an
+  adapter-held resolver cannot lose artwork between visible rendering and
+  preview capture. The public repository also includes a concrete merchant
+  integration quick start. Final local verification passed 21 files / 184
+  tests, strict typecheck, production build, exact-six discovery, two distinct
+  640 by 640 WebP previews, 25/25 parity, public-boundary, documentation,
+  judge-site, eval and browser-bundle checks. Ordinary Chrome rendered and
+  edited the exact 82 percent control without warnings; its automation bridge
+  did not expose native WebMCP invocation, so no unsupported Chrome tool-call
+  claim is made. Item 11's technical scope is complete. Item 12 remains the
+  deliberately deferred video and Devpost handoff.
 
 - [ ] **12. Prepare Devpost handoff**
   Spec ref: `spec.md > Demo And Submission Flow` and `prd.md > Submission Proof Points`

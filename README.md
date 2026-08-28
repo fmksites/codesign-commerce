@@ -100,6 +100,7 @@ See:
 - [EXECUTION_PLAN.md](./EXECUTION_PLAN.md) for the approved plan and current evidence log.
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for runtime, transaction, and trust boundaries.
 - [docs/MANIFEST_AND_ADAPTER.md](./docs/MANIFEST_AND_ADAPTER.md) for merchant integration obligations.
+- [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md) for the shortest concrete path from an existing customizer to the manifest, adapter, preview bridge, review controller, and exact-six tool registration.
 - [docs/WORKSPACE_AND_OPERATIONS.md](./docs/WORKSPACE_AND_OPERATIONS.md) for the Manifest 2.0 canonical state guard and atomic operation model.
 - [docs/WEBMCP_TOOLS.md](./docs/WEBMCP_TOOLS.md) for the exact six tools, schemas, review boundary, and browser lifecycle.
 - [docs/KORRHAUS_BRIDGE_MAPPING.md](./docs/KORRHAUS_BRIDGE_MAPPING.md) for the private flagship integration map and safety boundary.

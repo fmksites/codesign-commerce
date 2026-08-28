@@ -394,6 +394,39 @@ export class AssetSandbox<PrivateAsset = unknown> {
     }
   }
 
+  transitionProposalRevision(
+    baseRevision: string,
+    proposalId: string,
+    fromRevision: number,
+    toRevision: number,
+    attachedHandles: readonly string[],
+  ): void {
+    const base = boundedText(baseRevision, 200);
+    if (!isSafeIdentifier(proposalId) || !Number.isInteger(fromRevision) || !Number.isInteger(toRevision) || fromRevision < 0 || toRevision !== fromRevision + 1) {
+      return fail("INVALID_INPUT", "The asset proposal revision transition is invalid");
+    }
+    const handles = [...new Set(attachedHandles)];
+    for (const handle of handles) {
+      const entry = this.#entries.get(handle);
+      if (!entry) return fail("UNKNOWN_ASSET", "A referenced temporary asset is unavailable");
+      if (entry.expiresAtMs <= this.#now()) return fail("ASSET_EXPIRED", "A referenced temporary asset has expired");
+      const belongsToCurrentProposal = fromRevision > 0 && entry.proposalId === proposalId && entry.proposalRevision === fromRevision;
+      if (entry.baseRevision !== base || (entry.proposalId !== null && !belongsToCurrentProposal)) {
+        return fail("ASSET_BINDING_MISMATCH", "A referenced temporary asset belongs to another workspace or proposal revision");
+      }
+    }
+    for (const entry of this.#entries.values()) {
+      if (fromRevision > 0 && entry.proposalId === proposalId && entry.proposalRevision === fromRevision) {
+        entry.proposalRevision = toRevision;
+      }
+    }
+    for (const handle of handles) {
+      const entry = this.#entries.get(handle)!;
+      entry.proposalId = proposalId;
+      entry.proposalRevision = toRevision;
+    }
+  }
+
   async releaseProposal(proposalId: string): Promise<void> {
     const handles = [...this.#entries].filter(([, entry]) => entry.proposalId === proposalId).map(([handle]) => handle);
     await this.#releaseHandles(handles);

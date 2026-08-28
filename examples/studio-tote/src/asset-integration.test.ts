@@ -132,6 +132,9 @@ describe("studio tote supplied-artwork proposal lifecycle", () => {
     });
     expect(branding).toMatchObject({ ok: true, proposalRevision: 2, persisted: false });
     if (!branding.ok) return;
+    expect(adapter.validateVisibleState().issues).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ code: "ARTWORK_HANDLE_UNAVAILABLE" }),
+    ]));
 
     const variants = await engine.apply({
       baseRevision: branding.baseRevision,
@@ -182,6 +185,13 @@ describe("studio tote supplied-artwork proposal lifecycle", () => {
     expect(controller.state).toMatchObject({ kind: "temporary", activeVariantName: "North Form Natural", previewReady: false, canKeep: false });
     if (controller.state.kind === "temporary") {
       expect(controller.state.createdVariants).toEqual([{ variantId: "tote-2", name: "North Form Night" }]);
+      expect(controller.state.changes).toEqual(expect.arrayContaining([
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Body colour", before: "Not set", after: "Charcoal" }),
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Handles", before: "Not set", after: "Short tote · 33 cm" }),
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Print placement", before: "Not set", after: "Upper left" }),
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Artwork scale", before: "Not set", after: "70%" }),
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Artwork rotation", before: "Not set", after: "12°" }),
+      ]));
     }
     await expect(controller.revert()).resolves.toEqual({ reverted: true, persisted: false });
     expect(adapter.committedState).toEqual(toteInitialState);

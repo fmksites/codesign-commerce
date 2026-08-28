@@ -51,6 +51,8 @@ function displayValue(manifest: ConfiguratorManifest, controlId: string, value: 
   if (value === null) return "None";
   const control = manifest.controls.find((candidate) => candidate.id === controlId);
   if (control?.kind === "asset") return "Artwork attached";
+  if (control?.kind === "scale" && typeof value === "number") return `${Math.round(value * 100)}%`;
+  if (control?.kind === "rotation" && typeof value === "number") return `${value}°`;
   if (typeof value === "boolean") return value ? "Yes" : "No";
   if (typeof value === "object") return `x ${value.x.toFixed(2)}, y ${value.y.toFixed(2)}`;
   const labelledValue = control?.values?.find((candidate) => candidate.id === value);
@@ -186,7 +188,9 @@ export class ProposalReviewController<Snapshot = unknown, PrivateAsset = unknown
       activeVariantName: activeVariant?.name ?? "Current variant",
       createdVariants: result.diff.createdVariants.map((variant) => ({ ...variant })),
       removedVariants: result.diff.removedVariants.map((variant) => ({ ...variant })),
-      changes: result.diff.controlChanges.map((change) => ({
+      changes: result.diff.controlChanges.filter((change) => {
+        return this.manifest.controls.find((control) => control.id === change.controlId)?.agentWritable === true;
+      }).map((change) => ({
         targetLabel: targetLabel(result, change.target),
         controlId: change.controlId,
         label: labels.get(change.controlId) ?? change.controlId,

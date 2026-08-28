@@ -14,6 +14,7 @@ import {
   type PreviewCaptureRequest,
 } from "@codesign-commerce/core";
 import { StudioToteAdapter, toteInitialState, toteManifest, type ToteSnapshot } from "./configurator";
+import { syncRangeControl } from "./range-controls";
 import {
   StudioToteAssetProofStore,
   type StudioToteResolvedAsset,
@@ -96,8 +97,8 @@ app.innerHTML = `
               <button type="button" aria-label="Studio blue" data-option="branding.ink_color" data-value="cobalt" style="--ink:#1d56d8"></button>
               <button type="button" aria-label="Canvas white" data-option="branding.ink_color" data-value="canvas" style="--ink:#f5f1e8"></button>
             </div>
-            <label class="range-field"><span>Scale <output data-scale-output>100%</output></span><input type="range" min="0.5" max="1.4" step="0.05" data-option="branding.scale" /></label>
-            <label class="range-field"><span>Rotation <output data-rotation-output>0°</output></span><input type="range" min="-30" max="30" step="1" data-option="branding.rotation" /></label>
+            <label class="range-field"><span>Scale <output data-scale-output>100%</output></span><input type="range" min="0.5" max="1.4" step="0.01" aria-label="Artwork scale" data-option="branding.scale" /></label>
+            <label class="range-field"><span>Rotation <output data-rotation-output>0°</output></span><input type="range" min="-30" max="30" step="1" aria-label="Artwork rotation" data-option="branding.rotation" /></label>
           </section>
 
           <section class="control-section variant-section" id="variants">
@@ -573,6 +574,7 @@ const render = (followVisible = false) => {
     const optionId = control.dataset.option ?? "";
     const value = optionId === "design.quantity" ? design.quantity : selection(design, optionId, false);
     if (control instanceof HTMLInputElement && control.type === "checkbox") control.checked = value === true;
+    else if (control instanceof HTMLInputElement && control.type === "range") syncRangeControl(control, optionId, value);
     else control.value = String(value);
   }
   scaleOutput.value = `${Math.round(scale * 100)}%`;

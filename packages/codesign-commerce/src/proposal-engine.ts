@@ -137,6 +137,13 @@ function workspaceDiff(before: WorkspaceState, after: WorkspaceState): Workspace
       if (beforeElement) collectControlChanges(controlChanges, { scope: "element", variantId, elementId: afterElement.id }, beforeElement.controls, afterElement.controls);
     }
   }
+  for (const [variantId, afterVariant] of afterVariants) {
+    if (beforeVariants.has(variantId)) continue;
+    collectControlChanges(controlChanges, { scope: "variant", variantId }, {}, afterVariant.controls);
+    for (const afterElement of afterVariant.elements) {
+      collectControlChanges(controlChanges, { scope: "element", variantId, elementId: afterElement.id }, {}, afterElement.controls);
+    }
+  }
   return {
     controlChanges,
     createdVariants: after.variants.filter((variant) => !beforeVariants.has(variant.id)).map(({ id, name }) => ({ variantId: id, name })),
@@ -455,7 +462,16 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
         if (!this.assetSandbox) throw new AssetSandboxError("ASSET_SOURCE_REJECTED", "Temporary assets are unavailable");
         this.assetSandbox.assertHandles(attachedHandles, assetContext, true);
       }
-      const assets = this.assetSandbox?.createResolver(assetContext, true) ?? EMPTY_ASSET_RESOLVER;
+      const candidateRevision = this.#active.revision + 1;
+      const currentAssets = this.assetSandbox?.createResolver(assetContext, true) ?? EMPTY_ASSET_RESOLVER;
+      const candidateAssets = this.assetSandbox?.createResolver({
+        baseRevision: this.#active.baseRevision,
+        proposalId: this.#active.id,
+        proposalRevision: candidateRevision,
+      }, true) ?? EMPTY_ASSET_RESOLVER;
+      const assets: AssetResolver<PrivateAsset> = {
+        resolve: (assetHandle) => currentAssets.resolve(assetHandle) ?? candidateAssets.resolve(assetHandle),
+      };
 
       this.#setStatus("validating");
       const validation = await this.adapter.validateWorkspace(reduced.state, assets as AssetResolver<PrivateAsset>);
@@ -487,15 +503,16 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
       this.#active.validation = mergedValidation;
       this.#active.reducer = candidateReducer;
       const previousRevision = this.#active.revision;
-      this.#active.revision = previousRevision + 1;
       if (this.assetSandbox) {
-        if (previousRevision > 0) this.assetSandbox.advanceProposalRevision(this.#active.id, previousRevision, this.#active.revision);
-        if (attachedHandles.length > 0) this.assetSandbox.bindHandles(attachedHandles, {
-          baseRevision: this.#active.baseRevision,
-          proposalId: this.#active.id,
-          proposalRevision: this.#active.revision,
-        });
+        this.assetSandbox.transitionProposalRevision(
+          this.#active.baseRevision,
+          this.#active.id,
+          previousRevision,
+          candidateRevision,
+          attachedHandles,
+        );
       }
+      this.#active.revision = candidateRevision;
       this.previewBridge?.releaseProposal(this.#active.id);
       this.#active.previewStatus = "ready-for-capture";
       this.#active.previewArtifacts = [];

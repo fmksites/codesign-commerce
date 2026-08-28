@@ -84,6 +84,73 @@ describe("production-safe temporary asset sandbox", () => {
     expect(sandbox.createResolver({ baseRevision: "workspace-revision-1", proposalId: "proposal-one", proposalRevision: 2 }).resolve(receipt.assetHandle)).not.toBeNull();
   });
 
+  test("transitions existing and newly attached handles to the next proposal revision atomically", async () => {
+    const sandbox = new AssetSandbox(workspaceTestManifest, new TestAssetAdapter());
+    const existing = await sandbox.stage(input({ filename: "existing.png" }));
+    const attached = await sandbox.stage(input({ filename: "attached.png" }));
+    sandbox.bindHandles([existing.assetHandle], {
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-transition",
+      proposalRevision: 1,
+    });
+
+    sandbox.transitionProposalRevision(
+      "workspace-revision-1",
+      "proposal-transition",
+      1,
+      2,
+      [attached.assetHandle],
+    );
+
+    const current = sandbox.createResolver({
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-transition",
+      proposalRevision: 2,
+    });
+    expect(current.resolve(existing.assetHandle)).not.toBeNull();
+    expect(current.resolve(attached.assetHandle)).not.toBeNull();
+    expect(sandbox.createResolver({
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-transition",
+      proposalRevision: 1,
+    }).resolve(existing.assetHandle)).toBeNull();
+  });
+
+  test("does not partially transition when an attached handle belongs elsewhere", async () => {
+    const sandbox = new AssetSandbox(workspaceTestManifest, new TestAssetAdapter());
+    const existing = await sandbox.stage(input({ filename: "existing.png" }));
+    const foreign = await sandbox.stage(input({ filename: "foreign.png" }));
+    sandbox.bindHandles([existing.assetHandle], {
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-transition",
+      proposalRevision: 1,
+    });
+    sandbox.bindHandles([foreign.assetHandle], {
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-foreign",
+      proposalRevision: 1,
+    });
+
+    expect(() => sandbox.transitionProposalRevision(
+      "workspace-revision-1",
+      "proposal-transition",
+      1,
+      2,
+      [foreign.assetHandle],
+    )).toThrowError(expect.objectContaining({ code: "ASSET_BINDING_MISMATCH" }));
+
+    expect(sandbox.createResolver({
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-transition",
+      proposalRevision: 1,
+    }).resolve(existing.assetHandle)).not.toBeNull();
+    expect(sandbox.createResolver({
+      baseRevision: "workspace-revision-1",
+      proposalId: "proposal-transition",
+      proposalRevision: 2,
+    }).resolve(existing.assetHandle)).toBeNull();
+  });
+
   test("expires and releases temporary merchant resources", async () => {
     let now = 1_000_000;
     const adapter = new TestAssetAdapter();

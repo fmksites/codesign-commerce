@@ -34,6 +34,7 @@ class ResourceAdapter implements WorkspaceAdapter<Snapshot, PrivateAsset> {
   captureFailure = false;
   externalDuringCapture = false;
   metadata: CommitMetadata | null = null;
+  previewAssets: AssetResolver<PrivateAsset> | null = null;
   counters = { stage: 0, release: 0, validate: 0, preview: 0, capture: 0, restore: 0, commit: 0, localWrites: 0 };
 
   async readWorkspace() { return structuredClone(this.committed); }
@@ -75,6 +76,7 @@ class ResourceAdapter implements WorkspaceAdapter<Snapshot, PrivateAsset> {
     this.counters.preview += 1;
     const handle = workspace.variants[0]!.elements[0]!.controls["mark.artwork"];
     if (typeof handle === "string" && !assets?.resolve(handle) && !handle.startsWith("saved-")) throw new Error("private asset unavailable");
+    this.previewAssets = assets ?? null;
     this.visible = structuredClone(workspace);
   }
 
@@ -163,6 +165,7 @@ describe("proposal asset and preview integration", () => {
     const { staged, proposal } = await stageAndPropose(engine);
     expect(adapter.counters).toMatchObject({ stage: 1, validate: 1, preview: 1, capture: 0, commit: 0, localWrites: 0 });
     expect(engine.snapshot).toMatchObject({ proposalId: proposal.proposalId, proposalRevision: 1, previewStatus: "ready-for-capture" });
+    expect(adapter.previewAssets?.resolve(staged.asset.assetHandle)).not.toBeNull();
     await expect(engine.keep()).resolves.toMatchObject({ ok: false, error: { code: "PREVIEW_REQUIRED" } });
     const captured = await engine.capturePreviews({ proposalId: proposal.proposalId, proposalRevision: 1, baseRevision: proposal.baseRevision });
     expect(captured).toMatchObject({ ok: true, persisted: false, previewStatus: "available" });

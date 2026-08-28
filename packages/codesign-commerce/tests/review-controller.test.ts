@@ -79,7 +79,15 @@ describe("ProposalReviewController", () => {
         { type: "duplicate-variant", sourceVariantId: "variant-1", variantId: "variant-2", name: "Rose direction", initialControls: { "design.quantity": 30, "body.color": "rose" } },
       ],
     });
-    expect(review.state).toMatchObject({ kind: "temporary", variantCount: 2, createdVariants: [{ variantId: "variant-2", name: "Rose direction" }] });
+    expect(review.state).toMatchObject({
+      kind: "temporary",
+      variantCount: 2,
+      createdVariants: [{ variantId: "variant-2", name: "Rose direction" }],
+      changes: expect.arrayContaining([
+        expect.objectContaining({ targetLabel: "Rose direction", label: "Body colour", before: "Not set", after: "Dusty rose" }),
+        expect.objectContaining({ targetLabel: "Rose direction", label: "Design quantity", before: "Not set", after: "30" }),
+      ]),
+    });
   });
 
   test("Revert restores the exact baseline with zero writes", async () => {

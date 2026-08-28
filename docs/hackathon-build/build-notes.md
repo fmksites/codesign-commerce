@@ -395,3 +395,15 @@
 - Created `devpost-submission.md` from verified repository and runtime evidence with real public links, exact release identifiers, testing instructions, screenshots, limitations, Built With technologies, and field-specific draft answers.
 - Kept the packet honest: literal consumer ChatGPT remains unverified, current Chrome did not expose native WebMCP, KORRHAUS is locally integrated but not live-WebMCP-enabled, and the optional model eval was not run.
 - The draft remains open for participant-owned form choices, normal ChatGPT validation, video recording/upload, thumbnail selection, legal attestations and explicit Devpost submission approval. Nothing was sent to Devpost.
+
+## 28 August 2026 — Final technical hardening completed before submission work
+
+- Kept video, Devpost form work and final screenshot/evidence capture out of scope as requested.
+- Fixed the proposal review so a newly created variant exposes its actual agent-writable configuration instead of only reporting that a clone was added.
+- Formatted scale and rotation review values as percentages and degrees, preserved exact hundredth-scale values in the visible tote control, and added accessible range metadata.
+- Fixed the root temporary-artwork lifecycle defect by atomically transitioning both existing and newly attached handles to the next proposal revision. The renderer's retained resolver now remains valid between proposal rendering and preview capture.
+- Added a concrete merchant integration quick start covering the control inventory, package pinning, manifest, narrow adapter, asset/preview contracts, review controller, exact-six registration and release verification.
+- Final automated verification passed 21 files / 184 tests, strict typecheck, production build, 25/25 control parity, 220-candidate public-boundary scan, 75-file documentation check, judge-site, 25-case eval validation/scorer self-test, browser-bundle verification and `git diff --check`.
+- The exact rebuilt local bundle exposed six WebMCP tools, produced two distinct 640 by 640 WebP previews for a temporary two-variant proposal, showed 82 percent and -6 degrees in the human review, and persisted nothing.
+- Ordinary Chrome rendered the final customizer with no warnings or errors and preserved an exact 0.82 range value with `aria-valuetext="82 percent"`. The Chrome automation bridge did not expose native WebMCP tool invocation, so no unsupported final Chrome tool-run claim is made.
+- Item 11's technical scope is complete. Item 12 remains intentionally open for Felix's later video, participant-owned Devpost fields, legal attestations and explicit submission approval.

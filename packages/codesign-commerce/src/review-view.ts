@@ -323,7 +323,7 @@ export function mountProposalReview<Snapshot = unknown>(
       const row = element(document, "li", "change-row");
       row.append(
         element(document, "span", "change-label", "New colourway"),
-        element(document, "span", "change-before", "Clone"),
+        element(document, "span", "change-before", "Added"),
         element(document, "span", "change-arrow", "→"),
         element(document, "span", "change-after", created.name),
       );

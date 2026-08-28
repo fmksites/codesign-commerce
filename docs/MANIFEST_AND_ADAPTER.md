@@ -1,5 +1,9 @@
 # Manifest and adapter guide
 
+For a concrete five-step implementation sequence and wiring example, start with
+[`INTEGRATION_QUICKSTART.md`](./INTEGRATION_QUICKSTART.md), then use this guide
+as the contract reference.
+
 ## Manifest responsibility
 
 A manifest describes the safe, semantic surface an agent may understand. It does not expose raw state paths or implement the merchant's visual renderer.
