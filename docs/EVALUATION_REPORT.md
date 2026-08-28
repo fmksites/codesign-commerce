@@ -54,10 +54,15 @@ missing-final-artwork decision; and left the proposal unpersisted with no
 errors. Direct desktop/mobile inspection additionally passed with no overflow,
 console warnings, or Revert writes.
 
-This is supported-agent evidence for the local candidate, not a deployed-build
-or universal-client claim. Current native Chrome remains unclaimed because the
-extension transport did not return its open-tab list despite Chrome 152,
-extension, and native-host diagnostics passing.
+The same implementation is now deployed from commit
+`ae5e93a28dc735b0f8bb08596fb3ab8c22f7a2f5`. A separate Codex task repeated
+the implementation-blind brief against both the stable public tote and the
+Shopify development-store page. Both origins independently selected the same
+six-call sequence, displayed two genuine 640 by 640 renderer previews, reported
+the honest missing-final-artwork decision, and saved nothing. This is current
+supported-agent evidence for those two page origins, not a universal-client or
+consumer-ChatGPT-website claim. Current native Chrome remains unclaimed because
+the connected Chrome exposed no `document.modelContext`.
 
 ## Actual page and browser evidence
 
@@ -113,9 +118,10 @@ No paid model run or API key is required for the challenge submission.
 
 ## Remaining final-release gates
 
-1. Deploy the final repository commit and record its immutable URL and hashes.
-2. Repeat the exact judge flow in one officially supported current client.
-3. Record and upload the required public video with audio, under three minutes.
-4. Complete participant, eligibility, IP, and Devpost submission fields.
+1. Repeat release verification after any later runtime change; the current
+   deployed commit, immutable URL, hashes, clean-clone run, hosted CI, and
+   supported-agent judge flow have passed.
+2. Record and upload the required public video with audio, under three minutes.
+3. Complete participant, eligibility, IP, and Devpost submission fields.
 
 See [the evidence index](./evidence/README.md) for dated supporting records.
