@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -76,17 +76,35 @@ const commitSha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encodi
 const packageJson = JSON.parse(await readFile(path.join(root, "packages", "codesign-commerce", "package.json"), "utf8"));
 const browserBundle = await readFile(path.join(root, "packages", "codesign-commerce", "dist", "browser", "codesign-commerce.js"));
 const browserBundleSha256 = createHash("sha256").update(browserBundle).digest("hex");
+const browserBundlePath = "assets/codesign-commerce.js";
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(path.join(root, "judge-site"), output, { recursive: true });
 await cp(path.join(root, "examples", "studio-tote", "dist"), path.join(output, "tote"), { recursive: true });
+await mkdir(path.join(output, "assets"), { recursive: true });
+await cp(
+  path.join(root, "packages", "codesign-commerce", "dist", "browser", "codesign-commerce.js"),
+  path.join(output, browserBundlePath),
+);
+
+const toteAssets = await readdir(path.join(output, "tote", "assets"));
+const toteAppBundles = toteAssets.filter((asset) => /^index-.*\.js$/.test(asset));
+if (toteAppBundles.length !== 1) {
+  throw new Error(`Expected exactly one tote application JavaScript bundle, found ${toteAppBundles.length}`);
+}
+const toteAppBundlePath = `tote/assets/${toteAppBundles[0]}`;
+const toteAppBundle = await readFile(path.join(output, toteAppBundlePath));
+const toteAppBundleSha256 = createHash("sha256").update(toteAppBundle).digest("hex");
 
 const metadata = {
   product: "CoDesign Commerce",
   packageVersion: packageJson.version,
   commitSha,
   browserBundleSha256,
+  browserBundlePath,
+  toteAppBundleSha256,
+  toteAppBundlePath,
   repositoryUrl,
   flagshipUrl,
   releaseBuild: requireReleaseLinks,
@@ -97,6 +115,7 @@ await writeFile(path.join(output, "site-metadata.json"), `${JSON.stringify(metad
 console.log(`Judge site assembled at ${path.relative(root, output)}`);
 console.log(`Commit: ${commitSha}`);
 console.log(`Browser bundle: sha256:${browserBundleSha256}`);
+console.log(`Tote application bundle: sha256:${toteAppBundleSha256}`);
 console.log(
   repositoryUrl
     ? `Release repository: configured; KORRHAUS flagship: ${flagshipUrl ? "verified" : "withheld pending separate live verification"}`

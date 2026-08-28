@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,6 +17,7 @@ const requiredFiles = [
   "favicon.svg",
   "_headers",
   "site-metadata.json",
+  "assets/codesign-commerce.js",
   "assets/korrhaus-sock-cream.svg",
   "tote/index.html",
   "tote/favicon.svg",
@@ -89,6 +91,15 @@ if (/\b(?:src|href)="\/(?!\/)/.test(toteHtml)) {
 if (!/^\d+\.\d+\.\d+$/.test(metadata.packageVersion)) throw new Error("Judge metadata lacks a semantic package version");
 if (!/^[a-f0-9]{40}$/.test(metadata.commitSha)) throw new Error("Judge metadata lacks an exact Git commit");
 if (!/^[a-f0-9]{64}$/.test(metadata.browserBundleSha256)) throw new Error("Judge metadata lacks a browser-bundle digest");
+if (metadata.browserBundlePath !== "assets/codesign-commerce.js") {
+  throw new Error("Judge metadata lacks the published core browser-bundle path");
+}
+if (!/^[a-f0-9]{64}$/.test(metadata.toteAppBundleSha256)) {
+  throw new Error("Judge metadata lacks a tote application-bundle digest");
+}
+if (typeof metadata.toteAppBundlePath !== "string" || !/^tote\/assets\/index-.*\.js$/.test(metadata.toteAppBundlePath)) {
+  throw new Error("Judge metadata lacks the published tote application-bundle path");
+}
 for (const name of ["repositoryUrl", "flagshipUrl"]) {
   if (metadata[name] !== null && (typeof metadata[name] !== "string" || !metadata[name].startsWith("https://"))) {
     throw new Error(`Judge metadata ${name} must be null or HTTPS`);
@@ -134,5 +145,19 @@ if (!assets.some((asset) => asset.endsWith(".js")) || !assets.some((asset) => as
   throw new Error("Tote build is missing bundled JavaScript or CSS");
 }
 
+const [publishedCoreBundle, publishedToteBundle] = await Promise.all([
+  readFile(path.join(site, metadata.browserBundlePath)),
+  readFile(path.join(site, metadata.toteAppBundlePath)),
+]);
+const publishedCoreDigest = createHash("sha256").update(publishedCoreBundle).digest("hex");
+const publishedToteDigest = createHash("sha256").update(publishedToteBundle).digest("hex");
+if (publishedCoreDigest !== metadata.browserBundleSha256) {
+  throw new Error("Published core browser bundle does not match release metadata");
+}
+if (publishedToteDigest !== metadata.toteAppBundleSha256) {
+  throw new Error("Published tote application bundle does not match release metadata");
+}
+
 console.log(`Judge site verification passed for commit ${metadata.commitSha.slice(0, 12)}.`);
 console.log(`Package v${metadata.packageVersion}; browser bundle sha256:${metadata.browserBundleSha256}.`);
+console.log(`Tote application bundle sha256:${metadata.toteAppBundleSha256}.`);

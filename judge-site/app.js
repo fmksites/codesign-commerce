@@ -56,6 +56,7 @@ try {
   setText("[data-version]", metadata.packageVersion);
   setText("[data-commit]", commit.slice(0, 12));
   setText("[data-bundle]", typeof metadata.browserBundleSha256 === "string" ? metadata.browserBundleSha256.slice(0, 16) : "unavailable");
+  setText("[data-tote-bundle]", typeof metadata.toteAppBundleSha256 === "string" ? metadata.toteAppBundleSha256.slice(0, 16) : "unavailable");
   setOptionalLink(
     "flagship",
     verifiedFlagshipUrl,
