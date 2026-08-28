@@ -120,6 +120,21 @@
   enabled. The candidate is not yet pushed or deployed. Evidence:
   `docs/evidence/TOTE_FINAL_CONTROL_QA_2026-08-28.md`.
 
+  Final-release checkpoint (28 August 2026): Felix approved the public push and
+  Cloudflare deployment. Chrome 151 with the official testing flag discovered
+  the current exact-six tool surface through `document.modelContext`, executed
+  temporary proposal and supplied-artwork paths, rendered 640 by 640 previews,
+  and recorded zero writes/imports/commits. Final immutable public regression
+  recreated both exact North Form variants, validated production, advertised
+  limits 80/240, and proved rule-specific atomic rejection. That run also found
+  that release metadata advertised the reusable core digest without publishing
+  the standalone file. Commit `1150c40703816f3729ec9f8de6f93db9e172a5e1`
+  now publishes and labels both the core and tote application bundles; stable
+  and immutable downloads independently match both hashes. Clean-clone QA and
+  hosted CI pass. Item 11's engineering scope is complete; consumer ChatGPT and
+  the participant-owned video/submission fields remain Item 12 gates. Evidence:
+  `docs/evidence/TOTE_FINAL_CONTROL_QA_2026-08-28.md`.
+
 - [ ] **12. Prepare Devpost handoff**
   Spec ref: `spec.md > Demo And Submission Flow` and `prd.md > Submission Proof Points`
   What to build: Gather the verified product story, first-15-seconds tote sequence, judge instructions, stable demo URL, public repository link, exact commit/build hashes, screenshots or officially required media, clean-clone commands, browser-support limitations, test/eval evidence, public/private architecture explanation, pre-existing KORRHAUS distinction, real-business proof, Codex/AI usage summary, license, and learning documents. Draft only from verified facts and stop before Devpost submission for explicit approval.

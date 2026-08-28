@@ -1,10 +1,19 @@
 # Studio tote final control and recovery QA
 
 **Date:** 28 August 2026  
-**Local candidate:** `a8a734044f24524776b767c1b005d7a8db087de1`  
-**Candidate browser bundle:**
-`sha256:0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`  
-**Release state:** verified locally; not yet pushed or deployed
+**Implementation candidate:** `a8a734044f24524776b767c1b005d7a8db087de1`
+
+**Verified public release:** `1150c40703816f3729ec9f8de6f93db9e172a5e1`
+
+**Immutable release:** <https://26193628.codesign-commerce.pages.dev/>
+
+**Core WebMCP browser bundle:**
+`sha256:0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`
+
+**Tote application bundle:**
+`sha256:c6fd8b068c94d3ab521e83132b1670e53e5031950a949d2244a56c652c2da0eb`
+
+**Release state:** public and verified
 
 ## Why this checkpoint exists
 
@@ -106,11 +115,23 @@ and local tote:
 - the visible coupled production-rule messages passed on the local candidate;
 - no browser-console errors were observed.
 
-This connected Chrome profile did not expose `document.modelContext`. Normal
-Chrome behavior is therefore proven, but a native-WebMCP repeat on this exact
-candidate still requires Chrome's official WebMCP testing flag or origin-trial
-path. Earlier dated evidence covers native Chrome on the Item 8 build; it is not
-silently substituted for a current-candidate run.
+After Chrome's official `enable-webmcp-testing` flag was enabled and Chrome was
+relaunched, the current source passed its native main-world proof through
+`document.modelContext.getTools()` and `executeTool()`:
+
+- Chrome 151 discovered the exact six names;
+- a temporary proposal produced a visible 640 by 640 WebP;
+- the real 214,745-byte North Form PNG staged through
+  `codesign_stage_asset`, rendered on the tote, and produced a distinct preview;
+- all proposal, preview and asset results remained temporary;
+- local writes, server-simulation writes, imports and commits all remained zero;
+- no browser-console warnings or errors occurred.
+
+The browser-control inspection realm does not expose nonstandard page globals,
+so native execution was measured by the page's development-only main-world
+proof harness rather than inferred from `evaluate()`. The exact immutable
+public release was independently exercised through the Codex agent host as
+described below. A literal consumer ChatGPT conversation remains separate.
 
 ## Exact clean-clone verification
 
@@ -136,9 +157,36 @@ variable produced the passing release artifact above.
 
 ## Honest release boundary
 
-The stable public site still serves the earlier verified bundle at the time of
-this note. The fixes above are not called deployed or public until Felix
-separately approves a push/deployment and the served commit and bundle are
-rechecked. The literal consumer ChatGPT run, native Chrome repeat on the final
-release, public video, legal attestations and Devpost submission also remain
-separate gates.
+## Final public release regression
+
+Felix approved public publication. GitHub `main`, stable Cloudflare Pages and
+the immutable deployment were first advanced to the corrected candidate. The
+release regression then found an evidence defect: metadata named the reusable
+core bundle digest, while only the separately bundled Vite application file was
+publicly fetchable.
+
+Commit `1150c40703816f3729ec9f8de6f93db9e172a5e1` fixed that boundary by
+publishing and clearly labelling both files. Stable and immutable downloads now
+independently match metadata:
+
+| Published artifact | SHA-256 |
+| --- | --- |
+| `assets/codesign-commerce.js` | `0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde` |
+| `tote/assets/index-B_RMWorF.js` | `c6fd8b068c94d3ab521e83132b1670e53e5031950a949d2244a56c652c2da0eb` |
+
+An exact clean clone of that release passed 20 files / 177 tests, strict
+typecheck, release build, browser-bundle, judge-site, public-boundary,
+documentation, eval and 25/25 parity checks with zero reported dependency
+vulnerabilities. Public GitHub CI also passed.
+
+The final immutable agent journey recreated both exact 50-unit North Form
+variants, returned two real 640 by 640 previews, validated configuration and
+production readiness, advertised limits 80/240, and exposed exactly six tools.
+An invalid embroidery-on-8-oz request returned
+`EMBROIDERY_REQUIRES_SUBSTANTIAL_CANVAS` while revision 3 remained valid and
+unchanged. The isolated proposal was discarded without Keep or a persistence
+write.
+
+The engineering release is ready for submission use. The literal consumer
+ChatGPT run, public video, legal attestations and final Devpost submission
+remain participant-owned gates.

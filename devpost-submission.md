@@ -84,9 +84,11 @@ Codex then implemented and reviewed the TypeScript core, manifest and adapter
 contracts, proposal state machine, temporary-asset sandbox, revision-bound
 preview bridge, review controller, tote integration, tests, documentation,
 public/private boundary checks, CI, and Cloudflare release. It drove actual
-desktop, 390 px mobile, Codex in-app browser, and Chrome verification. Deployed
-testing found and fixed three release defects that source-only checks missed: a
-missing explicit 404, stale “pending” link labels, and a tote favicon 404.
+desktop, 390 px mobile, Codex in-app browser, and native Chrome verification.
+Browser and deployed testing found issues that source-only checks missed,
+including an explicit-404 gap, stale link labels, a favicon 404, inconsistent
+visible production validation, generic agent recovery errors, an unintended
+proposal-lifetime operation limit, and an unverifiable release-bundle label.
 
 We used deterministic tool-selection cases and a scorer self-test to design the
 evaluation corpus. We did not run the optional model-evaluation corpus against a
@@ -182,9 +184,11 @@ npm run check:evals
 npm run check:parity
 ```
 
-Expected deterministic result: 20 test files / 175 tests pass, strict typecheck
-and build pass, the browser bundle matches SHA-256
-`7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`,
+Expected deterministic result: 20 test files / 177 tests pass, strict typecheck
+and build pass, the core WebMCP bundle matches SHA-256
+`0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`,
+the tote application bundle matches SHA-256
+`c6fd8b068c94d3ab521e83132b1670e53e5031950a949d2244a56c652c2da0eb`,
 the public-boundary and documentation scans pass, and the tote inventory reports
 25/25 accounted surfaces.
 
@@ -194,14 +198,14 @@ the public-boundary and documentation scans pass, and the tote inventory reports
 
 Deterministic tote URL: <https://codesign-commerce.pages.dev/tote/?reset=true>
 
-Immutable verified deployment: <https://a4b1a250.codesign-commerce.pages.dev/>
+Immutable verified deployment: <https://26193628.codesign-commerce.pages.dev/>
 
 ## Public Repository Link
 
 <https://github.com/fmksites/codesign-commerce>
 
-Verified release commit:
-`57b25530052f2186699fb3810d6e8cdde2b52d07`
+Verified implementation release commit:
+`1150c40703816f3729ec9f8de6f93db9e172a5e1`
 
 License: Apache-2.0
 
@@ -233,10 +237,13 @@ Existing public-repository captures:
 ## Submission Readiness Notes
 
 - Public repository: ready and anonymously accessible.
-- Hosted CI: passing on release commit `57b2553`.
+- Hosted CI: passing on release commit `1150c40`.
 - Stable and immutable demo: byte-for-byte matched to the fresh public clone.
 - WebMCP runtime: exact-six public flow verified in the Codex in-app browser.
-- Ordinary browsers: desktop, 390 px mobile, and Chrome human flow verified.
+- Chrome: ordinary UI plus native exact-six and supplied-artwork paths verified
+  on the current source with the official testing flag.
+- Release integrity: independently fetched stable/immutable core and tote
+  bundles match their separately labelled metadata digests.
 - KORRHAUS: real private integration is locally complete and feature-off; it is
   not claimed as a live WebMCP production release.
 - Still required: literal consumer ChatGPT desktop run, final video recording,
@@ -246,9 +253,10 @@ Existing public-repository captures:
 
 ## Known Limitations
 
-- WebMCP is experimental and requires a compatible host. The final connected
-  ordinary Chrome instance did not expose `document.modelContext`; it worked as
-  a complete human configurator but could not repeat native tool discovery.
+- WebMCP is experimental and requires a compatible host. Chrome native testing
+  currently requires its official flag or origin-trial path. The final current
+  source passed the testing-flag path; the immutable public exact-six flow was
+  separately verified through the Codex agent host.
 - The literal consumer ChatGPT desktop journey remains to be performed by the
   participant on the deployed build. Codex in-app browser evidence is recorded
   separately and is not mislabeled as that consumer run.
@@ -282,10 +290,11 @@ Official fields fetched from Devpost on 28 August 2026:
 - **Testing instructions (optional):** use the Fast judge path above.
 - **Public code repository (required):**
   <https://github.com/fmksites/codesign-commerce>
-- **Agents/clients tested (required):** Codex desktop in-app browser exact-six
-  WebMCP flow; native Chrome 151 exact-six on an earlier dated build using the
-  same browser bundle; ordinary Chrome final public configurator. Literal
-  consumer ChatGPT desktop is pending and must be added only after it passes.
+- **Agents/clients tested (required):** Codex desktop agent exact-six WebMCP on
+  the final immutable public release; native Chrome 151 exact-six plus real
+  supplied artwork on the current source using the official testing flag; and
+  ordinary Chrome on the public configurator. Literal consumer ChatGPT desktop
+  is pending and must be added only after it passes.
 - **AI tools leveraged (required):** OpenAI Codex for product framing,
   architecture, implementation, testing, browser verification, release QA, and
   documentation. Shopper runtime is provider-neutral and uses the agent host

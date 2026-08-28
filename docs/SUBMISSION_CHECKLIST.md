@@ -1,7 +1,7 @@
 # Submission checklist
 
-**Current status:** corrected local candidate verified; public promotion,
-normal ChatGPT, final Chrome and video gates remain, 28 August 2026
+**Current status:** final public engineering release verified; consumer
+ChatGPT, video and human submission gates remain, 28 August 2026
 
 Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
 `BLOCKED BY CLIENT` needs a compatible external client, and `APPROVAL` is an
@@ -43,12 +43,14 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 - `PASS` — local tote actual-browser flows cover staged changes, distinct
   previews, targeted refinement, zero-write Revert, one-state-commit Keep,
   ordinary human fallback, desktop and 390 px mobile.
-- `PASS` — clean `--no-local` release clone of candidate `a8a734044f24`:
+- `PASS` — clean `--no-local` release clone of release `1150c4070381`:
   offline `npm ci`, zero reported vulnerabilities, 20 files / 177 tests,
   typecheck, build, bundle, judge,
   boundary, docs, parity and eval-structure checks.
-- `PASS` — candidate browser bundle digest
+- `PASS` — public core WebMCP bundle digest
   `0bcf250f6d61bec30988840f338a16c521b8b72eb3b10b4d367d6c0601b4fcde`.
+- `PASS` — public tote application bundle digest
+  `c6fd8b068c94d3ab521e83132b1670e53e5031950a949d2244a56c652c2da0eb`.
 - `PASS` — exhaustive tool/control matrix found and locally verified fixes for
   visible coupled-rule validation, rule-specific agent diagnostics, and
   per-batch versus per-proposal operation limits.
@@ -65,17 +67,17 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 - `PASS` — verify anonymous clone, visible Apache-2.0 license, source tree,
   README and hosted CI on the exact pushed commit.
 - `PASS` — Cloudflare Pages serves `dist/judge-site/` at
-  <https://codesign-commerce.pages.dev/> with an immutable fallback deployment.
+  <https://codesign-commerce.pages.dev/> with immutable fallback
+  <https://26193628.codesign-commerce.pages.dev/>.
 - `PASS` — public tote verified logged out on desktop/mobile ordinary browsers,
   the Codex in-app browser exact-six flow, and ordinary Chrome.
-- `PENDING` — literal normal ChatGPT desktop and an immutable-release Chrome
-  native-WebMCP repeat remain separate client checks; the connected Chrome did
-  not expose `document.modelContext`.
+- `PASS` — final immutable-release exact-six agent flow created both exact
+  North Form variants, returned two real previews, validated production, proved
+  rule-specific atomic rejection, and caused zero persistence.
 - `PASS` — record exact served commit, bundle hash, asset hashes, headers,
   screenshots and functional links.
-- `PENDING` — push/deploy candidate `a8a734044f24`, then repeat exact served
-  hash, runtime, ordinary-browser and agent checks before calling it the final
-  public submission build.
+- `PASS` — both advertised bundle paths are public and their independently
+  downloaded stable/immutable bytes match release metadata.
 
 ## Local KORRHAUS integration
 
@@ -107,11 +109,13 @@ The public tote release does not depend on KORRHAUS production promotion.
 - `PASS` — ordinary desktop/mobile browser fallback.
 - `PASS` — Codex in-app browser exact-six runtime evidence on the deployed tote
   product.
-- `PASS` — native Chrome 151 exact-six runtime evidence on the Item 8 build.
-- `BLOCKED BY CLIENT` — native Chrome repeat on the final candidate; exhaustive
-  ordinary Chrome UI behavior passed, but the connected profile does not expose
-  `document.modelContext`. Enable Chrome's official WebMCP testing flag or use
-  its origin-trial path, relaunch, and repeat before making the final claim.
+- `PASS` — native Chrome 151 with the official testing flag discovered the exact
+  six current tools through `document.modelContext`, executed temporary
+  proposal and real-artwork paths, produced real previews, and recorded zero
+  writes/imports/commits.
+- `PASS` — the exact immutable public release completed the same exact-six
+  contract through the Codex agent host. Chrome native main-world proof and
+  immutable public agent proof are recorded separately rather than conflated.
 - `PENDING` — literal normal ChatGPT desktop conversation on the deployed tote,
   including artwork transport, inline image previews, refinement and explicit
   action-time Keep confirmation.
