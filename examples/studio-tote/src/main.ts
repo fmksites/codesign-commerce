@@ -35,7 +35,7 @@ app.innerHTML = `
   <div class="app-shell">
     <header class="site-header">
       <div class="brand-lockup"><strong>CoDesign Commerce</strong><span>Studio tote reference</span></div>
-      <div class="header-status" data-save-tone="saved" role="status" aria-live="polite" aria-atomic="true"><span class="status-dot" aria-hidden="true"></span><span data-save-status>Draft saved on this device</span></div>
+      <div class="header-status" data-save-tone="saved" role="status" aria-live="polite" aria-atomic="true"><span class="status-dot" aria-hidden="true"></span><span data-save-status>Saved in this browser only</span></div>
     </header>
 
     <main class="designer-layout" aria-label="Studio tote reference configurator">
@@ -605,7 +605,7 @@ controller.subscribe((state) => {
     clearInterruptedProposalNotice();
     setSaveStatus(state.kind === "committed" ? "Proposal kept on this device" : "Proposal reverted · draft unchanged", "saved");
   } else if (!interruptedProposal) {
-    setSaveStatus("Draft saved on this device", "saved");
+    setSaveStatus("Saved in this browser only", "saved");
   }
   if (state.kind === "reverted") assetStore.releaseTemporary();
   render(true);
