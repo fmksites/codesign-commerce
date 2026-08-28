@@ -1,8 +1,8 @@
-# CoDesign Commerce architecture
+# CoDesign WebMCP architecture
 
 ## Purpose
 
-CoDesign Commerce adds a safe agent-collaboration transaction to an existing complex product configurator. The merchant keeps its renderer, controls, rules, and persistence. The public package contributes a canonical manifest, webpage WebMCP tools, proposal coordination, human review state, and adapter contract.
+CoDesign WebMCP adds a safe agent-collaboration transaction to an existing complex product configurator. The merchant keeps its renderer, controls, rules, and persistence. The public package contributes a canonical manifest, webpage WebMCP tools, proposal coordination, human review state, and adapter contract.
 
 It is intentionally not a universal product renderer, Shopify cart replacement, remote MCP server, quote engine, or autonomous ordering system.
 
@@ -121,7 +121,7 @@ See [SECURITY.md](../SECURITY.md) and [PUBLIC_PRIVATE_BOUNDARY.md](../PUBLIC_PRI
 The challenge uses one TypeScript package:
 
 ```text
-packages/codesign-commerce/
+packages/codesign-webmcp/
   src/
     types.ts                 canonical contracts
     manifest.ts              structural and semantic validation

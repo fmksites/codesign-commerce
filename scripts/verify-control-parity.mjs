@@ -1,7 +1,7 @@
 import { build } from "esbuild";
 
 const entry = `
-  import { validateHumanControlInventory } from "./packages/codesign-commerce/src/index.ts";
+  import { validateHumanControlInventory } from "./packages/codesign-webmcp/src/index.ts";
   import { toteManifest } from "./examples/studio-tote/src/configurator.ts";
   import { toteHumanControlInventory } from "./examples/studio-tote/src/control-inventory.ts";
   export default validateHumanControlInventory(toteHumanControlInventory, toteManifest).report;

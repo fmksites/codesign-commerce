@@ -1,6 +1,6 @@
 # Browser and agent support
 
-WebMCP is experimental and page-scoped. CoDesign Commerce therefore separates
+WebMCP is experimental and page-scoped. CoDesign WebMCP therefore separates
 ordinary configurator support from agent-client claims and records the exact
 build used for every actual-browser check.
 

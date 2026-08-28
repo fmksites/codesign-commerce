@@ -20,7 +20,7 @@ import {
   type WorkspaceAdapter,
   type WorkspaceState,
   type WorkspaceValidationResult,
-} from "@codesign-commerce/core";
+} from "@codesign-webmcp/core";
 import type {
   StudioToteAssetProofStore,
   StudioToteAssetStageInput,

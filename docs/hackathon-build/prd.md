@@ -1,13 +1,13 @@
 # Product Requirements Document
 
-**Product:** CoDesign Commerce
+**Product:** CoDesign WebMCP
 **Document stage:** User-facing requirements for technical specification
 **Date:** 27 August 2026
 **Authority:** Expands `scope.md`; does not authorize implementation or production changes
 
 ## Product Summary
 
-CoDesign Commerce makes chat the primary creation interface for customizable products sold through Shopify merchants.
+CoDesign WebMCP makes chat the primary creation interface for customizable products sold through Shopify merchants.
 
 A shopper begins with a normal need:
 
@@ -15,7 +15,7 @@ A shopper begins with a normal need:
 
 The agent first presents suitable customizable-product options. After the shopper chooses a merchant/product, the agent opens that merchant's existing customizer, creates a complete first design, updates the live visual renderer, returns useful visual previews to chat, accepts conversational art direction, checks the merchant's real constraints, and saves only after explicit human confirmation.
 
-The merchant does not replace its visual experience. CoDesign Commerce adds an agentic interaction layer around the customizer the merchant already owns.
+The merchant does not replace its visual experience. CoDesign WebMCP adds an agentic interaction layer around the customizer the merchant already owns.
 
 ### Product promise to shoppers
 
@@ -55,7 +55,7 @@ The tote and KORRHAUS are intentionally different. They must never be presented 
 ### KORRHAUS
 
 - The real operating Shopify merchant and Custom Sock Designer.
-- The commercial proof that CoDesign Commerce can enhance an existing customizer.
+- The commercial proof that CoDesign WebMCP can enhance an existing customizer.
 - Continues normal business and product development.
 - Is not frozen as the sole challenge URL.
 - Keeps its renderer, raw state, persistence, customer access, pricing, artwork backend, and operational logic private.
@@ -172,7 +172,7 @@ Typical needs:
 
 ### Merchant product owner
 
-A merchant operator deciding whether CoDesign Commerce is useful and safe.
+A merchant operator deciding whether CoDesign WebMCP is useful and safe.
 
 Typical needs:
 
@@ -247,7 +247,7 @@ Expected user experience:
 - Options appear before any customizer is operated.
 - Each option is understandable in normal shopping language.
 - The customer chooses which merchant/product to use.
-- CoDesign Commerce is not represented as the discovery engine.
+- CoDesign WebMCP is not represented as the discovery engine.
 - The challenge demo may use a known KORRHAUS or tote choice without building a marketplace.
 
 ### Phase 3 — open the selected customizer
@@ -474,7 +474,7 @@ Acceptance criteria:
 - Chat responds to an intent-led request with understandable options.
 - No customizer is opened before the shopper selects an option.
 - Options identify the product and merchant clearly enough to choose.
-- CoDesign Commerce is not described as the product search engine.
+- CoDesign WebMCP is not described as the product search engine.
 - The challenge experience can begin from a known selected option without claiming a merchant marketplace was built.
 
 #### Story 1.2 — select a compatible option

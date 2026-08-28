@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ProposalSession, validateManifest, type ConfigurationState } from "@codesign-commerce/core";
+import { ProposalSession, validateManifest, type ConfigurationState } from "@codesign-webmcp/core";
 import { StudioToteAssetProofStore } from "./asset-proof";
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
 

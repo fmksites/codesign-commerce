@@ -1,4 +1,4 @@
-import type { DocumentWithModelContext } from "@codesign-commerce/core";
+import type { DocumentWithModelContext } from "@codesign-webmcp/core";
 import type { StudioToteAssetProofStore } from "./asset-proof";
 import type { StudioToteAdapter } from "./configurator";
 

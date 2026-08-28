@@ -1,6 +1,6 @@
 # Security policy and public data boundary
 
-CoDesign Commerce is designed around a narrow webpage capability boundary, not broad access to a merchant application.
+CoDesign WebMCP is designed around a narrow webpage capability boundary, not broad access to a merchant application.
 
 ## In scope for WebMCP
 

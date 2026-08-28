@@ -42,7 +42,7 @@ production promotion.
 2. Build the single release artifact with the verified public repository URL:
 
    ```bash
-   CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
+   CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-webmcp \
    npm run build:release
    ```
 
@@ -89,7 +89,7 @@ production verification, rebuild the same public site with the optional
 flagship link:
 
 ```bash
-CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
+CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-webmcp \
 CODESIGN_FLAGSHIP_URL=https://korrhaus.nl/en/apps/wholesale/sock-designer \
 CODESIGN_FLAGSHIP_VERIFIED=true \
 npm run build:release

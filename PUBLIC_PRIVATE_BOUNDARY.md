@@ -8,7 +8,7 @@ Planned contents:
 
 ```text
 packages/
-  codesign-commerce/
+  codesign-webmcp/
 examples/
   studio-tote/
 docs/

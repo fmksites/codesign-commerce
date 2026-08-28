@@ -1,12 +1,18 @@
-# CoDesign Commerce
+# CoDesign WebMCP
+
+**WebMCP for Custom Products on Shopify**
+
+> **Make your Shopify product configurator agent-ready.**
 
 **Live challenge demo:** <https://codesign-commerce.pages.dev/>
 
-**Public source:** <https://github.com/fmksites/codesign-commerce>
+**Public source:** <https://github.com/fmksites/codesign-webmcp>
 
-CoDesign Commerce is an open-source WebMCP layer for existing complex product configurators. It lets an agent read an allowlisted configuration, propose coordinated changes in the merchant's own visible preview, and validate coupled product rules without silently saving anything. A person must explicitly Keep or Revert the temporary proposal.
+CoDesign WebMCP connects AI agents to the product designer already on your Shopify store, allowing them to create and validate custom-product configurations inside the live customer experience.
 
-The 2026 WebMCP Challenge entry will use KORRHAUS's existing Custom Sock Designer as its flagship real-world proof. CoDesign Commerce is not the Sock Designer itself, and it does not replace a merchant's renderer or production rules.
+The **Agent-Ready Configurator Pilot** connects one existing product configurator through a manifest and narrow adapter while preserving the merchant's renderer, rules, and human approval boundary.
+
+The 2026 WebMCP Challenge entry will use KORRHAUS's existing Custom Sock Designer as its flagship real-world proof. CoDesign WebMCP is not the Sock Designer itself, and it does not replace a merchant's renderer or production rules.
 
 ## Current status
 
@@ -67,7 +73,7 @@ the exact public repository URL is present. This deliberately lets the required
 public tote site ship without claiming that KORRHAUS is live:
 
 ```bash
-CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
+CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-webmcp \
 npm run build:release
 ```
 
@@ -75,7 +81,7 @@ Only after a separately approved KORRHAUS production release passes actual
 live-route verification may the same build expose the flagship link:
 
 ```bash
-CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-commerce \
+CODESIGN_PUBLIC_REPOSITORY_URL=https://github.com/fmksites/codesign-webmcp \
 CODESIGN_FLAGSHIP_URL=https://korrhaus.nl/en/apps/wholesale/sock-designer \
 CODESIGN_FLAGSHIP_VERIFIED=true \
 npm run build:release
@@ -84,7 +90,7 @@ npm run build:release
 Run the public portability example from the repository root:
 
 ```bash
-npm run dev --workspace @codesign-commerce/studio-tote
+npm run dev --workspace @codesign-webmcp/studio-tote
 ```
 
 The tote accepts `?reset=true` for a deterministic anonymous baseline and
@@ -116,6 +122,9 @@ See:
 - [docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md](./docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md)
   for the exact public repository, deployment, WebMCP, Chrome, mobile, safety
   and transport verification.
+- [docs/evidence/CODESIGN_WEBMCP_REBRAND_2026-08-28.md](./docs/evidence/CODESIGN_WEBMCP_REBRAND_2026-08-28.md)
+  for the package, copy, responsive-browser, and exact-six runtime verification
+  of the CoDesign WebMCP naming change.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.

@@ -30,8 +30,8 @@
 
 ## 27 August 2026 — scope interview round 1
 
-- Platform ambition: CoDesign Commerce should become the standard interaction layer through which agents operate customizable products on Shopify merchant sites.
-- Merchant outcome: a Shopify merchant with an existing product designer adopts CoDesign Commerce to expose its real controls, renderer, product rules, and safe actions to ChatGPT, Claude, or another capable agent.
+- Platform ambition: CoDesign WebMCP should become the standard interaction layer through which agents operate customizable products on Shopify merchant sites.
+- Merchant outcome: a Shopify merchant with an existing product designer adopts CoDesign WebMCP to expose its real controls, renderer, product rules, and safe actions to ChatGPT, Claude, or another capable agent.
 - Shopper outcome: a customer starts with a product need, such as custom grip socks for a studio, and completes the creative journey conversationally rather than learning and manually operating the merchant's designer.
 - Journey model: the agent helps identify the relevant merchant/product, opens that merchant's web customizer, drives its live visual canvas, and keeps conversation as the user's primary control surface.
 - Product intersection: commerce discovery, custom-product design, and agentic web interaction are one connected journey.
@@ -43,7 +43,7 @@
 ## 27 August 2026 — scope interview round 2
 
 - Proof-surface decision: use both the public studio tote and the real KORRHAUS website to explain the product, but make the tote the stable, reproducible Devpost submission demo.
-- KORRHAUS role: evolving live-business proof that CoDesign Commerce can enhance a real merchant customizer. KORRHAUS may continue normal product development and is not the sole required judge URL.
+- KORRHAUS role: evolving live-business proof that CoDesign WebMCP can enhance a real merchant customizer. KORRHAUS may continue normal product development and is not the sole required judge URL.
 - Tote role: versioned, runnable reference integration that judges and other merchants can reproduce even if KORRHAUS changes after submission.
 - Discovery cut: do not build a merchant-comparison or recommendation engine for the challenge. Demonstrate a customer brief reaching the appropriate known demo surface, then spend the experience on agentic design.
 - Active shaping: Felix explicitly prioritized continued KORRHAUS development over freezing the commercial site for a month.
@@ -80,7 +80,7 @@
 ## 27 August 2026 — PRD interview round 1
 
 - Entry behavior: ChatGPT first presents suitable product or merchant options in conversation. The customer selects the relevant option before the agent opens and operates that customizer.
-- Product boundary: discovering and presenting options may use the agent's existing shopping/web capabilities; CoDesign Commerce becomes responsible once a compatible customizable product is selected.
+- Product boundary: discovering and presenting options may use the agent's existing shopping/web capabilities; CoDesign WebMCP becomes responsible once a compatible customizable product is selected.
 - Work visibility: chat shows two or three short, user-friendly progress updates while the browser customizer is being read, designed, rendered, and validated. Tool names and low-level logs remain hidden.
 - Result presentation confirmed: one visual preview per design/colourway, a short creative-direction explanation, important assumptions, missing decisions or production warnings, and an invitation to refine conversationally.
 - Open clarification: Felix did not yet understand the proposed Keep/Revert surface. Explain the temporary-versus-saved distinction in plain language before recording a decision.
@@ -378,7 +378,7 @@
 ## 28 August 2026 — Item 11 public release and runtime verification
 
 - Felix approved public source publication, tote deployment and extensive runtime testing; this did not authorize a KORRHAUS production release or traffic change.
-- Published the Manifest 2.0 source and Apache-2.0 license at `https://github.com/fmksites/codesign-commerce` and passed hosted CI on the exact public history.
+- Published the Manifest 2.0 source and Apache-2.0 license at the then-current repository `https://github.com/fmksites/codesign-commerce` and passed hosted CI on the exact public history. The later CoDesign WebMCP rebrand targets `fmksites/codesign-webmcp`.
 - Deployed the static judge artifact to `https://codesign-commerce.pages.dev/` with immutable release `https://966f9e17.codesign-commerce.pages.dev/`.
 - Hardened the public artifact after deployed checks found three concrete defects: missing explicit 404 routing, release links still labelled pending, and a tote favicon 404. All three were fixed, retested and redeployed.
 - The deployed Codex in-app browser discovered exactly six tools and completed the real-artwork North Form flow through three coherent proposal revisions, two distinct inline previews, production validation, stale retry, invalid-value rejection, zero-write Revert and one visible Keep producing exactly one commit.

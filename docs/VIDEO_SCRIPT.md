@@ -26,7 +26,7 @@ owned/authorized visual assets and no copyrighted music.
 | Time | Screen | Narration |
 | --- | --- | --- |
 | 0:00–0:10 | Chat brief beside empty tote customizer | “I want custom studio products without learning another complex designer. I describe the collection once and the agent works in the merchant's real visual page.” |
-| 0:10–0:22 | Agent discovers exact six tools | “CoDesign Commerce gives the page six bounded WebMCP tools: read, capabilities, temporary assets, atomic proposals, renderer previews and validation.” |
+| 0:10–0:22 | Agent discovers exact six tools | “CoDesign WebMCP gives the page six bounded WebMCP tools: read, capabilities, temporary assets, atomic proposals, renderer previews and validation.” |
 | 0:22–0:58 | Foundation and Branding passes update the tote live | “The agent reads the committed state, chooses only declared values, stages my real artwork without uploading it, and builds the first direction. The browser canvas changes while the work remains temporary.” |
 | 0:58–1:18 | Variants pass creates Natural and Charcoal | “It creates a second named variant, preserves the 100-tote total, and applies different material, handles, placement, scale and rotation through one merchant adapter.” |
 | 1:18–1:36 | Two inline chat previews plus validation | “Both renderer previews return to chat at the exact proposal revision. The merchant's coupled production rules say the collection is ready.” |
@@ -34,7 +34,7 @@ owned/authorized visual assets and no copyrighted music.
 | 1:51–2:05 | Human decision | “Nothing is saved yet. WebMCP has no save or order tool. After explicit confirmation, the page's own Keep control commits once; Revert would restore the exact baseline with zero writes.” |
 | 2:05–2:22 | KORRHAUS evidence and existing Sock Designer | “This is not just a tote. The same unchanged core is integrated into KORRHAUS's existing Shopify Sock Designer, mapping more than 50 real controls without replacing its renderer or autosave.” |
 | 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 180 tests, safety cases and clean-clone instructions.” |
-| 2:31–2:35 | Closing title | “CoDesign Commerce: chat to custom products on Shopify.” |
+| 2:31–2:35 | Closing title | “CoDesign WebMCP: chat to custom products on Shopify.” |
 
 ## Contingencies
 

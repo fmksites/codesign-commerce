@@ -45,7 +45,7 @@ unmistakable.
 
 ## Allowed first-viewport copy
 
-- `CoDesign Commerce`
+- `CoDesign WebMCP`
 - `Studio tote reference`
 - `Design your collection`
 - `Every choice stays in the merchant's real visual workspace.`

@@ -1,6 +1,6 @@
 # Studio tote portability example
 
-This fictional public configurator proves that the same CoDesign Commerce core
+This fictional public configurator proves that the same CoDesign WebMCP core
 and review UI can adapt a made-to-order canvas tote with different options,
 assets, renderer behavior, and coupled production rules.
 
@@ -8,7 +8,7 @@ From the repository root:
 
 ```sh
 npm ci
-npm run dev --workspace @codesign-commerce/studio-tote
+npm run dev --workspace @codesign-webmcp/studio-tote
 ```
 
 Open the printed local URL. Add `?reset=true` for the documented anonymous

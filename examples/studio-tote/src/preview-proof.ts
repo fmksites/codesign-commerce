@@ -5,7 +5,7 @@ import {
   DocumentWithModelContext,
   WebMcpRegistration,
   WebMcpTool,
-} from "@codesign-commerce/core";
+} from "@codesign-webmcp/core";
 import { toteManifest } from "./configurator";
 
 export interface StudioTotePreviewArtifact {

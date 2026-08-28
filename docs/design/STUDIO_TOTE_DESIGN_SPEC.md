@@ -10,14 +10,14 @@ and fidelity ledger. The remainder of this file is retained as design history.
 
 ## Purpose and boundary
 
-The studio-tote example proves that CoDesign Commerce can connect to a second,
+The studio-tote example proves that CoDesign WebMCP can connect to a second,
 materially different made-to-order configurator without changing the core. It
 is a fictional public reference, not a claimed live merchant implementation and
 not a universal renderer.
 
 ## Exact first-screen copy
 
-- `Studio Tote reference · powered by CoDesign Commerce`
+- `Studio Tote reference · powered by CoDesign WebMCP`
 - `STUDIO TOTE`
 - `Public portability example`
 - `Build a tote for your studio`

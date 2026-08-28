@@ -1,5 +1,5 @@
 {
-  "name": "@codesign-commerce/core",
+  "name": "@codesign-webmcp/core",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
@@ -15,7 +15,7 @@
   "scripts": {
     "build": "npm run build:module && npm run build:browser",
     "build:module": "tsc -p tsconfig.build.json",
-    "build:browser": "esbuild src/index.ts --bundle --format=iife --global-name=CoDesignCommerce --platform=browser --target=chrome149 --sourcemap --outfile=dist/browser/codesign-commerce.js",
+    "build:browser": "esbuild src/index.ts --bundle --format=iife --global-name=CoDesignWebMCP --platform=browser --target=chrome149 --sourcemap --outfile=dist/browser/codesign-webmcp.js",
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   }
 }

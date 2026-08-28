@@ -7,7 +7,7 @@ Designer; it does not host a synthetic second Sock Designer.
 
 ## What to notice
 
-CoDesign Commerce does not replace a product configurator. It adds a narrow
+CoDesign WebMCP does not replace a product configurator. It adds a narrow
 manifest and adapter boundary so an agent can understand an existing complex
 configuration, coordinate interdependent changes, update the same preview a
 person sees, and report production readiness. The proposal remains temporary.
@@ -17,7 +17,7 @@ baseline. Neither control exists as a WebMCP tool.
 KORRHAUS demonstrates that the public package can enhance an existing
 production-grade configurator. The studio tote independently proves that another
 product can supply its own manifest, adapter, renderer, and rules without
-changing the core. CoDesign Commerce does not claim to be a universal renderer.
+changing the core. CoDesign WebMCP does not claim to be a universal renderer.
 
 ## Requirements and local start
 
@@ -44,7 +44,7 @@ credentials, private APIs, analytics, or customer data.
 For direct source-development work, run the tote in a separate terminal:
 
 ```bash
-npm run dev --workspace @codesign-commerce/studio-tote
+npm run dev --workspace @codesign-webmcp/studio-tote
 ```
 
 Append `?reset=true` to the printed URL. This clears only the fictional tote's

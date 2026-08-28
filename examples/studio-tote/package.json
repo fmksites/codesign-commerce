@@ -1,5 +1,5 @@
 {
-  "name": "@codesign-commerce/studio-tote",
+  "name": "@codesign-webmcp/studio-tote",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@codesign-commerce/core": "0.1.0"
+    "@codesign-webmcp/core": "0.1.0"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

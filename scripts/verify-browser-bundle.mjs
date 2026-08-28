@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 
-const bundlePath = "packages/codesign-commerce/dist/browser/codesign-commerce.js";
+const bundlePath = "packages/codesign-webmcp/dist/browser/codesign-webmcp.js";
 const source = readFileSync(bundlePath, "utf8");
 const context = vm.createContext({
   AbortController,
@@ -12,7 +12,7 @@ const context = vm.createContext({
 });
 vm.runInContext(source, context, { filename: bundlePath });
 
-const api = context.CoDesignCommerce;
+const api = context.CoDesignWebMCP;
 const requiredExports = [
   "InMemoryConfiguratorAdapter",
   "ProposalReviewController",

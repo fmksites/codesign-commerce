@@ -13,8 +13,8 @@
     "display_name": "Felix Kramer"
   },
   "project": {
-    "name": "CoDesign Commerce",
-    "summary": "An open-source WebMCP layer that lets AI agents turn a shopper's brief into a live, editable design inside an existing Shopify product customizer.",
+    "name": "CoDesign WebMCP",
+    "summary": "WebMCP for Custom Products on Shopify",
     "ai_usage": "",
     "codex_usage": ""
   },

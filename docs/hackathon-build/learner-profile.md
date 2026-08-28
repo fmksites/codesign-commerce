@@ -8,7 +8,7 @@
 
 ## Project Idea
 
-- Initial idea: CoDesign Commerce lets an agent operate every design control that a customer can currently operate in an existing Shopify customizer. The public studio tote proves portability; the existing KORRHAUS Sock Designer proves real commercial use.
+- Initial idea: CoDesign WebMCP lets an agent operate every design control that a customer can currently operate in an existing Shopify customizer. The public studio tote proves portability; the existing KORRHAUS Sock Designer proves real commercial use.
 - Intended journey: The customer starts entirely in ChatGPT. The agent finds and opens the appropriate product customizer, creates a complete first design, and supports conversational art direction without requiring the customer to operate the page first.
 - Creative parity: Logos and artwork are in scope, including customer-provided assets, generated motifs, background removal or transformation, positioning, scaling, rotation, and coordinated application across product and packaging.
 - Commercial continuation: In authenticated merchant experiences, the agent may read customer-visible prices and progress through order submission. A human must still confirm immediately before the order is actually submitted; payment is not currently part of the KORRHAUS flow.

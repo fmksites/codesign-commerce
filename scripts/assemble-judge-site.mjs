@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, "dist", "judge-site");
 const requireReleaseLinks = process.argv.includes("--require-release-links");
-const verifiedRepositoryUrl = "https://github.com/fmksites/codesign-commerce";
+const verifiedRepositoryUrl = "https://github.com/fmksites/codesign-webmcp";
 const verifiedFlagshipUrl =
   "https://korrhaus.nl/en/apps/wholesale/sock-designer";
 
@@ -73,10 +73,10 @@ if (requireReleaseLinks) {
 }
 
 const commitSha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-const packageJson = JSON.parse(await readFile(path.join(root, "packages", "codesign-commerce", "package.json"), "utf8"));
-const browserBundle = await readFile(path.join(root, "packages", "codesign-commerce", "dist", "browser", "codesign-commerce.js"));
+const packageJson = JSON.parse(await readFile(path.join(root, "packages", "codesign-webmcp", "package.json"), "utf8"));
+const browserBundle = await readFile(path.join(root, "packages", "codesign-webmcp", "dist", "browser", "codesign-webmcp.js"));
 const browserBundleSha256 = createHash("sha256").update(browserBundle).digest("hex");
-const browserBundlePath = "assets/codesign-commerce.js";
+const browserBundlePath = "assets/codesign-webmcp.js";
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -84,7 +84,7 @@ await cp(path.join(root, "judge-site"), output, { recursive: true });
 await cp(path.join(root, "examples", "studio-tote", "dist"), path.join(output, "tote"), { recursive: true });
 await mkdir(path.join(output, "assets"), { recursive: true });
 await cp(
-  path.join(root, "packages", "codesign-commerce", "dist", "browser", "codesign-commerce.js"),
+  path.join(root, "packages", "codesign-webmcp", "dist", "browser", "codesign-webmcp.js"),
   path.join(output, browserBundlePath),
 );
 
@@ -98,7 +98,7 @@ const toteAppBundle = await readFile(path.join(output, toteAppBundlePath));
 const toteAppBundleSha256 = createHash("sha256").update(toteAppBundle).digest("hex");
 
 const metadata = {
-  product: "CoDesign Commerce",
+  product: "CoDesign WebMCP",
   packageVersion: packageJson.version,
   commitSha,
   browserBundleSha256,

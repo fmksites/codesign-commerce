@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AssetSandbox, PreviewBridge, ProposalEngine, ProposalReviewController } from "@codesign-commerce/core";
+import { AssetSandbox, PreviewBridge, ProposalEngine, ProposalReviewController } from "@codesign-webmcp/core";
 import { StudioToteAssetProofStore } from "./asset-proof";
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
 

@@ -1,6 +1,6 @@
 # Merchant integration quick start
 
-This is the shortest credible path for adding CoDesign Commerce to an existing
+This is the shortest credible path for adding CoDesign WebMCP to an existing
 custom-product configurator. It is intentionally an adapter integration, not a
 zero-code Shopify app and not a replacement renderer.
 
@@ -25,8 +25,8 @@ is the complete reference.
 The challenge release is distributed as source and a standalone browser
 bundle; it is not published to npm. Choose one versioned route:
 
-- add `packages/codesign-commerce` to the merchant's npm workspace; or
-- build it once and self-host `dist/browser/codesign-commerce.js` with the
+- add `packages/codesign-webmcp` to the merchant's npm workspace; or
+- build it once and self-host `dist/browser/codesign-webmcp.js` with the
   merchant application.
 
 Do not hotlink an unversioned third-party bundle in production. Pin the source
@@ -36,7 +36,7 @@ From a clean clone, the reusable package is built with:
 
 ```sh
 npm ci
-npm run build --workspace @codesign-commerce/core
+npm run build --workspace @codesign-webmcp/core
 ```
 
 ## 2. Declare the public manifest
@@ -44,7 +44,7 @@ npm run build --workspace @codesign-commerce/core
 Create one `ConfiguratorManifest` containing only shopper-safe semantics:
 
 ```ts
-import type { ConfiguratorManifest } from "@codesign-commerce/core";
+import type { ConfiguratorManifest } from "@codesign-webmcp/core";
 
 export const manifest: ConfiguratorManifest = {
   schemaVersion: "2.0",
@@ -106,7 +106,7 @@ import {
   ProposalEngine,
   ProposalReviewController,
   registerCoDesignTools,
-} from "@codesign-commerce/core";
+} from "@codesign-webmcp/core";
 
 const assetSandbox = new AssetSandbox(manifest, adapter);
 const previewBridge = new PreviewBridge(manifest, adapter);
@@ -168,7 +168,7 @@ artifacts.
 
 ## Public versus merchant-owned code
 
-| CoDesign Commerce supplies | The merchant keeps |
+| CoDesign WebMCP supplies | The merchant keeps |
 | --- | --- |
 | Manifest and inventory validators | Product-specific option vocabulary |
 | Canonical public workspace | Raw application/customer state |

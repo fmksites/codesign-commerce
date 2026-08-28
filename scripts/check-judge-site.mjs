@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const site = path.join(root, "dist", "judge-site");
-const verifiedRepositoryUrl = "https://github.com/fmksites/codesign-commerce";
+const verifiedRepositoryUrl = "https://github.com/fmksites/codesign-webmcp";
 const verifiedFlagshipUrl =
   "https://korrhaus.nl/en/apps/wholesale/sock-designer";
 
@@ -17,7 +17,7 @@ const requiredFiles = [
   "favicon.svg",
   "_headers",
   "site-metadata.json",
-  "assets/codesign-commerce.js",
+  "assets/codesign-webmcp.js",
   "assets/korrhaus-sock-cream.svg",
   "tote/index.html",
   "tote/favicon.svg",
@@ -38,6 +38,10 @@ const metadata = JSON.parse(metadataText);
 const legacyKorrhausPathExists = await access(path.join(site, "korrhaus")).then(() => true).catch(() => false);
 
 const requiredLandingText = [
+  "CoDesign WebMCP",
+  "WebMCP for Custom Products on Shopify",
+  "Make your Shopify product configurator",
+  "Agent-Ready Configurator Pilot",
   "Open the tote demo",
   "KORRHAUS integration",
   "Fictional studio tote",
@@ -91,7 +95,7 @@ if (/\b(?:src|href)="\/(?!\/)/.test(toteHtml)) {
 if (!/^\d+\.\d+\.\d+$/.test(metadata.packageVersion)) throw new Error("Judge metadata lacks a semantic package version");
 if (!/^[a-f0-9]{40}$/.test(metadata.commitSha)) throw new Error("Judge metadata lacks an exact Git commit");
 if (!/^[a-f0-9]{64}$/.test(metadata.browserBundleSha256)) throw new Error("Judge metadata lacks a browser-bundle digest");
-if (metadata.browserBundlePath !== "assets/codesign-commerce.js") {
+if (metadata.browserBundlePath !== "assets/codesign-webmcp.js") {
   throw new Error("Judge metadata lacks the published core browser-bundle path");
 }
 if (!/^[a-f0-9]{64}$/.test(metadata.toteAppBundleSha256)) {

@@ -1,4 +1,4 @@
-# CoDesign Commerce — Binding Execution Plan
+# CoDesign WebMCP — Binding Execution Plan
 
 ## Document status
 
@@ -15,7 +15,7 @@
 
 The persistent Codex goal, when explicitly authorized, should remain short and point back to this file:
 
-> Execute the approved CoDesign Commerce plan in `EXECUTION_PLAN.md`, satisfy every milestone and acceptance criterion, and stop at every defined approval gate.
+> Execute the approved CoDesign WebMCP plan in `EXECUTION_PLAN.md`, satisfy every milestone and acceptance criterion, and stop at every defined approval gate.
 
 This document alone does not authorize a new external action. The decision log
 records the separately approved implementation, publication, and zero-traffic
@@ -39,14 +39,14 @@ be presented as a hosted or submitted flagship.
 
 ### 1.1 Product
 
-CoDesign Commerce is an open-source browser-side WebMCP layer that makes an existing complex Shopify product configurator agent-ready without replacing its normal interface, renderer, product rules, or commercial backend.
+CoDesign WebMCP is an open-source browser-side WebMCP layer that makes an existing complex Shopify product configurator agent-ready without replacing its normal interface, renderer, product rules, or commercial backend.
 
 The real KORRHAUS Custom Sock Designer is the sole KORRHAUS flagship integration.
 A small, materially different studio-tote example makes the public package
 runnable and proves that the abstraction is reusable without presenting a
 second Sock Designer.
 
-CoDesign Commerce is not the KORRHAUS Sock Designer itself. KORRHAUS is the strongest proof that the layer works in an existing, real, made-to-order configurator.
+CoDesign WebMCP is not the KORRHAUS Sock Designer itself. KORRHAUS is the strongest proof that the layer works in an existing, real, made-to-order configurator.
 
 ### 1.2 Core experience
 
@@ -70,9 +70,9 @@ The person must explicitly select **Keep** or **Revert**. Only Keep may persist.
 
 ### 1.3 Strategic differentiation
 
-Shopify already provides WebMCP tools for catalog discovery, product inspection, navigation, cart management, checkout, orders, and store information. CoDesign Commerce begins where standard SKU selection ends: complex made-to-order configuration with multiple interacting decisions, a merchant-owned visual renderer, production-aware validation, and a human approval transaction.
+Shopify already provides WebMCP tools for catalog discovery, product inspection, navigation, cart management, checkout, orders, and store information. CoDesign WebMCP begins where standard SKU selection ends: complex made-to-order configuration with multiple interacting decisions, a merchant-owned visual renderer, production-aware validation, and a human approval transaction.
 
-OpenAI showcase projects already demonstrate agents editing a shared visual canvas. Shared preview editing alone is therefore insufficient differentiation. CoDesign Commerce must prove all of the following together:
+OpenAI showcase projects already demonstrate agents editing a shared visual canvas. Shared preview editing alone is therefore insufficient differentiation. CoDesign WebMCP must prove all of the following together:
 
 - Integration into an existing production configurator.
 - Coordinated multi-field and multi-design proposals.
@@ -84,7 +84,7 @@ OpenAI showcase projects already demonstrate agents editing a shared visual canv
 
 The Shopify-facing “aha” statement is:
 
-> Shopify’s tools get a shopper to the product; CoDesign Commerce helps them finish designing the product.
+> Shopify’s tools get a shopper to the product; CoDesign WebMCP helps them finish designing the product.
 
 ---
 
@@ -98,7 +98,7 @@ The Shopify-facing “aha” statement is:
 
 ### 2.2 Product promise
 
-CoDesign Commerce lets a compatible browser agent:
+CoDesign WebMCP lets a compatible browser agent:
 
 - Read the current public-safe configuration.
 - Understand relevant option groups and allowed values.
@@ -126,7 +126,7 @@ The challenge version succeeds only if it proves:
 
 ### 2.4 Non-goals
 
-CoDesign Commerce version one will not:
+CoDesign WebMCP version one will not:
 
 - Search Shopify catalogs.
 - Navigate the wider storefront.
@@ -161,7 +161,7 @@ The judge should understand the entry in this order:
 1. Shopify already makes ordinary storefront actions agent-callable.
 2. Made-to-order products still require customers to coordinate many dependent decisions inside specialized visual interfaces.
 3. Rebuilding every merchant customizer for agents is unrealistic.
-4. CoDesign Commerce connects WebMCP to the configurator the merchant already owns.
+4. CoDesign WebMCP connects WebMCP to the configurator the merchant already owns.
 5. The agent proposes changes inside the same live preview.
 6. Product rules and production readiness are evaluated.
 7. The human keeps control of persistence.
@@ -231,7 +231,7 @@ If two live agent turns are too variable for the time limit, keep the proposal a
 
 The public project must contain:
 
-- The actual CoDesign Commerce core used by the live KORRHAUS integration and the public tote demo.
+- The actual CoDesign WebMCP core used by the live KORRHAUS integration and the public tote demo.
 - Canonical state and manifest types.
 - Manifest validation.
 - Proposal transaction and revision handling.
@@ -283,7 +283,7 @@ The private application retains:
 
 ### 4.4 Critical integration boundary
 
-The current designer exposes a broad boot object on `window.__KORRHAUS_SOCK_DESIGNER__`. It includes option, pricing, access, and API configuration. CoDesign Commerce must not read, accept, clone, log, or return that object.
+The current designer exposes a broad boot object on `window.__KORRHAUS_SOCK_DESIGNER__`. It includes option, pricing, access, and API configuration. CoDesign WebMCP must not read, accept, clone, log, or return that object.
 
 The production designer should instead expose a narrow sanitized adapter bridge from inside its existing closure. The working name is:
 
@@ -322,7 +322,7 @@ Use one modular TypeScript package for the challenge rather than independently v
 
 ```text
 packages/
-  codesign-commerce/
+  codesign-webmcp/
     src/
       core/
       manifest/
@@ -867,7 +867,7 @@ If a core change is required, document whether it exposes a genuinely missing ab
 
 ```text
 packages/
-  codesign-commerce/
+  codesign-webmcp/
 examples/
   studio-tote/
 evals/
@@ -1613,7 +1613,7 @@ Do not begin tote implementation, broad styling, package publication, or submiss
 | Plan approved | `PASS` | User authorization in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Local execution authorized; external gates remain binding. |
 | Persistent goal created | `PASS` | Active Codex goal in task `01a03e0a-9151-73e3-a3e6-83749ad8c23d` | Goal points to this plan. |
 | Baseline captured | `PASS` | Pre-start Cloud Run revision/digest and source separation recorded in `docs/evidence/PRE_CHALLENGE_BASELINE.md`; baseline commit `abf2a7829fdd188c2f2492e9c9d53a247a6ede7f` | Baseline commit timestamp is after written authorization. |
-| Public foundation | `PASS` | Security-remediation clean clone of `2f7235b` passed `npm ci`, 73 tests, strict source/test typecheck, core plus both example builds, public-boundary over 91 tracked candidates, 28 docs, 24 eval-corpus cases, browser-bundle digest `sha256:dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b`, and an empty final status; Apache-2.0 is present. Public release evidence is in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md`. | Public repository `fmksites/codesign-commerce`, Apache-2.0 detection, exact-commit hosted CI, and unauthenticated source access now pass. |
+| Public foundation | `PASS` | Security-remediation clean clone of `2f7235b` passed `npm ci`, 73 tests, strict source/test typecheck, core plus both example builds, public-boundary over 91 tracked candidates, 28 docs, 24 eval-corpus cases, browser-bundle digest `sha256:dc8d6180ba6bcdd426d735abe7dc73a8854559b05950b91936f57ee10d33ee1b`, and an empty final status; Apache-2.0 is present. Public release evidence is in `docs/evidence/PUBLIC_REPOSITORY_RELEASE.md`. | Original public repository `fmksites/codesign-commerce`, Apache-2.0 detection, exact-commit hosted CI, and unauthenticated source access passed. The 28 August repository rename is a separate release step. |
 | Transaction vertical slice | `PASS` | 45 deterministic tests; actual WebMCP discovery and proposal in the in-app browser; zero-write Revert and exactly-one-write-boundary Keep; native Chrome keyboard check; desktop/mobile visual comparison in `design-qa.md`; bundle `sha256:78ece1955a7416878c50a7f01325c702aa609974fb0cf816b1be3048e7f9819a` | The public adapter proves the complete Phase 2 transaction and hides the review surface until a proposal succeeds. |
 | KORRHAUS safety gate | `PASS` | `docs/evidence/KORRHAUS_READ_ONLY_COLOURWAY_QA.md`; syntax and focused ESLint; 41 Vitest files/199 tests; strict typecheck; production build; complete 142-case Playwright run with 141 passes and 1 expected skip; exact Cream/Rose read-only inspection regression on desktop and mobile | The current tested bytes match immutable image `sha256:1819173f…d9e3c`. Only zero-traffic QA tags use the guarded feature; ordinary traffic remains on a feature-off rollback revision. The older `aa9c…` candidate is historical. |
 | Complete tool suite | `PASS` | Public source commit `ea54e71` and private pinned bundle register exactly five tools; public and private actual-browser evidence covers discovery, option listing, proposal extension, design creation, validation, and Revert | The complete North Form behavior passed first in the retired synthetic harness and independently in the real private merchant configurator. |
@@ -1636,7 +1636,7 @@ than rewritten.
 
 | Date | Decision | Owner | Effect |
 |---|---|---|---|
-| 26 Aug 2026 | Product name is CoDesign Commerce. | User | Fixed working product name. |
+| 26 Aug 2026 | Working product name is CoDesign Commerce. | User | Original challenge working name; superseded by the 28 August rebrand. |
 | 26 Aug 2026 | Product is a reusable layer, not the KORRHAUS Sock Designer itself. | User | KORRHAUS is flagship proof. |
 | 26 Aug 2026 | Include a small, materially different second example if the safety gate passes. | User / plan | Studio tote remains conditional. |
 | 26 Aug 2026 | Final video production is human-owned. | User | Codex supplies stable demo, script, shot list, and review only. |
@@ -1679,6 +1679,7 @@ than rewritten.
 | 27 Aug 2026 | Close the corrected zero-traffic read-only-colourway QA gate. | Codex verification | Build `2985b639-7524-4a09-85ac-f367b78865e7` produced immutable image `sha256:181917…d9e3c`; `codesign-review-qa2` passed health, exact-asset and zero-error checks; `codesign-user-qa` passed the five-tool 2 × 60 flow plus Rose → Cream → Rose live-proof switching with persistent temporary status, locked mutation/upload controls and unchanged committed state. Owner hands-on QA is now the next gate. |
 | 27 Aug 2026 | Publish the read-only colourway QA evidence. | Codex verification | Public commit `4592aea` passed exact hosted CI run `33079821637`, including 95 tests, strict typecheck, build, exact bundle verification, judge-site assembly, public-boundary, 44-file documentation-link and evaluation-corpus checks. Production traffic and judge hosting remain closed gates. |
 | 27 Aug 2026 | Complete a natural-language Codex site-tools rehearsal and preserve the ChatGPT distinction. | Codex verification | From a clean Route 02 baseline, Codex discovered the five tools from the customer brief, recovered from the correctly rejected inconsistent 60/120 intermediate, staged and validated 2 × 60, visibly switched Cream → Rose, and re-read unchanged committed revision `korrhaus-5772028f` with no browser issues. This is supported agent-browser evidence; the owner's ChatGPT Desktop shell and permissions test remains a separate gate. |
+| 28 Aug 2026 | Rebrand the technology to CoDesign WebMCP. | User | Descriptor is “WebMCP for Custom Products on Shopify”; promise is “Make your Shopify product configurator agent-ready”; service is “Agent-Ready Configurator Pilot”; target repository name is `codesign-webmcp`. Protocol tool names remain unchanged. |
 
 ---
 

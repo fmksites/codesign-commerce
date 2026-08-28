@@ -2,7 +2,7 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/codesign-commerce/tsconfig.build.json"
+      "path": "./packages/codesign-webmcp/tsconfig.build.json"
     }
   ]
 }

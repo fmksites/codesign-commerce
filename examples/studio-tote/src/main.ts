@@ -12,7 +12,7 @@ import {
   type JsonPrimitive,
   type PreviewArtifactCandidate,
   type PreviewCaptureRequest,
-} from "@codesign-commerce/core";
+} from "@codesign-webmcp/core";
 import { StudioToteAdapter, toteInitialState, toteManifest, type ToteSnapshot } from "./configurator";
 import { syncRangeControl } from "./range-controls";
 import {
@@ -35,7 +35,7 @@ if (!app) throw new Error("Studio tote app root is missing");
 app.innerHTML = `
   <div class="app-shell">
     <header class="site-header">
-      <div class="brand-lockup"><strong>CoDesign Commerce</strong><span>Studio tote reference</span></div>
+      <div class="brand-lockup"><strong>CoDesign WebMCP</strong><span>WebMCP for Custom Products on Shopify</span></div>
       <div class="header-status" data-save-tone="saved" role="status" aria-live="polite" aria-atomic="true"><span class="status-dot" aria-hidden="true"></span><span data-save-status>Saved in this browser only</span></div>
     </header>
 

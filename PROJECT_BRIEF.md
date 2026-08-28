@@ -10,13 +10,21 @@ The commercial goal is to increase KORRHAUS authority and visibility. The produc
 
 Product definition:
 
-> An open-source WebMCP configuration layer for complex Shopify product customizers, demonstrated through the real KORRHAUS Custom Sock Designer.
+> WebMCP for Custom Products on Shopify.
 
 Product name:
 
-> CoDesign Commerce
+> CoDesign WebMCP
 
-The title and scope were approved for local implementation on 26 August 2026. Publication and production remain separately gated.
+Commercial promise:
+
+> Make your Shopify product configurator agent-ready.
+
+Service:
+
+> Agent-Ready Configurator Pilot
+
+The original concept and architecture were approved for local implementation on 26 August 2026. The CoDesign WebMCP naming structure was approved on 28 August 2026. Publication and production remain separately gated.
 
 ## Why This Direction
 
@@ -32,13 +40,14 @@ KORRHAUS provides a credible flagship because the designer already handles colou
 
 The current recommendation is option 3. Do not accept it without testing its novelty, feasibility and judging strength.
 
-## Planned WebMCP tools
+## WebMCP tools
 
-- `codesign_read_configuration`
-- `codesign_list_options`
-- `codesign_propose_configuration`
-- `codesign_create_design`
-- `codesign_validate_configuration`
+- `codesign_read_workspace`
+- `codesign_list_capabilities`
+- `codesign_stage_asset`
+- `codesign_apply_proposal`
+- `codesign_get_previews`
+- `codesign_validate_proposal`
 
 Keep and Revert are visible human controls and are intentionally not WebMCP tools.
 

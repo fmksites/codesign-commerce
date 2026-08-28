@@ -1,12 +1,14 @@
 # Title
 
-CoDesign Commerce
+CoDesign WebMCP
+
+**WebMCP for Custom Products on Shopify**
+
+> **Make your Shopify product configurator agent-ready.**
 
 ## One-line Summary
 
-An open-source WebMCP layer that turns chat into a safe visual design interface
-for existing Shopify product customizers, while merchants keep their renderer,
-rules, UI, and final save boundary.
+WebMCP for Custom Products on Shopify.
 
 ## Problem
 
@@ -24,7 +26,7 @@ operational rules.
 
 ## Solution
 
-CoDesign Commerce adds a reusable browser-side WebMCP transaction layer to an
+CoDesign WebMCP adds a reusable browser-side WebMCP transaction layer to an
 existing product customizer. A shopper can start with a sentence, let the agent
 open the appropriate merchant page, watch that page's real canvas change, and
 receive current renderer previews back in chat.
@@ -170,8 +172,8 @@ proposal stale instead of being silently overwritten.
 Requirements: Node.js 22.12 or newer and npm.
 
 ```bash
-git clone https://github.com/fmksites/codesign-commerce.git
-cd codesign-commerce
+git clone https://github.com/fmksites/codesign-webmcp.git
+cd codesign-webmcp
 npm ci
 npm test
 npm run typecheck
@@ -202,7 +204,7 @@ Immutable verified deployment: <https://26193628.codesign-commerce.pages.dev/>
 
 ## Public Repository Link
 
-<https://github.com/fmksites/codesign-commerce>
+<https://github.com/fmksites/codesign-webmcp>
 
 Verified implementation release commit:
 `1150c40703816f3729ec9f8de6f93db9e172a5e1`
@@ -266,7 +268,7 @@ Existing public-repository captures:
   the page. The separate ChatGPT desktop-app in-app-browser route remains
   untested. Neither result is mislabeled as the passing Codex/native-Chrome
   evidence.
-- CoDesign Commerce is not a universal renderer or zero-code integration. A
+- CoDesign WebMCP is not a universal renderer or zero-code integration. A
   merchant must supply a manifest and a small adapter to its real functions.
 - The public release stops at saved design. It deliberately exposes no ordering,
   quote, payment, upload, pricing, customer-data, supplier, or admin tool.
@@ -286,7 +288,7 @@ Official fields fetched from Devpost on 28 August 2026:
   value.`
 - **Organization name (optional):** `TODO only if Submitter Type is
   Organization.`
-- **App Status (required):** Recommended: `New`. CoDesign Commerce was built
+- **App Status (required):** Recommended: `New`. CoDesign WebMCP was built
   during the challenge; the KORRHAUS Sock Designer is clearly disclosed as a
   pre-existing integration surface.
 - **If Existing, what changed:** Not applicable if `New` is selected. If Devpost
@@ -295,7 +297,7 @@ Official fields fetched from Devpost on 28 August 2026:
 - **Live URL (required):** <https://codesign-commerce.pages.dev/>
 - **Testing instructions (optional):** use the Fast judge path above.
 - **Public code repository (required):**
-  <https://github.com/fmksites/codesign-commerce>
+  <https://github.com/fmksites/codesign-webmcp>
 - **Agents/clients tested (required):** Codex desktop agent exact-six WebMCP on
   the final immutable public release; native Chrome 151 exact-six plus real
   supplied artwork on the current source using the official testing flag; and
@@ -314,7 +316,7 @@ Official fields fetched from Devpost on 28 August 2026:
 ### What was created during the challenge
 
 The KORRHAUS Custom Sock Designer existed before 25 August 2026. During the
-submission period we created the reusable CoDesign Commerce package, six-tool
+submission period we created the reusable CoDesign WebMCP package, six-tool
 WebMCP layer, Manifest 2.0 and adapter contract, proposal transaction and human
 review boundary, temporary-asset and preview systems, complete studio-tote
 reference, private KORRHAUS adapter, deterministic and browser tests, eval

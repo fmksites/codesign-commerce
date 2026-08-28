@@ -186,7 +186,7 @@ vocabulary and renderer:
   two-colour screen printing below 50 units per variant.
 - Real tote raster assets and a dynamic print layer replace the sock renderer.
 
-No tote branch or tote-specific rule exists in `packages/codesign-commerce/`.
+No tote branch or tote-specific rule exists in `packages/codesign-webmcp/`.
 This is the intended portability model: reuse the transaction and tool surface,
 but keep product semantics, validation, preview, and persistence inside the
 merchant adapter.

@@ -1,6 +1,6 @@
 # Agent discovery and distribution
 
-CoDesign Commerce improves what happens after a compatible browser agent is on
+CoDesign WebMCP improves what happens after a compatible browser agent is on
 a supported configurator page. It does not by itself cause an agent, search
 engine, or shopping surface to recommend that merchant.
 

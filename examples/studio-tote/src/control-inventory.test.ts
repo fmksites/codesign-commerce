@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { validateHumanControlInventory } from "@codesign-commerce/core";
+import { validateHumanControlInventory } from "@codesign-webmcp/core";
 import { toteManifest } from "./configurator";
 import { toteHumanControlInventory } from "./control-inventory";
 

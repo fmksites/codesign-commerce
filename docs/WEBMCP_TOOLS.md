@@ -1,6 +1,6 @@
 # Six WebMCP tools and page confirmation
 
-CoDesign Commerce exposes one product-neutral tool surface for existing visual customizers. The merchant manifest supplies the vocabulary and bounds; the merchant adapter supplies real state, rules, rendering, temporary assets, and persistence. The package does not infer DOM paths or replace the customizer.
+CoDesign WebMCP exposes one product-neutral tool surface for existing visual customizers. The merchant manifest supplies the vocabulary and bounds; the merchant adapter supplies real state, rules, rendering, temporary assets, and persistence. The package does not infer DOM paths or replace the customizer.
 
 ## Exact public surface
 

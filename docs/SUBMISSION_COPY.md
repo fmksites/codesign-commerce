@@ -5,13 +5,17 @@ their corresponding deployment or publication has been verified.
 
 ## Project name
 
-CoDesign Commerce
+CoDesign WebMCP
+
+**Descriptor:** WebMCP for Custom Products on Shopify
+
+**Commercial promise:** Make your Shopify product configurator agent-ready.
+
+**Service:** Agent-Ready Configurator Pilot
 
 ## One-line summary
 
-An open-source WebMCP layer that lets agents safely collaborate inside an
-existing made-to-order product configurator while the merchant keeps its own
-visual UI, rules, and human approval boundary.
+WebMCP for Custom Products on Shopify.
 
 ## Description
 
@@ -21,7 +25,7 @@ information. The difficult gap is what happens inside a complex made-to-order
 configurator: dozens of interdependent choices, a merchant-owned visual
 preview, production rules, and decisions that should not be saved silently.
 
-CoDesign Commerce adds a reusable browser-side WebMCP layer to that existing
+CoDesign WebMCP adds a reusable browser-side WebMCP layer to that existing
 experience. A shopper can ask for 120 custom grip socks across two colourways.
 The agent reads only the public, allowlisted configuration; lists the relevant
 options and dependencies; proposes coordinated changes; creates a second
@@ -45,7 +49,7 @@ rebuilding it as a generic chatbot or surrendering the human approval boundary.
 
 The Shopify “aha” is the handoff point. Shopify's native WebMCP tools already
 cover catalog discovery, variants, navigation, cart, checkout, and orders.
-CoDesign Commerce covers the difficult configuration work before an item can
+CoDesign WebMCP covers the difficult configuration work before an item can
 become cart-ready: interdependent choices, multiple coordinated designs, the
 merchant's live preview, and production-readiness validation.
 
@@ -56,7 +60,7 @@ manifest, adapter, renderer, actual-artwork handling, typography and transform
 controls, and coupled print/canvas rules. In the judge flow, one brief visibly
 builds two named variants through Foundation, Branding, and Variants passes and
 returns one visual preview per variant. This demonstrates portability without
-claiming that CoDesign Commerce is a universal renderer.
+claiming that CoDesign WebMCP is a universal renderer.
 
 Use “live KORRHAUS flagship” in the final submission only if the exact-six
 production route has passed its separate live verification. Otherwise describe

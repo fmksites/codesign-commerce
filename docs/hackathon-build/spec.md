@@ -1,13 +1,13 @@
 # Technical Spec
 
-**Product:** CoDesign Commerce
+**Product:** CoDesign WebMCP
 **Specification date:** 27 August 2026
 **Status:** Architecture candidate for checklist review; planning only
 **Authority:** Implements the approved product behavior in `scope.md` and `prd.md`. It does not authorize implementation, deployment, publication, public-repository mutation, or private KORRHAUS changes.
 
 ## Overview
 
-CoDesign Commerce is a reusable, open-source WebMCP integration layer for existing Shopify product customizers. It lets a compatible agent translate a shopper's brief into temporary, visible, validated product-design proposals inside the merchant's existing browser renderer.
+CoDesign WebMCP is a reusable, open-source WebMCP integration layer for existing Shopify product customizers. It lets a compatible agent translate a shopper's brief into temporary, visible, validated product-design proposals inside the merchant's existing browser renderer.
 
 The challenge build has two deliberately separate product surfaces:
 
@@ -207,7 +207,7 @@ The target public structure is intentionally compact enough for challenge execut
   SECURITY.md                          threat boundary and reporting policy
   PUBLIC_PRIVATE_BOUNDARY.md           public/private integration rules
 
-  packages/codesign-commerce/
+  packages/codesign-webmcp/
     package.json                       core package metadata and builds
     tsconfig.build.json                library/type output
     src/
@@ -291,7 +291,7 @@ The private KORRHAUS repository will later add a private adapter and inventory i
 
 ### 1. Product selection and page opening
 
-Product discovery belongs to the host agent, not CoDesign Commerce. After the shopper chooses the tote or KORRHAUS:
+Product discovery belongs to the host agent, not CoDesign WebMCP. After the shopper chooses the tote or KORRHAUS:
 
 1. The host opens the selected merchant page.
 2. The page loads the ordinary human customizer.
@@ -1163,7 +1163,7 @@ A dynamic preview service is explicitly absent from the initial architecture. It
 
 ### Runtime responsibility
 
-CoDesign Commerce does not run its own product-design model or remote agent. The shopper's host agent supplies the language-model reasoning.
+CoDesign WebMCP does not run its own product-design model or remote agent. The shopper's host agent supplies the language-model reasoning.
 
 The agent is responsible for:
 
@@ -1191,7 +1191,7 @@ The agent cannot override a rejected operation by describing it differently.
 
 ### Artwork generation
 
-CoDesign Commerce may consume an asset created or supplied through the host agent, but it is not an image-generation model. The challenge must distinguish:
+CoDesign WebMCP may consume an asset created or supplied through the host agent, but it is not an image-generation model. The challenge must distinguish:
 
 - Agent or customer creates/provides asset.
 - CoDesign stages, sanitizes, positions, transforms, previews, and conditionally commits it.

@@ -1,4 +1,4 @@
-import type { HumanControlInventory } from "@codesign-commerce/core";
+import type { HumanControlInventory } from "@codesign-webmcp/core";
 
 export const toteHumanControlInventory: HumanControlInventory = {
   schemaVersion: "1.0",

@@ -7,7 +7,7 @@
 
 Date: 26 August 2026
 
-Surface: reusable CoDesign Commerce proposal review mounted in the public KORRHAUS reference configurator
+Surface: reusable CoDesign WebMCP proposal review mounted in the public KORRHAUS reference configurator
 
 ## Sources compared
 

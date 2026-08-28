@@ -8,7 +8,7 @@ import {
   DocumentWithModelContext,
   WebMcpRegistration,
   WebMcpTool,
-} from "@codesign-commerce/core";
+} from "@codesign-webmcp/core";
 import { toteManifest } from "./configurator";
 
 export type StudioToteProofMediaType = "image/png" | "image/jpeg" | "image/webp";

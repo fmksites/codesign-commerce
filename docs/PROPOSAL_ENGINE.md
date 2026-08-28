@@ -1,6 +1,6 @@
 # Guarded adapter and proposal transaction engine
 
-CoDesign Commerce separates temporary agent design work from merchant persistence. The public core can construct, validate, and visibly preview a proposal, but only the merchant adapter can restore private state or persist a shopper-confirmed Keep.
+CoDesign WebMCP separates temporary agent design work from merchant persistence. The public core can construct, validate, and visibly preview a proposal, but only the merchant adapter can restore private state or persist a shopper-confirmed Keep.
 
 The Manifest 2.0 transaction path is:
 

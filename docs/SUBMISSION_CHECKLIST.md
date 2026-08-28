@@ -68,8 +68,10 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 
 ## Public release
 
-- `PASS` — repository URL <https://github.com/fmksites/codesign-commerce>
-  exposes the current Manifest 2.0 history on `main`.
+- `PENDING REBRAND RELEASE` — target repository URL
+  <https://github.com/fmksites/codesign-webmcp>. The verified pre-rebrand
+  repository remains `fmksites/codesign-commerce` until the external rename
+  and push are separately approved and completed.
 - `PASS` — verify anonymous clone, visible Apache-2.0 license, source tree,
   README and hosted CI on the exact pushed commit.
 - `PASS` — Cloudflare Pages serves `dist/judge-site/` at

@@ -33,7 +33,7 @@ jobs:
       - name: Build release artifact
         run: npm run build:release
         env:
-          CODESIGN_PUBLIC_REPOSITORY_URL: https://github.com/fmksites/codesign-commerce
+          CODESIGN_PUBLIC_REPOSITORY_URL: https://github.com/fmksites/codesign-webmcp
 
       - name: Verify browser bundle
         run: npm run verify:browser-bundle

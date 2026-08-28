@@ -1,6 +1,6 @@
 # Temporary assets and revision-bound previews
 
-CoDesign Commerce lets an agent work with supplied artwork without turning a proposal into a normal merchant upload. The public core validates the transport and owns opaque, expiring handles. The merchant adapter owns the decoded temporary resource, product-specific sanitization, rendering, and the exact import that may occur only inside a shopper-confirmed page Keep.
+CoDesign WebMCP lets an agent work with supplied artwork without turning a proposal into a normal merchant upload. The public core validates the transport and owns opaque, expiring handles. The merchant adapter owns the decoded temporary resource, product-specific sanitization, rendering, and the exact import that may occur only inside a shopper-confirmed page Keep.
 
 This is a lifecycle and safety contract, not an image editor, universal product renderer, vectorizer, or print-preparation service.
 

@@ -1,19 +1,27 @@
 # Project Scope
 
-**Project:** CoDesign Commerce
+**Project:** CoDesign WebMCP
 **Stage:** Challenge scope approved for PRD development; not implementation authorization
 **Scope date:** 27 August 2026
 **Build posture:** Use all useful build time available before the challenge deadline, but protect one coherent end-to-end experience from feature sprawl.
 
-## Project Name Candidates
+## Project Name History
 
-- **CoDesign Commerce** — selected. It describes collaborative product creation and is broad enough to extend beyond KORRHAUS without pretending to be a universal renderer.
+- **CoDesign Commerce** — selected as the original 27 August working name. Superseded by the final 28 August rebrand below.
 - Agentic Product Configurator — accurate but generic; rejected as the primary name.
 - Shopify CoDesigner — clear but too dependent on a platform trademark and too close to a single assistant feature.
 
+Final 28 August naming structure:
+
+- Technology: **CoDesign WebMCP**.
+- Descriptor: **WebMCP for Custom Products on Shopify**.
+- Commercial promise: **Make your Shopify product configurator agent-ready.**
+- Service: **Agent-Ready Configurator Pilot**.
+- Repository: `codesign-webmcp`.
+
 ## One-Line Summary
 
-CoDesign Commerce is an open-source WebMCP integration layer that lets an AI agent turn a shopper's natural-language brief into a live, editable design inside an existing Shopify product customizer.
+CoDesign WebMCP is an open-source WebMCP integration layer that lets an AI agent turn a shopper's natural-language brief into a live, editable design inside an existing Shopify product customizer.
 
 The longer-term ambition is to become a standard way for compatible agents to interact with customizable Shopify products. The challenge version proves the foundation rather than claiming that universal platform has already been completed.
 
@@ -25,7 +33,7 @@ The challenge entry will prove one focused proposition:
 
 The public studio-tote integration is the stable, reproducible submission demo. The real KORRHAUS Custom Sock Designer is the evolving commercial proof that the same public layer can work inside an operating Shopify business.
 
-CoDesign Commerce is neither the Sock Designer nor the tote renderer. It is the reusable contract, proposal transaction, WebMCP tool layer, preview bridge, safety boundary, and integration pattern shared by both.
+CoDesign WebMCP is neither the Sock Designer nor the tote renderer. It is the reusable contract, proposal transaction, WebMCP tool layer, preview bridge, safety boundary, and integration pattern shared by both.
 
 ## Target User
 
@@ -49,7 +57,7 @@ A developer responsible for an existing Shopify product customizer. The develope
 
 The challenge integration promise is deliberately technical rather than zero-code:
 
-1. Install the CoDesign Commerce package.
+1. Install the CoDesign WebMCP package.
 2. Describe the customer-editable capabilities through a versioned manifest.
 3. Connect a narrow adapter to existing state, rendering, validation, snapshot, restore, and confirmed persistence functions.
 4. Register the generated WebMCP tools.
@@ -100,7 +108,7 @@ The shopper begins in ChatGPT or another compatible agent client with a natural-
 
 ### 2. Open the appropriate merchant customizer
 
-The agent opens the known Shopify customizer or public reference demo. The page exposes CoDesign Commerce tools only when the capability is enabled and supported.
+The agent opens the known Shopify customizer or public reference demo. The page exposes CoDesign WebMCP tools only when the capability is enabled and supported.
 
 ### 3. Read the live context
 
@@ -174,7 +182,7 @@ The challenge experience does not submit an order, accept a quote, take payment,
 
 ## What We Are Building
 
-### A. Reusable CoDesign Commerce package
+### A. Reusable CoDesign WebMCP package
 
 A real open-source TypeScript implementation containing:
 
@@ -311,7 +319,7 @@ The architecture may preserve a separately governed future extension point, but 
 
 ### Claim exclusions
 
-- Do not call CoDesign Commerce a universal protocol adopted by Shopify merchants; call it a reusable open-source foundation or integration layer.
+- Do not call CoDesign WebMCP a universal protocol adopted by Shopify merchants; call it a reusable open-source foundation or integration layer.
 - Do not claim Claude, ChatGPT, or another client works unless that exact client and workflow has been verified.
 - Do not claim KORRHAUS production behavior from a local, synthetic, mocked, zero-traffic, or stale deployment.
 - Do not present a text summary as proof of an in-chat visual preview.
@@ -384,7 +392,7 @@ The message is:
 1. Shopify merchants already have specialized visual customizers.
 2. Shoppers still have to learn those interfaces and coordinate many dependent choices.
 3. Agents can understand intent, but merchants should not rebuild their designers for every agent client.
-4. CoDesign Commerce exposes the merchant's real capabilities through a reusable WebMCP manifest and adapter.
+4. CoDesign WebMCP exposes the merchant's real capabilities through a reusable WebMCP manifest and adapter.
 5. The agent creates and refines the product in the existing live renderer.
 6. The visual result also returns to chat.
 7. Merchant validation and human confirmation preserve trust.
@@ -392,7 +400,7 @@ The message is:
 
 ### Shopify “aha”
 
-> Shopify gets the shopper to the customizable product. CoDesign Commerce helps the shopper actually design it.
+> Shopify gets the shopper to the customizable product. CoDesign WebMCP helps the shopper actually design it.
 
 ### Judging-criteria alignment
 

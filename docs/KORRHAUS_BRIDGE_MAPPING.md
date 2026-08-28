@@ -4,7 +4,7 @@ This document maps the private flagship integration without copying private stat
 
 ## Pre-migration local spike
 
-Read-only inspection on 26 August 2026 found a feature-flagged, post-start safety spike already present in the private designer. It registered one direct tool for a temporary main-yarn, accent-yarn, and pattern proposal. It is useful baseline evidence, but it was not the reusable CoDesign Commerce integration.
+Read-only inspection on 26 August 2026 found a feature-flagged, post-start safety spike already present in the private designer. It registered one direct tool for a temporary main-yarn, accent-yarn, and pattern proposal. It is useful baseline evidence, but it was not the reusable CoDesign WebMCP integration.
 
 The spike already demonstrates several sound private-side techniques:
 
@@ -49,7 +49,7 @@ The guarded adapter remains inside the existing browser closure and reuses these
 After explicit owner approval, the public runtime was connected to the existing
 private Designer behind its guarded WebMCP feature flag. The old direct
 KORRHAUS-specific tool/session spike was replaced with the pinned public
-CoDesign Commerce browser bundle plus a narrow private adapter.
+CoDesign WebMCP browser bundle plus a narrow private adapter.
 
 The bridge now:
 
@@ -110,11 +110,12 @@ For the North Form scenario, the expected canonical result is two designs at 60 
 
 ## Bundle consumption
 
-The public package builds a browser IIFE at
-`packages/codesign-commerce/dist/browser/codesign-commerce.js` and verifies its
-global API and SHA-256. The private app currently consumes the exact Item 9
-bundle `sha256:7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`
-only
+The rebranded public package builds a browser IIFE at
+`packages/codesign-webmcp/dist/browser/codesign-webmcp.js` and verifies its
+global API and SHA-256. This public-repository rebrand does not modify the
+private KORRHAUS application. That application still consumes the pre-rebrand
+Item 9 browser artifact (`codesign-commerce.js`), bundle
+`sha256:7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`, only
 after WebMCP capability is detected and instantiates:
 
 - `ProposalEngine`.
@@ -124,6 +125,10 @@ after WebMCP capability is detected and instantiates:
 - The private adapter defined inside the designer closure.
 
 The generated asset must carry its public source commit and hash in integration evidence. The private app must not fork or reimplement the public transaction engine.
+
+Adopting the renamed public artifact in KORRHAUS requires a separate private
+adapter update and complete regression/release gate; it is not part of this
+public branding change.
 
 ## Current release boundary
 
