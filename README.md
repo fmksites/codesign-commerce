@@ -30,6 +30,14 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 - A Shopify Liquid deployment overlay that runs the same tested tote bundle on a real Online Store page while retaining Shopify's own storefront WebMCP adapter and standard actions.
 - Deterministic unit, schema, lifecycle, safety, review, asset, and preview tests. Native Chrome 151 and the Codex in-app browser both discovered the exact six tools and executed a visible proposal/preview/Revert flow with zero writes.
 
+The final deployed tote was also rerun through the page-scoped WebMCP client:
+real PNG artwork, two atomic proposal passes, two distinct 640 x 640 previews,
+production-ready validation, atomic invalid-value rejection, and zero-write
+Revert all passed. The Shopify development-store page serves the same tested
+application digest and preserves Shopify's own storefront scripts, but the
+repository does not claim a native Shopify-page agent run until a supported
+client exposes WebMCP on that password-protected page.
+
 The source and complete tote reference are public. The private KORRHAUS
 Manifest 2 adapter is implemented and locally verified, but its WebMCP feature
 remains disabled by default and no KORRHAUS release or traffic change is part
