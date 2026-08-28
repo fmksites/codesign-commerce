@@ -335,6 +335,20 @@ export interface ToteAdapterCounters {
 
 const clone = <T>(value: T): T => structuredClone(value);
 
+const hydrateConfigurationState = (initialState: ConfigurationState): ConfigurationState => {
+  const hydrated = clone(initialState);
+  hydrated.configuratorId = toteManifest.id;
+  hydrated.manifestVersion = toteManifest.version;
+  for (const design of hydrated.designs) {
+    design.selections["branding.text"] ??= "NORTH FORM";
+    design.selections["branding.typeface"] ??= "grotesk";
+    design.selections["branding.ink_color"] ??= "ink";
+    design.selections["branding.scale"] ??= 1;
+    design.selections["branding.rotation"] ??= 0;
+  }
+  return hydrated;
+};
+
 export function configurationToWorkspace(state: ConfigurationState): WorkspaceState {
   return {
     configuratorId: toteManifest.id,
@@ -405,16 +419,7 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
     persist?: (state: ConfigurationState) => void,
     assetStore?: StudioToteAssetProofStore,
   ) {
-    const hydrated = clone(initialState);
-    hydrated.configuratorId = toteManifest.id;
-    hydrated.manifestVersion = toteManifest.version;
-    for (const design of hydrated.designs) {
-      design.selections["branding.text"] ??= "NORTH FORM";
-      design.selections["branding.typeface"] ??= "grotesk";
-      design.selections["branding.ink_color"] ??= "ink";
-      design.selections["branding.scale"] ??= 1;
-      design.selections["branding.rotation"] ??= 0;
-    }
+    const hydrated = hydrateConfigurationState(initialState);
     this.#committed = hydrated;
     this.#visible = clone(hydrated);
     const revisionSuffix = Number(initialState.revision.match(/(\d+)$/)?.[1]);
@@ -636,6 +641,17 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
   subscribeToExternalChanges(listener: (revision: string) => void): () => void {
     this.#listeners.add(listener);
     return () => this.#listeners.delete(listener);
+  }
+
+  synchronizeExternalState(state: ConfigurationState): boolean {
+    const incoming = hydrateConfigurationState(state);
+    if (JSON.stringify(incoming) === JSON.stringify(this.#committed)) return false;
+    this.#committed = incoming;
+    this.#visible = clone(incoming);
+    const revisionSuffix = Number(incoming.revision.match(/(\d+)$/)?.[1]);
+    if (Number.isInteger(revisionSuffix) && revisionSuffix > this.#revisionNumber) this.#revisionNumber = revisionSuffix;
+    for (const listener of this.#listeners) listener(incoming.revision);
+    return true;
   }
 
   applyHumanChange(designId: string, optionId: string, value: JsonPrimitive): boolean {

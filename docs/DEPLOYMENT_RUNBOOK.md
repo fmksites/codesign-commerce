@@ -55,8 +55,10 @@ production promotion.
 5. Verify exact commit metadata, browser bundle and asset hashes, logged-out
    access, cache/security headers, subpath assets, responsive layout, normal
    human fallback and every public link.
-6. Run the final normal ChatGPT and native Chrome WebMCP journeys on this exact
-   deployed build.
+6. Run the final journey in each client named as supported on this exact build;
+   record unavailable clients as limitations instead of substituting scripted
+   calls. Native Chrome and the Codex host are currently verified, while the
+   consumer ChatGPT website path is not supported in the tested session.
 7. Retain the provider URL as a fallback even if a branded domain is added.
 
 ## 5. Optional no-traffic KORRHAUS deployment — separate approval required

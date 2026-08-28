@@ -35,7 +35,7 @@ app.innerHTML = `
   <div class="app-shell">
     <header class="site-header">
       <div class="brand-lockup"><strong>CoDesign Commerce</strong><span>Studio tote reference</span></div>
-      <div class="header-status"><span class="status-dot" aria-hidden="true"></span><span data-save-status>Draft saved on this device</span></div>
+      <div class="header-status" data-save-tone="saved" role="status" aria-live="polite" aria-atomic="true"><span class="status-dot" aria-hidden="true"></span><span data-save-status>Draft saved on this device</span></div>
     </header>
 
     <main class="designer-layout" aria-label="Studio tote reference configurator">
@@ -121,6 +121,10 @@ app.innerHTML = `
       </section>
 
       <aside class="review-rail" aria-label="Proposal and preview review">
+        <section class="reload-notice" data-reload-notice role="status" aria-live="polite" hidden>
+          <strong>Previous proposal was not saved</strong>
+          <p>The temporary agent preview ended when this page reloaded. Ask the agent to recreate it before choosing Keep.</p>
+        </section>
         <section class="progress-panel" data-proposal-progress hidden>
           <div class="rail-heading"><strong>Proposal progress</strong><span data-progress-count>1 of 3</span></div>
           <ol><li data-pass="foundation"><i></i><span>Foundation</span></li><li data-pass="branding"><i></i><span>Branding</span></li><li data-pass="variants"><i></i><span>Variants</span></li></ol>
@@ -140,29 +144,64 @@ app.innerHTML = `
   </div>
 `;
 
+const STORAGE_KEY = "codesign-studio-tote";
+const PENDING_PROPOSAL_KEY = "codesign-studio-tote-pending-proposal";
 const query = new URLSearchParams(window.location.search);
-if (query.has("reset")) window.localStorage.removeItem("codesign-studio-tote");
-const persisted = window.localStorage.getItem("codesign-studio-tote");
+const resetRequested = query.has("reset");
+if (resetRequested) {
+  window.localStorage.removeItem(STORAGE_KEY);
+  window.sessionStorage.removeItem(PENDING_PROPOSAL_KEY);
+  query.delete("reset");
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.search = query.toString();
+  window.history.replaceState(null, "", cleanUrl);
+}
+
+const parseStoredDraft = (value: string | null): { state: ConfigurationState; assets: unknown } | null => {
+  if (!value) return null;
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    const record = typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
+      ? parsed as Record<string, unknown>
+      : null;
+    const candidate = record && "state" in record ? record.state : parsed;
+    if (typeof candidate !== "object" || candidate === null || Array.isArray(candidate)) return null;
+    const state = candidate as Partial<ConfigurationState>;
+    if (typeof state.revision !== "string"
+      || typeof state.activeDesignId !== "string"
+      || !Array.isArray(state.designs)
+      || typeof state.order !== "object"
+      || state.order === null
+      || !state.designs.every((design) => typeof design === "object"
+        && design !== null
+        && "selections" in design
+        && typeof design.selections === "object"
+        && design.selections !== null
+        && "assets" in design
+        && Array.isArray(design.assets))) return null;
+    return { state: candidate as ConfigurationState, assets: record?.assets ?? [] };
+  } catch {
+    return null;
+  }
+};
+
+const storedDraft = parseStoredDraft(window.localStorage.getItem(STORAGE_KEY));
 let seed = structuredClone(toteInitialState);
 let committedAssets: unknown = [];
-if (persisted) {
-  try {
-    const parsed = JSON.parse(persisted) as unknown;
-    if (typeof parsed === "object" && parsed !== null && "state" in parsed) {
-      seed = (parsed as { state: ConfigurationState }).state;
-      committedAssets = (parsed as { assets?: unknown }).assets ?? [];
-    } else {
-      seed = parsed as ConfigurationState;
-    }
-  } catch { /* keep public fixture */ }
+if (storedDraft) {
+  seed = storedDraft.state;
+  committedAssets = storedDraft.assets;
 }
+let interruptedProposal = !resetRequested && window.sessionStorage.getItem(PENDING_PROPOSAL_KEY) === "true";
+let onDraftPersisted = (): void => {};
 const assetStore = new StudioToteAssetProofStore(committedAssets);
 const adapter = new StudioToteAdapter(seed, (state) => {
-  window.localStorage.setItem("codesign-studio-tote", JSON.stringify({
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
     schemaVersion: 1,
     state,
     assets: assetStore.exportCommitted(),
   }));
+  onDraftPersisted();
 }, assetStore);
 assetStore.setBaseRevisionProvider(() => adapter.committedState.revision);
 let engine: ProposalEngine<ToteSnapshot, StudioToteResolvedAsset>;
@@ -194,9 +233,25 @@ const artworkRemove = document.querySelector<HTMLButtonElement>("[data-artwork-r
 const scaleOutput = document.querySelector<HTMLOutputElement>("[data-scale-output]");
 const rotationOutput = document.querySelector<HTMLOutputElement>("[data-rotation-output]");
 const resetButton = document.querySelector<HTMLButtonElement>("[data-reset-design]");
-if (!reviewContainer || !tabs || !nameInput || !saveStatus || !preview || !mark || !artworkMark || !controls || !audit || !assetAudit || !productionNote || !totalQuantity || !canvasTitle || !canvasMode || !canvasSpec || !progressPanel || !progressCount || !previewList || !previewCount || !mobileTabs || !artworkName || !artworkFile || !artworkRemove || !scaleOutput || !rotationOutput || !resetButton) {
+const reloadNotice = document.querySelector<HTMLElement>("[data-reload-notice]");
+const headerStatus = saveStatus?.closest<HTMLElement>(".header-status");
+if (!reviewContainer || !tabs || !nameInput || !saveStatus || !headerStatus || !preview || !mark || !artworkMark || !controls || !audit || !assetAudit || !productionNote || !totalQuantity || !canvasTitle || !canvasMode || !canvasSpec || !progressPanel || !progressCount || !previewList || !previewCount || !mobileTabs || !artworkName || !artworkFile || !artworkRemove || !scaleOutput || !rotationOutput || !resetButton || !reloadNotice) {
   throw new Error("Studio tote configurator markup is incomplete");
 }
+
+const setSaveStatus = (message: string, tone: "saved" | "temporary" | "stale"): void => {
+  saveStatus.textContent = message;
+  headerStatus.dataset.saveTone = tone;
+};
+
+const clearInterruptedProposalNotice = (): void => {
+  interruptedProposal = false;
+  window.sessionStorage.removeItem(PENDING_PROPOSAL_KEY);
+  reloadNotice.hidden = true;
+};
+onDraftPersisted = clearInterruptedProposalNotice;
+reloadNotice.hidden = !interruptedProposal;
+if (interruptedProposal) setSaveStatus("Previous temporary proposal was not saved", "temporary");
 
 let activeDesignId = adapter.visibleState.activeDesignId;
 
@@ -541,13 +596,48 @@ controller.subscribe((state) => {
   for (const control of controls.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement>("button, input, select")) control.disabled = locked;
   nameInput.disabled = locked;
   resetButton.disabled = locked;
-  saveStatus.textContent = ["temporary", "busy", "stale"].includes(state.kind)
-    ? "Temporary proposal not saved"
-    : "Draft saved on this device";
+  if (["temporary", "busy", "stale", "commit-retry", "commit-uncertain"].includes(state.kind)) {
+    interruptedProposal = true;
+    window.sessionStorage.setItem(PENDING_PROPOSAL_KEY, "true");
+    reloadNotice.hidden = true;
+    setSaveStatus(state.kind === "stale" ? "Proposal expired · not saved" : "Temporary proposal not saved", state.kind === "stale" ? "stale" : "temporary");
+  } else if (["committed", "reverted"].includes(state.kind)) {
+    clearInterruptedProposalNotice();
+    setSaveStatus(state.kind === "committed" ? "Proposal kept on this device" : "Proposal reverted · draft unchanged", "saved");
+  } else if (!interruptedProposal) {
+    setSaveStatus("Draft saved on this device", "saved");
+  }
   if (state.kind === "reverted") assetStore.releaseTemporary();
   render(true);
 });
 window.addEventListener("pagehide", () => assetStore.releaseTemporary(), { once: true });
+
+window.addEventListener("storage", (event) => {
+  if (event.storageArea !== window.localStorage || event.key !== STORAGE_KEY) return;
+  const external = event.newValue === null
+    ? { state: structuredClone(toteInitialState), assets: [] as unknown }
+    : parseStoredDraft(event.newValue);
+  if (!external) return;
+  assetStore.replaceCommitted(external.assets);
+  let externalState = external.state;
+  const currentState = adapter.committedState;
+  if (externalState.revision === currentState.revision && JSON.stringify(externalState) !== JSON.stringify(currentState)) {
+    externalState = { ...structuredClone(externalState), revision: `tote-revision-${Date.now()}` };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      schemaVersion: 1,
+      state: externalState,
+      assets: assetStore.exportCommitted(),
+    }));
+  }
+  if (!adapter.synchronizeExternalState(externalState)) return;
+  activeDesignId = adapter.visibleState.activeDesignId;
+  reloadNotice.hidden = true;
+  setSaveStatus(
+    engine.status === "stale" ? "Proposal expired after another tab changed the draft" : "Draft updated in another tab",
+    engine.status === "stale" ? "stale" : "saved",
+  );
+  render(true);
+});
 
 for (const button of document.querySelectorAll<HTMLButtonElement>("[data-option][data-value]")) {
   button.addEventListener("click", () => {
@@ -608,9 +698,10 @@ artworkRemove.addEventListener("click", () => {
 });
 
 resetButton.addEventListener("click", () => {
-  window.localStorage.removeItem("codesign-studio-tote");
+  window.localStorage.removeItem(STORAGE_KEY);
+  clearInterruptedProposalNotice();
   const url = new URL(window.location.href);
-  url.search = "?reset=true";
+  url.searchParams.set("reset", "true");
   window.location.assign(url);
 });
 

@@ -131,8 +131,9 @@
   the standalone file. Commit `1150c40703816f3729ec9f8de6f93db9e172a5e1`
   now publishes and labels both the core and tote application bundles; stable
   and immutable downloads independently match both hashes. Clean-clone QA and
-  hosted CI pass. Item 11's engineering scope is complete; consumer ChatGPT and
-  the participant-owned video/submission fields remain Item 12 gates. Evidence:
+  hosted CI pass. Item 11's engineering scope is complete; consumer ChatGPT
+  compatibility and the participant-owned video/submission fields remain Item
+  12 gates. Evidence:
   `docs/evidence/TOTE_FINAL_CONTROL_QA_2026-08-28.md`.
 
 - [ ] **12. Prepare Devpost handoff**
@@ -141,4 +142,4 @@
   Acceptance: The handoff clearly communicates “chat to custom design of products on Shopify,” proves non-trivial WebMCP and a coherent visual product, distinguishes tote from KORRHAUS, contains no unsupported compatibility/win claims, and provides everything `$prepare-submission` needs without exposing private data.
   Verify: Review every handoff statement against the repository, stable URL, official challenge requirements, dated evidence, and public-boundary scan; confirm all required links are public and functional; confirm the next command is `$prepare-submission` and that nothing has been submitted without explicit approval.
 
-  Draft checkpoint (28 August 2026): Live Devpost requirements, judging criteria and dates were fetched while authenticated and registered. `devpost-submission.md` now contains the verified product story, runtime/AI/Codex explanation, exact test prompt and commands, public and immutable URLs, release commit and bundle hash, five-shot evidence plan, known limitations, Built With list, judging-criteria alignment, and every current official form field. It is deliberately still a draft: literal consumer ChatGPT validation, the public narrated YouTube video, thumbnail choice, Felix's submitter/country/app-status confirmations, legal attestations and final Devpost approval remain open. Nothing was sent to Devpost.
+  Draft checkpoint (28 August 2026): Live Devpost requirements, judging criteria and dates were fetched while authenticated and registered. `devpost-submission.md` now contains the verified product story, runtime/AI/Codex explanation, exact test prompt and commands, public and immutable URLs, release commit and bundle hash, five-shot evidence plan, known limitations, Built With list, judging-criteria alignment, and every current official form field. The literal consumer ChatGPT website check was performed in ordinary Chrome and is recorded as blocked by that client's unavailable webpage-tool surface; it is not presented as a CoDesign pass. The packet is deliberately still a draft because the public narrated YouTube video, thumbnail choice, Felix's submitter/country/app-status confirmations, legal attestations and final Devpost approval remain open. Nothing was sent to Devpost.

@@ -209,8 +209,6 @@ const stylesheet = String.raw`
   @container (max-width: 340px) {
     .panel { padding: 16px; }
     .temporary { gap: 12px; }
-    .changes,
-    .review-details { display: none; }
     .actions { border-top: 1px solid var(--codesign-review-divider); padding-top: 12px; }
     h2 { font-size: 20px; }
     .summary { font-size: 13px; }

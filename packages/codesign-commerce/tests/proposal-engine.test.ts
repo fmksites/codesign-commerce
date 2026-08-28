@@ -290,6 +290,36 @@ describe("Manifest 2 proposal transaction engine", () => {
     })).resolves.toMatchObject({ ok: true, proposalRevision: 2, deduplicated: false });
   });
 
+  test("deduplicates an exact retry of the initial operation without proposal identity", async () => {
+    const adapter = new TestWorkspaceAdapter();
+    const engine = new ProposalEngine(workspaceTestManifest, adapter);
+    const input = firstInput("lost-first-response");
+    const first = await engine.apply(input);
+    expect(first).toMatchObject({ ok: true, proposalRevision: 1, deduplicated: false });
+
+    const retry = await engine.apply(input);
+    expect(retry).toMatchObject({
+      ok: true,
+      proposalId: first.ok ? first.proposalId : undefined,
+      proposalRevision: 1,
+      deduplicated: true,
+    });
+    expect(adapter.counters).toMatchObject({ validate: 1, preview: 1, localWrites: 0 });
+  });
+
+  test("rejects a conflicting reuse of the initial operation identifier", async () => {
+    const adapter = new TestWorkspaceAdapter();
+    const engine = new ProposalEngine(workspaceTestManifest, adapter);
+    await expect(engine.apply(firstInput("conflicting-first-response"))).resolves.toMatchObject({ ok: true });
+
+    await expect(engine.apply({
+      ...firstInput("conflicting-first-response"),
+      operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: "body.color", value: "rose" }],
+    })).resolves.toMatchObject({ ok: false, error: { code: "OPERATION_ID_CONFLICT" } });
+    expect(engine.status).toBe("reviewable");
+    expect(adapter.visible.variants[0]!.controls["body.color"]).toBe("navy");
+  });
+
   test("does not expose raw rejected identifiers in public errors", async () => {
     const adapter = new TestWorkspaceAdapter();
     const engine = new ProposalEngine(workspaceTestManifest, adapter);

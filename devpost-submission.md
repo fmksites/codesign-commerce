@@ -246,7 +246,10 @@ Existing public-repository captures:
   bundles match their separately labelled metadata digests.
 - KORRHAUS: real private integration is locally complete and feature-off; it is
   not claimed as a live WebMCP production release.
-- Still required: literal consumer ChatGPT desktop run, final video recording,
+- Consumer ChatGPT website result: tested in ordinary Chrome on 28 August 2026;
+  that client searched plugins for `WebMCP`, returned an empty result and did
+  not expose the webpage's tools. This path is not claimed as supported.
+- Still required: final video recording in a verified WebMCP-capable host,
   public YouTube upload, thumbnail choice, entrant attestations, and explicit
   final Devpost approval.
 - Nothing has been sent to Devpost.
@@ -257,9 +260,12 @@ Existing public-repository captures:
   currently requires its official flag or origin-trial path. The final current
   source passed the testing-flag path; the immutable public exact-six flow was
   separately verified through the Codex agent host.
-- The literal consumer ChatGPT desktop journey remains to be performed by the
-  participant on the deployed build. Codex in-app browser evidence is recorded
-  separately and is not mislabeled as that consumer run.
+- A literal consumer ChatGPT website journey was performed in ordinary Chrome
+  on the deployed build and failed at client capability discovery: ChatGPT
+  searched its plugin directory for `WebMCP`, found none, and could not invoke
+  the page. The separate ChatGPT desktop-app in-app-browser route remains
+  untested. Neither result is mislabeled as the passing Codex/native-Chrome
+  evidence.
 - CoDesign Commerce is not a universal renderer or zero-code integration. A
   merchant must supply a manifest and a small adapter to its real functions.
 - The public release stops at saved design. It deliberately exposes no ordering,
@@ -293,8 +299,10 @@ Official fields fetched from Devpost on 28 August 2026:
 - **Agents/clients tested (required):** Codex desktop agent exact-six WebMCP on
   the final immutable public release; native Chrome 151 exact-six plus real
   supplied artwork on the current source using the official testing flag; and
-  ordinary Chrome on the public configurator. Literal consumer ChatGPT desktop
-  is pending and must be added only after it passes.
+  ordinary Chrome on the public configurator. The consumer ChatGPT website was
+  also tested in ordinary Chrome, but its plugin search returned no `WebMCP`
+  integration and no webpage tools; that path is explicitly not claimed as
+  supported. The separate ChatGPT desktop-app route remains untested.
 - **AI tools leveraged (required):** OpenAI Codex for product framing,
   architecture, implementation, testing, browser verification, release QA, and
   documentation. Shopper runtime is provider-neutral and uses the agent host

@@ -366,6 +366,25 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
       }
       return errorResult("OPERATION_IN_PROGRESS", "Another proposal operation is still in progress", true);
     }
+    // The first successful request may be retried without proposal identity
+    // when its response was lost. Let the reducer fingerprint decide whether
+    // this is an exact replay or a conflicting operation-id reuse before
+    // requiring proposal identity for normal refinements.
+    if (this.#active
+      && input.proposalId === undefined
+      && input.proposalRevision === undefined
+      && this.#active.results.has(input.operationId)) {
+      try {
+        const replay = this.#active.reducer.fork().apply(this.#active.state, input);
+        if (!replay.deduplicated) throw new Error("Missing idempotent proposal replay");
+        const prior = this.#active.results.get(input.operationId);
+        if (!prior) throw new Error("Missing idempotent proposal result");
+        return { ...structuredClone(prior.result), deduplicated: true };
+      } catch (error) {
+        if (error instanceof OperationValidationError) return this.#operationError(error);
+        return errorResult("ADAPTER_FAILURE", "The proposal retry could not be resolved safely", true, this.#active.baseRevision);
+      }
+    }
     if (this.#active) {
       if (input.proposalId !== this.#active.id || input.proposalRevision !== this.#active.revision) {
         return errorResult("STALE_PROPOSAL_REVISION", "The proposal identity or revision is no longer current", true, this.#active.baseRevision);

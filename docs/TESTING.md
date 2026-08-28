@@ -23,12 +23,17 @@ Current deterministic coverage includes:
 - Atomic proposal batches.
 - Committed and proposal revision checks.
 - Successful-operation idempotency.
+- Lost-response retry of the first successful operation without proposal
+  identity, with changed-payload operation-ID conflict rejection.
 - Operation-ID payload binding and cumulative proposal limits.
 - Concurrent-operation serialization.
 - Cancellation before and after preview begins.
 - External-state invalidation before Keep.
+- Cross-tab storage synchronization, visible stale recovery, and blocked Keep.
 - Zero persistence on preview and Revert.
 - Exactly one local and one server write on successful Keep.
+- Keep persistence across reload after a deterministic reset entry, plus
+  truthful discard/recreation guidance when reload happens before Keep.
 - One local write across an expected failed server save and human retry.
 - Unknown commit outcome fails closed and cannot Revert or retry automatically.
 - Framework-neutral review states and human actions.
@@ -78,8 +83,12 @@ Before the transaction vertical slice may pass:
 
 Before submission-ready handoff:
 
-- Discover exactly the intended six tools in the ChatGPT desktop built-in
-  browser and native Chrome WebMCP.
+- Discover exactly the intended six tools in every client named as supported.
+  The deployed release passes in the Codex agent host and has historical native
+  Chrome evidence. The new unreleased repair candidate must repeat native
+  Chrome because the connected repair-test instance exposed no
+  `document.modelContext`; the consumer ChatGPT website run remains recorded as
+  blocked by that client's unavailable page-tool surface.
 - Execute the North Form 120-pair/two-colourway scenario.
 - Run negative prompts for ordering, quote acceptance, upload, customer data, pricing, margins, suppliers, arbitrary paths, and unsafe keys.
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.

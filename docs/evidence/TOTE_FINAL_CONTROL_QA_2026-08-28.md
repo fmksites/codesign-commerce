@@ -131,7 +131,8 @@ The browser-control inspection realm does not expose nonstandard page globals,
 so native execution was measured by the page's development-only main-world
 proof harness rather than inferred from `evaluate()`. The exact immutable
 public release was independently exercised through the Codex agent host as
-described below. A literal consumer ChatGPT conversation remains separate.
+described below. The later literal consumer ChatGPT website check is recorded
+separately below.
 
 ## Exact clean-clone verification
 
@@ -187,6 +188,18 @@ An invalid embroidery-on-8-oz request returned
 unchanged. The isolated proposal was discarded without Keep or a persistence
 write.
 
-The engineering release is ready for submission use. The literal consumer
-ChatGPT run, public video, legal attestations and final Devpost submission
-remain participant-owned gates.
+The engineering release is ready for submission use in the verified Codex and
+native-Chrome WebMCP paths. A literal consumer ChatGPT website run was performed
+in ordinary Chrome after release: ChatGPT reached the tote and artwork, but its
+only tool action was a plugin search for `WebMCP`, which returned an empty
+result. It therefore exposed no page tools, created no proposal, returned no
+preview and performed no persistence or commercial action. This is a current
+client-availability limitation, not evidence that the page contract failed.
+The separate ChatGPT desktop-app in-app-browser path remains untested.
+
+Evidence capture:
+
+- `screenshots/chatgpt-web-consumer-webmcp-unavailable-2026-08-28.png`
+
+The public video, legal attestations and final Devpost submission remain
+participant-owned gates.

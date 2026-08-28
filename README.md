@@ -26,10 +26,13 @@ Manifest 2 adapter is implemented and locally verified, but its WebMCP feature
 remains disabled by default and no KORRHAUS release or traffic change is part
 of this public repository release. The exact-six deployed flow is verified in
 the Codex in-app browser and the ordinary Chrome configurator is verified on the
-public release. The explicitly deferred literal normal-ChatGPT conversation,
-required YouTube video, and Devpost submission remain separately evidenced and
-approval-gated. The optional model-evaluation corpus and scorer are quality
-tooling, not proof of an actual model run.
+public release. A separate consumer ChatGPT website run in ordinary Chrome was
+also performed: that client searched its plugin directory for “WebMCP,” found
+no matching plugin, and did not expose or invoke the webpage's six tools. The
+project therefore does not claim that path. The required YouTube video and
+Devpost submission remain separately approval-gated. The optional
+model-evaluation corpus and scorer are quality tooling, not proof of an actual
+model run.
 
 ## Local verification
 

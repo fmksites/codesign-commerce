@@ -1,7 +1,9 @@
 # Submission checklist
 
-**Current status:** final public engineering release verified; consumer
-ChatGPT, video and human submission gates remain, 28 August 2026
+**Current status:** deployed release remains available, but a newer local
+transaction/usability repair candidate is not yet pushed or deployed; consumer
+ChatGPT web is blocked by that client, while video and human submission gates
+remain, 28 August 2026
 
 Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
 `BLOCKED BY CLIENT` needs a compatible external client, and `APPROVAL` is an
@@ -43,6 +45,11 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 - `PASS` — local tote actual-browser flows cover staged changes, distinct
   previews, targeted refinement, zero-write Revert, one-state-commit Keep,
   ordinary human fallback, desktop and 390 px mobile.
+- `PASS` — the unreleased repair candidate passes initial-request retry,
+  cross-tab stale protection, Keep-after-reload, unsaved-reload recovery,
+  visible narrow-rail details and mobile keyboard/target-size checks.
+- `PENDING` — commit, push, clean-clone and deploy that repair candidate before
+  treating it as the submission build.
 - `PASS` — clean `--no-local` release clone of release `1150c4070381`:
   offline `npm ci`, zero reported vulnerabilities, 20 files / 177 tests,
   typecheck, build, bundle, judge,
@@ -113,18 +120,27 @@ The public tote release does not depend on KORRHAUS production promotion.
   six current tools through `document.modelContext`, executed temporary
   proposal and real-artwork paths, produced real previews, and recorded zero
   writes/imports/commits.
+- `PENDING` — repeat native Chrome on the repair release. The connected Chrome
+  used for its final local ordinary-browser smoke exposed no
+  `document.modelContext`, so the historical pass is not relabeled as a pass on
+  the new bundle.
 - `PASS` — the exact immutable public release completed the same exact-six
   contract through the Codex agent host. Chrome native main-world proof and
   immutable public agent proof are recorded separately rather than conflated.
-- `PENDING` — literal normal ChatGPT desktop conversation on the deployed tote,
-  including artwork transport, inline image previews, refinement and explicit
-  action-time Keep confirmation.
+- `BLOCKED BY CLIENT` — a literal ChatGPT website run in ordinary Chrome on 28
+  August 2026 reached the public tote and artwork, but ChatGPT only searched its
+  plugin directory for `WebMCP`, received an empty result, exposed no webpage
+  tools, created no proposal and returned no previews. This is evidence about
+  that consumer client, not a tote implementation failure.
+- `NOT TESTED` — the separate ChatGPT desktop-app in-app-browser path on the
+  exact final release. It must not be inferred from either the failed ChatGPT
+  website run or the passing Codex/native-Chrome evidence.
 - `PASS` — the existing Codex task independently executed the exact two-variant
   North Form flow and the focused final diagnostics/operation-limit regression;
-  this is strong engineering evidence but does not replace the literal consumer
-  ChatGPT check above.
-- `NOT CLAIMED` — ChatGPT website in ordinary Chrome, Claude and other clients
-  until separately documented and actually verified.
+  this is strong engineering evidence and is kept distinct from the blocked
+  consumer ChatGPT website check above.
+- `NOT CLAIMED` — Claude and other clients until separately documented and
+  actually verified.
 
 ## Submission materials
 

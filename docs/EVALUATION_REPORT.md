@@ -8,22 +8,25 @@ release checks. None is used as a substitute for another.
 
 ## Public core and tote
 
-At local commit `afa8b598e1af5ddb6d82afd90f18430a99d81326`:
+The newest unreleased local repair candidate is based on commit
+`8a5d3e175d5977d8689fb22d779d3dc592b4af3e`. Its working-tree changes are not
+yet an immutable commit or public release:
 
 - `npm ci --offline` completed from a fresh `--no-local` clone and reported
   zero dependency vulnerabilities.
-- 20 test files / 175 tests passed.
+- 20 test files / 180 tests passed.
 - Strict TypeScript checks passed for the core and studio tote.
 - The package, browser bundle, tote and combined judge artifact built.
-- The public-boundary check passed for 166 clean-clone candidates.
-- Documentation links passed for 65 files.
+- The public-boundary check passed for 216 public candidates.
+- Documentation links passed for 73 files.
 - The 25-case corpus across six categories and its synthetic scorer self-test
   passed structural validation.
 - Tote parity accounted for all 25 human surfaces: 14 manifest controls, four
   variant operations, one asset slot and six legitimate exclusions.
-- The judge artifact bound package `0.1.0`, the exact commit and browser bundle
-  `sha256:7a26da66b510b52acc4e358dd39cecabcf3fd474559adf055a2e507c6491ce27`.
-- The clean clone remained unmodified after build and verification.
+- The judge artifact bound package `0.1.0`, browser bundle
+  `sha256:03c98c4be01c9928dfd70b119d2567061ca30cdf6d4a4d1195c3bb1d429becc0`
+  and tote application bundle
+  `sha256:dd3e5cfaa87fdc272ab9b0e7512881ce4c5730118ba784f0b9e3e25bd4d40d01`.
 
 Deterministic coverage includes strict Manifest 2.0 validation; public-state
 reconstruction; prototype/unknown-field rejection; atomic mixed operations;
@@ -37,9 +40,22 @@ ordinary-browser fallback.
 The current tote flow has also run in the Codex in-app browser with two named
 variants, real supplied artwork, live merchant-renderer changes, distinct
 revision-bound WebP previews, zero-write Revert and one page-owned Keep commit.
-Native Chrome 151 discovered and executed the same exact-six contract on the
-Item 8 build. Those are actual runtime results, but the final deployed-build
-Chrome repeat and the literal normal-ChatGPT conversation remain pending.
+Native Chrome 151 discovered and executed the same exact-six contract, and the
+exact immutable public release completed the North Form flow through the Codex
+agent host. Those are actual runtime results. The later consumer ChatGPT
+website run is separately recorded as blocked by that client's unavailable
+webpage-tool surface; the ChatGPT desktop-app path remains untested.
+
+The latest focused repair regression additionally passed exact initial-request
+deduplication, changed-payload conflict, two-tab stale invalidation, Keep across
+reload, truthful unsaved-reload recovery, narrow-rail review details, 390 px
+mobile focus/target checks and an empty console. See
+[`evidence/TOTE_TRANSACTION_REPAIR_QA_2026-08-28.md`](./evidence/TOTE_TRANSACTION_REPAIR_QA_2026-08-28.md).
+
+The connected ordinary Chrome used for the final local smoke exposed no
+`document.modelContext`. Historical Chrome 151 native proof remains valid for
+its named older build, but is not substituted for a native-WebMCP pass on this
+unreleased repair bundle.
 
 ## Private KORRHAUS integration
 
@@ -102,9 +118,10 @@ Before submission claims are final:
    verify anonymous clean-clone instructions and hosted CI on the exact commit.
 2. Deploy the static landing plus tote after approval and verify the exact
    served hashes, links, headers, desktop/mobile ordinary UI and WebMCP tools.
-3. Run the complete normal ChatGPT desktop conversation on that deployed build,
-   including supplied artwork, inline preview, refinement and action-time Keep
-   confirmation.
+3. Run each consumer client intended for a compatibility claim on that deployed
+   build. The 28 August ChatGPT website run in ordinary Chrome is recorded as
+   blocked by its unavailable webpage-tool surface; the separate ChatGPT
+   desktop-app path remains untested and unclaimed.
 4. Repeat the native Chrome WebMCP flow on the same deployed build.
 5. Treat KORRHAUS zero-traffic deployment, production traffic and live-route
    verification as separate optional flagship gates; the tote release does not

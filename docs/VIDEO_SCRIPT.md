@@ -9,8 +9,10 @@ owned/authorized visual assets and no copyrighted music.
 
 - Record the exact deployed tote release, not a hot-reloading local build.
 - Use the anonymous English reset URL and supplied North Form demo artwork.
-- Keep the ChatGPT conversation, background browser, public landing, tote and
-  repository ready before recording.
+- Keep the verified Codex agent conversation, background browser, public
+  landing, tote and repository ready before recording. Do not use the consumer
+  ChatGPT website path: the 28 August final-release test did not expose webpage
+  WebMCP tools there.
 - Rehearse the final natural-language run on the exact deployed build. Do not
   call direct scripted tool calls an agent run.
 - Keep progress messages, the visible tote canvas, inline chat previews and
@@ -41,7 +43,8 @@ owned/authorized visual assets and no copyrighted music.
   commit counter.
 - If KORRHAUS is still feature-off, show the local exact-six evidence screenshot
   and say so plainly. The tote is the submitted working live URL.
-- If normal ChatGPT does not display the renderer images inline, do not hide the
-  limitation. Fix or narrow the claim before recording.
+- Record in a host that has already passed the exact deployed flow. Do not cut
+  from a failed consumer ChatGPT website attempt to a scripted page invocation
+  and present it as one successful agent run.
 - The finished export must stay under three minutes; judges are not required to
   watch beyond that limit.

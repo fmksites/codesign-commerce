@@ -112,6 +112,11 @@ export class StudioToteAssetProofStore implements AssetStagingAdapter<StudioTote
 
   constructor(committedAssets: unknown = []) {
     this.#sandbox = new AssetSandbox(toteManifest, this);
+    this.replaceCommitted(committedAssets);
+  }
+
+  replaceCommitted(committedAssets: unknown = []): void {
+    this.#committed.clear();
     if (!Array.isArray(committedAssets)) committedAssets = [];
     for (const candidate of committedAssets as unknown[]) {
       if (!isRecord(candidate)

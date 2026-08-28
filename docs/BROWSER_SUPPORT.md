@@ -11,9 +11,9 @@ build used for every actual-browser check.
 | Ordinary Chrome/Chromium, desktop | Verified locally | Complete human tote and KORRHAUS UI; no tools or proposal panel when `document.modelContext` is absent | Repeat on the deployed tote URL and any promoted KORRHAUS route |
 | Ordinary 390 px mobile browser | Verified locally | Responsive human UI, no horizontal overflow, proposal review fallback | Repeat on the deployed tote URL |
 | Codex desktop in-app browser | Verified locally | Exact-six discovery, visible proposals, real artwork, renderer previews, zero-write Revert and exactly-once page Keep | Repeat against the immutable deployed tote build |
-| ChatGPT desktop in-app browser | Pending final release test | Earlier feasibility work proved inline renderer images and page Keep behavior, but the final normal ChatGPT conversation/permission journey was explicitly deferred | Required before claiming the full chat-first experience |
-| Chrome 149+ native WebMCP | Contract verified, final release repeat pending | Chrome 151 discovered and executed the exact six tools under the official testing path on the Item 8 build | Repeat on the exact deployed tote build with WebMCP testing/origin support enabled |
-| ChatGPT website running in ordinary Chrome | Not claimed | The normal website remains usable, but OpenAI site-tool availability is not inferred from Chrome alone | Claim only if OpenAI documents and an actual run proves this client path |
+| ChatGPT desktop in-app browser | Not tested on the final release | Official site-tool guidance describes a page-scoped desktop-app path, but this exact final release has not been run there | Claim only after a separately documented final-release run |
+| Chrome 149+ native WebMCP | Historical contract verified; new repair candidate blocked in the connected instance | Chrome 151 discovered and executed the exact six tools under the official testing path on the Item 8 build. The connected Chrome used for the 28 August repair smoke exposed no `document.modelContext`; ordinary UI still passed | Repeat on the exact deployed repair build with WebMCP testing/origin support enabled before making a current native-Chrome claim |
+| ChatGPT website running in ordinary Chrome | Verified unavailable in the tested session | On 28 August 2026 the submitted prompt caused ChatGPT to search plugins for `WebMCP`; the result was empty, no webpage tool was exposed, no proposal ran, and no preview was returned | Do not use this path in the demo or claim it as supported unless OpenAI changes the client and a new run proves it |
 | Claude or other agent clients | Not claimed | The protocol and manifest are client-neutral by design | Verify each named client before adding it to submission claims |
 
 ## Supported behavior
@@ -37,6 +37,9 @@ as native WebMCP.
 - A local or zero-traffic run does not prove the submitted public URL.
 - A returned data URL proves preview transport only when the supported client
   actually displays the matching image inline.
+- Native WebMCP support in Chrome does not automatically make the ChatGPT
+  website inside that browser a WebMCP agent host. Those are separate clients
+  and require separate evidence.
 - The KORRHAUS feature must not be called live until its separately approved
   production route and feature flag are verified.
 

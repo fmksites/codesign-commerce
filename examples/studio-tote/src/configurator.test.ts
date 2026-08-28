@@ -126,6 +126,24 @@ describe("studio tote portability adapter", () => {
     expect(persisted).toHaveLength(2);
   });
 
+  it("synchronizes an authoritative draft from another browser tab", () => {
+    const adapter = new StudioToteAdapter();
+    const revisions: string[] = [];
+    adapter.subscribeToExternalChanges((revision) => revisions.push(revision));
+    const external = clone(toteInitialState);
+    external.revision = "tote-revision-4";
+    external.designs[0]!.selections["bag.color"] = "charcoal";
+
+    expect(adapter.synchronizeExternalState(external)).toBe(true);
+    expect(adapter.committedState).toEqual(external);
+    expect(adapter.visibleState).toEqual(external);
+    expect(revisions).toEqual(["tote-revision-4"]);
+    expect(adapter.synchronizeExternalState(external)).toBe(false);
+
+    expect(adapter.applyHumanChange("tote-1", "handles.length", "short")).toBe(true);
+    expect(adapter.committedState.revision).toBe("tote-revision-5");
+  });
+
   it("keeps the human path complete for typography, transforms, variants, and artwork", async () => {
     const tinyPng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
     const store = new StudioToteAssetProofStore();
