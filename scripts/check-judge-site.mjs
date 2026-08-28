@@ -10,6 +10,7 @@ const verifiedFlagshipUrl =
 
 const requiredFiles = [
   "index.html",
+  "404.html",
   "styles.css",
   "app.js",
   "favicon.svg",
@@ -22,8 +23,9 @@ const requiredFiles = [
 ];
 await Promise.all(requiredFiles.map((file) => access(path.join(site, file))));
 
-const [landingHtml, landingJs, toteHtml, metadataText, headersText] = await Promise.all([
+const [landingHtml, notFoundHtml, landingJs, toteHtml, metadataText, headersText] = await Promise.all([
   readFile(path.join(site, "index.html"), "utf8"),
+  readFile(path.join(site, "404.html"), "utf8"),
   readFile(path.join(site, "app.js"), "utf8"),
   readFile(path.join(site, "tote", "index.html"), "utf8"),
   readFile(path.join(site, "site-metadata.json"), "utf8"),
@@ -56,6 +58,9 @@ if (!landingHtml.includes('./tote/north-form-supplied-mark.png')) {
 }
 if (legacyKorrhausPathExists || landingHtml.includes("./korrhaus/") || landingHtml.includes("KORRHAUS public reference")) {
   throw new Error("Judge artifact still exposes the retired synthetic KORRHAUS configurator");
+}
+if (!notFoundHtml.includes("This route does not exist") || !notFoundHtml.includes("does not contain a second KORRHAUS Sock Designer")) {
+  throw new Error("Judge artifact lacks an explicit static not-found boundary");
 }
 for (const requiredHeader of [
   "Content-Security-Policy:",
