@@ -27,7 +27,7 @@
   "rules_acknowledged": true,
   "learning": {
     "status": "active",
-    "current_step": "release-verification",
+    "current_step": "build",
     "completed_steps": [
       "onboard",
       "scope",
@@ -40,7 +40,7 @@
   },
   "submission": {
     "draft_file": "devpost-submission.md",
-    "status": "not-started"
+    "status": "handoff-pending"
   },
-  "next_command": "build-project-item-11"
+  "next_command": "complete-normal-chatgpt-check-then-prepare-submission"
 }

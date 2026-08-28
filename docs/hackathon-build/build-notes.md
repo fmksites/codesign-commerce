@@ -374,3 +374,16 @@
 - Rewrote current release, browser-support, testing, evaluation, KORRHAUS mapping, submission checklist and mandatory-video documents to remove stale five-tool/current-deployment claims.
 - Read-only remote verification found public `main` still at historical baseline `e986e12`; current Manifest 2.0 work has not been pushed.
 - Item 11 remains open. The next action is an explicit owner decision on public source publication and tote hosting; no external mutation occurred.
+
+## 28 August 2026 — Item 11 public release and runtime verification
+
+- Felix approved public source publication, tote deployment and extensive runtime testing; this did not authorize a KORRHAUS production release or traffic change.
+- Published the Manifest 2.0 source and Apache-2.0 license at `https://github.com/fmksites/codesign-commerce` and passed hosted CI on the exact public history.
+- Deployed the static judge artifact to `https://codesign-commerce.pages.dev/` with immutable release `https://966f9e17.codesign-commerce.pages.dev/`.
+- Hardened the public artifact after deployed checks found three concrete defects: missing explicit 404 routing, release links still labelled pending, and a tote favicon 404. All three were fixed, retested and redeployed.
+- The deployed Codex in-app browser discovered exactly six tools and completed the real-artwork North Form flow through three coherent proposal revisions, two distinct inline previews, production validation, stale retry, invalid-value rejection, zero-write Revert and one visible Keep producing exactly one commit.
+- Ordinary desktop, 390 px mobile and Chrome tests passed live canvas editing, two variants, saved-state reread, deterministic reset, no overflow and zero console warnings/errors.
+- The connected release-test Chrome did not expose `document.modelContext`. Earlier Chrome 151 exact-six evidence remains dated evidence, but the immutable-release native-WebMCP repeat is not claimed for this Chrome instance.
+- KORRHAUS production remained untouched. The public release metadata keeps `flagshipUrl: null` and `flagshipVerified: false`.
+- Item 11 now waits only on the explicitly deferred literal normal-ChatGPT desktop conversation repeat. The public YouTube video and final Devpost actions remain human-owned Item 12 gates.
+- Dated evidence: `docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md`.

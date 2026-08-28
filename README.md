@@ -1,5 +1,9 @@
 # CoDesign Commerce
 
+**Live challenge demo:** <https://codesign-commerce.pages.dev/>
+
+**Public source:** <https://github.com/fmksites/codesign-commerce>
+
 CoDesign Commerce is an open-source WebMCP layer for existing complex product configurators. It lets an agent read an allowlisted configuration, propose coordinated changes in the merchant's own visible preview, and validate coupled product rules without silently saving anything. A person must explicitly Keep or Revert the temporary proposal.
 
 The 2026 WebMCP Challenge entry will use KORRHAUS's existing Custom Sock Designer as its flagship real-world proof. CoDesign Commerce is not the Sock Designer itself, and it does not replace a merchant's renderer or production rules.
@@ -20,8 +24,10 @@ The public package and studio-tote reference now use Manifest 2.0 end to end:
 The source and complete tote reference are public. The private KORRHAUS
 Manifest 2 adapter is implemented and locally verified, but its WebMCP feature
 remains disabled by default and no KORRHAUS release or traffic change is part
-of this public repository release. Hosted-client verification, the required
-YouTube video, and Devpost submission remain separately evidenced and
+of this public repository release. The exact-six deployed flow is verified in
+the Codex in-app browser and the ordinary Chrome configurator is verified on the
+public release. The explicitly deferred literal normal-ChatGPT conversation,
+required YouTube video, and Devpost submission remain separately evidenced and
 approval-gated. The optional model-evaluation corpus and scorer are quality
 tooling, not proof of an actual model run.
 
@@ -103,6 +109,9 @@ See:
 - [docs/evidence/CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md](./docs/evidence/CODESIGN_V2_ITEM11_LOCAL_RELEASE_READINESS_2026-08-28.md)
   for the clean-clone, release-builder, official-rule and local visual
   checkpoint before public push/deployment.
+- [docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md](./docs/evidence/CODESIGN_V2_ITEM11_PUBLIC_RELEASE_2026-08-28.md)
+  for the exact public repository, deployment, WebMCP, Chrome, mobile, safety
+  and transport verification.
 - [examples/studio-tote/README.md](./examples/studio-tote/README.md) for the public portability example.
 - [docs/TESTING.md](./docs/TESTING.md) for deterministic and browser evidence requirements.
 - [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md) for exact prompts, expected tool calls, reset, and recovery.

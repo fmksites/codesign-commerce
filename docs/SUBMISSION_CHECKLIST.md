@@ -1,9 +1,10 @@
 # Submission checklist
 
-**Current status:** local release preparation, 28 August 2026
+**Current status:** public release verified; normal ChatGPT/video gates remain, 28 August 2026
 
 Status meanings: `PASS` is evidenced on the named build, `PENDING` needs work,
-and `APPROVAL` is an external action that cannot proceed without Felix.
+`BLOCKED BY CLIENT` needs a compatible external client, and `APPROVAL` is an
+external action that cannot proceed without Felix.
 
 ## Official requirements
 
@@ -12,17 +13,17 @@ on 28 August 2026:
 
 - `PASS` — project uses `document.modelContext.registerTool(...)` and is a
   non-trivial WebMCP implementation.
-- `PENDING` — working live URL accessible to judges in ChatGPT's in-app browser
-  or Chrome with WebMCP enabled.
-- `PENDING` — current source and history publicly available with all runnable
+- `PASS` — working live URL at <https://codesign-commerce.pages.dev/> is
+  accessible to the Codex in-app browser and ordinary Chrome.
+- `PASS` — current source and history publicly available with all runnable
   code, assets and instructions.
-- `PASS` — visible Apache-2.0 `LICENSE` exists locally.
+- `PASS` — visible Apache-2.0 `LICENSE` exists in the public repository.
 - `PASS` — English text draft explains WebMCP fit, user experience, joint
   human-agent work and implementation.
 - `PENDING` — public YouTube demonstration with audio, clearly functioning and
   shorter than three minutes. This is mandatory even though recording is not a
   useful Codex-only engineering task.
-- `PENDING` — clear final evidence distinguishing the pre-existing KORRHAUS
+- `PASS` — clear final evidence distinguishing the pre-existing KORRHAUS
   Designer from work added after 25 August 2026.
 - `PENDING` — entrant/representative, eligibility, IP and third-party
   authorization attestations by Felix.
@@ -41,8 +42,7 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 - `PASS` — local tote actual-browser flows cover staged changes, distinct
   previews, targeted refinement, zero-write Revert, one-state-commit Keep,
   ordinary human fallback, desktop and 390 px mobile.
-- `PASS` — clean `--no-local` clone of commit
-  `afa8b598e1af5ddb6d82afd90f18430a99d81326`: offline `npm ci`, zero reported
+- `PASS` — clean `--no-local` release clone: offline `npm ci`, zero reported
   vulnerabilities, 20 files / 175 tests, typecheck, build, bundle, judge,
   boundary, docs, parity and eval-structure checks.
 - `PASS` — browser bundle digest
@@ -55,18 +55,18 @@ test access must remain available through **21 September 2026, 5:00 PM PT**.
 
 ## Public release
 
-- `PASS` — repository URL exists at
-  <https://github.com/fmksites/codesign-commerce> and currently exposes
-  historical baseline commit `e986e12b9448491c2e34b302c1c4ddcf12320047` on
-  `main`.
-- `APPROVAL` — push the current local branch/history. No current Manifest 2.0
-  commit is public yet.
-- `PENDING` — verify anonymous clone, visible Apache-2.0 license, source tree,
+- `PASS` — repository URL <https://github.com/fmksites/codesign-commerce>
+  exposes the current Manifest 2.0 history on `main`.
+- `PASS` — verify anonymous clone, visible Apache-2.0 license, source tree,
   README and hosted CI on the exact pushed commit.
-- `APPROVAL` — choose a hosting provider and deploy `dist/judge-site/`.
-- `PENDING` — verify the public tote URL logged out, on desktop/mobile ordinary
-  browsers, in normal ChatGPT desktop and in native Chrome WebMCP.
-- `PENDING` — record exact served commit, bundle hash, asset hashes, headers,
+- `PASS` — Cloudflare Pages serves `dist/judge-site/` at
+  <https://codesign-commerce.pages.dev/> with an immutable fallback deployment.
+- `PASS` — public tote verified logged out on desktop/mobile ordinary browsers,
+  the Codex in-app browser exact-six flow, and ordinary Chrome.
+- `PENDING` — literal normal ChatGPT desktop and an immutable-release Chrome
+  native-WebMCP repeat remain separate client checks; the connected Chrome did
+  not expose `document.modelContext`.
+- `PASS` — record exact served commit, bundle hash, asset hashes, headers,
   screenshots and functional links.
 
 ## Local KORRHAUS integration
@@ -97,10 +97,12 @@ The public tote release does not depend on KORRHAUS production promotion.
 ## Browser and agent evidence
 
 - `PASS` — ordinary desktop/mobile browser fallback.
-- `PASS` — Codex in-app browser exact-six runtime evidence on the final local
-  tote product.
+- `PASS` — Codex in-app browser exact-six runtime evidence on the deployed tote
+  product.
 - `PASS` — native Chrome 151 exact-six runtime evidence on the Item 8 build.
-- `PENDING` — native Chrome repeat on the immutable deployed tote build.
+- `BLOCKED BY CLIENT` — native Chrome repeat on the immutable deployed tote;
+  the connected Chrome works as a normal configurator but does not expose
+  `document.modelContext`.
 - `PENDING` — literal normal ChatGPT desktop conversation on the deployed tote,
   including artwork transport, inline image previews, refinement and explicit
   action-time Keep confirmation.
@@ -113,7 +115,8 @@ The public tote release does not depend on KORRHAUS production promotion.
 - `PASS` — exact judge prompt and recovery guide.
 - `PASS` — mandatory sub-three-minute video script and shot list updated to
   tote-first exact-six behavior.
-- `PENDING` — final screenshots and thumbnail/cover selection.
+- `PASS` — final deployed desktop and mobile screenshots captured; thumbnail
+  selection remains part of the Devpost handoff.
 - `PENDING` — human recording and narration.
 - `APPROVAL` — public YouTube upload.
 - `PENDING` — logged-out check of repository, app and video URLs.
@@ -122,5 +125,5 @@ The public tote release does not depend on KORRHAUS production promotion.
 ## Availability and rollback
 
 - `PENDING` — monitoring/ownership plan through 21 September 2026, 5:00 PM PT.
-- `PENDING` — immutable public fallback URL and rollback owner.
+- `PASS` — immutable public fallback URL recorded; deployment owner is Felix.
 - `PENDING` — submit before 3 September 2026, 1:00 PM PT.
