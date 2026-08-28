@@ -17,6 +17,30 @@ All six registrations share one `AbortController`. Page teardown aborts every to
 
 There is deliberately no WebMCP Keep, Revert, save, retry, upload, quote, checkout, order, payment, customer, pricing, supplier, or administrative tool.
 
+## Natural-language selection contract
+
+The six registrations are a routing map, not an incantation API. A shopper
+should say what they want to design in ordinary commerce language. The tool
+titles, descriptions, annotations, and input-schema descriptions explicitly
+tell a capable client to:
+
+1. read first for any design, customization, inspection, or refinement intent;
+2. discover current choices before translating subjective direction;
+3. stage only artwork the shopper actually supplied;
+4. create or refine the visible temporary product proposal;
+5. return current previews after every coherent visual pass; and
+6. validate production readiness after the proposal.
+
+Commerce intents such as catalog search, cart, checkout, quote, order, and
+payment are explicitly excluded from the design-mutation tool description so a
+client can select Shopify or another commerce capability instead.
+
+This contract begins after the client visits the configurator. WebMCP is
+page-scoped and cannot make a closed page globally discoverable. Merchant
+selection and navigation into the correct product designer belong to browser,
+search, catalog, or storefront tooling; CoDesign owns the difficult structured
+work inside the open designer.
+
 ## Tool responsibilities
 
 ### Read workspace
@@ -46,6 +70,11 @@ There is deliberately no WebMCP Keep, Revert, save, retry, upload, quote, checko
 ## Schema and runtime boundary
 
 Tool JSON Schemas are generated from the validated manifest. Every object schema uses `additionalProperties: false`; IDs, arrays, text, operations, assets, transforms, variants, and preview filters are bounded. Browser schema enforcement is not trusted as the only defense: every handler and engine entry point validates again at runtime.
+
+Root inputs and routing-critical properties carry plain-language descriptions.
+The eval validator rejects prompts containing `WebMCP`, CoDesign tool names,
+or “tool call” wording, preventing technical hints from being counted as
+normal shopper-intent coverage.
 
 Merchant outputs pass through guarded field-by-field reconstruction. Unknown safe fields are dropped; malformed structures fail as generic public adapter errors. Raw values and private exceptions are never interpolated into public error messages.
 

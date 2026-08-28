@@ -407,3 +407,23 @@
 - The exact rebuilt local bundle exposed six WebMCP tools, produced two distinct 640 by 640 WebP previews for a temporary two-variant proposal, showed 82 percent and -6 degrees in the human review, and persisted nothing.
 - Ordinary Chrome rendered the final customizer with no warnings or errors and preserved an exact 0.82 range value with `aria-valuetext="82 percent"`. The Chrome automation bridge did not expose native WebMCP tool invocation, so no unsupported final Chrome tool-run claim is made.
 - Item 11's technical scope is complete. Item 12 remains intentionally open for Felix's later video, participant-owned Devpost fields, legal attestations and explicit submission approval.
+
+## 28 August 2026 — Item 11A zero-incantation candidate implemented; independent selection still open
+
+- Reframed the exact-six tool titles and descriptions as an explicit sequence from ordinary shopper intent: inspect, discover choices, conditionally stage supplied artwork, create/refine visibly, show current previews, and validate production readiness.
+- Added plain-language descriptions to every tool root input and routing-critical proposal, target, control, variant, asset, preview, and validation property so argument generation does not depend on source-code knowledge. Merchant-authored labels and descriptions remain untrusted capability-result data and cannot enter registration metadata.
+- Added a subjective North Form core case with no artwork and no preselected option IDs. Corpus validation now rejects `WebMCP`, CoDesign tool names, “tool call,” and “function call” in shopper prompts; all 26 cases remain implementation-blind.
+- Documented the honest page-scope boundary: after visiting the configurator, ordinary design language should be enough; finding and opening an unvisited merchant page remains a browser, search, catalog, or commerce-navigation responsibility.
+- The rebuilt local page exposed the new registered metadata and directly produced two visible 50-tote variants, two distinct 640 by 640 WebP previews, configuration-valid validation with a final-artwork decision, zero persistence, no desktop/mobile overflow, no browser warnings, and zero-write Revert.
+- Full verification passed 22 test files / 189 tests, strict typecheck, production and Shopify-overlay builds, browser bundle `sha256:c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`, tote bundle `sha256:4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`, judge, public-boundary, 74-file documentation, 26-case eval structure/scorer and 25/25 parity checks.
+- Independent selection is not claimed yet. The authorized separate Codex task completed without exposing a retrievable result, and Chrome browser control timed out after a fresh window even though diagnostics found Chrome running, the extension enabled, and the native host valid. Item 11A remains open for one fresh supported-agent or Chrome Inspector pass.
+- No push, deployment, Shopify mutation, KORRHAUS change, video work or Devpost submission occurred.
+
+## 28 August 2026 — Item 11A independent selection passed
+
+- Re-ran the exact subjective North Form brief in a separate Codex task against the rebuilt local candidate. The shopper prompt contained only the page URL and ordinary product intent; it did not mention WebMCP, CoDesign tool names, option IDs, or tool calls.
+- The independent agent discovered and invoked read, capabilities, apply, previews, validate, and final reread in the intended order. It did not stage an absent asset or invoke a commerce action.
+- The page returned two genuine 640 by 640 renderer previews for “North Form Customer” and “North Form Staff,” each at 50 units. Validation was configuration-valid and truthfully production-not-ready pending final print artwork.
+- The agent reported `persisted: false`, no Keep invocation, and no errors. Item 11A's local supported-agent acceptance gate is therefore complete.
+- Native Chrome remains a separate unclaimed client result. Chrome 152 was running, the ChatGPT extension was installed and enabled in Profile 1, and the native-host manifest was correct; however, the extension transport still timed out after a fresh Profile 1 window, so no current Chrome WebMCP invocation is claimed.
+- No push, deployment, Shopify mutation, KORRHAUS change, video work or Devpost submission occurred.

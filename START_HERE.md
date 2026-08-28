@@ -13,6 +13,12 @@ Choose the path that matches why you opened this repository.
    production-ready, and the result remains temporary.
 5. Choose **Revert** to restore the baseline without saving.
 
+The prompt intentionally never tells the agent to “use WebMCP” or call named
+tools. After the page is open, tool selection must follow from the shopper's
+ordinary design intent. WebMCP cannot advertise tools from a page the client
+has not visited, so initial merchant discovery remains a separate browser,
+search, catalog, or commerce-navigation step.
+
 Then inspect the six tools in
 [packages/codesign-webmcp/src/webmcp.ts](./packages/codesign-webmcp/src/webmcp.ts)
 and the architecture in [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).

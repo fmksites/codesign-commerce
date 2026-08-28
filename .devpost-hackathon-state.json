@@ -18,7 +18,7 @@
     "ai_usage": "",
     "codex_usage": ""
   },
-  "current_stage": "prepare-submission",
+  "current_stage": "build-project",
   "completed_stages": [
     "start-hackathon",
     "review",
@@ -42,5 +42,5 @@
     "draft_file": "devpost-submission.md",
     "status": "drafting"
   },
-  "next_command": "prepare-submission"
+  "next_command": "build-project"
 }

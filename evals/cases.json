@@ -200,6 +200,14 @@
       "expectedCoDesignTools": ["codesign_read_workspace", "codesign_list_capabilities", "codesign_stage_asset", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal"],
       "forbiddenCoDesignTools": [],
       "expectedOutcome": "Stage only an opaque temporary handle, visibly render the supplied image, return its current preview, and leave all writes at zero until page Keep."
+    },
+    {
+      "id": "studio-tote-natural-intent",
+      "category": "end-to-end",
+      "prompt": "I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, use the studio name for the branding, show me both options, and tell me if they are ready to make. Do not save anything yet.",
+      "expectedCoDesignTools": ["codesign_read_workspace", "codesign_list_capabilities", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal"],
+      "forbiddenCoDesignTools": ["codesign_stage_asset"],
+      "expectedOutcome": "Translate subjective shopper intent into two visibly different temporary 50-tote variants with studio-name typography, return both current previews, report production readiness and assumptions, and require page Keep or Revert."
     }
   ]
 }

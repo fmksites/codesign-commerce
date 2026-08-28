@@ -7,7 +7,8 @@
     "north-form-brief",
     "single-cuff-change",
     "production-readiness",
-    "studio-tote-portability-brief"
+    "studio-tote-portability-brief",
+    "studio-tote-natural-intent"
   ],
   "coreRunsPerCase": 10,
   "minimumSelectionPassesPerCoreCase": 9,

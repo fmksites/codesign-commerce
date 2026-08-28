@@ -34,6 +34,10 @@ and attach it to the agent conversation.
 
 ### 3. Use the exact brief
 
+Do not add “use WebMCP” or any tool name. The brief below is intentionally an
+ordinary shopper request; selecting and sequencing the page tools is part of
+the product proof.
+
 > Create 100 studio totes for North Form, split evenly across two variants, and
 > use the supplied artwork. Name the first North Form Natural: natural 12 oz
 > canvas, long handles, centered one-colour ink artwork at 105% scale. Name the
@@ -79,6 +83,20 @@ Before reverting, ask:
 
 The natural variant must remain unchanged. Both returned previews must match
 the newest proposal revision.
+
+## Natural-intent proof
+
+For a less scripted usability check, reset the page and ask:
+
+> I need 100 premium branded studio totes for North Form. Give me a natural
+> customer version and a darker staff version, use the studio name for the
+> branding, show me both options, and tell me if they are ready to make. Do not
+> save anything yet.
+
+The agent should inspect the open designer, discover its current choices,
+choose bounded assumptions, create two visible temporary variants, return both
+previews, and validate them. It must not stage an asset because none was
+supplied, and it must not require the shopper to name a tool.
 
 ## Coupled-rule and atomicity proof
 

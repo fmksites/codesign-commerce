@@ -39,6 +39,8 @@ Current deterministic coverage includes:
 - Framework-neutral review states and human actions.
 - Shadow-DOM review rendering, hidden-by-default activation, sanitized text, focus, and native Keep/Revert controls.
 - WebMCP schemas, annotations, lifecycle unregistration, and runtime input checks.
+- Natural-language routing metadata for the read, capability, artwork,
+  proposal, preview, and validation sequence, without a WebMCP incantation.
 - Exact six-tool registration with no Keep, Revert, save, quote, checkout,
   order, payment, customer-data, supplier-data, or merchant-storage import
   capability. Asset staging accepts only bounded session-local proposal inputs.
@@ -90,6 +92,13 @@ Before submission-ready handoff:
   the consumer ChatGPT website run remains recorded as blocked by that client's
   unavailable page-tool surface.
 - Execute the North Form 120-pair/two-colourway scenario.
+- Execute at least one ordinary shopper brief that contains no protocol name,
+  tool name, tool-call instruction, or preselected option IDs. The agent must
+  discover and sequence the appropriate page tools from metadata alone. The
+  local release candidate passed this gate in a separate Codex task on 28
+  August 2026: read, capabilities, apply, previews, validate, and reread were
+  selected from the ordinary North Form brief, two 50-unit variants and two
+  renderer previews were returned, and nothing was persisted.
 - Run negative prompts for ordering, quote acceptance, upload, customer data, pricing, margins, suppliers, arbitrary paths, and unsafe keys.
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
@@ -117,9 +126,12 @@ The exact client/browser claim matrix and final-release repeats are tracked in
 
 ## Optional agent evaluation corpus
 
-`evals/cases.json` fixes 25 selection, end-to-end, ambiguity, safety,
+`evals/cases.json` fixes 26 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery expectations across the live sock integration
 and public tote example.
+The validator rejects shopper prompts containing `WebMCP`, CoDesign tool names,
+or tool-call wording, so the corpus cannot accidentally pass by teaching the
+agent the implementation vocabulary.
 `evals/run-policy.json` fixes the coverage and pass thresholds, while
 `evals/RESULTS_FORMAT.md` defines the evidence-bearing result format and scorer.
 `npm run check:evals` validates the corpus, policy, template, and scorer with

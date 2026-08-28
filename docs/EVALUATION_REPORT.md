@@ -6,26 +6,26 @@ This report separates deterministic verification, actual browser/runtime
 evidence, and the optional model-evaluation corpus. None substitutes for the
 others.
 
-## Current public source
+## Current release candidate
 
-A fresh clone of the public repository passes:
+The current local candidate passes:
 
 - `npm ci` with zero reported dependency vulnerabilities;
-- 22 Vitest files / 186 tests;
+- 22 Vitest files / 189 tests;
 - strict TypeScript checks for the core, tests, and studio tote;
 - standalone and Shopify-overlay builds;
 - browser-bundle and judge-site verification;
 - public-boundary and documentation-link checks;
-- 25-case eval-corpus validation and scorer self-test; and
+- 26-case eval-corpus validation and scorer self-test; and
 - 25/25 tote surface parity: 14 controls, four variant operations, one asset
   slot, and six intentional human/non-configuration exclusions.
 
 The current local build produces:
 
 - core browser bundle SHA-256:
-  `aa195de70a5c0a2a7db0a929e038212f485d70db309f0538914dad7c1da7371f`;
+  `c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`;
 - tote application bundle SHA-256:
-  `4f115aee2d97895a715495d842ec0830e5470d033570699613599074686b304b`.
+  `4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`.
 
 Recheck both hashes after any application-code change and record the final
 deployed commit and immutable URL after the last release.
@@ -42,6 +42,22 @@ rules, review accessibility, reload recovery, and ordinary-browser fallback.
 
 These tests establish deterministic contracts. They do not prove that a named
 external agent client discovers or selects the tools on a deployed URL.
+
+The current local candidate passed both a direct page-scoped journey and an
+independent natural-language selection run. A separate Codex task received only
+the local page URL and an ordinary subjective shopper brief containing no
+protocol name, tool name, option ID, or tool-call instruction. It independently
+selected read, capabilities, apply, previews, validate, and final reread;
+created two named 50-tote variants; received two genuine 640 by 640 WebP
+renderer previews; reported configuration-valid output with the truthful
+missing-final-artwork decision; and left the proposal unpersisted with no
+errors. Direct desktop/mobile inspection additionally passed with no overflow,
+console warnings, or Revert writes.
+
+This is supported-agent evidence for the local candidate, not a deployed-build
+or universal-client claim. Current native Chrome remains unclaimed because the
+extension transport did not return its open-tab list despite Chrome 152,
+extension, and native-host diagnostics passing.
 
 ## Actual page and browser evidence
 
@@ -81,9 +97,15 @@ or feature activation.
 
 ## Optional model-evaluation tooling
 
-`evals/cases.json` defines 25 selection, end-to-end, ambiguity, safety,
+`evals/cases.json` defines 26 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery cases. `evals/run-policy.json` defines thresholds
 and `evals/RESULTS_FORMAT.md` defines evidence-bearing output.
+
+Every shopper prompt in the corpus is implementation-blind: validation rejects
+`WebMCP`, CoDesign tool names, and explicit tool-call wording. One core tote
+case intentionally supplies only subjective intent—natural customer version,
+darker staff version, studio-name branding, previews, and readiness—so routing
+cannot depend on copied option IDs or a protocol incantation.
 
 `npm run check:evals` validates the corpus and scorer with synthetic fixtures.
 It does **not** execute a model and is not reported as model-selection evidence.

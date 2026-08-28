@@ -59,7 +59,12 @@ export const CODESIGN_TOOL_NAMES = [
   "codesign_validate_proposal",
 ] as const;
 
-const EMPTY_OBJECT_SCHEMA: JsonSchema = { type: "object", properties: {}, additionalProperties: false };
+const EMPTY_OBJECT_SCHEMA: JsonSchema = {
+  type: "object",
+  description: "No input. Read the current custom-product workspace before planning a design or refinement.",
+  properties: {},
+  additionalProperties: false,
+};
 const SAFE_ID_SCHEMA: JsonSchema = { type: "string", minLength: 1, maxLength: 200, pattern: "^[a-zA-Z0-9][a-zA-Z0-9._-]*$" };
 const REVISION_SCHEMA: JsonSchema = { type: "string", minLength: 1, maxLength: 200 };
 const POSITION_SCHEMA: JsonSchema = {
@@ -69,6 +74,7 @@ const POSITION_SCHEMA: JsonSchema = {
   additionalProperties: false,
 };
 const CONTROL_VALUE_SCHEMA: JsonSchema = {
+  description: "The bounded value for the declared customer-editable control. Use codesign_list_capabilities to discover its kind, choices, and limits.",
   oneOf: [
     { type: "string", maxLength: 1_000 },
     { type: "number", minimum: -1_000_000_000, maximum: 1_000_000_000 },
@@ -78,10 +84,11 @@ const CONTROL_VALUE_SCHEMA: JsonSchema = {
   ],
 };
 const TARGET_SCHEMA: JsonSchema = {
+  description: "The exact visible workspace, variant, or element to change, using IDs returned by codesign_read_workspace or codesign_list_capabilities.",
   oneOf: [
-    { type: "object", properties: { scope: { type: "string", const: "workspace" } }, required: ["scope"], additionalProperties: false },
-    { type: "object", properties: { scope: { type: "string", const: "variant" }, variantId: SAFE_ID_SCHEMA }, required: ["scope", "variantId"], additionalProperties: false },
-    { type: "object", properties: { scope: { type: "string", const: "element" }, variantId: SAFE_ID_SCHEMA, elementId: SAFE_ID_SCHEMA }, required: ["scope", "variantId", "elementId"], additionalProperties: false },
+    { type: "object", description: "Target a workspace-wide customer control.", properties: { scope: { type: "string", const: "workspace" } }, required: ["scope"], additionalProperties: false },
+    { type: "object", description: "Target one visible product variant.", properties: { scope: { type: "string", const: "variant" }, variantId: { ...SAFE_ID_SCHEMA, description: "A current visible variant ID." } }, required: ["scope", "variantId"], additionalProperties: false },
+    { type: "object", description: "Target one visible element inside a product variant.", properties: { scope: { type: "string", const: "element" }, variantId: { ...SAFE_ID_SCHEMA, description: "A current visible variant ID." }, elementId: { ...SAFE_ID_SCHEMA, description: "A current element ID within variantId." } }, required: ["scope", "variantId", "elementId"], additionalProperties: false },
   ],
 };
 
@@ -103,7 +110,11 @@ function safeId(value: unknown): value is string {
 function controlRecordSchema(controls: ControlDefinition[]): JsonSchema {
   return {
     type: "object",
-    properties: Object.fromEntries(controls.map((control) => [control.id, CONTROL_VALUE_SCHEMA])),
+    description: "Initial values for declared customer-editable controls. Omit controls that should retain their current value.",
+    properties: Object.fromEntries(controls.map((control) => [control.id, {
+      ...CONTROL_VALUE_SCHEMA,
+      description: `Initial value for declared control ${control.id}. Use codesign_list_capabilities to discover its current choices and bounds.`,
+    }])),
     additionalProperties: false,
     maxProperties: controls.length,
   };
@@ -147,48 +158,58 @@ function operationSchema(manifest: ConfiguratorManifest): JsonSchema {
   const operations: JsonSchema[] = [];
   if (valueControls.length > 0) operations.push({
     type: "object",
-    properties: { type: { type: "string", const: "set-control" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: valueControls }, value: CONTROL_VALUE_SCHEMA },
+    description: "Set one declared customer-editable control on the visible workspace, variant, or element.",
+    properties: {
+      type: { type: "string", const: "set-control" },
+      target: TARGET_SCHEMA,
+      controlId: { type: "string", enum: valueControls, description: "A currently available writable control ID returned by codesign_list_capabilities." },
+      value: CONTROL_VALUE_SCHEMA,
+    },
     required: ["type", "target", "controlId", "value"],
     additionalProperties: false,
   });
   if (assetControls.length > 0) {
     operations.push({
       type: "object",
-      properties: { type: { type: "string", const: "attach-asset" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: assetControls }, assetHandle: SAFE_ID_SCHEMA },
+      description: "Attach one already-staged temporary shopper asset to a declared visible artwork control.",
+      properties: { type: { type: "string", const: "attach-asset" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: assetControls, description: "A currently available artwork control returned by codesign_list_capabilities." }, assetHandle: { ...SAFE_ID_SCHEMA, description: "The opaque temporary handle returned by codesign_stage_asset." } },
       required: ["type", "target", "controlId", "assetHandle"],
       additionalProperties: false,
     });
     operations.push({
       type: "object",
-      properties: { type: { type: "string", const: "remove-asset" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: assetControls } },
+      description: "Remove artwork from a declared visible artwork control in the temporary proposal.",
+      properties: { type: { type: "string", const: "remove-asset" }, target: TARGET_SCHEMA, controlId: { type: "string", enum: assetControls, description: "A currently available artwork control returned by codesign_list_capabilities." } },
       required: ["type", "target", "controlId"],
       additionalProperties: false,
     });
   }
   if (manifest.variantPolicy.operations.includes("create")) operations.push({
     type: "object",
-    properties: { type: { type: "string", const: "create-variant" }, variant: variantSchema(manifest), index: { type: "integer", minimum: 0, maximum: 20 } },
+    description: "Create one complete additional visible design or colourway when the manifest permits it.",
+    properties: { type: { type: "string", const: "create-variant" }, variant: { ...variantSchema(manifest), description: "The complete new visible variant using declared IDs and controls." }, index: { type: "integer", minimum: 0, maximum: 20, description: "Optional zero-based display position." } },
     required: ["type", "variant"],
     additionalProperties: false,
   });
   if (manifest.variantPolicy.operations.includes("duplicate")) operations.push({
     type: "object",
+    description: "Duplicate an existing visible design or colourway, then optionally name and initialize the new variant.",
     properties: {
-      type: { type: "string", const: "duplicate-variant" }, sourceVariantId: SAFE_ID_SCHEMA, variantId: SAFE_ID_SCHEMA,
-      name: { type: "string", maxLength: 1_000 }, index: { type: "integer", minimum: 0, maximum: 20 },
+      type: { type: "string", const: "duplicate-variant" }, sourceVariantId: { ...SAFE_ID_SCHEMA, description: "The current visible variant to copy." }, variantId: { ...SAFE_ID_SCHEMA, description: "A new unique safe ID for the copied variant." },
+      name: { type: "string", maxLength: 1_000, description: "Optional shopper-facing name for the copied variant." }, index: { type: "integer", minimum: 0, maximum: 20, description: "Optional zero-based display position." },
       initialControls: controlRecordSchema(variantValueControls),
     },
     required: ["type", "sourceVariantId", "variantId"],
     additionalProperties: false,
   });
   if (manifest.variantPolicy.operations.includes("remove")) operations.push({
-    type: "object", properties: { type: { type: "string", const: "remove-variant" }, variantId: SAFE_ID_SCHEMA }, required: ["type", "variantId"], additionalProperties: false,
+    type: "object", description: "Remove one visible design or colourway from the temporary proposal.", properties: { type: { type: "string", const: "remove-variant" }, variantId: { ...SAFE_ID_SCHEMA, description: "The current visible variant to remove." } }, required: ["type", "variantId"], additionalProperties: false,
   });
   if (manifest.variantPolicy.operations.includes("reorder")) operations.push({
-    type: "object", properties: { type: { type: "string", const: "reorder-variant" }, variantId: SAFE_ID_SCHEMA, index: { type: "integer", minimum: 0, maximum: 20 } }, required: ["type", "variantId", "index"], additionalProperties: false,
+    type: "object", description: "Move one visible design or colourway to a new display position.", properties: { type: { type: "string", const: "reorder-variant" }, variantId: { ...SAFE_ID_SCHEMA, description: "The current visible variant to move." }, index: { type: "integer", minimum: 0, maximum: 20, description: "The new zero-based display position." } }, required: ["type", "variantId", "index"], additionalProperties: false,
   });
   if (manifest.variantPolicy.operations.includes("set-active")) operations.push({
-    type: "object", properties: { type: { type: "string", const: "set-active-variant" }, variantId: SAFE_ID_SCHEMA }, required: ["type", "variantId"], additionalProperties: false,
+    type: "object", description: "Make one current design or colourway active in the visible renderer.", properties: { type: { type: "string", const: "set-active-variant" }, variantId: { ...SAFE_ID_SCHEMA, description: "The current visible variant to activate." } }, required: ["type", "variantId"], additionalProperties: false,
   });
   return { oneOf: operations.length > 0 ? operations : [{ type: "object", maxProperties: 0, additionalProperties: false }] };
 }
@@ -196,10 +217,25 @@ function operationSchema(manifest: ConfiguratorManifest): JsonSchema {
 function applyProposalSchema(manifest: ConfiguratorManifest): JsonSchema {
   return {
     type: "object",
+    description: "Create or refine one temporary visible custom-product proposal. Read the workspace and relevant capabilities first.",
     properties: {
-      baseRevision: REVISION_SCHEMA, proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 }, operationId: SAFE_ID_SCHEMA,
-      operations: { type: "array", minItems: 1, maxItems: MAX_OPERATIONS_PER_BATCH, items: operationSchema(manifest) },
-      assumptions: { type: "array", maxItems: 20, items: { type: "string", maxLength: 500 } },
+      baseRevision: { ...REVISION_SCHEMA, description: "The committed revision returned by codesign_read_workspace." },
+      proposalId: { ...SAFE_ID_SCHEMA, description: "The current temporary proposal ID. Omit only when starting a new proposal." },
+      proposalRevision: { type: "integer", minimum: 1, description: "The current temporary proposal revision. Omit only when starting a new proposal." },
+      operationId: { ...SAFE_ID_SCHEMA, description: "A unique idempotency key for this exact coherent batch of requested changes." },
+      operations: {
+        type: "array",
+        minItems: 1,
+        maxItems: MAX_OPERATIONS_PER_BATCH,
+        description: "All coordinated changes for this visible pass. The complete batch succeeds or fails atomically.",
+        items: operationSchema(manifest),
+      },
+      assumptions: {
+        type: "array",
+        maxItems: 20,
+        description: "Bounded shopper-visible assumptions used to complete the proposal without unnecessary clarification.",
+        items: { type: "string", maxLength: 500 },
+      },
     },
     required: ["baseRevision", "operationId", "operations"],
     additionalProperties: false,
@@ -219,11 +255,20 @@ function stageAssetSchema(manifest: ConfiguratorManifest): JsonSchema {
   });
   return {
     type: "object",
+    description: "Stage shopper-supplied artwork temporarily for a declared customizer slot before attaching it to a proposal.",
     properties: {
-      baseRevision: REVISION_SCHEMA, proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 },
-      slotId: slots.length > 0 ? { type: "string", enum: slots.map((slot) => slot.id) } : { type: "string", maxLength: 0 },
-      source: { oneOf: sources.length > 0 ? sources : [{ type: "object", maxProperties: 0, additionalProperties: false }] },
-      filename: { type: "string", minLength: 1, maxLength: 120 }, altText: { type: "string", minLength: 1, maxLength: 300 },
+      baseRevision: { ...REVISION_SCHEMA, description: "The committed revision returned by codesign_read_workspace." },
+      proposalId: { ...SAFE_ID_SCHEMA, description: "The current temporary proposal ID when refining an existing proposal." },
+      proposalRevision: { type: "integer", minimum: 1, description: "The current temporary proposal revision when refining an existing proposal." },
+      slotId: slots.length > 0
+        ? { type: "string", enum: slots.map((slot) => slot.id), description: "The declared artwork slot returned by codesign_list_capabilities." }
+        : { type: "string", maxLength: 0, description: "This customizer exposes no temporary artwork slot." },
+      source: {
+        description: "The bounded shopper-supplied artwork source. Never invent or fetch an undeclared source.",
+        oneOf: sources.length > 0 ? sources : [{ type: "object", maxProperties: 0, additionalProperties: false }],
+      },
+      filename: { type: "string", minLength: 1, maxLength: 120, description: "Optional display filename for the supplied artwork." },
+      altText: { type: "string", minLength: 1, maxLength: 300, description: "A concise visual description of the supplied artwork." },
     },
     required: ["baseRevision", "slotId", "source", "altText"],
     additionalProperties: false,
@@ -233,10 +278,13 @@ function stageAssetSchema(manifest: ConfiguratorManifest): JsonSchema {
 function previewSchema(manifest: ConfiguratorManifest): JsonSchema {
   return {
     type: "object",
+    description: "Capture inspectable images from the merchant renderer for one exact current temporary proposal revision.",
     properties: {
-      proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 }, baseRevision: REVISION_SCHEMA,
-      variantIds: { type: "array", minItems: 1, maxItems: 20, uniqueItems: true, items: SAFE_ID_SCHEMA },
-      surfaceIds: { type: "array", minItems: 1, maxItems: 20, uniqueItems: true, items: { type: "string", enum: manifest.previewSurfaces.map((surface) => surface.id) } },
+      proposalId: { ...SAFE_ID_SCHEMA, description: "The temporary proposal ID returned by codesign_apply_proposal." },
+      proposalRevision: { type: "integer", minimum: 1, description: "The exact current proposal revision to render." },
+      baseRevision: { ...REVISION_SCHEMA, description: "The committed base revision returned with the proposal." },
+      variantIds: { type: "array", minItems: 1, maxItems: 20, uniqueItems: true, description: "Optional visible variants to include. Omit to capture all current variants.", items: SAFE_ID_SCHEMA },
+      surfaceIds: { type: "array", minItems: 1, maxItems: 20, uniqueItems: true, description: "Optional declared preview surfaces to capture.", items: { type: "string", enum: manifest.previewSurfaces.map((surface) => surface.id) } },
     },
     required: ["proposalId", "proposalRevision", "baseRevision"],
     additionalProperties: false,
@@ -244,16 +292,24 @@ function previewSchema(manifest: ConfiguratorManifest): JsonSchema {
 }
 
 const VALIDATE_SCHEMA: JsonSchema = {
-  type: "object", properties: { proposalId: SAFE_ID_SCHEMA, proposalRevision: { type: "integer", minimum: 1 } }, additionalProperties: false,
+  type: "object",
+  description: "Validate the committed custom product or one exact temporary proposal using merchant-authoritative rules.",
+  properties: {
+    proposalId: { ...SAFE_ID_SCHEMA, description: "The temporary proposal to validate. Omit both fields to validate committed state." },
+    proposalRevision: { type: "integer", minimum: 1, description: "The exact current temporary proposal revision." },
+  },
+  additionalProperties: false,
 };
 
 function capabilitiesSchema(manifest: ConfiguratorManifest): JsonSchema {
   return {
     type: "object",
+    description: "Discover the controls and rules needed to translate an ordinary shopper design request into valid customizer operations.",
     properties: {
-      variantId: SAFE_ID_SCHEMA, elementId: SAFE_ID_SCHEMA,
-      controlIds: { type: "array", minItems: 1, maxItems: 50, uniqueItems: true, items: { type: "string", enum: manifest.controls.map((control) => control.id) } },
-      categories: { type: "array", minItems: 1, maxItems: 5, uniqueItems: true, items: { type: "string", enum: ["controls", "variants", "assets", "previews", "dependencies"] } },
+      variantId: { ...SAFE_ID_SCHEMA, description: "Optional visible variant whose currently available controls are needed." },
+      elementId: { ...SAFE_ID_SCHEMA, description: "Optional element within variantId whose currently available controls are needed." },
+      controlIds: { type: "array", minItems: 1, maxItems: 50, uniqueItems: true, description: "Optional control IDs to inspect. Omit to discover all customer-editable controls.", items: { type: "string", enum: manifest.controls.map((control) => control.id) } },
+      categories: { type: "array", minItems: 1, maxItems: 5, uniqueItems: true, description: "Optional capability groups. Omit to read controls, variants, assets, previews, and dependencies together.", items: { type: "string", enum: ["controls", "variants", "assets", "previews", "dependencies"] } },
     },
     additionalProperties: false,
   };
@@ -324,8 +380,8 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
   const manifest = validateManifest(structuredClone(engine.manifest));
 
   const readTool: WebMcpTool = {
-    name: "codesign_read_workspace", title: "Read custom product workspace",
-    description: "Read the sanitized committed custom-product workspace and any temporary proposal metadata. Never returns pricing, customer data, private snapshots, or raw artwork.",
+    name: "codesign_read_workspace", title: "Inspect the current custom product",
+    description: "Use this first whenever a shopper asks to design, customize, personalize, inspect, or refine the product on this page. Reads sanitized design state and temporary proposal status; never pricing, customer data, private snapshots, or raw artwork.",
     inputSchema: EMPTY_OBJECT_SCHEMA, annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options) {
       if (!isRecord(input) || Object.keys(input).length !== 0) return invalidInput("This tool does not accept arguments");
@@ -350,8 +406,8 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
   };
 
   const capabilitiesTool: WebMcpTool = {
-    name: "codesign_list_capabilities", title: "List customizer capabilities",
-    description: "List declared customer controls, current availability, variants, temporary asset slots, preview surfaces, and public dependencies for the current customizer.",
+    name: "codesign_list_capabilities", title: "Discover available design choices",
+    description: "Use after reading the workspace when translating a shopper's brief or subjective art direction into valid changes. Lists customer-editable controls, current choices, variants, artwork slots, preview surfaces, and public dependencies without changing the design.",
     inputSchema: capabilitiesSchema(manifest), annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options) {
       const parsed = parseCapabilities(input, manifest);
@@ -381,22 +437,22 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
   };
 
   const stageTool: WebMcpTool = {
-    name: "codesign_stage_asset", title: "Stage temporary product artwork",
-    description: "Stage one bounded asset for a declared customizer slot. Returns an opaque temporary handle; it does not create a normal upload or save the product.",
+    name: "codesign_stage_asset", title: "Prepare supplied artwork temporarily",
+    description: "Use only when a shopper has supplied a logo or artwork for this custom product. Stage it in a declared temporary slot before attaching it with codesign_apply_proposal. This creates no merchant upload and saves nothing.",
     inputSchema: stageAssetSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
     async execute(input, options) { return publicResult(await engine.stageAsset(input, options?.signal ? { signal: options.signal } : {})); },
   };
 
   const applyTool: WebMcpTool = {
-    name: "codesign_apply_proposal", title: "Apply a temporary custom-product proposal",
-    description: `Apply one atomic batch of up to ${MAX_OPERATIONS_PER_BATCH} typed customer changes to the merchant's visible renderer. A temporary proposal supports up to ${MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL} successful operations across refinements. Nothing persists until a person uses the visible page Keep control.`,
+    name: "codesign_apply_proposal", title: "Create or refine the visible product design",
+    description: `Use after reading the workspace and relevant capabilities to create or refine the shopper's requested custom product in the current page's visible renderer. Applies one atomic batch of up to ${MAX_OPERATIONS_PER_BATCH} changes; the proposal supports up to ${MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL} successful operations. It stays temporary until a person uses the visible Keep control. Do not use for catalog, cart, checkout, quote, order, or payment requests.`,
     inputSchema: applyProposalSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
     async execute(input, options) { return publicResult(await engine.apply(input, options?.signal ? { signal: options.signal } : {})); },
   };
 
   const previewsTool: WebMcpTool = {
-    name: "codesign_get_previews", title: "Get current proposal previews",
-    description: "Capture verified renderer images for the exact current proposal revision and requested variants. A stale image is never returned as current.",
+    name: "codesign_get_previews", title: "Show the current product design previews",
+    description: "Use after every coherent proposal or refinement so the shopper can inspect the actual product result in chat. Captures verified merchant-renderer images for the exact current proposal revision and requested variants; never returns a stale image as current and never saves.",
     inputSchema: previewSchema(manifest), annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options) {
       const result = await engine.capturePreviews(input, options?.signal ? { signal: options.signal } : {});
@@ -408,8 +464,8 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
   };
 
   const validateTool: WebMcpTool = {
-    name: "codesign_validate_proposal", title: "Validate custom-product readiness",
-    description: "Validate the committed workspace or one exact temporary proposal with merchant-authoritative configuration and production-readiness rules. This never persists changes.",
+    name: "codesign_validate_proposal", title: "Check design and production readiness",
+    description: "Use after creating or refining a proposal, or whenever the shopper asks whether a custom design is possible or production-ready. Applies merchant-authoritative rules to committed state or one exact temporary proposal; never changes or saves the design.",
     inputSchema: VALIDATE_SCHEMA, annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options) { return publicResult(await engine.validate(input, options?.signal ? { signal: options.signal } : {})); },
   };

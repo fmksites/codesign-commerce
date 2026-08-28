@@ -166,6 +166,13 @@ Then verify the actual supported browser/agent host. Source inspection and unit
 tests do not prove that a host discovers the tools or displays returned visual
 artifacts.
 
+Use ordinary shopper prompts for this host check. Do not tell the model to use
+WebMCP or call a named CoDesign tool: a successful integration must route
+“make me two branded tote options and show them” through the registered tools
+from their metadata alone. Test direct, subjective, underspecified, refinement,
+artwork, validation, and unrelated commerce intents. The page must already be
+open because WebMCP clients cannot discover tools from an unvisited origin.
+
 ## Public versus merchant-owned code
 
 | CoDesign WebMCP supplies | The merchant keeps |

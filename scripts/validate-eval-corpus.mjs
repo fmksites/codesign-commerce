@@ -13,6 +13,7 @@ const allowedTools = new Set([
 ]);
 const requiredCategories = new Set(["selection", "end-to-end", "ambiguity", "safety", "adversarial", "recovery"]);
 const mutatingTools = new Set(["codesign_stage_asset", "codesign_apply_proposal"]);
+const implementationIncantation = /\b(?:webmcp|codesign_[a-z_]+|tool call|function call)\b/i;
 const failures = [];
 
 if (document.schemaVersion !== "1.0") failures.push("schemaVersion must be 1.0");
@@ -32,6 +33,9 @@ for (const [index, entry] of (document.cases ?? []).entries()) {
   if (!requiredCategories.has(entry.category)) failures.push(`${prefix}.category is invalid`);
   seenCategories.add(entry.category);
   if (typeof entry.prompt !== "string" || entry.prompt.length < 10 || entry.prompt.length > 1000) failures.push(`${prefix}.prompt length is invalid`);
+  if (typeof entry.prompt === "string" && implementationIncantation.test(entry.prompt)) {
+    failures.push(`${prefix}.prompt must use ordinary shopper language without WebMCP or tool-call incantations`);
+  }
   if (typeof entry.expectedOutcome !== "string" || entry.expectedOutcome.length < 10) failures.push(`${prefix}.expectedOutcome is required`);
   for (const field of ["expectedCoDesignTools", "forbiddenCoDesignTools"]) {
     if (!Array.isArray(entry[field])) {

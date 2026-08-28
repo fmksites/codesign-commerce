@@ -24,6 +24,14 @@ configurator before a product is cart-ready.
 
 ## Try it in 60 seconds
 
+The shopper does not need to know the words WebMCP, tool, schema, or adapter.
+Once the agent has opened the tote page, an ordinary design request is the
+intended interface: the six tool descriptions tell the client when to inspect,
+discover choices, create a temporary design, return previews, and validate it.
+WebMCP is page-scoped, so a client must visit the configurator before it can
+discover those tools; finding and opening the right merchant page remains a
+browser, search, catalog, or commerce-navigation responsibility.
+
 1. Open the [deterministic tote demo](https://codesign-webmcp.pages.dev/tote/?reset=true)
    in ChatGPT's in-app browser or Chrome with WebMCP enabled.
 2. Download and attach the
@@ -41,6 +49,12 @@ Expected result: two named 50-tote variants, two distinct renderer previews,
 valid and production-ready status, and `persisted: false`. The ordinary design
 controls remain visible but lock while the proposal awaits the person's decision.
 Choose **Revert** to restore the deterministic baseline without a write.
+
+A shorter, deliberately non-technical prompt is also part of the evaluation
+corpus: “I need 100 premium branded studio totes for North Form. Give me a
+natural customer version and a darker staff version, use the studio name for
+the branding, show me both options, and tell me if they are ready to make. Do
+not save anything yet.”
 
 The complete prompts, negative tests, recovery steps, and expected tool order
 are in [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md).
