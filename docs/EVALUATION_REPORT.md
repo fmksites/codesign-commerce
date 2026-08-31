@@ -27,8 +27,10 @@ The current local build produces:
 - tote application bundle SHA-256:
   `4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`.
 
-Recheck both hashes after any application-code change and record the final
-deployed commit and immutable URL after the last release.
+The deployed final release identifies commit
+`a3b7c1fc38578b0a3a3bcb78f1c62242020b1f0b` and immutable deployment
+<https://a8e2b6b7.codesign-webmcp.pages.dev/>. Recheck both hashes after any
+later application-code change.
 
 ## What deterministic tests establish
 
@@ -54,7 +56,7 @@ missing-final-artwork decision; and left the proposal unpersisted with no
 errors. Direct desktop/mobile inspection additionally passed with no overflow,
 console warnings, or Revert writes.
 
-The same implementation is now deployed from commit
+The same tote application bundle was first deployed from commit
 `ae5e93a28dc735b0f8bb08596fb3ab8c22f7a2f5`. A separate Codex task repeated
 the implementation-blind brief against both the stable public tote and the
 Shopify development-store page. Both origins independently selected the same
@@ -63,6 +65,18 @@ the honest missing-final-artwork decision, and saved nothing. This is current
 supported-agent evidence for those two page origins, not a universal-client or
 consumer-ChatGPT-website claim. Current native Chrome remains unclaimed because
 the connected Chrome exposed no `document.modelContext`.
+
+The final deployed commit
+`a3b7c1fc38578b0a3a3bcb78f1c62242020b1f0b` then completed a fresh direct
+supported-client lifecycle in the Codex desktop in-app browser. The page
+exposed exactly six tools; read, capabilities, apply, previews, validate, and
+final reread created two temporary 50-unit variants and visibly returned the
+same two renderer hashes. Validation was configuration-valid and honestly
+production-not-ready pending final artwork. The visible page Revert restored
+the original single 100-unit draft at `tote-revision-1`, with
+`pendingProposal: null`, `persisted: false`, and zero console warnings/errors.
+This final run proves the deployed contract and human review boundary; the
+earlier separate-task evidence remains the independent tool-selection proof.
 
 ## Actual page and browser evidence
 
@@ -86,8 +100,10 @@ together.
 Current client claims are authoritative only in
 [`BROWSER_SUPPORT.md`](./BROWSER_SUPPORT.md). In particular, historical native
 Chrome 151 exact-six evidence must not be relabeled as a final-release repeat.
-After the repository cleanup is deployed, repeat native Chrome with WebMCP
-enabled or ChatGPT's in-app browser before freezing the submission claim.
+The final supported-client repeat is recorded in
+[`CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md`](./evidence/CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md).
+Current native Chrome and consumer ChatGPT-web execution remain deliberately
+unclaimed.
 
 ## Private KORRHAUS integration
 

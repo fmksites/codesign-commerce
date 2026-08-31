@@ -17,6 +17,9 @@ which files describe the shipped six-tool product.
   validation, ordinary-visitor isolation, and zero-write Revert evidence.
 - [Final public tote regression](./TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md)
   — deployed proposal, preview, validation, recovery, Keep, and Revert checks.
+- [Final supported-client release proof](./CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md)
+  — exact final commit and immutable release identity, six-tool discovery, two
+  current previews, honest validation, and visible zero-write Revert.
 - [CoDesign WebMCP rebrand](./CODESIGN_WEBMCP_REBRAND_2026-08-28.md) — naming
   and current-brand verification.
 - [Shopify-hosted interoperability proof](./CODESIGN_SHOPIFY_HOSTED_DEMO_2026-08-28.md)

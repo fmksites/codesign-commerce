@@ -3,8 +3,6 @@
 Status meanings:
 
 - `PASS` — evidenced on the named current source or public surface.
-- `REPEAT AFTER FINAL DEPLOY` — implementation exists, but the final submitted
-  deployment must be tested again.
 - `HUMAN` — requires the participant's decision, recording, attestation, or
   external submission action.
 
@@ -48,12 +46,16 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
   rejection, Revert, and Keep/reload evidence.
 - `PASS` — Shopify development-store page has executed CoDesign tools alongside
   Shopify native catalog/cart tools.
-- `REPEAT AFTER FINAL DEPLOY` — deploy the final repository commit so live
-  metadata and source `main` identify the same release.
-- `REPEAT AFTER FINAL DEPLOY` — repeat exact-six discovery and the judge flow in
-  native Chrome with the WebMCP testing flag or ChatGPT's in-app browser.
-- `REPEAT AFTER FINAL DEPLOY` — record the final immutable deployment URL,
-  commit, core bundle hash, tote bundle hash, browser/client, and date.
+- `PASS` — stable and immutable release metadata identify public commit
+  `a3b7c1fc38578b0a3a3bcb78f1c62242020b1f0b` and the same two bundle hashes.
+- `PASS` — the final deployed tote repeated exact-six discovery and the full
+  temporary proposal, preview, validation, reread, and visible Revert journey
+  in the Codex desktop in-app browser on 31 August 2026.
+- `PASS` — immutable release
+  <https://a8e2b6b7.codesign-webmcp.pages.dev/> is recorded with core bundle
+  `c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`
+  and tote bundle
+  `4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`.
 - `PASS` — unsupported consumer ChatGPT website behavior is documented without
   being mislabeled as a supported client.
 - `PASS` — Claude and other untested clients are not claimed.

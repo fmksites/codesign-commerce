@@ -427,3 +427,15 @@
 - The agent reported `persisted: false`, no Keep invocation, and no errors. Item 11A's local supported-agent acceptance gate is therefore complete.
 - Native Chrome remains a separate unclaimed client result. Chrome 152 was running, the ChatGPT extension was installed and enabled in Profile 1, and the native-host manifest was correct; however, the extension transport still timed out after a fresh Profile 1 window, so no current Chrome WebMCP invocation is claimed.
 - No push, deployment, Shopify mutation, KORRHAUS change, video work or Devpost submission occurred.
+
+## 31 August 2026 — Item 11 final supported-client repeat passed
+
+- Verified stable public commit `a3b7c1fc38578b0a3a3bcb78f1c62242020b1f0b` and immutable deployment `a8e2b6b7.codesign-webmcp.pages.dev`; both metadata responses identify the same core and tote bundle hashes.
+- The Codex desktop in-app browser opened the deterministic public tote, discovered exactly six page-scoped tools, and kept the ordinary one-variant baseline intact while the proposal was staged.
+- Read, capabilities, apply, previews, validate, and final reread created two temporary 50-unit North Form variants. The supplied-artwork tool was correctly omitted because the brief supplied no asset.
+- The page returned and the client visibly displayed two distinct 640 by 640 WebP renderer previews with integrity hashes `86e7ef...6f03` and `179c0a...4a30`.
+- Validation returned configuration-valid and production-not-ready with the truthful `FINAL_PRINT_ARTWORK_REQUIRED` decision for both variants. The proposal remained `persisted: false`.
+- The visible page Revert control restored the original single `Canvas tote` at quantity 100 and committed revision `tote-revision-1`; `pendingProposal` returned to `null`, nothing was saved, and browser warnings/errors remained empty.
+- Full repository verification then passed 22 test files / 189 tests, strict typecheck, production and Shopify-overlay builds, browser-bundle and judge-site checks, a 198-candidate public-boundary scan, 77-file documentation validation, the 26-case eval corpus/scorer self-test, and 25/25 tote parity. The rebuilt core and tote hashes matched the deployed release.
+- This closes the final supported-client technical repeat. It does not create a consumer ChatGPT-web, current native-Chrome, Claude, video, Devpost, or submission claim. Item 12 remains intentionally open.
+- Dated evidence: `docs/evidence/CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md`.
