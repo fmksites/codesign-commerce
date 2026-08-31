@@ -97,8 +97,13 @@ claiming a universal renderer.
 KORRHAUS's Custom Sock Designer existed before the challenge. A private
 Manifest 2 adapter now maps the reusable package to its real customer controls,
 renderer, validation, artwork pipeline, and autosave boundary. That integration
-is locally verified and disabled by default; this repository does **not** claim
-that KORRHAUS currently exposes live production WebMCP tools.
+is now live on KORRHAUS's existing Shopify storefront. Supported agents discover
+the same exact six CoDesign tools alongside Shopify's native storefront tools,
+while ordinary visitors retain the unchanged Designer. The adapter and all
+customer, pricing, persistence, and operational logic remain private.
+
+[Open the live KORRHAUS Sock Designer](https://korrhaus.nl/en/apps/wholesale/sock-designer) ·
+[Read the bounded live evidence](./docs/evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md)
 
 An additional password-protected Shopify development-store page proves that the
 tote bundle can run alongside Shopify's native storefront WebMCP tools. It is
@@ -163,7 +168,7 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 ## Current evidence
 
 - Public GitHub repository with a detected [Apache-2.0 license](./LICENSE).
-- Hosted CI verifies a clean install, 22 test files / 186 tests, strict
+- Hosted CI verifies a clean install, 22 test files / 189 tests, strict
   typecheck, release build, exact-six bundle, public boundary, docs, eval
   structure, and 25/25 tote surface parity.
 - The public tote has passed deployed page-scoped WebMCP proposal, real-artwork,

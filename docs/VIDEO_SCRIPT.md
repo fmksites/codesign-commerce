@@ -17,9 +17,9 @@ owned/authorized visual assets and no copyrighted music.
   call direct scripted tool calls an agent run.
 - Keep progress messages, the visible tote canvas, inline chat previews and
   Keep/Revert decision readable in the YouTube player.
-- Include KORRHAUS only as the real-business integration proof. If its live
-  WebMCP release is not separately verified, show the dated local evidence and
-  say “integrated locally,” not “live.”
+- Include KORRHAUS only as the secondary real-business integration proof. Its
+  live evidence is scoped to the verified Codex-browser run; do not imply that
+  the current native-Chrome or consumer-ChatGPT route was used.
 
 ## Timed script and shot list
 
@@ -33,7 +33,7 @@ owned/authorized visual assets and no copyrighted music.
 | 1:36–1:51 | Conversational refinement | “I ask for only the charcoal tote to feel bolder. The natural design stays unchanged while the charcoal preview updates.” |
 | 1:51–2:05 | Human decision | “Nothing is saved yet. WebMCP has no save or order tool. After explicit confirmation, the page's own Keep control commits once; Revert would restore the exact baseline with zero writes.” |
 | 2:05–2:22 | KORRHAUS evidence and existing Sock Designer | “This is not just a tote. The same unchanged core is integrated into KORRHAUS's existing Shopify Sock Designer, mapping more than 50 real controls without replacing its renderer or autosave.” |
-| 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 186 tests, safety cases and clean-clone instructions.” |
+| 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 189 tests, safety cases and clean-clone instructions.” |
 | 2:31–2:35 | Closing title | “CoDesign WebMCP: chat to custom products on Shopify.” |
 
 ## Contingencies
@@ -41,8 +41,9 @@ owned/authorized visual assets and no copyrighted music.
 - If a live Keep creates avoidable recording risk, use Revert in the main take
   and insert a clearly labeled, exact-build Keep replay that shows the one
   commit counter.
-- If KORRHAUS is still feature-off, show the local exact-six evidence screenshot
-  and say so plainly. The tote is the submitted working live URL.
+- Keep the tote as the submitted working live URL. KORRHAUS may be shown as
+  secondary live-business proof, using the dated evidence and its precise client
+  qualification.
 - Record in a host that has already passed the exact deployed flow. Do not cut
   from a failed consumer ChatGPT website attempt to a scripted page invocation
   and present it as one successful agent run.

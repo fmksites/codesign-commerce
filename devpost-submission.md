@@ -38,10 +38,10 @@ configuration and production readiness. The proposal remains temporary. The
 webpage—not WebMCP—owns visible Keep and Revert controls.
 
 The public studio-tote reference proves that this is a complete runnable product,
-not a chat mockup. The same unchanged public core is also integrated locally into
-KORRHAUS's pre-existing Shopify Custom Sock Designer through a private adapter
-that maps more than 50 real customer-editable controls and preserves its renderer
-and autosave path.
+not a chat mockup. The same unchanged public core is also live in KORRHAUS's
+pre-existing Shopify Custom Sock Designer through a private adapter that maps
+more than 50 real customer-editable controls and preserves its renderer and
+autosave path.
 
 ## Why This Matters
 
@@ -186,11 +186,11 @@ npm run check:evals
 npm run check:parity
 ```
 
-Expected deterministic result: 22 test files / 186 tests pass, strict typecheck
+Expected deterministic result: 22 test files / 189 tests pass, strict typecheck
 and build pass, the core WebMCP bundle matches SHA-256
-`aa195de70a5c0a2a7db0a929e038212f485d70db309f0538914dad7c1da7371f`,
+`c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`,
 the tote application bundle matches SHA-256
-`4f115aee2d97895a715495d842ec0830e5470d033570699613599074686b304b`,
+`4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`,
 the public-boundary and documentation scans pass, and the tote inventory reports
 25/25 accounted surfaces. Recheck these values after any application-code change.
 
@@ -200,14 +200,18 @@ the public-boundary and documentation scans pass, and the tote inventory reports
 
 Deterministic tote URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
-Final immutable deployment URL: `TODO after the final source-synchronized deployment.`
+Release identity: open
+<https://codesign-webmcp.pages.dev/site-metadata.json> to verify the exact
+deployed commit and bundle digests. Cloudflare also returns a unique deployment
+URL for each release; retain that URL in the submission handoff rather than
+hard-coding a self-referential deployment into source.
 
 ## Public Repository Link
 
 <https://github.com/fmksites/codesign-webmcp>
 
-Verified implementation release commit:
-`TODO record the final source-synchronized deployment commit.`
+Verified implementation source: public `main`. The deployed
+`site-metadata.json` must report the same commit before submission.
 
 License: Apache-2.0
 
@@ -227,7 +231,7 @@ Target script: `docs/VIDEO_SCRIPT.md` (2 minutes 35 seconds).
    validation.
 4. Visible human Keep/Revert boundary while ordinary design controls are locked.
 5. Architecture/repository proof showing the exact six tools, Manifest 2.0,
-   Apache-2.0 license, and 186 passing tests.
+   Apache-2.0 license, and 189 passing tests.
 
 Existing public-repository captures:
 
@@ -248,8 +252,9 @@ Existing public-repository captures:
   testing flag; repeat that proof on the final deployed commit before submission.
 - Release integrity: independently fetched stable/immutable core and tote
   bundles match their separately labelled metadata digests.
-- KORRHAUS: real private integration is locally complete and feature-off; it is
-  not claimed as a live WebMCP production release.
+- KORRHAUS: the real private integration is live on the existing Shopify
+  storefront and is used as secondary real-business proof. Its current evidence
+  is scoped to the tested Codex browser, not consumer ChatGPT or native Chrome.
 - Consumer ChatGPT website result: tested in ordinary Chrome on 28 August 2026;
   that client searched plugins for `WebMCP`, returned an empty result and did
   not expose the webpage's tools. This path is not claimed as supported.
@@ -274,8 +279,8 @@ Existing public-repository captures:
   merchant must supply a manifest and a small adapter to its real functions.
 - The public release stops at saved design. It deliberately exposes no ordering,
   quote, payment, upload, pricing, customer-data, supplier, or admin tool.
-- The live KORRHAUS production route remains feature-off until a separate owner
-  decision and production-safe release process.
+- The live KORRHAUS production route is a secondary integration example; the
+  anonymous tote remains the reproducible submitted product URL.
 - The optional model eval corpus has structure and scorer tests but no paid-model
   execution result.
 

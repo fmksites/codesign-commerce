@@ -11,7 +11,10 @@ which files describe the shipped six-tool product.
 - [Manifest 2 studio-tote completion](./CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md)
   — complete public control inventory, renderer, artwork, and review behavior.
 - [Private KORRHAUS integration](./CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md)
-  — current local exact-six adapter and safety boundary; not a live claim.
+  — dated local exact-six adapter and safety boundary before activation.
+- [Live KORRHAUS WebMCP verification](./KORRHAUS_LIVE_WEBMCP_2026-08-31.md)
+  — current production-route tool discovery, temporary proposal, previews,
+  validation, ordinary-visitor isolation, and zero-write Revert evidence.
 - [Final public tote regression](./TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md)
   — deployed proposal, preview, validation, recovery, Keep, and Revert checks.
 - [CoDesign WebMCP rebrand](./CODESIGN_WEBMCP_REBRAND_2026-08-28.md) — naming

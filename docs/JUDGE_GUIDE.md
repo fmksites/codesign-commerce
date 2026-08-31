@@ -138,10 +138,16 @@ Manifest 2 adapter maps more than 50 real customer-editable controls, up to four
 colourways, the existing renderer, validation, artwork flow, autosave isolation,
 and exact Keep/Revert behavior to the same public core.
 
-That adapter is locally verified and disabled by default. Do not describe it as
-a live production WebMCP feature unless a later separately approved release is
-deployed and verified on the real public route. The challenge submission does
-not depend on that activation.
+That adapter is now live at
+<https://korrhaus.nl/en/apps/wholesale/sock-designer>. A supported Codex browser
+discovered Shopify's native storefront tools plus CoDesign's exact six, created
+a temporary 120-pair/two-colourway proposal, returned two genuine previews,
+validated it, and reverted without changing the committed design. It is
+secondary real-business evidence, not the anonymous judge path and not a claim
+that consumer ChatGPT or current native Chrome was used. The challenge
+submission remains fully runnable through the public tote.
+
+See the [dated live KORRHAUS evidence](./evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md).
 
 ## Recovery
 

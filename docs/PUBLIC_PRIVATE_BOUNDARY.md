@@ -44,10 +44,11 @@ after a person chooses Keep and the committed revision still matches.
 ## KORRHAUS status
 
 The pre-existing KORRHAUS Custom Sock Designer remains in a private production
-repository. Its Manifest 2 adapter is locally verified and disabled by default.
-No private source, credential, customer record, pricing logic, or production
-workflow is copied here. The public challenge demo does not depend on a live
-KORRHAUS feature release.
+repository. Its Manifest 2 adapter is live on the existing Shopify storefront
+and maps the exact six public tools to the merchant-owned Designer. No private
+source, credential, customer record, pricing logic, or production workflow is
+copied here. KORRHAUS is secondary real-business proof; the public challenge
+demo remains independently runnable and does not require a KORRHAUS account.
 
 ## Scope
 

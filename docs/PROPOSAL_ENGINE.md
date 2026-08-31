@@ -96,5 +96,6 @@ Native Chrome and the Codex in-app browser have executed its two-variant
 actual-artwork flow with zero writes before the visible page Keep boundary.
 After explicit owner approval, the private KORRHAUS Designer also integrated
 the same engine and exact-six runtime through its full Route 02 control
-inventory. That work is local only, disabled by default, and remains separately
-approval-gated for deployment and production traffic.
+inventory. That adapter is now live on the existing Shopify storefront. Its
+production renderer, autosave, customer state, persistence, pricing, and
+commerce paths remain merchant-owned and outside this repository.

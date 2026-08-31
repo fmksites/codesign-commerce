@@ -8,8 +8,8 @@ Status meanings:
 - `HUMAN` — requires the participant's decision, recording, attestation, or
   external submission action.
 
-Last official Devpost recheck: 28 August 2026. No organizer announcements were
-available. Submission deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
+Last official Devpost and organizer-email recheck: 31 August 2026. Submission
+deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 
 ## Product and WebMCP
 
@@ -32,7 +32,7 @@ available. Submission deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 - `PASS` — source, public assets, tests, setup instructions, and reproducible
   tote example are included.
 - `PASS` — hosted CI is green on current `main`.
-- `PASS` — fresh public clone passes 22 test files / 186 tests, strict
+- `PASS` — fresh public clone passes 22 test files / 189 tests, strict
   typecheck, build, browser-bundle verification, judge-site verification,
   public-boundary scan, documentation check, eval structure, and 25/25 tote
   surface parity.
@@ -61,8 +61,10 @@ available. Submission deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 ## KORRHAUS and Shopify boundary
 
 - `PASS` — the public tote is the sole anonymous standalone product demo.
-- `PASS` — private KORRHAUS Manifest 2 integration is documented as locally
-  verified, disabled by default, and not a live production claim.
+- `PASS` — private KORRHAUS Manifest 2 integration is live on the existing
+  Shopify storefront and documented as secondary real-business proof.
+- `PASS` — live KORRHAUS page evidence remains explicitly scoped to the tested
+  Codex browser and is not relabeled as consumer ChatGPT or native Chrome.
 - `PASS` — no private KORRHAUS source, credentials, customer records, pricing,
   supplier data, or administrative logic is included.
 - `PASS` — the password-protected Shopify development-store proof is clearly

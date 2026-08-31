@@ -1,6 +1,6 @@
 # Evaluation report
 
-**Current evidence date:** 28 August 2026
+**Current evidence date:** 31 August 2026
 
 This report separates deterministic verification, actual browser/runtime
 evidence, and the optional model-evaluation corpus. None substitutes for the
@@ -93,12 +93,16 @@ enabled or ChatGPT's in-app browser before freezing the submission claim.
 
 The pre-existing KORRHAUS Custom Sock Designer has a private exact-six Manifest
 2 adapter covering more than 50 customer-editable controls and up to four
-colourways. Local unit, build, Playwright, visual, artwork, stale-state,
-autosave-isolation, mobile, Keep, and Revert evidence passed.
+colourways. It is now live on the existing Shopify storefront. A supported Codex
+browser discovered Shopify's native storefront tools plus CoDesign's exact six,
+read the sanitized live workspace, created a temporary 120-pair/two-colourway
+proposal, returned two current renderer previews, validated it, and used
+zero-write Revert. The proposal remained `persisted:false` and ordinary visitors
+kept the unchanged Designer.
 
-The feature remains disabled by default and is not claimed as a live production
-WebMCP release. The public tote submission does not depend on KORRHAUS traffic
-or feature activation.
+The live run did not press Keep on a real customer draft. Exactly-once Keep is
+covered by the isolated private integration tests. The public tote submission
+does not depend on KORRHAUS authentication or availability.
 
 ## Optional model-evaluation tooling
 

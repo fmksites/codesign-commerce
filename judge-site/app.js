@@ -60,7 +60,7 @@ try {
   setOptionalLink(
     "flagship",
     verifiedFlagshipUrl,
-    "KORRHAUS live verification pending",
+    "KORRHAUS link available in verified release builds",
     "Open KORRHAUS Sock Designer ↗",
   );
   setOptionalLink(
@@ -76,7 +76,7 @@ try {
     "Open judge guide ↗",
   );
 } catch {
-  setOptionalLink("flagship", null, "KORRHAUS live verification pending");
+  setOptionalLink("flagship", null, "KORRHAUS link available in verified release builds");
   setOptionalLink("repository", null, "Public repository pending release");
   setOptionalLink("judge-guide", null, "Judge guide pending release");
 }
