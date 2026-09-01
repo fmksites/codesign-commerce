@@ -52,14 +52,17 @@ order or expose artwork, customer, price, prompt, or private merchant data.
 The complete expected behavior and recovery checks are in
 [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md).
 
-### Release-verification gate
+### Current release evidence
 
-The improved flow is not deployed evidence until the exact commit has been
-deployed and repeated in the clients named in
-[docs/BROWSER_SUPPORT.md](./docs/BROWSER_SUPPORT.md). At the time of this edit,
-the local candidate passes 28 test files / 235 tests plus desktop and 390 px
-browser QA, but exact-current final-client verification is still pending. Do
-not infer it from local tests or older dated evidence.
+Public commit `1f422d6` is deployed and passes 28 test files / 235 tests plus
+desktop and 390 px browser QA. The exact stable URL completed the X-Ray repair,
+two fresh previews, production-ready revalidation, `persisted:false`, and
+visible Revert flow. A separate Keep run issued one Configuration Passport and
+survived reload. The current Chrome connection rendered the complete human
+fallback but exposed no native WebMCP capability, so current native-Chrome and
+consumer ChatGPT-web execution remain unclaimed. See
+[docs/BROWSER_SUPPORT.md](./docs/BROWSER_SUPPORT.md) and the
+[release evidence](./docs/evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md).
 
 ## Merchant or integrator: understand the reusable layer
 

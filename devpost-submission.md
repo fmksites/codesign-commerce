@@ -4,9 +4,10 @@ CoDesign WebMCP
 
 ### ⏳ Not submitted yet
 
-An editable Devpost project draft now exists at
-<https://devpost.com/software/codesign-webmcp>. It is associated with The
-WebMCP Challenge, but it has **not** been submitted for judging.
+An editable public Devpost project exists at
+<https://devpost.com/software/codesign-webmcp>. Its current release copy was
+refreshed on 1 September 2026, but the WebMCP Challenge entry still has
+`submitted_at: null`: it has **not** been submitted for judging.
 
 **WebMCP for Custom Products on Shopify**
 
@@ -44,7 +45,7 @@ captures revision-bound previews, and asks the merchant adapter to validate
 configuration and production readiness. The proposal remains temporary. The
 webpage—not WebMCP—owns visible Keep and Revert controls.
 
-The improved local release candidate also makes that work legible. A
+The current public release also makes that work legible. A
 privacy-safe trail shows actual inspection, capability reading, temporary
 changes, preview capture, and validation. A deterministic Constraint X-Ray
 turns the ordinary darker-staff direction into a credible first Charcoal
@@ -181,9 +182,7 @@ proposal stale instead of being silently overwritten.
 
 ### Fast judge path
 
-These are the intended instructions for the improved candidate. Do not copy
-them into Devpost until the approved deployment and exact deployed-client
-repeat pass; the currently public URL still identifies the prior release.
+These are the verified instructions for public commit `1f422d6`.
 
 1. Open <https://codesign-webmcp.pages.dev/tote/?reset=true> in a WebMCP-capable
    ChatGPT in-app browser.
@@ -234,24 +233,22 @@ npm run check:evals
 npm run check:parity
 ```
 
-Current local verification passes 28 test files / 235 tests, strict typecheck,
+Current verification passes 28 test files / 235 tests, strict typecheck,
 production and Shopify-overlay builds, browser-bundle, judge-site,
 public-boundary, documentation, 27-case eval/scorer, and 25/25 parity gates.
 The rebuilt local hashes are core
 `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
 and tote
 `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
-New deployed commit identity
-must be recorded only after explicit release approval and deployment; the older
-published hashes do not identify this release candidate.
+Public commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`, stable
+release metadata, and immutable deployment
+<https://0b0603b6.codesign-webmcp.pages.dev/> identify this exact build.
 
 ## Public Demo Link
 
 Primary judge URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
-Current status: this URL serves the prior verified release until the improved
-candidate receives separate deployment approval. Refresh all expected results
-and release metadata after deployment.
+Current status: this URL serves the verified 1 September integrity release.
 
 Project overview: <https://codesign-webmcp.pages.dev/>
 
@@ -265,9 +262,9 @@ hard-coding a self-referential deployment into source.
 
 <https://github.com/fmksites/codesign-webmcp>
 
-Prior verified release source: public `main`. The improved candidate is local
-and must not replace this claim until it is pushed with approval, hosted CI
-passes, and deployed `site-metadata.json` reports that exact commit.
+Current verified release source: public `main` at
+`1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`. Hosted CI passed and deployed
+`site-metadata.json` reports that exact commit and both expected bundle hashes.
 
 License: Apache-2.0
 
@@ -299,23 +296,26 @@ Existing public-repository captures:
 
 ## Submission Readiness Notes
 
-- Public repository and stable demo: the prior release remains anonymously
-  accessible. The improved release candidate is local only until separate push
-  and deployment approval.
-- Local release candidate: exact six, canonical result envelopes,
+- Public repository and stable demo: current release `1f422d6` is anonymously
+  accessible; hosted CI, stable metadata, immutable metadata, and downloaded
+  bundle bytes agree on its identity.
+- Current release: exact six, canonical result envelopes,
   privacy-safe activity, Constraint X-Ray, text-branding fallback, post-Keep
   Passport, trusted validation provenance, revision-aware preview freshness,
   and pure Shopify mapper are implemented; 28 files / 235 tests and
-  the complete local verification suite pass.
-- Final-client gate: repeat the ordinary flow, repair loop, `persisted: false`,
-  Revert, and separate Keep/Passport proof on the exact deployed commit in
-  ChatGPT desktop's in-app browser and native Chrome after release approval.
-- Chrome: ordinary UI verified on the public configurator. Historical native
-  Chrome 151 exact-six and supplied-artwork paths passed with the official
-  testing flag; repeat that proof on the final deployed commit before submission.
+  the complete verification suite pass.
+- Deployed supported-client gate: the exact stable URL completed the two-
+  variant X-Ray repair, two fresh previews, production-ready revalidation,
+  `persisted:false`, and visible Revert path in the Codex desktop in-app
+  browser. A separate deployed Keep issued one Passport and survived reload.
+- Chrome: the ordinary human UI passed on the exact public release with no
+  overflow or warnings/errors. Historical native Chrome 151 exact-six and
+  supplied-artwork paths passed with the official testing flag; the current
+  connected Chrome exposed no `document.modelContext` or WebMCP capability, so
+  no current native-Chrome execution claim is made.
 - Release integrity: independently fetched stable/immutable core and tote
-  bundles match their separately labelled metadata digests for the prior
-  release; new digests are not claimed yet.
+  bundles match their separately labelled metadata digests for commit
+  `1f422d6`.
 - KORRHAUS: the real private integration is live on the existing Shopify
   storefront and is used as secondary real-business proof. Its current evidence
   is scoped to the tested Codex browser, not consumer ChatGPT or native Chrome.
@@ -325,16 +325,17 @@ Existing public-repository captures:
 - Still required: final video recording in a verified WebMCP-capable host,
   public YouTube upload, thumbnail choice, entrant attestations, and explicit
   final Devpost approval.
-- An editable Devpost project draft exists at
+- An editable public Devpost project exists at
   <https://devpost.com/software/codesign-webmcp>. It is associated with The
-  WebMCP Challenge but has not been submitted for judging.
+  WebMCP Challenge, but its live challenge record has `submitted_at: null` and
+  has not been submitted for judging.
 
 ## Known Limitations
 
 - WebMCP is experimental and requires a compatible host. Chrome native testing
   currently requires its official flag or origin-trial path. Historical native
-  Chrome evidence and the prior immutable Codex-host release remain dated
-  evidence; neither proves the improved local candidate.
+  Chrome evidence remains dated; the connected Chrome used for the current
+  release exposed no native WebMCP capability.
 - A literal consumer ChatGPT website journey was performed in ordinary Chrome
   on the deployed build and failed at client capability discovery: ChatGPT
   searched its plugin directory for `WebMCP`, found none, and could not invoke
@@ -357,7 +358,7 @@ Existing public-repository captures:
 
 ## Official Form Field Status
 
-Official fields most recently fetched from Devpost on 31 August 2026:
+Official fields most recently fetched from Devpost on 1 September 2026:
 
 - **Submitter Type (required):** Saved as `Individual` after Felix's explicit
   confirmation.
@@ -372,22 +373,19 @@ Official fields most recently fetched from Devpost on 31 August 2026:
   pre-existing KORRHAUS boundary explicit.
 - **Live URL (required):** Saved as
   <https://codesign-webmcp.pages.dev/tote/?reset=true>
-- **Testing instructions (optional):** Saved with the ordinary-language North
-  Form brief, exact expected outputs, Revert behavior, and documentation route
-  for the supplied-artwork path. This saved field predates the X-Ray/Passport
-  candidate and must be refreshed only after the new release is deployed and
-  verified.
+- **Testing instructions (optional):** Refresh the saved field with the ordinary
+  North Form brief, visible X-Ray, exact 78% repair, fresh-preview requirement,
+  `persisted:false`, and Revert behavior from the current release.
 - **Public code repository (required):** Saved as
   <https://github.com/fmksites/codesign-webmcp>
-- **Agents/clients tested (required):** Saved as Codex desktop in-app browser,
-  page-scoped exact-six WebMCP on the prior deployed public release; historical
+- **Agents/clients tested (required):** Refresh as Codex desktop in-app browser,
+  page-scoped exact-six WebMCP on the current deployed public release; historical
   native Chrome 151 exact-six plus real supplied artwork using the official
   testing flag; and ordinary Chrome on the public configurator. The consumer
   ChatGPT website was also tested in ordinary Chrome, but that client did not
   expose the webpage tools; it is explicitly not claimed as supported. Current
-  native Chrome and the separate consumer ChatGPT desktop-app route are also
-  not claimed without a matching current test. This field must be updated after
-  the improved exact deployed commit completes its final-client repeat.
+  native Chrome and the separate consumer ChatGPT desktop-app route remain
+  unclaimed without a matching current test.
 - **AI tools leveraged (required):** Saved as OpenAI Codex for product framing,
   architecture, implementation, testing, browser verification, release QA, and
   documentation. Shopper runtime is provider-neutral and uses the agent host
@@ -421,8 +419,8 @@ GitHub Actions, OpenAI Codex
 - **Execution:** a stable public URL delivers a coherent visual configurator,
   two variants, studio-name or real-artwork branding, a deterministic localized
   repair, responsive ordinary browsing, extensive tests, clean-clone
-  instructions, CI, and reproducible judge steps after the new release passes
-  its final deployment gate.
+  instructions, green CI, and reproducible judge steps on the current public
+  release.
 - **Potential Impact:** merchants can make existing high-investment customizers
   agent-ready without rebuilding their renderer; KORRHAUS supplies credible
   real-business integration evidence.

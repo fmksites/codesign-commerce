@@ -240,7 +240,7 @@
   only a runtime-verified, current-readiness-bound, production-ready Passport and performs no cart or
   network mutation.
 
-- [ ] **16. Reframe and verify the judge experience on the exact release candidate**
+- [x] **16. Reframe and verify the judge experience on the exact release candidate**
   Improvement-plan ref: `CoDesign WebMCP Submission Improvement Plan > 4. Judge Experience and Submission Narrative` and `5. Verification and Release Gates`
   What to build: Make the ordinary-language prompt primary, replace inferred progress and stale test counts, add genuine problem/repaired visuals and the line “Agent designs. Human approves. Shopify completes the sale.” Update current docs/evals only from verified behavior. Do not push, deploy, change Shopify/KORRHAUS, or submit without the existing separate approvals.
   Acceptance: Local judge/tote surfaces tell one coherent story; current claims match the final local test/build output; desktop and 390px QA pass; exact six, X-Ray repair, `persisted:false`, Revert, Keep/passport, progressive enhancement and public/private boundaries are all verified locally. External supported-client verification remains explicitly gated until deployment approval.
@@ -269,3 +269,21 @@
   overflow or browser warnings/errors. Revert restored one variant with zero
   local/server/commit writes and released the temporary asset. Push,
   deployment, Shopify changes, and Devpost submission remain separately gated.
+
+  Public checkpoint (1 September 2026): Commit
+  `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61` was pushed to public `main`,
+  passed hosted CI, and deployed to stable `codesign-webmcp.pages.dev` plus
+  immutable `0b0603b6.codesign-webmcp.pages.dev`. Stable/immutable metadata and
+  downloaded bundles matched core
+  `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
+  and tote
+  `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
+  The exact deployed direct WebMCP run completed two variants, two 640 by 640
+  previews, merchant-rule X-Ray, only the returned 78% repair, outdated-to-
+  current preview transition, ready revalidation, `persisted:false`, and
+  visible Revert. A separate Keep advanced one revision, issued one
+  Configuration Passport, removed the Keep control, and survived reload.
+  Deployed 390 px and ordinary Chrome fallback QA passed with no overflow or
+  warnings/errors. The connected Chrome did not expose native WebMCP, so no
+  current native-Chrome or consumer ChatGPT-web claim is made. Evidence:
+  `docs/evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md`.

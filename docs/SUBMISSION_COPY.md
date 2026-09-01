@@ -21,7 +21,8 @@ The canonical judge journey that submission copy must describe is:
 7. a separate exactly-once human Keep proof that issues a Configuration
    Passport and opaque Shopify-safe reference.
 
-Do not add final-client, deployment, video, or test-count claims to the Devpost
-draft until the exact release evidence supports them. At the time of this edit,
-the improved exact-current ChatGPT desktop/native-Chrome acceptance remains
-pending.
+Current deployment, test-count, direct supported-client X-Ray/Revert, and
+separate Keep/Passport claims are supported by the exact release evidence.
+Keep independent model selection, consumer ChatGPT web, and current native-
+Chrome WebMCP unclaimed until a matching run exists. Video and final Devpost
+acceptance remain human-owned.

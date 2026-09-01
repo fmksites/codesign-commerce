@@ -20,6 +20,10 @@ which files describe the shipped six-tool product.
 - [Final supported-client release proof](./CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md)
   — exact final commit and immutable release identity, six-tool discovery, two
   current previews, honest validation, and visible zero-write Revert.
+- [Current integrity release](./CODESIGN_INTEGRITY_RELEASE_2026-09-01.md) —
+  public commit `1f422d6`, exact bundle digests, deployed Constraint X-Ray,
+  preview freshness, zero-write Revert, Keep/Passport reload, responsive QA,
+  and current Chrome claim boundary.
 - [CoDesign WebMCP rebrand](./CODESIGN_WEBMCP_REBRAND_2026-08-28.md) — naming
   and current-brand verification.
 - [Shopify-hosted interoperability proof](./CODESIGN_SHOPIFY_HOSTED_DEMO_2026-08-28.md)

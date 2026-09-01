@@ -8,10 +8,11 @@ Status meanings:
 - `HUMAN` — requires the participant's decision, recording, attestation, or
   external submission action.
 
-Last official Devpost and organizer-email recheck: 31 August 2026. Submission
+Last official Devpost requirements, judging, and dates recheck: 1 September
+2026. Submission
 deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 
-## Improved local candidate — 1 September 2026
+## Current public release — 1 September 2026
 
 - `PASS` — exact six and registration order are unchanged; successful results
   expose bounded canonical guidance and the privacy-safe observer records no
@@ -28,15 +29,20 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 - `PASS` — Passport verification is bound to freshly recomputed authoritative
   merchant readiness; unsafe edit URLs, tampering, unknown versions, unverified
   or non-production-ready mapping, and artwork/private-data leakage fail closed.
-- `PASS` — complete local verification passes 27 test files / 230 tests, strict
+- `PASS` — complete verification passes 28 test files / 235 tests, strict
   typecheck, production and Shopify-overlay builds, browser/judge/boundary/docs
-  checks, 27 eval cases, and 25/25 parity. Local bundle hashes are core
-  `454db66b8f01c70f90131b3bfbde38632380c2fff2026ea440f3269bdf1e1178`
+  checks, 27 eval cases, and 25/25 parity. Current bundle hashes are core
+  `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
   and tote
-  `bad0ed05b8cdbc04d208793ebbdf3523118b835cf69de644c0feab4673d95c76`.
-- `PENDING` — this improved candidate has not been pushed or deployed. Exact
-  deployed ChatGPT desktop, native Chrome, ordinary Chrome, Shopify-hosted tote,
-  and separately bounded KORRHAUS repeats require explicit release approval.
+  `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
+- `PASS` — public commit `1f422d6`, hosted CI, stable release metadata, and
+  immutable deployment `0b0603b6.codesign-webmcp.pages.dev` identify the
+  exact release. The deployed direct WebMCP X-Ray/Revert path, separate
+  Keep/Passport reload, 390 px mobile, and ordinary Chrome fallback passed.
+- `PENDING` — independent model selection on this exact commit, current native
+  Chrome WebMCP, consumer ChatGPT web, and a refreshed Shopify development-store
+  overlay remain unclaimed. They are not required to call the product build
+  incomplete, but any future claim needs matching evidence.
 
 ## Product and WebMCP
 
@@ -89,9 +95,9 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
   being mislabeled as a supported client.
 - `PASS` — Claude and other untested clients are not claimed.
 
-These rows are dated evidence for the 189-test release. They do not prove the
-new activity/X-Ray/Passport candidate until its exact commit is deployed and
-the client matrix is repeated.
+These rows remain dated evidence for the earlier 189-test release. Current
+activity/X-Ray/Passport evidence is in the first section and the 1 September
+release record; do not mix their commits or bundle hashes.
 
 ## KORRHAUS and Shopify boundary
 
@@ -107,14 +113,18 @@ the client matrix is repeated.
 
 ## Submission materials
 
-- `PASS` — English Devpost copy draft and exact judge instructions exist.
+- `PASS` — English Devpost project copy and exact judge instructions were
+  refreshed from the current release evidence; the live project remains not
+  entered for judging (`submitted_at:null`).
 - `PASS` — video script exists and targets less than three minutes.
-- `HUMAN` — record a clear public YouTube demo with audio after the final
-  deployment/client repeat.
+- `HUMAN` — record a clear public YouTube demo with audio from the current
+  verified release.
 - `HUMAN` — choose the final thumbnail and verify it uses current CoDesign
   WebMCP branding.
-- `HUMAN` — choose submitter type and country, confirm eligibility, IP,
-  third-party rights, and required Devpost answers.
+- `PASS` — submitter type `Individual`, country `Netherlands`, app status `New`,
+  live URL, and public repository were previously confirmed and saved.
+- `HUMAN` — confirm final eligibility, IP, third-party rights, and required
+  Devpost attestations at submission time.
 - `HUMAN` — add the final public YouTube URL.
 - `HUMAN` — submit the project before the deadline.
 

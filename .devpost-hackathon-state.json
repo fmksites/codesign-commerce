@@ -22,7 +22,8 @@
   "completed_stages": [
     "start-hackathon",
     "review",
-    "resources"
+    "resources",
+    "prepare-submission"
   ],
   "rules_acknowledged": true,
   "learning": {
@@ -43,5 +44,5 @@
     "status": "drafting",
     "devpost_project_url": "https://devpost.com/software/codesign-webmcp"
   },
-  "next_command": "prepare-submission"
+  "next_command": "submit-project"
 }

@@ -125,11 +125,11 @@ Before the transaction vertical slice may pass:
 Before submission-ready handoff:
 
 - Discover exactly the intended six tools in every client named as supported.
-  The exact final deployed release passes in the Codex agent host and has
-  historical native Chrome evidence. Current native Chrome remains unclaimed
-  because the connected final-release instance exposed no `document.modelContext`;
-  the consumer ChatGPT website run remains recorded as blocked by that client's
-  unavailable page-tool surface.
+  Public commit `1f422d6` passes the direct page-tool flow in the Codex desktop
+  in-app browser and has historical native Chrome evidence. Current native
+  Chrome remains unclaimed because the connected instance exposed no
+  `document.modelContext` or WebMCP capability; consumer ChatGPT web remains
+  recorded as unavailable in the tested session.
 - Execute the North Form 120-pair/two-colourway scenario.
 - Execute the ordinary 100-tote/two-variant scenario without supplied artwork;
   studio-name typography must remain production-ready.
@@ -173,6 +173,8 @@ history, not an active submission surface.
 
 The exact client/browser claim matrix and final-release repeats are tracked in
 [BROWSER_SUPPORT.md](./BROWSER_SUPPORT.md).
+The current public release record is
+[evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md](./evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md).
 
 ## Optional agent evaluation corpus
 

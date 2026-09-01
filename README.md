@@ -24,13 +24,13 @@ configurator before a product is cart-ready.
 
 > **Agent designs. Human approves. Shopify completes the sale.**
 
-**Release-candidate status (1 September 2026):** the activity observer,
-Constraint X-Ray repair loop, and Configuration Passport described below are
-implemented in the current local candidate. The complete local verification
-passes 28 test files / 235 tests, strict typecheck, builds, boundary/docs/eval
-checks, and 25/25 parity. The improved build has not been pushed or deployed
-yet, and final ChatGPT desktop/native-Chrome acceptance on the exact deployed
-commit remains gated by explicit release approval.
+**Current public release (1 September 2026):** commit `1f422d6` ships the
+activity observer, Constraint X-Ray repair loop, revision-aware preview
+freshness, and Configuration Passport described below. The complete release
+verification passes 28 test files / 235 tests, strict typecheck, builds,
+boundary/docs/eval checks, 25/25 parity, deployed desktop and 390 px QA, the
+exact deployed WebMCP repair/Revert flow, and a separate Keep/Passport reload
+proof. Current native Chrome WebMCP and consumer ChatGPT web are not claimed.
 
 ## Try it in 60 seconds
 
@@ -42,7 +42,7 @@ WebMCP is page-scoped, so a client must visit the configurator before it can
 discover those tools; finding and opening the right merchant page remains a
 browser, search, catalog, or commerce-navigation responsibility.
 
-1. After the improved release is explicitly approved and deployed, open the
+1. Open the
    [deterministic tote demo](https://codesign-webmcp.pages.dev/tote/?reset=true)
    in a supported WebMCP client.
 2. Ask the agent:
@@ -113,8 +113,8 @@ administration.
 
 ### Public studio-tote reference
 
-The tote is the submitted, anonymous, reproducible challenge demo. Its current
-local release candidate uses the
+The tote is the anonymous, reproducible challenge demo. Its current public
+release uses the
 same core package with its own manifest, adapter, renderer, artwork handling,
 variant logic, coupled production rules, truthful activity trail, deterministic
 Constraint X-Ray, and post-Keep Passport. It proves portability without claiming
@@ -200,17 +200,19 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 ## Current evidence
 
 - Public GitHub repository with a detected [Apache-2.0 license](./LICENSE).
-- The last deployed public release and hosted CI remain valid dated evidence;
-  they do not yet prove the new release candidate.
-- The improved local candidate passes 28 files / 235 tests covering exact-six
+- Public commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`, hosted
+  CI, stable release metadata, and immutable deployment
+  `0b0603b6.codesign-webmcp.pages.dev` identify the current release.
+- The release passes 28 files / 235 tests covering exact-six
   registration, privacy-safe activity, canonical result guidance, Constraint
   X-Ray provenance/localization and exact repair, revision-aware preview
   freshness, post-Keep Passport issuance/tamper rejection, and the pure
-  Shopify mapper. Deployment and exact deployed-client evidence remain pending.
-- Prior public tote evidence covers page-scoped proposals, real artwork, two
-  previews, validation, rejection, Revert, and Keep/reload. The new X-Ray and
-  Passport claims remain local until the approved release is deployed and
-  retested.
+  Shopify mapper.
+- The exact stable deployment completed the two-variant X-Ray repair and
+  zero-write Revert path, plus a separate exactly-once Keep/Passport reload
+  proof in the Codex desktop in-app browser. Ordinary Chrome rendered the full
+  fallback without errors; its current connection exposed no native WebMCP, so
+  no current native-Chrome execution claim is made.
 - The Shopify development-store proof has run CoDesign's six tools alongside
   Shopify's native catalog and cart tools.
 - Browser/client claims are kept precise in
@@ -226,6 +228,7 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 - [docs/TESTING.md](./docs/TESTING.md) — deterministic and actual-browser evidence policy.
 - [docs/PUBLIC_PRIVATE_BOUNDARY.md](./docs/PUBLIC_PRIVATE_BOUNDARY.md) — public package versus private merchant responsibilities.
 - [docs/evidence/README.md](./docs/evidence/README.md) — current evidence and historical archive map.
+- [docs/evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md](./docs/evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md) — exact current public release, repair, Revert, Keep, and browser evidence.
 - [ASSET_NOTICES.md](./ASSET_NOTICES.md) — code, brand, and demo-asset rights.
 - [SECURITY.md](./SECURITY.md) — security and data boundary.
 

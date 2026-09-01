@@ -546,3 +546,40 @@
   `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
 - No push, deployment, Shopify/KORRHAUS change, video work, Devpost form change,
   or final submission occurred.
+
+## 1 September 2026 — integrity release pushed, deployed, and verified
+
+- Explicit owner approval authorized the public Git push and Cloudflare Pages
+  deployment only. Commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`
+  reached public `main`, passed hosted CI, and deployed to stable
+  `codesign-webmcp.pages.dev` plus immutable
+  `0b0603b6.codesign-webmcp.pages.dev`.
+- Stable and immutable release metadata and downloaded bundles agreed on core
+  SHA-256
+  `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
+  and tote SHA-256
+  `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
+- The exact stable tote completed the direct page-tool judge journey in the
+  Codex desktop in-app browser: exactly six tools, two temporary 50-unit
+  variants, two revision-1 640 by 640 previews, merchant-rule safe-zone issue,
+  only the returned 78% repair, visible outdated receipts after revision
+  advance, two fresh revision-2 previews, production-ready revalidation,
+  `persisted:false`, and visible zero-save Revert.
+- A separate clean deployed run proved one page-owned Keep, one committed
+  revision, one visible Verified configuration receipt and Shopify-safe
+  reference, no remaining Keep control, and receipt/workspace survival after
+  reload.
+- Deployed 390 by 844 QA had no horizontal overflow or browser warnings/errors.
+  Ordinary native Chrome rendered the complete fallback cleanly but exposed no
+  `document.modelContext` or WebMCP capability; current native-Chrome WebMCP,
+  consumer ChatGPT web, and independent model selection on this exact commit
+  remain unclaimed.
+- No Shopify theme, private KORRHAUS runtime, video, legal attestation, or final
+  Devpost Submit action changed. Full record:
+  `docs/evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md`.
+- Official Devpost requirements, judging criteria, dates, registration, and the
+  existing project were reread on 1 September. The editable public project
+  description was refreshed to version 2 with only current verified claims and
+  read back successfully. Its WebMCP Challenge record still reports
+  `submitted_at:null` and `video_url:null`; no final submission or legal
+  acceptance occurred.

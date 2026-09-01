@@ -1,12 +1,11 @@
 # CoDesign WebMCP product direction and roadmap
 
 **Decision date:** 1 September 2026
-**Status:** Current strategic and local implementation source of truth. The
-activity observer, Constraint X-Ray, and Configuration Passport v0.1 are now
-implemented in the local public-tote release candidate. “Implemented locally”
-is not a deployed or final-client claim. This document does not authorize a
-push, deployment, Shopify theme change, private KORRHAUS change, production
-promotion, video, or Devpost submission.
+**Status:** Current strategic and implementation source of truth. The activity
+observer, Constraint X-Ray, preview freshness, and Configuration Passport v0.1
+are public in commit `1f422d6` and have exact deployed direct-client evidence.
+This document does not authorize a Shopify theme change, private KORRHAUS
+change, production promotion, video, or final Devpost submission.
 
 ## The product
 
@@ -88,10 +87,10 @@ portable Configuration Passport.
 | Open live customizer | Merchant and browser | Register six page-scoped WebMCP tools on the top-level page | Implemented |
 | Read and design | CoDesign plus merchant adapter | Read canonical state, list choices, stage assets, apply atomic proposal operations | Implemented |
 | Render and validate | Merchant renderer and rules | Return revision-bound previews and structured readiness | Implemented |
-| Explain and repair constraints | CoDesign plus merchant rules | Localize issues, select only a declared repair, rerender, recapture, revalidate | Implemented locally; deployed-client repeat pending |
+| Explain and repair constraints | CoDesign plus merchant rules | Localize issues, select only a declared repair, rerender, recapture, revalidate | Public and deployed direct-client verified |
 | Human review | Merchant page | Keep or Revert the visible proposal | Implemented |
-| Issue Configuration Passport | Merchant page plus CoDesign contract | Bind the kept revision, exact previews, readiness, and handoff reference | Implemented locally after confirmed Keep only |
-| Prepare Shopify reference | CoDesign pure mapper | Map a verified production-ready Passport to opaque safe line metadata | Implemented locally; no cart write |
+| Issue Configuration Passport | Merchant page plus CoDesign contract | Bind the kept revision, exact previews, readiness, and handoff reference | Public; deployed Keep/reload verified |
+| Prepare Shopify reference | CoDesign pure mapper | Map a verified production-ready Passport to opaque safe line metadata | Public and deterministically verified; no cart write |
 | Resume commerce | Shopify native capabilities | Carry the opaque configuration reference into cart, checkout, and order | Deferred merchant/Shopify integration |
 | Produce and support | Merchant systems | Resolve the reference to private production state | Private merchant responsibility |
 
@@ -422,8 +421,8 @@ Acceptance:
 
 **Goal:** Turn validation into a visible repair loop without adding tools.
 
-**Status:** Implemented and deterministically tested in the local release
-candidate; deployed-client repeat pending.
+**Status:** Implemented, deterministically tested, public, and verified through
+the exact deployed X-Ray/repair/Revert flow.
 
 Implementation order:
 
@@ -453,8 +452,8 @@ Acceptance:
 
 **Goal:** Bind the exact kept design to a public-safe Shopify handoff.
 
-**Status:** Implemented and deterministically tested in the local tote after
-confirmed Keep; deployed Keep/readback proof pending.
+**Status:** Implemented and deterministically tested; the exact public release
+completed page-owned Keep, Passport display, and reload readback.
 
 Implementation order:
 
@@ -538,9 +537,12 @@ Acceptance:
 **Goal:** Prove the complete deployed experience before changing submission
 claims.
 
-**Status:** Local release gate passed: 27 test files / 230 tests, strict
-typecheck, builds, boundary/docs/eval checks, and 25/25 parity. Push/deployment
-and exact deployed-client evidence remain pending explicit approval.
+**Status:** Current public release gate passed on commit `1f422d6`: 28 test
+files / 235 tests, strict typecheck, builds, boundary/docs/eval checks, 25/25
+parity, exact stable/immutable bundle identity, deployed direct WebMCP
+X-Ray/Revert, separate Keep/Passport reload, 390 px QA, and ordinary Chrome
+fallback. Independent model selection on this commit and current native Chrome
+WebMCP remain unclaimed.
 
 Required tracks:
 
@@ -617,16 +619,19 @@ fresh previews → revalidation → page Keep → Configuration Passport—is no
 implemented in the public tote while preserving six tools and the zero-write
 proposal boundary.
 
-The remaining sequence is:
+The technical release sequence is now complete for the public tote:
 
-1. obtain separate approval before Git push or public deployment;
-2. repeat the ordinary flow and X-Ray/Revert proof on the exact deployed commit
-   in ChatGPT desktop and native Chrome;
-3. run a separate exactly-once Keep/Passport proof;
-4. update submission claims and immutable release identifiers only from that
-   evidence; and
-5. leave Shopify cart mutation and private KORRHAUS adoption outside this
-   challenge release unless separately authorized later.
+1. public commit and immutable deployment identity are recorded;
+2. the exact stable build passed direct supported-client X-Ray/Revert and
+   separate Keep/Passport proofs;
+3. responsive and ordinary-Chrome fallback passed; and
+4. claims and release identifiers are synchronized to that evidence.
+
+Still separate: independently selected model execution on this exact commit,
+current native-Chrome WebMCP, any Shopify theme refresh, video/media, legal
+attestations, and final Devpost Submit. Shopify cart mutation and further
+private KORRHAUS work remain outside this challenge release unless separately
+authorized.
 
 ## Research basis
 

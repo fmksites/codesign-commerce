@@ -19,13 +19,13 @@ exact baseline. Neither action is a WebMCP tool.
 
 ## Release status before scoring
 
-These instructions describe the improved working-tree release. Treat them as
-deployed evidence only after the exact commit is deployed and its current
-browser acceptance is recorded. At the time of this edit, exact-current
-ChatGPT desktop and native-Chrome verification is still pending. The local
-candidate passes 28 test files / 235 tests and desktop/390 px browser QA; local
-tests, older deployments, and dated Codex-browser runs do not satisfy the
-deployed-client gate.
+These instructions describe public commit `1f422d6`. Stable and immutable
+release metadata identify the exact core and tote bundles; hosted CI is green;
+28 test files / 235 tests and desktop/390 px QA pass. The stable tote completed
+the full X-Ray/repair/Revert flow and a separate Keep/Passport reload proof in
+the Codex desktop in-app browser. Current native-Chrome WebMCP and consumer
+ChatGPT-web execution remain unclaimed; judges should use a WebMCP-capable
+client and may always inspect the complete ordinary configurator.
 
 ## Scored flow: ordinary brief, Constraint X-Ray, repair, Revert
 
@@ -212,9 +212,9 @@ CoDesign exposes no tool capable of those actions. The agent should explain the
 boundary without issuing a configuration call. A person-supplied file may be
 staged temporarily; remote fetching and merchant-storage upload are not exposed.
 
-## Exact-current browser acceptance gate
+## Exact-current browser acceptance status
 
-On the exact deployed commit, record separate results for:
+Separate results are recorded for:
 
 - ChatGPT desktop's in-app browser;
 - native Chrome with WebMCP enabled;
@@ -222,11 +222,12 @@ On the exact deployed commit, record separate results for:
 - the Shopify-hosted tote page; and
 - the live KORRHAUS integration as separately bounded evidence.
 
-The scored WebMCP run must prove ordinary-language selection, truthful activity,
-two previews, issue detection, exact merchant repair, refreshed validation,
-`persisted: false`, and Revert. The separate Keep run must prove exactly-once
-Passport issuance. Until those rows are complete for the final commit, describe
-them as pending—not as current live-client proof.
+The exact deployed direct supported-client run proves truthful activity, two
+previews, issue detection, the exact merchant repair, refreshed validation,
+`persisted:false`, Revert, and a separate exactly-once Keep/Passport result.
+Independent model selection on this exact commit, current native-Chrome WebMCP,
+consumer ChatGPT web, and a refreshed Shopify overlay remain separate unclaimed
+rows. See [browser support](./BROWSER_SUPPORT.md) for the authoritative matrix.
 
 ## Shopify-hosted interoperability proof
 
