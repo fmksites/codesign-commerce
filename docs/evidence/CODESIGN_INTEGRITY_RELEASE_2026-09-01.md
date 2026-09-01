@@ -87,10 +87,11 @@ tool-disclosure copy, and recorded no warnings or errors.
 
 The same stable URL loaded in the connected native Chrome instance with the
 complete human configurator, no horizontal overflow, the generated tool
-disclosure, and no warnings or errors. That Chrome connection did **not** expose
-`document.modelContext` or a WebMCP browser capability, so no current native-
-Chrome tool-execution claim is made. Historical Chrome 151 evidence remains
-dated evidence only.
+disclosure, and no warnings or errors. A normal human click changed the tote
+renderer to a Charcoal preview; Reset restored the deterministic baseline. That
+Chrome connection did **not** expose `document.modelContext` or a WebMCP browser
+capability, so no current native-Chrome tool-execution claim is made.
+Historical Chrome 151 evidence remains dated evidence only.
 
 ## Claim boundary and remaining work
 
