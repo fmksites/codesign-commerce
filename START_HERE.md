@@ -2,6 +2,17 @@
 
 Choose the path that matches why you opened this repository.
 
+## What you are reviewing
+
+The submission is **CoDesign WebMCP**, an open-source integration protocol and
+runtime layer for custom-product configurators. The Studio Tote is its
+anonymous public reference implementation; it is not the product being
+submitted. KORRHAUS is the active Shopify implementation of the same public
+core through a private merchant adapter.
+
+In short: **the protocol is the submission, the tote demonstrates it, and
+KORRHAUS proves it on Shopify.**
+
 ## Judge or reviewer: see the product first
 
 CoDesign WebMCP makes an existing custom-product designer agent-readable and

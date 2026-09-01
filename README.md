@@ -4,6 +4,22 @@
 
 > **Make your Shopify product configurator agent-ready.**
 
+## What is being submitted
+
+**CoDesign WebMCP is the product:** an open-source integration protocol and
+runtime layer built on WebMCP for existing custom-product configurators.
+
+- **Studio Tote is the public reference implementation.** It runs on
+  Cloudflare so judges can use it without an account and developers can
+  reproduce the complete integration.
+- **KORRHAUS is the live Shopify implementation.** The same public core is
+  actively connected to KORRHAUS's existing Custom Sock Designer through a
+  private merchant adapter.
+
+The tote is the demonstration—not the product. KORRHAUS proves the protocol can
+work inside a real Shopify business without publishing private application
+logic, customer data, pricing, suppliers, or internal endpoints.
+
 [![CI](https://github.com/fmksites/codesign-webmcp/actions/workflows/ci.yml/badge.svg)](https://github.com/fmksites/codesign-webmcp/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 
@@ -109,9 +125,9 @@ There is deliberately no WebMCP tool for Keep, Revert, save, upload, quote,
 checkout, order, payment, customer data, pricing, margins, suppliers, or
 administration.
 
-## Two proof surfaces, two different purposes
+## Two proof surfaces, one submitted protocol
 
-### Public studio-tote reference
+### Studio Tote: public reference implementation
 
 The tote is the anonymous, reproducible challenge demo. Its current public
 release uses the
@@ -120,7 +136,7 @@ variant logic, coupled production rules, truthful activity trail, deterministic
 Constraint X-Ray, and post-Keep Passport. It proves portability without claiming
 a universal renderer.
 
-### KORRHAUS real-business integration
+### KORRHAUS: live Shopify implementation
 
 KORRHAUS's Custom Sock Designer existed before the challenge. A private
 Manifest 2 adapter now maps the reusable package to its real customer controls,

@@ -113,6 +113,12 @@ release record; do not mix their commits or bundle hashes.
 
 ## Submission materials
 
+- `PENDING` — the locally verified submission-story candidate now makes the
+  boundary explicit on the judge page, README, start guide, judge guide,
+  Devpost copy, and video script: CoDesign WebMCP is the submitted protocol;
+  Studio Tote is its public reference implementation; KORRHAUS is the live
+  Shopify proof. It is not a public release claim until the candidate is
+  pushed and deployed.
 - `PASS` — English Devpost project copy and exact judge instructions were
   refreshed from the current release evidence; the live project remains not
   entered for judging (`submitted_at:null`).

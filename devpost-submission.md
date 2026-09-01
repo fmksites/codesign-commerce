@@ -13,6 +13,25 @@ refreshed on 1 September 2026, but the WebMCP Challenge entry still has
 
 > **Make your Shopify product configurator agent-ready.**
 
+## What We Are Submitting
+
+CoDesign WebMCP is an open-source integration protocol and runtime layer built
+on WebMCP for existing custom-product configurators.
+
+The Studio Tote is the anonymous public reference implementation. It shows the
+complete protocol on Cloudflare so judges can test it without an account and
+developers can reproduce it from the repository. The tote is the demonstration,
+not the product being submitted.
+
+KORRHAUS is the active Shopify implementation. The same public core is
+connected to KORRHAUS's existing live Custom Sock Designer through a private
+merchant adapter. That proves the protocol can operate inside a real Shopify
+business without publishing customer data, pricing, suppliers, internal
+endpoints or private application logic.
+
+**The protocol is the submission. Studio Tote demonstrates it publicly.
+KORRHAUS proves it on Shopify.**
+
 ## One-line Summary
 
 Turn a shopper's brief into a real, production-checked design inside the

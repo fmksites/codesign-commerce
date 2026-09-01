@@ -38,6 +38,9 @@ If that run fails, stop and fix or narrow the claim before recording.
 - Use large captions with six words or fewer. Keep them away from the product
   previews and WebMCP activity trail.
 - Use no copyrighted music. Narration can be Felix's voice or clear AI speech.
+- Keep a small context label visible during each proof surface:
+  `PUBLIC REFERENCE · STUDIO TOTE` for the tote and
+  `LIVE SHOPIFY IMPLEMENTATION · KORRHAUS` for the Sock Designer.
 
 ## Primary shopper prompt
 
@@ -54,15 +57,15 @@ the shopper prompt.
 
 | Time | What must be visible | Narration | On-screen overlay |
 | --- | --- | --- | --- |
-| 0:00–0:10 | The pasted brief is sent. The live tote canvas immediately begins changing; cut directly to the first visible agent activity if necessary. | “I asked for one hundred premium studio totes in two versions. I did not explain the designer or name a single tool.” | **One brief → two real designs** |
+| 0:00–0:10 | The pasted brief is sent. The live tote canvas immediately begins changing; cut directly to the first visible agent activity if necessary. Keep the small `PUBLIC REFERENCE · STUDIO TOTE` context label visible. | “This tote is the public reference for CoDesign WebMCP. I asked for one hundred premium studio totes in two versions without naming a single tool.” | **One brief → two real designs** |
 | 0:10–0:28 | Real activity appears and the Natural and Charcoal variants take shape in the merchant renderer. Briefly open the disclosure showing the registered capability count. | “CoDesign lets the agent read the designer, discover valid choices and make a temporary proposal inside the merchant's existing page.” | **6 page tools · 0 commerce tools** |
 | 0:28–0:48 | Show the two clearly different product previews in the conversation and the matching versions on the page. | “The agent creates fifty customer totes and fifty staff totes. These are not generated mockups; they are fresh images from the merchant's own renderer.” | **2 live renderer previews** |
 | 0:48–1:07 | Show the Charcoal safe-zone highlight, accessible explanation and `Merchant production rule` source. | “The first staff version looks plausible, but it is not ready to make. The merchant's rule identifies the exact artwork area that is too large.” | **Problem found before production** |
 | 1:07–1:25 | Show the declared 78% repair being selected, Charcoal rerendering, old previews becoming outdated, then fresh previews replacing them. | “The agent cannot invent a fix. It applies the merchant-approved reduction from ninety-five to seventy-eight percent, rerenders only what changed and replaces the stale preview.” | **Merchant-approved repair · 95% → 78%** |
 | 1:25–1:38 | Show production readiness turning true, Natural unchanged and `persisted: false`. | “The new evidence is current, both designs are ready to make, and nothing has been saved.” | **Ready to make · Still temporary** |
 | 1:38–1:48 | Use the visible Revert control and show the clean one-variant baseline return. | “The person stays in control. Revert restores the original design with zero writes.” | **Human decides: Keep or Revert** |
-| 1:48–2:00 | Quick cut to the live KORRHAUS Sock Designer with its real visual product canvas. Do not begin a second workflow. | “The same public core also runs inside KORRHAUS's live Shopify Sock Designer through a private adapter.” | **Same core · Live Shopify business** |
-| 2:00–2:12 | Show the repository top, Apache-2.0 license, six tool registrations and the manifest/adapter diagram. | “A merchant keeps its renderer and product rules, adds a manifest and a narrow adapter, and makes its configurator agent-ready.” | **Keep your configurator** / **Add manifest + adapter** |
+| 1:48–2:00 | Quick cut to the live KORRHAUS Sock Designer with its real visual product canvas and the small `LIVE SHOPIFY IMPLEMENTATION · KORRHAUS` label. Do not begin a second workflow. | “The tote is the demonstration, not the product. The same public core is actively integrated into KORRHAUS's live Shopify Sock Designer through a private adapter.” | **Same protocol · Live on Shopify** |
+| 2:00–2:12 | Show the repository top, Apache-2.0 license, six tool registrations and the manifest/adapter diagram. Add the small `SUBMISSION · OPEN-SOURCE PROTOCOL` label. | “CoDesign WebMCP is the submitted protocol. A merchant keeps its renderer and rules, then connects a manifest and narrow adapter.” | **Protocol → manifest → adapter** |
 | 2:12–2:18 | End on the repaired Natural and Charcoal previews. No separate title card. | “CoDesign WebMCP. Agent designs. Human approves. Shopify completes the sale.” | **Agent designs. Human approves.** |
 
 ## Editing rules from the organizer guidance

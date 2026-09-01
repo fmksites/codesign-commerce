@@ -1,6 +1,12 @@
 # Judge guide
 
-The fastest proof is the anonymous public studio-tote demo. KORRHAUS is a
+The submitted product is CoDesign WebMCP: an open-source integration protocol
+and runtime layer for custom-product configurators. The Studio Tote is the
+anonymous, reproducible public reference—not the product itself. KORRHAUS is
+the active Shopify implementation of the same public core through a private
+merchant adapter.
+
+The fastest hands-on proof is the anonymous public studio-tote demo. KORRHAUS is a
 separate real-business integration case and is not required to run or judge the
 submission.
 
