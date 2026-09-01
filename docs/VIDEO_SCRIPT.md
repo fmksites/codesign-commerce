@@ -1,80 +1,107 @@
-# Mandatory demonstration video script
+# CoDesign WebMCP demonstration video
 
-Target: 2 minutes 40 seconds. The official rules require a public YouTube video
-with audio, a clear functioning demo, and a duration under three minutes.
-Recording, voice, upload, and publication are human-owned. Use only
-owned/authorized visual assets and no copyrighted music.
+Target length: **2 minutes 10 seconds to 2 minutes 20 seconds**.
 
-## Do not record before this gate passes
+The finished video must be public on YouTube, include spoken narration, and stay
+under three minutes. Record short clips and edit them together. Do not record a
+title screen, sign-in, setup, loading, live typing, or waiting.
 
-- Deploy one exact commit after owner approval.
-- Repeat the scored flow on that deployment in the intended WebMCP client.
-- Repeat the separate Keep/Passport flow on that same deployment.
-- Confirm the browser evidence record names the exact commit, bundle, client,
-  date, and outcome.
-- Keep ChatGPT desktop, native Chrome, and ordinary-Chrome claims separate; do
-  not broaden a result from one client to another.
+## Recording gate
 
-At the time of this edit, the improved exact-current ChatGPT desktop and native
-Chrome runs are pending. Do not record local or historical evidence as though
-it were the final deployed release.
+Record only after the ordinary North Form brief completes on the exact public
+release in the intended WebMCP client. The run must show the agent independently
+discovering and using the page tools; a scripted direct tool call is not enough.
+
+The verified run must produce:
+
+- two visible 50-unit variants;
+- two genuine renderer previews returned to the conversation;
+- the Charcoal safe-zone issue and merchant-approved 78% repair;
+- fresh previews and production-ready revalidation;
+- `persisted: false`; and
+- a visible zero-write Revert.
+
+If that run fails, stop and fix or narrow the claim before recording.
 
 ## Recording setup
 
-- Record the anonymous English reset URL, not a hot-reloading local build.
-- Keep the agent conversation, tote page, public landing, KORRHAUS tab, and
-  repository ready.
-- Make the live activity trail, both product previews, Constraint X-Ray,
-  `persisted: false`, and Keep/Revert controls readable in the YouTube player.
-- Use the primary no-file prompt exactly as written below. Supplied artwork is a
-  short advanced proof in the separate Keep replay, not the first setup hurdle.
-- Do not call direct scripted tool invocations an agent run.
+- Start already signed in with the tote page reset and the agent conversation
+  open.
+- Paste the complete shopper prompt before recording. At 0:00, send it with one
+  click; never film the prompt being typed.
+- Keep the agent conversation and product canvas visible together whenever
+  possible.
+- Record the tote flow as separate clips: first change, two previews, problem,
+  repair, Revert, KORRHAUS proof, repository.
+- Cut every wait. Speed up unavoidable agent activity to 1.2–1.4× while keeping
+  the cursor and page state understandable.
+- Use large captions with six words or fewer. Keep them away from the product
+  previews and WebMCP activity trail.
+- Use no copyrighted music. Narration can be Felix's voice or clear AI speech.
 
-## Timed script and shot list
+## Primary shopper prompt
 
-| Time | Screen | Narration |
-| --- | --- | --- |
-| 0:00–0:12 | Ordinary shopper brief beside the clean tote designer | “I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.” |
-| 0:12–0:27 | Registered-tool disclosure opens; real activity begins | “CoDesign adds six bounded page tools to the merchant's existing designer. This disclosure is generated from what registered in this tab: four inspect, two temporary design, and zero save, order, or payment tools. The activity shown here is what the agent is actually doing.” |
-| 0:27–0:55 | Natural and Charcoal variants appear; the declared darker-staff direction starts at 95% upper-left | “The agent reads declared choices, keeps the 100-tote total consistent, and creates the merchant's customer and staff directions using North Form typography. It never replaces the merchant renderer, and every change is still temporary.” |
-| 0:55–1:15 | Two genuine previews appear; X-Ray highlights the Charcoal safe-zone issue | “Both renderer previews return to chat. The collection is configuration-valid, but the darker staff direction is not ready to make: the merchant's safe-zone rule marks this exact region. Every result still reports persisted false.” |
-| 1:15–1:47 | Agent selects the declared 78% repair; Charcoal rerenders; validation turns ready | “The agent cannot invent a production fix. It selects the smallest repair offered by the merchant: 78 percent. The old preview is invalidated, Charcoal rerenders, Natural stays unchanged, and fresh validation proves the issue is resolved.” |
-| 1:47–1:58 | Human clicks Revert; baseline and zero-write state return | “Nothing was saved. Revert restores the exact baseline with zero writes. This is the repeatable judge flow.” |
-| 1:58–2:15 | Clearly labeled separate replay: supplied mark, human Keep once, Verified configuration receipt | “In a separate run, the same temporary path stages a person-supplied mark without uploading it. After I inspect the current previews, one human Keep creates one committed revision and one Configuration Passport.” |
-| 2:15–2:27 | Receipt detail and Shopify-safe metadata, then Shopify-hosted tote | “The receipt binds readiness and preview integrity to an opaque Shopify-safe reference. It is not a cart write or a seventh tool; Shopify still owns commerce.” |
-| 2:27–2:35 | KORRHAUS live Sock Designer | “The same public core also runs behind KORRHAUS's existing Shopify Sock Designer through a private adapter, without replacing its customer interface.” |
-| 2:35–2:40 | Repository and closing title | “CoDesign WebMCP. Agent designs. Human approves. Shopify completes the sale.” |
+Paste this before recording and send it at 0:00:
 
-## Primary prompt card
+> I need 100 premium branded studio totes for North Form. Give me a natural
+> customer version and a darker staff version, show me both options, check
+> whether they are ready to make, and do not save anything yet.
 
-Use this verbatim in the recording:
+Do not mention WebMCP, CoDesign tool names, option IDs, schemas, or call order in
+the shopper prompt.
 
-> I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.
+## Final shot plan, narration and overlays
 
-The primary brief is sufficient to trigger the merchant-declared darker-staff
-direction and its repair loop. Do not add a protocol incantation or a second
-setup prompt.
+| Time | What must be visible | Narration | On-screen overlay |
+| --- | --- | --- | --- |
+| 0:00–0:10 | The pasted brief is sent. The live tote canvas immediately begins changing; cut directly to the first visible agent activity if necessary. | “I asked for one hundred premium studio totes in two versions. I did not explain the designer or name a single tool.” | **One brief → two real designs** |
+| 0:10–0:28 | Real activity appears and the Natural and Charcoal variants take shape in the merchant renderer. Briefly open the disclosure showing the registered capability count. | “CoDesign lets the agent read the designer, discover valid choices and make a temporary proposal inside the merchant's existing page.” | **6 page tools · 0 commerce tools** |
+| 0:28–0:48 | Show the two clearly different product previews in the conversation and the matching versions on the page. | “The agent creates fifty customer totes and fifty staff totes. These are not generated mockups; they are fresh images from the merchant's own renderer.” | **2 live renderer previews** |
+| 0:48–1:07 | Show the Charcoal safe-zone highlight, accessible explanation and `Merchant production rule` source. | “The first staff version looks plausible, but it is not ready to make. The merchant's rule identifies the exact artwork area that is too large.” | **Problem found before production** |
+| 1:07–1:25 | Show the declared 78% repair being selected, Charcoal rerendering, old previews becoming outdated, then fresh previews replacing them. | “The agent cannot invent a fix. It applies the merchant-approved reduction from ninety-five to seventy-eight percent, rerenders only what changed and replaces the stale preview.” | **Merchant-approved repair · 95% → 78%** |
+| 1:25–1:38 | Show production readiness turning true, Natural unchanged and `persisted: false`. | “The new evidence is current, both designs are ready to make, and nothing has been saved.” | **Ready to make · Still temporary** |
+| 1:38–1:48 | Use the visible Revert control and show the clean one-variant baseline return. | “The person stays in control. Revert restores the original design with zero writes.” | **Human decides: Keep or Revert** |
+| 1:48–2:00 | Quick cut to the live KORRHAUS Sock Designer with its real visual product canvas. Do not begin a second workflow. | “The same public core also runs inside KORRHAUS's live Shopify Sock Designer through a private adapter.” | **Same core · Live Shopify business** |
+| 2:00–2:12 | Show the repository top, Apache-2.0 license, six tool registrations and the manifest/adapter diagram. | “A merchant keeps its renderer and product rules, adds a manifest and a narrow adapter, and makes its configurator agent-ready.” | **Keep your configurator** / **Add manifest + adapter** |
+| 2:12–2:18 | End on the repaired Natural and Charcoal previews. No separate title card. | “CoDesign WebMCP. Agent designs. Human approves. Shopify completes the sale.” | **Agent designs. Human approves.** |
 
-## Evidence that must be visible, not merely narrated
+## Editing rules from the organizer guidance
 
-- The registered-tool disclosure and tab-scoped explanation.
-- Real invocation activity with no inferred milestone steps.
-- Two visibly different renderer previews returned to chat.
-- `ARTWORK_SAFE_ZONE` expressed visually and accessibly.
-- Only the merchant-declared 78% repair accepted.
-- Refreshed preview and production-ready result after repair.
-- `persisted: false` before the human decision.
-- Revert with zero writes in the scored run.
-- Exactly one Keep and one Verified configuration receipt in the separate run.
-- Opaque Shopify-safe reference without any order or checkout claim.
+- The product must visibly work within the first ten seconds.
+- The agent's actual tool use is the centerpiece, not an architecture lecture.
+- Show one excellent tote journey. Do not replay the same workflow for artwork
+  staging, Keep, Passport, Shopify cart, or KORRHAUS.
+- Use the short KORRHAUS cut only as proof that the public core works in a real
+  business.
+- Keep Configuration Passport, detailed test counts and the build story in the
+  written description.
+- Jump-cut between meaningful state changes. Remove every spinner, pause and
+  repeated explanation.
+- Add subtitles for the complete narration as well as the short emphasis
+  overlays above.
+- Export at 1080p or higher and verify that page labels remain legible in the
+  YouTube player.
 
-## Contingencies
+## What the video must not claim
 
-- If the final supported client fails during recording, stop and fix or narrow
-  the claim. Do not splice a scripted call into an agent run.
-- If the Keep replay creates avoidable recording risk, rehearse it on the exact
-  deployment, reset, then record one clean click and the resulting receipt.
-- Keep the tote as the submitted working URL. KORRHAUS is secondary
-  real-business proof and must retain its precise client qualification.
-- The finished export must stay under three minutes; judges are not required to
-  watch beyond that limit.
+- Do not call direct scripted tool invocation an independent agent run.
+- Do not claim consumer ChatGPT web or current native-Chrome WebMCP unless that
+  exact current client passes before recording.
+- Do not imply that CoDesign places orders, controls checkout, replaces the
+  merchant renderer, or installs with zero code.
+- Do not show the Configuration Passport unless it naturally fits without
+  weakening the single strong tote story.
+- Do not show or narrate secrets, customer data, pricing, private endpoints or
+  KORRHAUS implementation details.
+
+## Final export checklist
+
+- [ ] Public YouTube URL.
+- [ ] Duration below 3:00.
+- [ ] Audible narration explains both the product and WebMCP.
+- [ ] Working product appears by 0:10.
+- [ ] No title screen, setup, sign-in, loading or live typing.
+- [ ] Actual agent activity and two real previews are visible.
+- [ ] The issue, repair, refreshed preview and Revert are readable.
+- [ ] Captions and short overlays are present.
+- [ ] Claims match the exact client and deployed release shown.

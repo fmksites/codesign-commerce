@@ -15,111 +15,95 @@ refreshed on 1 September 2026, but the WebMCP Challenge entry still has
 
 ## One-line Summary
 
-AI agents turn a shopper's brief into a validated visual design inside an
-existing Shopify product configurator.
+Turn a shopper's brief into a real, production-checked design inside the
+Shopify product customizer a merchant already uses.
 
 ## Problem
 
-Shopify's emerging agent tools are strong at catalog discovery, navigation,
-cart, checkout, and orders. They do not solve the difficult work inside a
-made-to-order configurator: dozens of coupled options, multiple coordinated
-designs, customer artwork, a merchant-owned visual renderer, production rules,
-and state that must not be saved accidentally.
+Buying a normal Shopify product is easy for an agent. Designing a custom one is
+not.
 
-Today a studio owner who wants custom grip socks, totes, shirts, uniforms, or
-packaging still has to learn each merchant's designer and manually translate a
-plain-language brief into every control. Merchants cannot simply replace those
-customizers: they contain valuable product knowledge, renderer logic, and
-operational rules.
+A studio owner may know that they need 100 branded totes, two versions and a
+premium feel. They should not have to translate that idea into material,
+handle, print, placement, scale, quantity and production settings one control
+at a time.
+
+The merchant cannot simply replace its configurator either. That page already
+contains the real renderer, product options and manufacturing rules. The
+missing piece is a safe way for an agent to understand and operate it.
 
 ## Solution
 
-CoDesign WebMCP adds a reusable browser-side WebMCP transaction layer to an
-existing product customizer. A shopper can start with a sentence, let the agent
-open the appropriate merchant page, watch that page's real canvas change, and
-receive current renderer previews back in chat.
+CoDesign WebMCP connects an AI agent to the customizer already on the merchant's
+Shopify store.
 
-The agent reads only an allowlisted workspace, discovers declared controls and
-dependencies, stages temporary artwork, applies atomic multi-control proposals,
-captures revision-bound previews, and asks the merchant adapter to validate
-configuration and production readiness. The proposal remains temporary. The
-webpage—not WebMCP—owns visible Keep and Revert controls.
+The shopper describes the result they want. The agent reads the choices the
+merchant has made available, creates the design in the merchant's real visual
+renderer and returns current previews to the conversation. The shopper can ask
+for changes in normal language instead of learning the interface.
 
-The current public release also makes that work legible. A
-privacy-safe trail shows actual inspection, capability reading, temporary
-changes, preview capture, and validation. A deterministic Constraint X-Ray
-turns the ordinary darker-staff direction into a credible first Charcoal
-preview at 95% upper-left, localizes the resulting production issue, exposes
-only merchant-approved repair operations, rerenders, captures fresh previews,
-and proves that readiness has changed. Studio-name typography is the
-production-safe fallback, so the primary journey does not require an artwork
-attachment.
+The public tote demo makes this concrete. One brief creates a natural customer
+tote and a darker staff tote, 50 of each. The first staff design places the
+branding outside the merchant's safe area. CoDesign highlights the exact
+problem, offers only the merchant-approved repair, applies it and produces a
+fresh preview that is ready to make. The natural design stays untouched.
 
-After—and only after—a successful page Keep, Configuration Passport v0.1 binds
-the committed revision to a public-safe configuration digest and exact preview
-receipts. It is an unsigned integrity receipt, not a signature, identity proof,
-or authorization token. A pure Shopify mapper can turn a verified,
-production-ready Passport into opaque line metadata, but performs no cart,
-checkout, order, or payment mutation.
+Nothing is saved while the agent works. The page shows what the agent is doing,
+and the customer still decides whether to Keep or Revert the proposal.
 
-The public studio-tote reference proves that this is a complete runnable product,
-not a chat mockup. The same unchanged public core is also live in KORRHAUS's
-pre-existing Shopify Custom Sock Designer through a private adapter that maps
-more than 50 real customer-editable controls and preserves its renderer and
-autosave path.
+This is not a mock chat sitting beside a product form. The same public core is
+also connected to KORRHAUS's live Shopify Custom Sock Designer through a private
+adapter. The tote proves that the package is reproducible; KORRHAUS proves that
+it can work inside a real business without publishing customer data, pricing or
+private application logic.
 
 ## Why This Matters
 
-For shoppers, chat becomes the creation interface: describe the collection,
-watch a real product take shape, refine it conversationally, and decide whether
-to keep it without learning a complex designer.
+Shopify already helps agents discover products and continue towards checkout.
+CoDesign handles the difficult part in between: turning intent into a valid
+custom product.
 
-For merchants, the integration is intentionally narrow: install the package,
-declare the public control surface in a manifest, and connect an adapter to the
-existing state, renderer, validation, preview, and persistence functions. The
-merchant does not replace its visual experience or adopt a universal renderer.
+For shoppers, chat becomes the design interface. For merchants, the existing
+customizer remains the source of truth. They add a manifest describing the
+public choices and a small adapter to their existing state, renderer, preview
+and validation functions. They do not need to rebuild their visual experience
+or adopt a universal renderer.
 
-The potential audience is the long tail of Shopify merchants selling products
-that do not fit a normal variant picker: apparel programs, teamwear, packaging,
-furniture, uniforms, promotional goods, and other production-aware custom work.
+That makes the approach useful for the long tail of made-to-order Shopify
+products: apparel, teamwear, packaging, uniforms, promotional products,
+furniture and anything else that needs more than a normal variant picker.
+
+The simple version is:
+
+> Shopify gets the shopper to the product. CoDesign helps them actually design
+> it.
 
 ## How We Used AI
 
-At runtime, the shopper's agent performs the judgment-heavy orchestration that
-is difficult to hard-code: it interprets a natural-language brief, selects the
-relevant declared capabilities, chooses merchant-valid values, groups changes
-into coherent visual passes, creates coordinated variants, explains assumptions,
-uses current visual previews, and turns subjective feedback such as “make only
-the charcoal version feel bolder” into targeted typed operations.
+At runtime, the agent translates a subjective request into concrete design
+choices. It can decide that “premium” means heavier canvas and reinforced
+construction, create coordinated variants, react to the real previews and turn
+feedback such as “make only the staff version less severe” into a targeted
+change.
 
-The AI does not invent product rules or bypass the merchant. Structured WebMCP
-schemas bound its calls; the merchant manifest and adapter remain authoritative
-for allowed values, dependencies, rendering, and production validation. No
-ordering, quote, payment, customer-data, pricing, supplier, or administrative
-tool exists in the public WebMCP surface.
+The AI does not invent product rules. The merchant decides which values are
+allowed, how the product renders and what is ready to manufacture. WebMCP gives
+the agent a structured way to work inside those boundaries.
 
 ## How We Used Codex
 
-Codex was the primary build partner from product framing through release. We
-used a guided Scope → PRD → Technical Spec → Checklist → Build process, with
-explicit pushback when the first implementation was too text-heavy and too
-KORRHAUS-specific. That changed the product direction to full customer-control
-parity, live visual creation, real artwork transport, a reusable six-tool
-contract, and a materially different tote reference.
+Codex helped turn the original KORRHAUS-specific experiment into a reusable
+product. We used it to challenge the scope, design the six-tool contract, build
+the TypeScript package and tote adapter, create safety and parity tests, and
+test the result in real browsers.
 
-Codex then implemented and reviewed the TypeScript core, manifest and adapter
-contracts, proposal state machine, temporary-asset sandbox, revision-bound
-preview bridge, review controller, tote integration, tests, documentation,
-public/private boundary checks, CI, and Cloudflare release. It drove actual
-desktop, 390 px mobile, Codex in-app browser, and native Chrome verification.
-Browser and deployed testing found issues that source-only checks missed,
-including an explicit-404 gap, stale link labels, a favicon 404, inconsistent
-visible production validation, generic agent recovery errors, an unintended
-proposal-lifetime operation limit, and an unverifiable release-bundle label.
+That browser work mattered. It found problems that unit tests did not, including
+stale preview labels, weak error recovery, broken release links and visual
+issues on a 390-pixel screen. The final repository therefore contains both the
+implementation and the evidence used to verify it.
 
-We used deterministic tool-selection cases and a scorer self-test to design the
-evaluation corpus. We did not run the optional model-evaluation corpus against a
-paid model, so no synthetic or scripted result is presented as model evidence.
+We did not run the optional evaluation corpus against a paid model, so no
+scripted or synthetic result is presented as model evidence.
 
 ## Key Features
 
@@ -182,31 +166,39 @@ proposal stale instead of being silently overwritten.
 
 ### Fast judge path
 
-These are the verified instructions for public commit `1f422d6`.
+No login or credentials are required. These instructions use public release
+`1f422d6`.
 
 1. Open <https://codesign-webmcp.pages.dev/tote/?reset=true> in a WebMCP-capable
    ChatGPT in-app browser.
-2. Ask in ordinary shopper language:
+2. Paste this ordinary shopper request:
 
    > I need 100 premium branded studio totes for North Form. Give me a natural
    > customer version and a darker staff version, show me both options, check
    > whether they are ready to make, and do not save anything yet.
 
-3. No tool name, option ID, or WebMCP instruction is required. Expect the page
-   to show the actual invocation sequence: inspect workspace, read available
-   choices, update the temporary proposal, capture current previews, and check
-   production readiness. Asset staging is correctly omitted because no artwork
-   was supplied.
-4. Expect two visible 50-unit variants and two renderer previews. The declared
-   darker-staff direction begins Charcoal at 95% upper-left while Natural stays
-   centered. The first Charcoal result remains configuration-valid but is
-   visibly production-not-ready with an accessible localized safe-zone issue.
-5. Without a second shopper instruction, expect the agent to choose only the
-   returned merchant-approved 78% repair. It must leave Natural unchanged,
-   invalidate the old Charcoal preview, capture two fresh previews, restore
-   production readiness, and continue reporting `persisted: false`.
-6. Use visible Revert for a repeatable walkthrough. It must restore the original
-   one-variant baseline without a persistence write.
+3. Do not tell the agent about WebMCP or name any tools. The page should show
+   the agent reading the designer, checking its choices, creating a temporary
+   proposal, returning previews and checking production readiness.
+4. Expect two designs of 50 totes each. The Natural customer tote stays
+   centered. The Charcoal staff tote begins with its upper-left branding at
+   95%, which intentionally triggers the merchant's artwork safe-zone rule.
+5. The agent should use the only repair the merchant permits—reduce that staff
+   branding to 78%—then return fresh previews and show both designs as ready to
+   make. Natural must remain unchanged and the result must still say
+   `persisted: false`.
+6. Click the page's visible **Revert** button. The original single Canvas tote
+   should return. Nothing should be saved.
+
+What proves the demo is real: the product images come from the page's renderer;
+the first Charcoal preview becomes outdated after the repair; the replacement
+preview has a different integrity hash; and the merchant rule—not the language
+model—defines the accepted repair.
+
+Known client evidence: the complete current flow passes in Codex desktop's
+in-app browser. The ordinary non-WebMCP interface also works in Chrome. We do
+not claim current consumer ChatGPT-web or native-Chrome WebMCP support without
+a matching current test.
 
 For the supplied-artwork path, download `north-form-supplied-mark.png` from the
 public site, attach it to the conversation, and ask the agent to apply it. That
@@ -273,7 +265,7 @@ License: Apache-2.0
 `TODO: add the final public YouTube URL. The required video must include audio,
 show the working product, and remain under three minutes.`
 
-Target script: `docs/VIDEO_SCRIPT.md` (2 minutes 40 seconds).
+Target script: `docs/VIDEO_SCRIPT.md` (2 minutes 18 seconds).
 
 ## Screenshot Shot List
 
