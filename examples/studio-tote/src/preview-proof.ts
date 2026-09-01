@@ -152,6 +152,7 @@ export function registerStudioTotePreviewProof(
     return {
       supported: false,
       toolNames: [],
+      toolDisclosures: [],
       unregister: () => controller.abort(),
       ready: Promise.resolve(),
     };
@@ -163,6 +164,7 @@ export function registerStudioTotePreviewProof(
   return {
     supported: true,
     toolNames: [tool.name],
+    toolDisclosures: [{ name: "codesign_get_previews", title: tool.title, effect: "inspect" }],
     unregister: () => controller.abort(),
     ready,
   };

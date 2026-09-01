@@ -27,6 +27,14 @@ import type {
   StudioToteResolvedAsset,
 } from "./asset-proof";
 
+export const TOTE_ARTWORK_SAFE_ZONE = {
+  code: "ARTWORK_SAFE_ZONE",
+  maximumUpperLeftScale: 0.78,
+  repairScale: 0.78,
+  surfaceId: "product-preview",
+  normalizedPreviewRegion: { x: 0.32, y: 0.39, width: 0.14, height: 0.14 },
+} as const;
+
 export const toteManifest: ConfiguratorManifest = {
   schemaVersion: "2.0",
   id: "codesign.studio-tote-reference",
@@ -95,7 +103,7 @@ export const toteManifest: ConfiguratorManifest = {
     {
       id: "print.position",
       label: "Print placement",
-      agentDescription: "Choose the public front decoration position.",
+      agentDescription: "Choose the public front decoration position. The merchant's premium darker staff direction starts upper-left so production validation can assess its safe area.",
       scope: "variant",
       kind: "enum",
       agentWritable: true,
@@ -190,7 +198,7 @@ export const toteManifest: ConfiguratorManifest = {
     },
     {
       id: "branding.ink_color",
-      label: "Artwork colour",
+      label: "Branding colour",
       agentDescription: "Choose the visible single-colour ink used for studio-name typography.",
       scope: "variant",
       kind: "color",
@@ -205,8 +213,8 @@ export const toteManifest: ConfiguratorManifest = {
     },
     {
       id: "branding.scale",
-      label: "Artwork scale",
-      agentDescription: "Scale the visible branding between 50 and 140 percent of its standard size.",
+      label: "Branding scale",
+      agentDescription: "Scale the visible branding between 50 and 140 percent of its standard size. The merchant's premium darker staff direction starts at 95 percent; use only validation-declared repairs if that exploration is not production-ready.",
       scope: "variant",
       kind: "scale",
       agentWritable: true,
@@ -217,7 +225,7 @@ export const toteManifest: ConfiguratorManifest = {
     },
     {
       id: "branding.rotation",
-      label: "Artwork rotation",
+      label: "Branding rotation",
       agentDescription: "Rotate the visible branding between minus 30 and plus 30 degrees.",
       scope: "variant",
       kind: "rotation",
@@ -287,8 +295,18 @@ export const toteManifest: ConfiguratorManifest = {
     },
     {
       id: "artwork-before-production",
-      description: "A placeholder may be kept as a draft, but final print artwork is required before production.",
-      controlIds: ["branding.artwork_status"],
+      description: "A non-empty studio-name treatment or final supplied print artwork is required before production.",
+      controlIds: ["branding.text", "branding.artwork_status"],
+    },
+    {
+      id: "upper-left-artwork-safe-zone",
+      description: "An upper-left branding mark on charcoal canvas must use the merchant-approved 78 percent safe-area scale.",
+      controlIds: ["bag.color", "print.position", "branding.scale"],
+    },
+    {
+      id: "premium-darker-staff-direction",
+      description: "For this public tote's premium darker staff direction, begin with charcoal canvas, short handles, upper-left studio-name branding at 95 percent, then use only a repair returned by merchant validation.",
+      controlIds: ["bag.color", "handles.length", "print.position", "branding.text", "branding.scale"],
     },
   ],
   approval: { mode: "explicit-human", persistencePath: "page-keep-controller" },
@@ -516,6 +534,7 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
       issues.push({
         code: "QUANTITY_TOTAL_MISMATCH",
         severity: "constraint-error",
+        source: "merchant-rule",
         message: "Variant quantities must equal the order total",
         optionIds: ["design.quantity", "order.total_quantity"],
       });
@@ -528,6 +547,7 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
         issues.push({
           code: "EMBROIDERY_REQUIRES_SUBSTANTIAL_CANVAS",
           severity: "constraint-error",
+          source: "merchant-rule",
           message: "Embroidery requires 12 oz or 16 oz canvas",
           optionIds: ["print.method", "canvas.weight"],
           designIds: [design.id],
@@ -537,6 +557,7 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
         issues.push({
           code: "EXTRA_HEAVY_REQUIRES_REINFORCEMENT",
           severity: "constraint-error",
+          source: "merchant-rule",
           message: "16 oz canvas requires reinforced handle construction",
           optionIds: ["canvas.weight", "construction.reinforced"],
           designIds: [design.id],
@@ -546,40 +567,78 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
         issues.push({
           code: "TWO_COLOUR_PRINT_MINIMUM",
           severity: "constraint-error",
+          source: "merchant-rule",
           message: "Two-colour screen print requires at least 50 totes per variant",
           optionIds: ["print.method", "design.quantity"],
           designIds: [design.id],
         });
       }
+      const colour = design.selections["bag.color"];
+      const position = design.selections["print.position"];
+      const scale = Number(design.selections["branding.scale"] ?? 1);
+      const studioName = design.selections["branding.text"];
+      const hasStudioName = typeof studioName === "string" && studioName.trim().length > 0;
       const artworkReference = design.selections["branding.artwork_ref"];
+      const stagedArtworkAvailable = artworkReference !== undefined && (this.#assetStore?.resolve(artworkReference) ?? null) !== null;
+      const committedArtworkReady = design.assets.some((asset) => asset.slot === "print-artwork" && asset.status === "ready");
+      const hasBrandingMark = hasStudioName || stagedArtworkAvailable || committedArtworkReady;
+      if (hasBrandingMark && colour === "charcoal" && position === "upper-left" && scale > TOTE_ARTWORK_SAFE_ZONE.maximumUpperLeftScale) {
+        issues.push({
+          issueId: `artwork-safe-zone.${design.id}`,
+          code: TOTE_ARTWORK_SAFE_ZONE.code,
+          severity: "decision-required",
+          source: "merchant-rule",
+          message: "Branding mark exceeds the approved upper-left print safe area on charcoal canvas",
+          optionIds: ["bag.color", "print.position", "branding.scale"],
+          designIds: [design.id],
+          surfaceId: TOTE_ARTWORK_SAFE_ZONE.surfaceId,
+          normalizedPreviewRegion: { ...TOTE_ARTWORK_SAFE_ZONE.normalizedPreviewRegion },
+          repairable: true,
+          merchantApprovedRepairs: [{
+            id: "reduce-artwork-to-safe-scale",
+            label: "Reduce branding mark scale to 78%",
+            operations: [{
+              type: "set-control",
+              target: { scope: "variant", variantId: design.id },
+              controlId: "branding.scale",
+              value: TOTE_ARTWORK_SAFE_ZONE.repairScale,
+            }],
+          }],
+        });
+      }
       if (artworkReference !== undefined && !this.#assetStore?.resolve(artworkReference)) {
         issues.push({
           code: "ARTWORK_HANDLE_UNAVAILABLE",
           severity: "constraint-error",
+          source: "current-configuration",
           message: "The staged print artwork is no longer available",
           optionIds: ["branding.artwork_ref"],
           designIds: [design.id],
         });
       }
     }
-    const missingArtwork = state.designs.filter((design) => {
+    const missingBranding = state.designs.filter((design) => {
+      const studioName = design.selections["branding.text"];
+      const hasStudioName = typeof studioName === "string" && studioName.trim().length > 0;
       const artworkReference = design.selections["branding.artwork_ref"];
       const stagedArtworkAvailable = artworkReference !== undefined && (this.#assetStore?.resolve(artworkReference) ?? null) !== null;
-      return !stagedArtworkAvailable && design.assets.some((asset) => asset.slot === "print-artwork" && asset.status !== "ready");
+      const committedArtworkReady = design.assets.some((asset) => asset.slot === "print-artwork" && asset.status === "ready");
+      return !hasStudioName && !stagedArtworkAvailable && !committedArtworkReady;
     });
-    if (missingArtwork.length > 0) {
+    if (missingBranding.length > 0) {
       issues.push({
         code: "FINAL_PRINT_ARTWORK_REQUIRED",
         severity: "decision-required",
-        message: "Final print artwork",
-        optionIds: ["branding.artwork_status"],
-        designIds: missingArtwork.map((design) => design.id),
+        source: "merchant-rule",
+        message: "Final branding mark required: add a studio name or supplied print artwork",
+        optionIds: ["branding.text", "branding.artwork_status"],
+        designIds: missingBranding.map((design) => design.id),
       });
     }
     const configurationValid = !issues.some((issue) => issue.severity === "constraint-error");
     return {
       configurationValid,
-      productionReady: configurationValid && missingArtwork.length === 0,
+      productionReady: configurationValid && !issues.some((issue) => issue.severity === "decision-required"),
       issues,
       assumptions: [],
     };
@@ -592,11 +651,17 @@ export class StudioToteAdapter implements ConfiguratorAdapter<ToteSnapshot>, Wor
       configurationValid: result.configurationValid,
       productionReady: result.productionReady,
       issues: result.issues.map((issue) => ({
+        issueId: issue.issueId ?? `${issue.code.toLowerCase()}.${issue.designIds?.join(".") ?? "workspace"}`,
         code: issue.code,
         severity: issue.severity,
+        ...(issue.source === undefined ? {} : { source: issue.source }),
         message: issue.message,
         ...(issue.optionIds === undefined ? {} : { controlIds: issue.optionIds }),
         ...(issue.designIds === undefined ? {} : { variantIds: issue.designIds }),
+        ...(issue.surfaceId === undefined ? {} : { surfaceId: issue.surfaceId }),
+        ...(issue.normalizedPreviewRegion === undefined ? {} : { normalizedPreviewRegion: issue.normalizedPreviewRegion }),
+        repairable: issue.repairable ?? false,
+        ...(issue.merchantApprovedRepairs === undefined ? {} : { merchantApprovedRepairs: issue.merchantApprovedRepairs }),
       })),
       assumptions: [...result.assumptions],
     };

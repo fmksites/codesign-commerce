@@ -12,9 +12,24 @@ import {
   type JsonPrimitive,
   type PreviewArtifactCandidate,
   type PreviewCaptureRequest,
+  type ValidationResult,
+  type WebMcpInvocationEvent,
 } from "@codesign-webmcp/core";
 import { StudioToteAdapter, toteInitialState, toteManifest, type ToteSnapshot } from "./configurator";
+import {
+  constraintXRayExplanation,
+  constraintXRayForVariant,
+  firstConstraintXRay,
+  normalizedRegionStyles,
+  validationIssueSourceLabel,
+} from "./constraint-xray";
+import {
+  previewFreshnessForVariant,
+  recordPreviewEvidence,
+  type VariantPreviewEvidenceMap,
+} from "./preview-freshness";
 import { syncRangeControl } from "./range-controls";
+import { reduceAgentActivity, summarizeToolDisclosures, type AgentActivityItem } from "./agent-activity";
 import {
   StudioToteAssetProofStore,
   type StudioToteResolvedAsset,
@@ -26,6 +41,11 @@ import {
 } from "./preview-proof";
 import { mountNativeAssetProof } from "./native-asset-proof";
 import { resolveStudioToteAsset, type StudioToteAssetMap } from "./public-assets";
+import {
+  TotePassportCoordinator,
+  verifyStoredTotePassport,
+  type TotePassportOutcome,
+} from "./configuration-passport";
 import "./styles.css";
 
 declare global {
@@ -126,6 +146,7 @@ app.innerHTML = `
           <img src="${publicAsset("tote-natural-long.png")}" alt="Natural canvas studio tote with long handles" data-tote-preview />
           <span class="print-mark" data-print-mark>NORTH FORM</span>
           <img class="artwork-mark" data-artwork-mark alt="" hidden />
+          <div class="constraint-xray" data-constraint-xray role="note" tabindex="0" hidden><span aria-hidden="true">Constraint X-Ray</span></div>
         </div>
         <div class="canvas-footer"><span>Front</span><span data-canvas-spec>Natural · 12 oz · long handles</span><span>100%</span></div>
         <output data-persistence-audit hidden aria-hidden="true"></output>
@@ -137,18 +158,33 @@ app.innerHTML = `
           <strong>Previous proposal was not saved</strong>
           <p>The temporary agent preview ended when this page reloaded. Ask the agent to recreate it before choosing Keep.</p>
         </section>
-        <section class="progress-panel" data-proposal-progress hidden>
-          <div class="rail-heading"><strong>Proposal progress</strong><span data-progress-count>1 of 3</span></div>
-          <ol><li data-pass="foundation"><i></i><span>Foundation</span></li><li data-pass="branding"><i></i><span>Branding</span></li><li data-pass="variants"><i></i><span>Variants</span></li></ol>
+        <section class="activity-panel" data-agent-activity hidden aria-labelledby="agent-activity-title">
+          <div class="rail-heading"><strong id="agent-activity-title">Agent activity</strong><span data-activity-status>Live in this tab</span></div>
+          <ol data-agent-activity-list aria-live="polite" aria-relevant="additions text"></ol>
         </section>
+        <details class="tool-disclosure" data-tool-disclosure hidden>
+          <summary><span>Agent tools active in this tab</span><small data-tool-disclosure-count></small></summary>
+          <p>These page-scoped capabilities end when this tab closes. They can inspect the designer or create a visible temporary proposal; they cannot save, order, or pay.</p>
+          <ul data-tool-disclosure-list></ul>
+        </details>
         <div id="proposal-review" class="proposal-slot"></div>
         <section class="preview-panel">
           <div class="rail-heading"><strong>Variant previews</strong><span data-preview-count>1 design</span></div>
           <div class="preview-list" data-variant-previews></div>
         </section>
-        <section class="readiness-panel">
+        <section class="readiness-panel" data-readiness-panel>
           <div class="readiness-icon" aria-hidden="true">!</div>
-          <div><strong>Production readiness</strong><p class="production-note"><span>Final print artwork is still required.</span></p></div>
+          <div><strong>Production readiness</strong><span class="validation-source" data-validation-source hidden></span><p class="production-note" id="production-readiness-note" role="status" aria-live="polite"><span>Final print artwork is still required.</span></p></div>
+        </section>
+        <section class="passport-receipt" data-passport-receipt aria-labelledby="passport-receipt-title" hidden>
+          <div class="passport-receipt-heading"><span aria-hidden="true">✓</span><div><strong id="passport-receipt-title">Verified configuration</strong><small>Issued only after Keep succeeded</small></div></div>
+          <dl>
+            <div><dt>Revision</dt><dd data-passport-revision></dd></div>
+            <div><dt>Readiness</dt><dd data-passport-readiness></dd></div>
+            <div><dt>Preview integrity</dt><dd data-passport-preview></dd></div>
+            <div><dt>Shopify-safe reference</dt><dd data-passport-reference></dd></div>
+          </dl>
+          <p>Public integrity receipt—not a signature. It contains no artwork, shopper data, price, prompt, or private merchant rule.</p>
         </section>
         <p class="review-boundary">Agent work stays temporary. Keep is the only save boundary; Revert restores the previous design.</p>
       </aside>
@@ -158,10 +194,12 @@ app.innerHTML = `
 
 const STORAGE_KEY = "codesign-studio-tote";
 const PENDING_PROPOSAL_KEY = "codesign-studio-tote-pending-proposal";
+const PASSPORT_STORAGE_KEY = "codesign-studio-tote-passport-v0.1";
 const query = new URLSearchParams(window.location.search);
 const resetRequested = query.has("reset");
 if (resetRequested) {
   window.localStorage.removeItem(STORAGE_KEY);
+  window.localStorage.removeItem(PASSPORT_STORAGE_KEY);
   window.sessionStorage.removeItem(PENDING_PROPOSAL_KEY);
   query.delete("reset");
   const cleanUrl = new URL(window.location.href);
@@ -206,6 +244,7 @@ if (storedDraft) {
 }
 let interruptedProposal = !resetRequested && window.sessionStorage.getItem(PENDING_PROPOSAL_KEY) === "true";
 let onDraftPersisted = (): void => {};
+let onCommittedDraftWrite = (): void => {};
 const assetStore = new StudioToteAssetProofStore(committedAssets);
 const adapter = new StudioToteAdapter(seed, (state) => {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -213,6 +252,7 @@ const adapter = new StudioToteAdapter(seed, (state) => {
     state,
     assets: assetStore.exportCommitted(),
   }));
+  onCommittedDraftWrite();
   onDraftPersisted();
 }, assetStore);
 assetStore.setBaseRevisionProvider(() => adapter.committedState.revision);
@@ -226,16 +266,23 @@ const saveStatus = document.querySelector<HTMLElement>("[data-save-status]");
 const preview = document.querySelector<HTMLImageElement>("[data-tote-preview]");
 const mark = document.querySelector<HTMLElement>("[data-print-mark]");
 const artworkMark = document.querySelector<HTMLImageElement>("[data-artwork-mark]");
+const constraintXray = document.querySelector<HTMLElement>("[data-constraint-xray]");
 const controls = document.querySelector<HTMLFieldSetElement>("[data-human-controls]");
 const audit = document.querySelector<HTMLOutputElement>("[data-persistence-audit]");
 const assetAudit = document.querySelector<HTMLOutputElement>("[data-asset-audit]");
 const productionNote = document.querySelector<HTMLElement>(".production-note span");
+const validationSource = document.querySelector<HTMLElement>("[data-validation-source]");
+const readinessPanel = document.querySelector<HTMLElement>("[data-readiness-panel]");
 const totalQuantity = document.querySelector<HTMLElement>("[data-total-quantity]");
 const canvasTitle = document.querySelector<HTMLElement>("[data-canvas-title]");
 const canvasMode = document.querySelector<HTMLElement>("[data-canvas-mode]");
 const canvasSpec = document.querySelector<HTMLElement>("[data-canvas-spec]");
-const progressPanel = document.querySelector<HTMLElement>("[data-proposal-progress]");
-const progressCount = document.querySelector<HTMLElement>("[data-progress-count]");
+const activityPanel = document.querySelector<HTMLElement>("[data-agent-activity]");
+const activityList = document.querySelector<HTMLOListElement>("[data-agent-activity-list]");
+const activityStatus = document.querySelector<HTMLElement>("[data-activity-status]");
+const toolDisclosure = document.querySelector<HTMLDetailsElement>("[data-tool-disclosure]");
+const toolDisclosureCount = document.querySelector<HTMLElement>("[data-tool-disclosure-count]");
+const toolDisclosureList = document.querySelector<HTMLUListElement>("[data-tool-disclosure-list]");
 const previewList = document.querySelector<HTMLElement>("[data-variant-previews]");
 const previewCount = document.querySelector<HTMLElement>("[data-preview-count]");
 const mobileTabs = document.querySelector<HTMLElement>("[data-mobile-variant-tabs]");
@@ -243,13 +290,57 @@ const artworkName = document.querySelector<HTMLElement>("[data-artwork-name]");
 const artworkFile = document.querySelector<HTMLInputElement>("[data-artwork-file]");
 const artworkRemove = document.querySelector<HTMLButtonElement>("[data-artwork-remove]");
 const scaleOutput = document.querySelector<HTMLOutputElement>("[data-scale-output]");
+const scaleInput = document.querySelector<HTMLInputElement>('input[data-option="branding.scale"]');
 const rotationOutput = document.querySelector<HTMLOutputElement>("[data-rotation-output]");
 const resetButton = document.querySelector<HTMLButtonElement>("[data-reset-design]");
 const reloadNotice = document.querySelector<HTMLElement>("[data-reload-notice]");
+const passportReceipt = document.querySelector<HTMLElement>("[data-passport-receipt]");
+const passportTitle = document.querySelector<HTMLElement>("#passport-receipt-title");
+const passportRevision = document.querySelector<HTMLElement>("[data-passport-revision]");
+const passportReadiness = document.querySelector<HTMLElement>("[data-passport-readiness]");
+const passportPreview = document.querySelector<HTMLElement>("[data-passport-preview]");
+const passportReference = document.querySelector<HTMLElement>("[data-passport-reference]");
 const headerStatus = saveStatus?.closest<HTMLElement>(".header-status");
-if (!reviewContainer || !tabs || !nameInput || !saveStatus || !headerStatus || !preview || !mark || !artworkMark || !controls || !audit || !assetAudit || !productionNote || !totalQuantity || !canvasTitle || !canvasMode || !canvasSpec || !progressPanel || !progressCount || !previewList || !previewCount || !mobileTabs || !artworkName || !artworkFile || !artworkRemove || !scaleOutput || !rotationOutput || !resetButton || !reloadNotice) {
+if (!reviewContainer || !tabs || !nameInput || !saveStatus || !headerStatus || !preview || !mark || !artworkMark || !constraintXray || !controls || !audit || !assetAudit || !productionNote || !validationSource || !readinessPanel || !totalQuantity || !canvasTitle || !canvasMode || !canvasSpec || !activityPanel || !activityList || !activityStatus || !toolDisclosure || !toolDisclosureCount || !toolDisclosureList || !previewList || !previewCount || !mobileTabs || !artworkName || !artworkFile || !artworkRemove || !scaleOutput || !scaleInput || !rotationOutput || !resetButton || !reloadNotice || !passportReceipt || !passportTitle || !passportRevision || !passportReadiness || !passportPreview || !passportReference) {
   throw new Error("Studio tote configurator markup is incomplete");
 }
+
+const validateCommittedToteReadiness = (workspace: Parameters<typeof adapter.validateWorkspace>[0]) =>
+  adapter.validateWorkspace(workspace);
+const passportCoordinator = new TotePassportCoordinator(validateCommittedToteReadiness);
+let passportDisplayGeneration = 0;
+const passportContext = () => ({ merchantOrigin: window.location.origin, editUrl: window.location.href });
+
+const clearPassportReceipt = (): void => {
+  passportDisplayGeneration += 1;
+  passportReceipt.hidden = true;
+  delete passportReceipt.dataset.status;
+  window.localStorage.removeItem(PASSPORT_STORAGE_KEY);
+};
+
+const renderPassportReceipt = (outcome: TotePassportOutcome): void => {
+  const { passport, shopifyLineMetadata } = outcome;
+  passportTitle.textContent = "Verified configuration";
+  passportReceipt.dataset.status = "verified";
+  passportRevision.textContent = passport.committedRevision;
+  passportReadiness.textContent = passport.readiness.productionReady ? "Production ready" : "Saved draft · production blocked";
+  const firstIntegrity = passport.previewReceipts[0]?.integrity.slice("sha256:".length, "sha256:".length + 10) ?? "unavailable";
+  passportPreview.textContent = `${passport.previewReceipts.length} exact ${passport.previewReceipts.length === 1 ? "preview" : "previews"} · ${firstIntegrity}…`;
+  passportReference.textContent = shopifyLineMetadata?._codesign_configuration_id ?? "Blocked until production ready";
+  passportReceipt.hidden = false;
+};
+
+const renderPassportError = (revision: string, message: string): void => {
+  passportTitle.textContent = "Configuration saved · receipt unavailable";
+  passportReceipt.dataset.status = "error";
+  passportRevision.textContent = revision;
+  passportReadiness.textContent = "Integrity receipt not issued";
+  passportPreview.textContent = message;
+  passportReference.textContent = "No Shopify-safe reference";
+  passportReceipt.hidden = false;
+};
+
+onCommittedDraftWrite = clearPassportReceipt;
 
 const setSaveStatus = (message: string, tone: "saved" | "temporary" | "stale"): void => {
   saveStatus.textContent = message;
@@ -452,7 +543,22 @@ const inkColour = (design: ConfigurationDesign): string => {
   return colour === "cobalt" ? "#1d56d8" : colour === "canvas" ? "#f5f1e8" : "#1c222b";
 };
 
-const renderVariantPreviews = (state: ConfigurationState): void => {
+let previewEvidence: VariantPreviewEvidenceMap = {};
+let previewEvidenceProposalId: string | null = null;
+
+const synchronizePreviewEvidence = (): void => {
+  const snapshot = engine.snapshot;
+  if (snapshot.proposalId !== previewEvidenceProposalId) {
+    previewEvidence = {};
+    previewEvidenceProposalId = snapshot.proposalId;
+  }
+  if (snapshot.proposalId !== null && engine.currentPreviewReceipts.length > 0) {
+    previewEvidence = recordPreviewEvidence(previewEvidence, engine.currentPreviewReceipts);
+  }
+};
+
+const renderVariantPreviews = (state: ConfigurationState, validation: ValidationResult): void => {
+  synchronizePreviewEvidence();
   previewList.replaceChildren();
   previewCount.textContent = `${state.designs.length} ${state.designs.length === 1 ? "design" : "designs"}`;
   for (const design of state.designs) {
@@ -461,7 +567,10 @@ const renderVariantPreviews = (state: ConfigurationState): void => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `preview-card${design.id === activeDesignId ? " active" : ""}`;
-    button.setAttribute("aria-label", `Show ${design.name}`);
+    const xray = constraintXRayForVariant(validation, design.id);
+    const freshness = previewFreshnessForVariant(engine.snapshot, previewEvidence[design.id]);
+    button.classList.toggle("constraint-warning", xray !== null);
+    button.setAttribute("aria-label", `Show ${design.name}${xray ? "; merchant production safe-area check required" : ""}${freshness ? `; ${freshness.description}` : ""}`);
     const visual = document.createElement("span");
     visual.className = "preview-card-visual";
     const image = document.createElement("img");
@@ -489,6 +598,20 @@ const renderVariantPreviews = (state: ConfigurationState): void => {
     const meta = document.createElement("small");
     meta.textContent = `${design.quantity} totes · ${String(selection(design, "bag.color", "natural"))}`;
     copy.append(title, meta);
+    if (xray) {
+      const warning = document.createElement("em");
+      warning.className = "preview-card-constraint";
+      warning.textContent = `${validationIssueSourceLabel(xray.source)} · Check print safe area`;
+      copy.append(warning);
+    }
+    if (freshness) {
+      const status = document.createElement("span");
+      status.className = "preview-card-freshness";
+      status.dataset.tone = freshness.tone;
+      status.textContent = freshness.label;
+      status.title = freshness.description;
+      copy.append(status);
+    }
     button.append(visual, copy);
     button.addEventListener("click", () => {
       activeDesignId = design.id;
@@ -517,19 +640,43 @@ const renderMobileVariantTabs = (state: ConfigurationState): void => {
   }
 };
 
-const renderProgress = (): void => {
+let agentActivity: AgentActivityItem[] = [];
+let nextActivityId = 1;
+
+const renderAgentActivity = (): void => {
+  activityPanel.hidden = agentActivity.length === 0;
+  activityList.replaceChildren();
+  for (const item of agentActivity) {
+    const row = document.createElement("li");
+    row.dataset.phase = item.phase;
+    row.dataset.effect = item.effect;
+    const indicator = document.createElement("i");
+    indicator.setAttribute("aria-hidden", "true");
+    const copy = document.createElement("span");
+    copy.textContent = item.label;
+    const status = document.createElement("small");
+    status.textContent = item.phase === "start"
+      ? "Working"
+      : item.phase === "success"
+        ? `${Math.max(0, item.duration)} ms`
+        : item.phase === "cancelled" ? "Cancelled" : "Needs attention";
+    row.append(indicator, copy, status);
+    activityList.append(row);
+  }
+  const pending = agentActivity.some((item) => item.phase === "start");
+  activityStatus.textContent = pending ? "Working" : "Current";
+};
+
+const onToolInvocation = (event: Readonly<WebMcpInvocationEvent>): void => {
+  agentActivity = reduceAgentActivity(agentActivity, event, nextActivityId);
+  if (event.phase === "start") nextActivityId += 1;
+  renderAgentActivity();
+};
+
+const renderProposalMode = (): void => {
   const proposal = engine.snapshot;
   const active = proposal.proposalId !== null;
-  progressPanel.hidden = !active;
   canvasMode.textContent = active ? "Agent proposal · not saved" : "Human editing";
-  if (!active) return;
-  const completed = proposal.previewStatus === "available" ? 3 : Math.min(3, Math.max(1, proposal.proposalRevision));
-  progressCount.textContent = proposal.previewStatus === "available" ? "Preview ready" : `${completed} of 3`;
-  const passes = [...progressPanel.querySelectorAll<HTMLElement>("[data-pass]")];
-  passes.forEach((pass, index) => {
-    pass.classList.toggle("complete", index < completed);
-    pass.classList.toggle("active", index === completed && completed < 3);
-  });
 };
 
 const render = (followVisible = false) => {
@@ -567,14 +714,50 @@ const render = (followVisible = false) => {
   mark.classList.toggle("light", colour === "charcoal");
   artworkMark.classList.toggle("upper-left", upperLeft);
   const validation = adapter.validateVisibleState();
+  const activeXray = constraintXRayForVariant(validation, design.id);
+  const firstXrayIssue = firstConstraintXRay(validation);
+  const firstXrayVariantId = firstXrayIssue?.designIds?.[0];
+  const firstXray = firstXrayVariantId ? constraintXRayForVariant(validation, firstXrayVariantId) : null;
+  const firstXrayVariant = firstXrayVariantId
+    ? adapter.visibleState.designs.find((candidate) => candidate.id === firstXrayVariantId)
+    : undefined;
+  const provenanceIssue = activeXray ?? firstXray;
+  validationSource.hidden = provenanceIssue === null;
+  if (provenanceIssue) validationSource.textContent = validationIssueSourceLabel(provenanceIssue.source);
+  else validationSource.textContent = "";
+  constraintXray.hidden = activeXray === null;
+  if (activeXray) {
+    Object.assign(constraintXray.style, normalizedRegionStyles(activeXray.normalizedPreviewRegion));
+    constraintXray.dataset.issueId = activeXray.issueId;
+    constraintXray.setAttribute("aria-label", constraintXRayExplanation(design.name, activeXray));
+    scaleInput.setAttribute("aria-describedby", "production-readiness-note");
+    scaleInput.dataset.constraintAffected = "true";
+  } else {
+    for (const property of ["left", "top", "width", "height"] as const) constraintXray.style.removeProperty(property);
+    delete constraintXray.dataset.issueId;
+    constraintXray.removeAttribute("aria-label");
+    scaleInput.removeAttribute("aria-describedby");
+    delete scaleInput.dataset.constraintAffected;
+  }
+  scaleInput.closest(".range-field")?.classList.toggle("constraint-affected", activeXray !== null);
   const blockingMessages = validation.issues
     .filter((issue) => issue.severity === "constraint-error")
     .map((issue) => issue.message);
+  const unresolvedDecisions = validation.issues
+    .filter((issue) => issue.severity === "decision-required" && issue.code !== "ARTWORK_SAFE_ZONE")
+    .map((issue) => issue.message);
   productionNote.textContent = blockingMessages.length > 0
     ? blockingMessages.join(". ")
-    : artwork
-      ? "Artwork is attached and ready for review."
-      : "Studio-name typography is shown; production artwork can be supplied later.";
+    : activeXray
+      ? constraintXRayExplanation(design.name, activeXray)
+      : firstXray && firstXrayVariant
+        ? `${firstXrayVariant.name} needs a print safe-area repair. Select the flagged preview to inspect it.`
+        : unresolvedDecisions.length > 0
+          ? unresolvedDecisions.join(". ")
+        : artwork
+          ? "Artwork is attached and ready for review."
+          : "Studio-name typography is production-ready; supplied artwork remains optional.";
+  readinessPanel.dataset.tone = blockingMessages.length > 0 || unresolvedDecisions.length > 0 ? "blocked" : firstXray ? "xray" : "ready";
   artworkName.textContent = artwork?.filename ?? (artwork ? "Supplied artwork" : "Use studio-name typography");
   artworkRemove.hidden = artwork === null;
   nameInput.value = design.name;
@@ -593,9 +776,9 @@ const render = (followVisible = false) => {
   totalQuantity.textContent = `${adapter.visibleState.order.totalQuantity} totes total`;
   canvasTitle.textContent = design.name;
   canvasSpec.textContent = `${colour === "charcoal" ? "Charcoal" : "Natural"} · ${String(selection(design, "canvas.weight", "12oz")).replace("oz", " oz")} · ${handles} handles`;
-  renderVariantPreviews(adapter.visibleState);
+  renderVariantPreviews(adapter.visibleState, validation);
   renderMobileVariantTabs(adapter.visibleState);
-  renderProgress();
+  renderProposalMode();
   audit.value = JSON.stringify(adapter.counters);
   assetAudit.value = JSON.stringify(assetStore.counters);
 };
@@ -605,6 +788,12 @@ mountProposalReview(reviewContainer, controller, {
 });
 
 controller.subscribe((state) => {
+  if (state.kind === "busy" && state.action === "committing") {
+    const review = engine.currentReview;
+    if (review) {
+      try { passportCoordinator.captureBeforeKeep(review, engine.currentPreviewReceipts); } catch { passportCoordinator.discardPending(); }
+    }
+  }
   const locked = reviewLocksHumanControls(state);
   for (const control of controls.querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement>("button, input, select")) control.disabled = locked;
   nameInput.disabled = locked;
@@ -615,10 +804,26 @@ controller.subscribe((state) => {
     reloadNotice.hidden = true;
     setSaveStatus(state.kind === "stale" ? "Proposal expired · not saved" : "Temporary proposal not saved", state.kind === "stale" ? "stale" : "temporary");
   } else if (["committed", "reverted"].includes(state.kind)) {
+    previewEvidence = {};
+    previewEvidenceProposalId = null;
     clearInterruptedProposalNotice();
     setSaveStatus(state.kind === "committed" ? "Proposal kept on this device" : "Proposal reverted · draft unchanged", "saved");
   } else if (!interruptedProposal) {
     setSaveStatus("Saved in this browser only", "saved");
+  }
+  if (state.kind === "reverted" || state.kind === "stale" || state.kind === "commit-uncertain") passportCoordinator.discardPending();
+  if (state.kind === "committed") {
+    const generation = passportDisplayGeneration;
+    void passportCoordinator.confirmSuccessfulKeep(adapter.committedState, state.revision, passportContext())
+      .then((outcome) => {
+        if (!outcome || generation !== passportDisplayGeneration || adapter.committedState.revision !== state.revision) return;
+        window.localStorage.setItem(PASSPORT_STORAGE_KEY, JSON.stringify(outcome.passport));
+        renderPassportReceipt(outcome);
+      })
+      .catch((error: unknown) => {
+        if (generation !== passportDisplayGeneration || adapter.committedState.revision !== state.revision) return;
+        renderPassportError(state.revision, error instanceof Error ? error.message : "The public receipt failed closed.");
+      });
   }
   if (state.kind === "reverted") assetStore.releaseTemporary();
   render(true);
@@ -643,6 +848,8 @@ window.addEventListener("storage", (event) => {
     }));
   }
   if (!adapter.synchronizeExternalState(externalState)) return;
+  passportCoordinator.discardPending();
+  clearPassportReceipt();
   activeDesignId = adapter.visibleState.activeDesignId;
   reloadNotice.hidden = true;
   setSaveStatus(
@@ -730,16 +937,49 @@ for (const step of document.querySelectorAll<HTMLButtonElement>("[data-step-targ
 const webMcpDocument = import.meta.env.DEV && query.has("disable-webmcp")
   ? {} as DocumentWithModelContext
   : document as DocumentWithModelContext;
-const registration = registerCoDesignTools(webMcpDocument, { engine });
-const allToolsReady = registration.ready;
-void allToolsReady;
-if (import.meta.env.DEV) document.documentElement.dataset.webmcpRegistration = registration.supported ? "supported" : "unsupported";
+const registration = registerCoDesignTools(webMcpDocument, { engine, onInvocation: onToolInvocation });
+const allToolsReady = registration.ready.then(() => {
+  if (!registration.supported) return;
+  const disclosure = summarizeToolDisclosures(registration.toolDisclosures);
+  toolDisclosure.hidden = false;
+  toolDisclosureCount.textContent = disclosure.label;
+  toolDisclosureList.replaceChildren(...registration.toolDisclosures.map((tool) => {
+    const item = document.createElement("li");
+    item.textContent = `${tool.title} · ${tool.effect === "inspect" ? "inspect" : "temporary design"}`;
+    return item;
+  }));
+  if (import.meta.env.DEV) document.documentElement.dataset.webmcpRegistration = "ready";
+}, (error: unknown) => {
+  toolDisclosure.hidden = true;
+  if (import.meta.env.DEV) document.documentElement.dataset.webmcpRegistration = registration.supported ? "failed" : "unsupported";
+  throw error;
+});
+void allToolsReady.catch(() => undefined);
+if (import.meta.env.DEV && !registration.supported) document.documentElement.dataset.webmcpRegistration = "unsupported";
 window.addEventListener("pagehide", () => {
   registration.unregister();
   controller.destroy();
 }, { once: true });
 
 render();
+
+const storedPassport = window.localStorage.getItem(PASSPORT_STORAGE_KEY);
+if (storedPassport) {
+  const generation = passportDisplayGeneration;
+  void (async () => {
+    try {
+      const outcome = await verifyStoredTotePassport(
+        JSON.parse(storedPassport) as unknown,
+        adapter.committedState,
+        passportContext(),
+        validateCommittedToteReadiness,
+      );
+      if (generation === passportDisplayGeneration) renderPassportReceipt(outcome);
+    } catch {
+      if (generation === passportDisplayGeneration) clearPassportReceipt();
+    }
+  })();
+}
 
 if (import.meta.env.DEV && query.has("native-asset-proof")) {
   const parent = document.querySelector<HTMLElement>("main");
@@ -873,6 +1113,7 @@ if (import.meta.env.DEV && query.has("native-webmcp-proof")) {
 
 if (import.meta.env.DEV && query.has("agent-preview")) {
   void (async () => {
+    const previewMode = query.get("agent-preview");
     const first = await engine.apply({
       baseRevision: adapter.committedState.revision,
       operationId: "tote-visual-foundation",
@@ -920,15 +1161,39 @@ if (import.meta.env.DEV && query.has("agent-preview")) {
       operationId: "tote-visual-variants",
       operations: [
         { type: "set-control", target: { scope: "variant", variantId: "tote-1" }, controlId: "design.quantity", value: 50 },
-        { type: "duplicate-variant", sourceVariantId: "tote-1", variantId: "tote-2", name: "North Form Charcoal", initialControls: { "design.quantity": 50, "bag.color": "charcoal", "handles.length": "short", "print.position": "upper-left", "branding.scale": .82, "branding.rotation": -6 } },
+        { type: "duplicate-variant", sourceVariantId: "tote-1", variantId: "tote-2", name: "North Form Charcoal", initialControls: { "design.quantity": 50, "bag.color": "charcoal", "handles.length": "short", "print.position": "upper-left", "branding.scale": previewMode === "integrity" || previewMode === "xray" ? .95 : .82, "branding.rotation": -6 } },
       ],
       assumptions: ["Split the 100-tote collection evenly across two visibly distinct variants."],
     });
     if (!variants.ok) return;
-    await engine.capturePreviews({
+    const firstCapture = await engine.capturePreviews({
       baseRevision: variants.baseRevision,
       proposalId: variants.proposalId,
       proposalRevision: variants.proposalRevision,
+      variantIds: ["tote-1", "tote-2"],
+      surfaceIds: ["product-preview"],
+    });
+    if (previewMode !== "integrity" || !firstCapture.ok) return;
+    await new Promise((resolve) => window.setTimeout(resolve, 700));
+    const repaired = await engine.apply({
+      baseRevision: variants.baseRevision,
+      proposalId: variants.proposalId,
+      proposalRevision: variants.proposalRevision,
+      operationId: "tote-visual-approved-repair",
+      operations: [{
+        type: "set-control",
+        target: { scope: "variant", variantId: "tote-2" },
+        controlId: "branding.scale",
+        value: .78,
+      }],
+      assumptions: ["Apply the smallest merchant-approved safe-area repair to the affected variant only."],
+    });
+    if (!repaired.ok) return;
+    await new Promise((resolve) => window.setTimeout(resolve, 700));
+    await engine.capturePreviews({
+      baseRevision: repaired.baseRevision,
+      proposalId: repaired.proposalId,
+      proposalRevision: repaired.proposalRevision,
       variantIds: ["tote-1", "tote-2"],
       surfaceIds: ["product-preview"],
     });

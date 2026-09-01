@@ -2,13 +2,20 @@
 
 CoDesign WebMCP
 
+### ⏳ Not submitted yet
+
+An editable Devpost project draft now exists at
+<https://devpost.com/software/codesign-webmcp>. It is associated with The
+WebMCP Challenge, but it has **not** been submitted for judging.
+
 **WebMCP for Custom Products on Shopify**
 
 > **Make your Shopify product configurator agent-ready.**
 
 ## One-line Summary
 
-WebMCP for Custom Products on Shopify.
+AI agents turn a shopper's brief into a validated visual design inside an
+existing Shopify product configurator.
 
 ## Problem
 
@@ -36,6 +43,23 @@ dependencies, stages temporary artwork, applies atomic multi-control proposals,
 captures revision-bound previews, and asks the merchant adapter to validate
 configuration and production readiness. The proposal remains temporary. The
 webpage—not WebMCP—owns visible Keep and Revert controls.
+
+The improved local release candidate also makes that work legible. A
+privacy-safe trail shows actual inspection, capability reading, temporary
+changes, preview capture, and validation. A deterministic Constraint X-Ray
+turns the ordinary darker-staff direction into a credible first Charcoal
+preview at 95% upper-left, localizes the resulting production issue, exposes
+only merchant-approved repair operations, rerenders, captures fresh previews,
+and proves that readiness has changed. Studio-name typography is the
+production-safe fallback, so the primary journey does not require an artwork
+attachment.
+
+After—and only after—a successful page Keep, Configuration Passport v0.1 binds
+the committed revision to a public-safe configuration digest and exact preview
+receipts. It is an unsigned integrity receipt, not a signature, identity proof,
+or authorization token. A pure Shopify mapper can turn a verified,
+production-ready Passport into opaque line metadata, but performs no cart,
+checkout, order, or payment mutation.
 
 The public studio-tote reference proves that this is a complete runnable product,
 not a chat mockup. The same unchanged public core is also live in KORRHAUS's
@@ -108,10 +132,22 @@ paid model, so no synthetic or scripted result is presented as model evidence.
   using the ordinary upload/save path.
 - Merchant-owned, revision-bound 640 by 640 WebP previews returned inline to the
   agent surface.
-- Visible staged progress: Foundation, Branding, and Variants rather than one
-  opaque “do everything” tool call.
+- A privacy-safe actual invocation trail generated from the six registered
+  tools, plus canonical bounded `message` and `nextAction` fields on successful
+  results. No arguments, results, shopper text, artwork, configuration values,
+  URLs, or customer data enter the observer.
+- A localized charcoal safe-zone Constraint X-Ray. Only the declared 78% repair
+  batch is accepted; repair invalidates old previews and requires fresh
+  rendering and validation.
+- Studio-name typography as the ordinary valid branding fallback, with
+  placement/scale still subject to production rules and supplied artwork
+  retained as an advanced temporary-asset proof.
 - Human-owned Keep/Revert; current preview is required before Keep is enabled.
 - Zero-write Revert and exactly-once Keep, verified with persistence counters.
+- Configuration Passport v0.1 only after confirmed Keep, with fail-closed
+  expected origin/configurator/manifest/renderer verification and a public
+  projection that excludes artwork and private data.
+- A pure verified-Passport-to-Shopify line-metadata mapper with no cart write.
 - Ordinary desktop/mobile/Chrome human UI remains fully functional when WebMCP
   is absent.
 - Public studio-tote control parity: 14 mapped controls, four variant operations,
@@ -145,27 +181,39 @@ proposal stale instead of being silently overwritten.
 
 ### Fast judge path
 
+These are the intended instructions for the improved candidate. Do not copy
+them into Devpost until the approved deployment and exact deployed-client
+repeat pass; the currently public URL still identifies the prior release.
+
 1. Open <https://codesign-webmcp.pages.dev/tote/?reset=true> in a WebMCP-capable
    ChatGPT in-app browser.
-2. Download `north-form-supplied-mark.png` from the judge landing and attach it
-   to the conversation.
-3. Ask:
+2. Ask in ordinary shopper language:
 
-   > Create 100 studio totes for North Form, split evenly across two variants,
-   > and use the supplied artwork. Name the first North Form Natural: natural
-   > 12 oz canvas, long handles, centered one-colour ink artwork at 105% scale.
-   > Name the second North Form Charcoal: charcoal 12 oz canvas, short handles,
-   > upper-left one-colour artwork at 82% scale and -6 degrees rotation. Show me
-   > both previews and check production readiness. Do not save either design.
+   > I need 100 premium branded studio totes for North Form. Give me a natural
+   > customer version and a darker staff version, show me both options, check
+   > whether they are ready to make, and do not save anything yet.
 
-4. Expect all six tools to be used, two visible 50-unit variants, two distinct
-   current previews, total quantity 100, valid configuration, production-ready
-   status, and `persisted: false`.
-5. Ask: “Make only the charcoal version feel bolder: use cobalt ink, increase
-   the artwork to 95%, and rotate it to -10 degrees.” The natural design should
-   remain unchanged.
+3. No tool name, option ID, or WebMCP instruction is required. Expect the page
+   to show the actual invocation sequence: inspect workspace, read available
+   choices, update the temporary proposal, capture current previews, and check
+   production readiness. Asset staging is correctly omitted because no artwork
+   was supplied.
+4. Expect two visible 50-unit variants and two renderer previews. The declared
+   darker-staff direction begins Charcoal at 95% upper-left while Natural stays
+   centered. The first Charcoal result remains configuration-valid but is
+   visibly production-not-ready with an accessible localized safe-zone issue.
+5. Without a second shopper instruction, expect the agent to choose only the
+   returned merchant-approved 78% repair. It must leave Natural unchanged,
+   invalidate the old Charcoal preview, capture two fresh previews, restore
+   production readiness, and continue reporting `persisted: false`.
 6. Use visible Revert for a repeatable walkthrough. It must restore the original
    one-variant baseline without a persistence write.
+
+For the supplied-artwork path, download `north-form-supplied-mark.png` from the
+public site, attach it to the conversation, and ask the agent to apply it. That
+path exercises `codesign_stage_asset`, real placement/scale/rotation controls,
+and the same production-readiness rules. It is an advanced proof, not a primary
+setup dependency.
 
 ### Local clean-clone verification
 
@@ -186,19 +234,26 @@ npm run check:evals
 npm run check:parity
 ```
 
-Expected deterministic result: 22 test files / 189 tests pass, strict typecheck
-and build pass, the core WebMCP bundle matches SHA-256
-`c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`,
-the tote application bundle matches SHA-256
-`4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`,
-the public-boundary and documentation scans pass, and the tote inventory reports
-25/25 accounted surfaces. Recheck these values after any application-code change.
+Current local verification passes 28 test files / 235 tests, strict typecheck,
+production and Shopify-overlay builds, browser-bundle, judge-site,
+public-boundary, documentation, 27-case eval/scorer, and 25/25 parity gates.
+The rebuilt local hashes are core
+`460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
+and tote
+`edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
+New deployed commit identity
+must be recorded only after explicit release approval and deployment; the older
+published hashes do not identify this release candidate.
 
 ## Public Demo Link
 
-<https://codesign-webmcp.pages.dev/>
+Primary judge URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
-Deterministic tote URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
+Current status: this URL serves the prior verified release until the improved
+candidate receives separate deployment approval. Refresh all expected results
+and release metadata after deployment.
+
+Project overview: <https://codesign-webmcp.pages.dev/>
 
 Release identity: open
 <https://codesign-webmcp.pages.dev/site-metadata.json> to verify the exact
@@ -210,8 +265,9 @@ hard-coding a self-referential deployment into source.
 
 <https://github.com/fmksites/codesign-webmcp>
 
-Verified implementation source: public `main`. The deployed
-`site-metadata.json` must report the same commit before submission.
+Prior verified release source: public `main`. The improved candidate is local
+and must not replace this claim until it is pushed with approval, hosted CI
+passes, and deployed `site-metadata.json` reports that exact commit.
 
 License: Apache-2.0
 
@@ -220,18 +276,19 @@ License: Apache-2.0
 `TODO: add the final public YouTube URL. The required video must include audio,
 show the working product, and remain under three minutes.`
 
-Target script: `docs/VIDEO_SCRIPT.md` (2 minutes 35 seconds).
+Target script: `docs/VIDEO_SCRIPT.md` (2 minutes 40 seconds).
 
 ## Screenshot Shot List
 
 1. First 15 seconds: natural-language brief beside the clean tote canvas.
-2. Temporary two-variant proposal with both live product previews and the real
-   North Form artwork visible.
-3. Two inline renderer previews in the agent conversation plus production-ready
-   validation.
-4. Visible human Keep/Revert boundary while ordinary design controls are locked.
+2. Actual invocation trail beside the temporary two-variant proposal and two
+   merchant-rendered previews.
+3. Constraint X-Ray problem state, declared 78% repair, refreshed preview, and
+   production-ready resolution while the natural variant remains unchanged.
+4. Visible human Keep/Revert boundary, followed in a separate Keep run by the
+   post-commit Configuration Passport receipt.
 5. Architecture/repository proof showing the exact six tools, Manifest 2.0,
-   Apache-2.0 license, and 189 passing tests.
+   Apache-2.0 license, and the final verified local test count.
 
 Existing public-repository captures:
 
@@ -242,16 +299,23 @@ Existing public-repository captures:
 
 ## Submission Readiness Notes
 
-- Public repository: ready and anonymously accessible.
-- Hosted CI: passing on the current public `main` branch.
-- Stable demo: available; the final immutable URL and source match must be
-  recorded after the last repository cleanup deployment.
-- WebMCP runtime: exact-six public flow verified in the Codex in-app browser.
+- Public repository and stable demo: the prior release remains anonymously
+  accessible. The improved release candidate is local only until separate push
+  and deployment approval.
+- Local release candidate: exact six, canonical result envelopes,
+  privacy-safe activity, Constraint X-Ray, text-branding fallback, post-Keep
+  Passport, trusted validation provenance, revision-aware preview freshness,
+  and pure Shopify mapper are implemented; 28 files / 235 tests and
+  the complete local verification suite pass.
+- Final-client gate: repeat the ordinary flow, repair loop, `persisted: false`,
+  Revert, and separate Keep/Passport proof on the exact deployed commit in
+  ChatGPT desktop's in-app browser and native Chrome after release approval.
 - Chrome: ordinary UI verified on the public configurator. Historical native
   Chrome 151 exact-six and supplied-artwork paths passed with the official
   testing flag; repeat that proof on the final deployed commit before submission.
 - Release integrity: independently fetched stable/immutable core and tote
-  bundles match their separately labelled metadata digests.
+  bundles match their separately labelled metadata digests for the prior
+  release; new digests are not claimed yet.
 - KORRHAUS: the real private integration is live on the existing Shopify
   storefront and is used as secondary real-business proof. Its current evidence
   is scoped to the tested Codex browser, not consumer ChatGPT or native Chrome.
@@ -261,14 +325,16 @@ Existing public-repository captures:
 - Still required: final video recording in a verified WebMCP-capable host,
   public YouTube upload, thumbnail choice, entrant attestations, and explicit
   final Devpost approval.
-- Nothing has been sent to Devpost.
+- An editable Devpost project draft exists at
+  <https://devpost.com/software/codesign-webmcp>. It is associated with The
+  WebMCP Challenge but has not been submitted for judging.
 
 ## Known Limitations
 
 - WebMCP is experimental and requires a compatible host. Chrome native testing
-  currently requires its official flag or origin-trial path. The final current
-  source passed the testing-flag path; the immutable public exact-six flow was
-  separately verified through the Codex agent host.
+  currently requires its official flag or origin-trial path. Historical native
+  Chrome evidence and the prior immutable Codex-host release remain dated
+  evidence; neither proves the improved local candidate.
 - A literal consumer ChatGPT website journey was performed in ordinary Chrome
   on the deployed build and failed at client capability discovery: ChatGPT
   searched its plugin directory for `WebMCP`, found none, and could not invoke
@@ -279,46 +345,55 @@ Existing public-repository captures:
   merchant must supply a manifest and a small adapter to its real functions.
 - The public release stops at saved design. It deliberately exposes no ordering,
   quote, payment, upload, pricing, customer-data, supplier, or admin tool.
+- Configuration Passport v0.1 is unsigned integrity evidence only. It does not
+  authenticate the merchant, authorize a purchase, prove physical colour/scale,
+  or replace production approval.
+- `toShopifyLineMetadata()` is a pure mapper. Actual Shopify cart continuation
+  remains merchant/Shopify scope and is not implemented or claimed here.
 - The live KORRHAUS production route is a secondary integration example; the
   anonymous tote remains the reproducible submitted product URL.
 - The optional model eval corpus has structure and scorer tests but no paid-model
   execution result.
 
-## TODO Official Form Fields
+## Official Form Field Status
 
-Official fields fetched from Devpost on 28 August 2026:
+Official fields most recently fetched from Devpost on 31 August 2026:
 
-- **Submitter Type (required):** `TODO Felix — choose Individual, Team of
-  Individuals, or Organization.` Recommended: `Individual` if submitting only
-  as Felix.
-- **Country of residence (required):** `TODO Felix — confirm the exact country
-  value.`
-- **Organization name (optional):** `TODO only if Submitter Type is
-  Organization.`
-- **App Status (required):** Recommended: `New`. CoDesign WebMCP was built
-  during the challenge; the KORRHAUS Sock Designer is clearly disclosed as a
+- **Submitter Type (required):** Saved as `Individual` after Felix's explicit
+  confirmation.
+- **Country of residence (required):** Saved as `Netherlands` after Felix's
+  explicit confirmation.
+- **Organization name (optional):** Left blank because the entry is individual.
+- **App Status (required):** Saved as `New`. CoDesign WebMCP was built during
+  the challenge; the KORRHAUS Sock Designer is clearly disclosed as a
   pre-existing integration surface.
-- **If Existing, what changed:** Not applicable if `New` is selected. If Devpost
-  treats the entry as existing, use the “What was created during the challenge”
-  answer below.
-- **Live URL (required):** <https://codesign-webmcp.pages.dev/>
-- **Testing instructions (optional):** use the Fast judge path above.
-- **Public code repository (required):**
+- **If Existing, what changed:** Not applicable because `New` is selected. The
+  “What was created during the challenge” section below still makes the
+  pre-existing KORRHAUS boundary explicit.
+- **Live URL (required):** Saved as
+  <https://codesign-webmcp.pages.dev/tote/?reset=true>
+- **Testing instructions (optional):** Saved with the ordinary-language North
+  Form brief, exact expected outputs, Revert behavior, and documentation route
+  for the supplied-artwork path. This saved field predates the X-Ray/Passport
+  candidate and must be refreshed only after the new release is deployed and
+  verified.
+- **Public code repository (required):** Saved as
   <https://github.com/fmksites/codesign-webmcp>
-- **Agents/clients tested (required):** Codex desktop page-scoped exact-six
-  WebMCP on the deployed public release; historical native Chrome 151 exact-six
-  plus real supplied artwork using the official testing flag; and ordinary
-  Chrome on the public configurator. Repeat native Chrome or ChatGPT in-app on
-  the final source-synchronized deployment before copying this answer. The consumer ChatGPT website was
-  also tested in ordinary Chrome, but its plugin search returned no `WebMCP`
-  integration and no webpage tools; that path is explicitly not claimed as
-  supported. The separate ChatGPT desktop-app route remains untested.
-- **AI tools leveraged (required):** OpenAI Codex for product framing,
+- **Agents/clients tested (required):** Saved as Codex desktop in-app browser,
+  page-scoped exact-six WebMCP on the prior deployed public release; historical
+  native Chrome 151 exact-six plus real supplied artwork using the official
+  testing flag; and ordinary Chrome on the public configurator. The consumer
+  ChatGPT website was also tested in ordinary Chrome, but that client did not
+  expose the webpage tools; it is explicitly not claimed as supported. Current
+  native Chrome and the separate consumer ChatGPT desktop-app route are also
+  not claimed without a matching current test. This field must be updated after
+  the improved exact deployed commit completes its final-client repeat.
+- **AI tools leveraged (required):** Saved as OpenAI Codex for product framing,
   architecture, implementation, testing, browser verification, release QA, and
   documentation. Shopper runtime is provider-neutral and uses the agent host
   invoking WebMCP; no paid-model eval result is claimed.
-- **Learning derived (required):** Recommended: `Significant`.
-- **AI value usable in career (required):** Recommended: `Yes`.
+- **Learning derived (required):** Saved as `Significant`.
+- **AI value usable in career (required):** Saved as `Yes`.
 - **Video URL (required deliverable):** `TODO public YouTube URL`.
 
 ### What was created during the challenge
@@ -341,14 +416,18 @@ GitHub Actions, OpenAI Codex
 
 - **WebMCP Leverage:** six bounded tools cover state, capabilities, assets,
   atomic visual proposals, renderer previews, and merchant validation with real
-  revision, stale, invalid, Keep, and Revert behavior.
+  revision, stale, invalid, Keep, and Revert behavior. Canonical result routing
+  and truthful activity make the non-trivial WebMCP sequence visible.
 - **Execution:** a stable public URL delivers a coherent visual configurator,
-  real artwork, two variants, responsive ordinary browsing, extensive tests,
-  clean-clone instructions, CI, and reproducible judge steps.
+  two variants, studio-name or real-artwork branding, a deterministic localized
+  repair, responsive ordinary browsing, extensive tests, clean-clone
+  instructions, CI, and reproducible judge steps after the new release passes
+  its final deployment gate.
 - **Potential Impact:** merchants can make existing high-investment customizers
   agent-ready without rebuilding their renderer; KORRHAUS supplies credible
   real-business integration evidence.
 - **Creativity & Ambition:** the project joins shopping intent, conversational
   art direction, a live merchant-owned product canvas, physical-production
-  rules, and safe human persistence rather than building another catalog or
-  cart agent.
+  rules, visible self-repair, safe human persistence, and a public-safe
+  post-Keep configuration receipt rather than building another catalog or cart
+  agent.

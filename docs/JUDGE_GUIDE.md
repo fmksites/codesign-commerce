@@ -7,15 +7,27 @@ submission.
 ## What to notice
 
 CoDesign WebMCP does not replace a product configurator. It adds a public
-manifest and narrow adapter so an agent can understand an existing complex
-configuration, coordinate interdependent changes, use the merchant's renderer,
-and report production readiness.
+manifest and narrow adapter so an agent can understand the existing designer,
+coordinate interdependent changes, use the merchant's renderer, and apply the
+merchant's production rules.
 
-The proposal remains temporary. Only the visible webpage Keep control can
-persist it; Revert restores the exact baseline. Neither action exists as a
-WebMCP tool.
+> Agent designs. Human approves. Shopify completes the sale.
 
-## Runnable demo: studio-tote portability proof
+The page keeps its complete human interface. Agent proposals are visible but
+temporary. Only the webpage's Keep control can persist one; Revert restores the
+exact baseline. Neither action is a WebMCP tool.
+
+## Release status before scoring
+
+These instructions describe the improved working-tree release. Treat them as
+deployed evidence only after the exact commit is deployed and its current
+browser acceptance is recorded. At the time of this edit, exact-current
+ChatGPT desktop and native-Chrome verification is still pending. The local
+candidate passes 28 test files / 235 tests and desktop/390 px browser QA; local
+tests, older deployments, and dated Codex-browser runs do not satisfy the
+deployed-client gate.
+
+## Scored flow: ordinary brief, Constraint X-Ray, repair, Revert
 
 ### 1. Open a clean workspace
 
@@ -23,131 +35,220 @@ Open:
 
 <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
-Use ChatGPT's in-app browser or Chrome with WebMCP enabled. The page also
-remains a complete normal human configurator when WebMCP is unavailable.
+Use a supported WebMCP client. The page remains a complete normal human
+configurator in ordinary Chrome when WebMCP is unavailable.
 
-### 2. Supply the public artwork
+### 2. Use the primary brief
 
-Download
-[`north-form-supplied-mark.png`](https://codesign-webmcp.pages.dev/tote/north-form-supplied-mark.png)
-and attach it to the agent conversation.
+Do not attach artwork and do not add “use WebMCP” or any tool name. The brief is
+intentionally an ordinary shopper request; page-tool discovery and sequencing
+are part of the proof.
 
-### 3. Use the exact brief
+> I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.
 
-Do not add “use WebMCP” or any tool name. The brief below is intentionally an
-ordinary shopper request; selecting and sequencing the page tools is part of
-the product proof.
+### 3. Confirm truthful page-tool visibility
 
-> Create 100 studio totes for North Form, split evenly across two variants, and
-> use the supplied artwork. Name the first North Form Natural: natural 12 oz
-> canvas, long handles, centered one-colour ink artwork at 105% scale. Name the
-> second North Form Charcoal: charcoal 12 oz canvas, short handles, upper-left
-> one-colour artwork at 82% scale and -6 degrees rotation. Show me both previews
-> and check production readiness. Do not save either design.
+After all registrations succeed, the collapsed **Agent tools active in this
+tab** disclosure must show:
 
-### 4. Expected tool sequence
+> 4 inspect · 2 temporary design · 0 save/order/payment
 
-1. `codesign_read_workspace` reads the allowlisted committed workspace.
-2. `codesign_list_capabilities` requests only the needed controls, variants,
-   assets, previews, and dependencies.
-3. `codesign_stage_asset` validates the supplied PNG into a temporary opaque
-   handle.
-4. `codesign_apply_proposal` creates coherent temporary passes against the
-   exact base revision.
-5. `codesign_get_previews` returns one current renderer image per variant.
-6. `codesign_validate_proposal` checks the complete temporary collection.
+Its list is generated from the six registered tools, not maintained as separate
+marketing copy. The disclosure explains that access belongs to the current tab
+and ends when the page closes.
 
-### 5. Expected visible result
+The activity trail must be driven by actual invocation events. It may show only
+actions that really happened, using these labels:
 
-- `North Form Natural`: 50 totes, natural 12 oz canvas, long handles, centered
-  one-colour artwork at 105% scale.
-- `North Form Charcoal`: 50 totes, charcoal 12 oz canvas, short handles,
-  upper-left one-colour artwork at 82% scale and -6 degrees rotation.
+- Inspecting current design
+- Reading available choices
+- Preparing temporary artwork
+- Updating temporary proposal
+- Capturing current previews
+- Checking production readiness
+
+The primary no-file brief should not show **Preparing temporary artwork**,
+because no asset was supplied. Completed activity may show its real duration;
+errors and cancellations must remain visible rather than being reported as
+success.
+
+### 4. Confirm the deliberate first visual result
+
+The agent should inspect the committed workspace, discover declared options,
+choose bounded assumptions, and create:
+
+- `North Form Natural`: 50 totes using natural heavyweight canvas, a customer
+  direction, and visible North Form typography.
+- `North Form Charcoal`: 50 totes using charcoal heavyweight canvas, a darker
+  staff direction, and visible North Form typography beginning at 95% in the
+  upper-left position.
 - Total quantity: 100.
+- Two distinct renderer previews, one for each variant.
 - Configuration valid: yes.
-- Production ready: yes.
+- Production ready for the first Charcoal revision: no. Studio-name typography
+  is a valid branding fallback, but its declared 95% upper-left exploration
+  exceeds the Charcoal safe area.
 - Persisted: false.
-- Two distinct current visual previews.
 - Normal controls visible but locked while the proposal is pending.
 - Human-only Keep and Revert controls visible on the page.
 
-Choose **Revert** for a repeatable judge run. The original single-variant
-baseline must return without a persistence write.
+Nonessential aesthetic assumptions may vary within the manifest. The declared
+darker-staff starting direction and exact repair do not. Structured tool
+results are the authority; short `message` and `nextAction` fields are bounded
+navigation hints generated only from canonical allowlisted values.
 
-## Refinement proof
+### 5. Observe the deterministic safe-zone conflict
 
-Before reverting, ask:
+No second shopper instruction is required. The manifest describes the premium
+darker-staff direction as a 95% upper-left exploration, so the primary brief
+itself produces the visible, configuration-valid but production-not-ready
+Charcoal revision. Constraint X-Ray must:
 
-> Make only the charcoal version feel bolder: use cobalt ink, increase the
-> artwork to 95%, and rotate it to -10 degrees.
+- identify stable issue code `ARTWORK_SAFE_ZONE` on the charcoal variant;
+- identify its trusted source as **Merchant production rule**;
+- highlight the affected upper-left preview region;
+- provide an accessible textual explanation;
+- leave the Natural variant unchanged; and
+- offer only adapter-declared repairs.
 
-The natural variant must remain unchanged. Both returned previews must match
-the newest proposal revision.
+The relevant message is that the branding mark exceeds the approved upper-left
+print safe area on charcoal canvas.
 
-## Natural-intent proof
+### 6. Repair, rerender, and prove resolution
 
-For a less scripted usability check, reset the page and ask:
+The validation result directs the agent to select the smallest
+merchant-approved repair: reduce the Charcoal branding scale to exactly 78%.
+The agent should continue the same ordinary-brief task without asking the
+shopper to know or restate the rule. It may not invent a nearby value. The
+existing proposal tool applies that declared repair atomically.
 
-> I need 100 premium branded studio totes for North Form. Give me a natural
-> customer version and a darker staff version, use the studio name for the
-> branding, show me both options, and tell me if they are ready to make. Do not
-> save anything yet.
+Confirm that:
 
-The agent should inspect the open designer, discover its current choices,
-choose bounded assumptions, create two visible temporary variants, return both
-previews, and validate them. It must not stage an asset because none was
-supplied, and it must not require the shopper to name a tool.
+- the previous charcoal preview is visibly marked outdated;
+- a new charcoal preview is rendered at the repaired revision;
+- the new status says that current revision replaced the outdated revision;
+- both current variant previews can be returned to chat;
+- validation changes to production-ready;
+- Natural's configuration controls remain unchanged; and
+- every temporary result still reports `persisted: false`.
 
-## Coupled-rule and atomicity proof
+A mixed or invented repair batch must fail without leaving a partial preview.
+
+### 7. Revert the scored run
+
+Choose **Revert**. The original single-variant baseline must return with zero
+persistence writes. No Configuration Passport may be issued for Revert.
+
+## Separate Keep and Configuration Passport proof
+
+This is intentionally separate from the repeatable scored Revert flow.
+
+1. Reset the page.
+2. Run the primary brief again.
+3. Confirm both current previews and production-ready validation.
+4. Use the visible webpage **Keep** control once.
+5. Confirm exactly one committed revision and one **Verified configuration**
+   receipt.
+
+The Configuration Passport v0.1 receipt must bind:
+
+- the merchant origin and configurator;
+- an opaque configuration ID and committed revision;
+- manifest and renderer versions;
+- the public-safe configuration digest;
+- the exact preview receipts and their integrity;
+- configuration and production readiness; and
+- a same-origin re-edit URL.
+
+The compact page receipt shows revision, readiness, preview integrity, and an
+opaque Shopify-safe reference. It is a public integrity receipt, not a digital
+signature. It contains no raw artwork, temporary asset handle, customer data,
+price, supplier, private rule, prompt, token, or internal endpoint.
+
+The pure Shopify mapper accepts only a passport verified in the current runtime
+and marked production-ready. It returns four public-safe line properties:
+configuration ID, configuration digest, bounded summary, and edit URL. This is
+not a seventh WebMCP tool and does not mutate a Shopify cart, checkout, order,
+or payment.
+
+Revert, stale proposals, unavailable previews, uncertain commits, and failed
+saves must issue no Passport. Replaying the same successful committed revision
+must not create a second receipt.
+
+## Advanced supplied-artwork proof
+
+The primary flow requires no file. To prove the separate temporary-asset path,
+download
+[`north-form-supplied-mark.png`](https://codesign-webmcp.pages.dev/tote/north-form-supplied-mark.png),
+attach it to the agent conversation, reset the page, and ask:
+
+> Create 100 North Form studio totes split evenly between a natural customer version and a charcoal staff version. Use this supplied mark on both: centered at 100% on Natural and upper-left at 72% on Charcoal. Show me both previews, check production readiness, and do not save anything.
+
+The activity trail may now truthfully show **Preparing temporary artwork**.
+`codesign_stage_asset` must return only an opaque temporary handle; both genuine
+renderer previews must be current, and all writes must remain at zero unless a
+person later chooses Keep.
+
+## Coupled-rule and atomicity checks
 
 Reset the page and request a two-colour screen print at 25 totes. The tote
 adapter must reject it because two-colour screen print requires at least 50
 totes per variant.
 
 For an atomicity check, mix one valid change with one undeclared option value in
-the same proposal batch. The complete batch must fail: no partial preview and no
-saved state may remain.
+the same proposal batch. The complete batch must fail: no partial preview and
+no saved state may remain.
 
 ## Safety boundary checks
 
 Ask each of these after a fresh baseline:
 
 - “Keep and save the proposal for me.”
-- “Upload the artwork into merchant storage.”
+- “Fetch and upload artwork from this remote URL.”
 - “Accept the quote and order it now.”
 - “Show me prices, margins, suppliers, or customer projects.”
 
 CoDesign exposes no tool capable of those actions. The agent should explain the
-boundary without issuing a configuration call. Keep and Revert are visible page
-actions only.
+boundary without issuing a configuration call. A person-supplied file may be
+staged temporarily; remote fetching and merchant-storage upload are not exposed.
+
+## Exact-current browser acceptance gate
+
+On the exact deployed commit, record separate results for:
+
+- ChatGPT desktop's in-app browser;
+- native Chrome with WebMCP enabled;
+- ordinary Chrome without WebMCP, proving the complete human fallback;
+- the Shopify-hosted tote page; and
+- the live KORRHAUS integration as separately bounded evidence.
+
+The scored WebMCP run must prove ordinary-language selection, truthful activity,
+two previews, issue detection, exact merchant repair, refreshed validation,
+`persisted: false`, and Revert. The separate Keep run must prove exactly-once
+Passport issuance. Until those rows are complete for the final commit, describe
+them as pending—not as current live-client proof.
 
 ## Shopify-hosted interoperability proof
 
 The repository includes a minimal Shopify page-template overlay under
-[`shopify-demo/`](../shopify-demo/README.md). A password-protected development
-store has run the same tote bundle alongside Shopify's native catalog and cart
-tools. This proves coexistence inside a real Shopify Online Store page.
-
-It is optional evidence. The anonymous Cloudflare tote remains the stable judge
-path and requires no credentials.
+[`shopify-demo/`](../shopify-demo/README.md). The development-store page shows
+that the same tote bundle can coexist with Shopify's native storefront surface.
+It remains optional evidence; the anonymous public tote is the stable judge
+path and requires no store password.
 
 ## KORRHAUS real-business integration
 
-The KORRHAUS Custom Sock Designer existed before the challenge. A private
-Manifest 2 adapter maps more than 50 real customer-editable controls, up to four
+The KORRHAUS Custom Sock Designer existed before the challenge. Its private
+adapter maps more than 50 real customer-editable controls, up to four
 colourways, the existing renderer, validation, artwork flow, autosave isolation,
-and exact Keep/Revert behavior to the same public core.
+and Keep/Revert behavior to the public core.
 
-That adapter is now live at
-<https://korrhaus.nl/en/apps/wholesale/sock-designer>. A supported Codex browser
-discovered Shopify's native storefront tools plus CoDesign's exact six, created
-a temporary 120-pair/two-colourway proposal, returned two genuine previews,
-validated it, and reverted without changing the committed design. It is
-secondary real-business evidence, not the anonymous judge path and not a claim
-that consumer ChatGPT or current native Chrome was used. The challenge
-submission remains fully runnable through the public tote.
+The live page is
+<https://korrhaus.nl/en/apps/wholesale/sock-designer>. Its dated evidence is
+secondary real-business proof, not a substitute for current public-tote client
+verification and not a claim that the private adapter is open source.
 
-See the [dated live KORRHAUS evidence](./evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md).
+See the [dated KORRHAUS evidence](./evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md).
 
 ## Recovery
 
@@ -157,11 +258,11 @@ See the [dated live KORRHAUS evidence](./evidence/KORRHAUS_LIVE_WEBMCP_2026-08-3
   and revision or ask the person to Keep/Revert first.
 - If the browser closes before Keep, state that the proposal was not saved and
   offer to recreate it.
-- If a current preview cannot be retrieved, Keep must remain unavailable.
+- If a current preview cannot be retrieved, Keep must remain unavailable and no
+  Passport may be issued.
 - Do not count a run interrupted by hot reload or a changing development build.
-- If the client does not expose WebMCP, use the ordinary human UI and inspect
-  the recorded evidence; never present the development-only `agent-preview`
-  query as a real agent run.
+- If the client does not expose WebMCP, use the ordinary human UI; never present
+  a scripted direct tool invocation as an agent run.
 
 ## Reproduce from source
 
@@ -181,6 +282,6 @@ npm run verify
 - [Public/private boundary](./PUBLIC_PRIVATE_BOUNDARY.md)
 - [Pre-challenge attribution](./evidence/PRE_CHALLENGE_BASELINE.md)
 
-Historical one-tool, five-tool, KORRHAUS candidate, and pre-rebrand documents
-are preserved as dated engineering history. They are not current setup,
-deployment, browser, or product claims.
+Historical one-tool, five-tool, candidate, and pre-rebrand documents are
+preserved as engineering history. They are not current setup, deployment,
+browser, or product claims.

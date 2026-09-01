@@ -90,7 +90,9 @@ export class V2TestAdapter implements WorkspaceAdapter<TestWorkspaceSnapshot, Te
     return {
       configurationValid,
       productionReady: configurationValid && hasArtwork,
-      issues: configurationValid ? (hasArtwork ? [] : [{ code: "ARTWORK_REQUIRED", severity: "decision-required", message: "Final artwork is still required", controlIds: ["mark.artwork"] }]) : [{ code: "QUANTITY_TOTAL_MISMATCH", severity: "constraint-error", message: "Variant quantities must equal the workspace total", controlIds: ["order.total_quantity", "design.quantity"] }],
+      issues: configurationValid
+        ? (hasArtwork ? [] : [{ issueId: "artwork-required.variant-1", code: "ARTWORK_REQUIRED", severity: "decision-required", message: "Final artwork is still required", controlIds: ["mark.artwork"], repairable: false }])
+        : [{ issueId: "quantity-total-mismatch.workspace", code: "QUANTITY_TOTAL_MISMATCH", severity: "constraint-error", message: "Variant quantities must equal the workspace total", controlIds: ["order.total_quantity", "design.quantity"], repairable: false }],
       assumptions: [],
     };
   }

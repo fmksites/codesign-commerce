@@ -116,6 +116,44 @@ by field into the canonical public contract. Unknown fields are dropped;
 malformed values fail closed with a generic `ADAPTER_FAILURE`. TypeScript types
 alone are not treated as a data boundary.
 
+## Public validation issue contract
+
+Merchant validation can return a localized, actionable issue without exposing
+private production logic:
+
+```ts
+interface WorkspaceValidationIssue {
+  issueId: string;
+  code: string;
+  severity: "constraint-error" | "decision-required" | "warning" | "information";
+  message: string;
+  controlIds?: string[];
+  variantIds?: string[];
+  elementIds?: string[];
+  surfaceId?: string;
+  normalizedPreviewRegion?: { x: number; y: number; width: number; height: number };
+  repairable: boolean;
+  merchantApprovedRepairs?: Array<{
+    id: string;
+    label: string;
+    operations: SetControlOperation[];
+  }>;
+}
+```
+
+Coordinates are normalized to the declared preview surface and must stay
+inside `[0, 1]`. A repairable issue must name affected controls and supply a
+bounded, fully validated set-control batch. Repair operations may reference
+only affected, agent-writable controls and exact declared targets/values. The
+agent may select one returned repair; it may not invent a production fix.
+
+The guarded adapter also provides a migration-safe default for existing
+adapters: when `issueId` is absent it derives a stable-in-result-order
+`legacy-<index>-<code>` identifier, and when `repairable` is absent it defaults
+to `false`. Legacy issues therefore remain visible and localizable at the
+result level but do not gain repair authority. Merchants should add permanent
+domain IDs before relying on cross-revision issue identity.
+
 ## Adapter obligations
 
 `WorkspaceAdapter` has eleven responsibilities:
@@ -138,6 +176,17 @@ Variant creation, duplication, removal, reordering, activation, control edits,
 asset binding, and transforms are expressed as one bounded atomic operations
 batch. The core applies that batch to detached canonical state, rejects any
 invalid intermediate result, and previews only the fully validated outcome.
+
+If current validation exposes a repairable issue, a subsequent operation batch
+that touches that issue must be byte-for-byte equivalent after canonicalization
+to one whole `merchantApprovedRepairs[].operations` batch. The core rejects a
+different value, partial repair, repair mixed with another change, or
+undeclared repair before calling the merchant preview. Unrelated refinements
+remain allowed.
+
+Any accepted refinement—including an approved repair—advances the proposal
+revision and invalidates its old preview receipts. New merchant-rendered
+previews and validation are required before Keep.
 
 Expected server-save failure is data, not an exception:
 
@@ -173,6 +222,37 @@ temporary proposal, and restores the latest committed public state.
 
 The private KORRHAUS bridge must live inside the existing designer closure or receive an equivalently narrow internal interface. It must never give the generic package the broad boot/configuration object. DOM clicking is not an acceptable primary adapter because it cannot reliably quiesce or suppress the existing autosave paths.
 
+The challenge submission improvements do not change this private adapter. The
+new public validation fields use the legacy-ID/nonrepairable defaults until a
+merchant integration deliberately adopts localized repairs. No KORRHAUS
+mapping, rule, renderer, or persistence implementation is copied into this
+repository.
+
+## Post-Keep public projection and Passport
+
+Configuration Passport v0.1 is optional integration output after a confirmed
+Keep, not part of `WorkspaceAdapter.commitWorkspace()` and not a WebMCP tool.
+The integration must project the newly committed workspace through a
+manifest-aware public allowlist. Asset-kind controls, opaque asset handles, raw
+artwork, URLs, temporary transports, prices, customers, suppliers, prompts,
+tokens, private rules, and internal endpoints must not enter the projection or
+Passport.
+
+Creation binds the committed revision, exact pre-Keep preview receipts,
+configuration/production readiness, a structured bounded summary, and a
+same-origin public re-edit URL. Verification must be given the expected
+merchant origin, configurator ID, manifest version, renderer version, and
+public-safe readiness freshly recomputed by the merchant from the exact current
+committed state. Verification compares readiness exactly and fails closed for
+unknown/mismatched values or digest changes. The public re-edit URL must contain
+no query or fragment data. The integrity
+hash is unsigned tamper evidence only; it is not a merchant signature.
+
+`toShopifyLineMetadata()` is a pure reference conversion for an already
+runtime-verified, current-readiness-bound, production-ready Passport. It returns only the opaque
+configuration ID, digest, canonical summary, and edit URL. The merchant still
+owns any later Shopify cart operation; this mapper performs no write.
+
 ## Studio-tote portability proof
 
 `examples/studio-tote/` implements the same contract with a different product
@@ -180,10 +260,14 @@ vocabulary and renderer:
 
 - `canvas.weight`, `bag.color`, and `handles.length` replace sock yarn and grip
   options.
-- Print method, placement, reinforcement, and artwork status introduce tote
+- Print method, placement, reinforcement, and branding status introduce tote
   production dependencies.
 - The adapter rejects embroidery on 8 oz canvas, unreinforced 16 oz canvas, and
   two-colour screen printing below 50 units per variant.
+- A non-empty studio-name treatment is the ordinary production-ready branding
+  fallback; supplied artwork remains an optional advanced proof.
+- An oversized upper-left branding mark on charcoal produces a localized
+  Constraint X-Ray issue and one exact 78% merchant-approved repair batch.
 - Real tote raster assets and a dynamic print layer replace the sock renderer.
 
 No tote branch or tote-specific rule exists in `packages/codesign-webmcp/`.

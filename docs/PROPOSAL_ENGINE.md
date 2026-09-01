@@ -58,6 +58,19 @@ Each accepted batch increments `proposalRevision`. A refinement must supply the 
 
 The operation reducer is forked for every candidate. Its operation-ID ledger and successful-operation budget are promoted only after merchant validation and visible rendering both succeed. A rejected, cancelled, or failed refinement therefore cannot consume an operation ID or later masquerade as a deduplicated success.
 
+When the last reviewable validation contains a repairable issue, the engine
+adds one more gate before reducing a refinement. Any batch that touches the
+issue must exactly equal one whole merchant-approved repair batch from that
+issue. The agent cannot approximate the value, combine it with unrelated
+changes, or synthesize a new production fix. A mismatch is rejected without
+changing the proposal revision, adapter-visible state, or current preview.
+
+An accepted repair is otherwise an ordinary `codesign_apply_proposal`
+refinement. It advances `proposalRevision`, invalidates all old preview
+receipts, rerenders the merchant workspace, and requires fresh preview capture
+and validation. There is intentionally no separate repair or privileged write
+tool.
+
 ## Restore and failure rules
 
 - Invalid first proposal: restore the exact private snapshot and end proposal mode.
@@ -88,14 +101,46 @@ Commit outcomes remain explicit:
 - Exception or unverifiable outcome after commit begins: enter `commit-uncertain`; never retry automatically or claim success.
 - Failure while performing the pre-commit revision read: stay reviewable and retryable because no commit was attempted.
 
+## Post-Keep Configuration Passport
+
+Configuration Passport v0.1 sits after this transaction, not inside its commit
+authority. An integration may capture the exact review and transport-free
+preview receipts immediately before Keep, but it creates a Passport only after
+the controller reports a confirmed committed revision. Revert, stale,
+preview-unavailable, failed commit, and `commit-uncertain` discard pending
+evidence and issue nothing.
+
+Before issuance, the integration projects the newly committed state through a
+manifest-aware public allowlist and proves it matches the previewed proposal.
+Asset controls/handles, artwork data, private controls, commercial/customer
+data, prompts, tokens, and internal endpoints are excluded. Verification binds
+the expected origin, configurator, manifest version, renderer version,
+committed revision, public configuration digest, and exact preview receipts.
+It also requires public-safe readiness freshly recomputed by the merchant from
+that exact committed state and rejects any mismatch with receipt readiness.
+Public re-edit URLs contain no query or fragment data.
+
+The Passport's SHA-256 values are **unsigned integrity receipts**. They detect a
+changed receipt when reverified with the public configuration and expected
+policy; they are not signatures or merchant-authentication credentials. The
+pure Shopify mapper accepts only a runtime-verified, current-readiness-bound,
+production-ready Passport and
+returns reference metadata. It does not write a cart, checkout, or order and is
+not a WebMCP tool.
+
 ## Integration status
 
 The complete public studio-tote product uses this engine, `AssetSandbox`,
 `PreviewBridge`, the exact six-tool registry, and one shared review controller.
-Native Chrome and the Codex in-app browser have executed its two-variant
-actual-artwork flow with zero writes before the visible page Keep boundary.
+Its ordinary flow can use studio-name typography as production-ready branding;
+its advanced flow supports temporary supplied artwork and a localized
+Constraint X-Ray repair. Native Chrome and the Codex in-app browser have
+executed its two-variant actual-artwork flow with zero writes before the visible
+page Keep boundary.
 After explicit owner approval, the private KORRHAUS Designer also integrated
 the same engine and exact-six runtime through its full Route 02 control
 inventory. That adapter is now live on the existing Shopify storefront. Its
 production renderer, autosave, customer state, persistence, pricing, and
 commerce paths remain merchant-owned and outside this repository.
+The submission improvements documented above do not change that private
+adapter.

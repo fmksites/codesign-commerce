@@ -2,7 +2,7 @@ import { isSafeIdentifier, validateManifest } from "./manifest.js";
 import { AtomicOperationReducer, OperationValidationError, validateApplyOperationsInput } from "./operations.js";
 import { AssetSandbox, AssetSandboxError, validateStageAssetInput } from "./asset-sandbox.js";
 import { PreviewBridge, PreviewBridgeError, validatePreviewCaptureRequest } from "./preview-bridge.js";
-import { GuardedWorkspaceAdapter } from "./workspace-adapter.js";
+import { assertMerchantApprovedRepairBatch, GuardedWorkspaceAdapter, MerchantApprovedRepairError } from "./workspace-adapter.js";
 import type {
   ApplyOperationsInput,
   AssetResolver,
@@ -11,6 +11,7 @@ import type {
   ConfiguratorManifest,
   ControlValue,
   PreviewArtifact,
+  PreviewArtifactReceipt,
   PreviewCaptureSuccessResult,
   ProposalEndReason,
   ProposalEngineErrorCode,
@@ -203,6 +204,10 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
   get status(): ProposalEngineStatus { return this.#status; }
   get proposedWorkspace(): WorkspaceState | null { return this.#active ? structuredClone(this.#active.state) : null; }
   get currentReview(): ProposalEngineSuccessResult | null { return this.#active?.reviewResult ? structuredClone(this.#active.reviewResult) : null; }
+  get currentPreviewReceipts(): PreviewArtifactReceipt[] {
+    if (!this.#active || this.#active.previewStatus !== "available") return [];
+    return this.#active.previewArtifacts.map(({ altText: _altText, transport: _transport, ...receipt }) => structuredClone(receipt));
+  }
   get snapshot(): ProposalEngineSnapshot {
     return {
       status: this.#status,
@@ -399,6 +404,24 @@ export class ProposalEngine<Snapshot = unknown, PrivateAsset = unknown> {
       if (input.baseRevision !== this.#active.baseRevision) return errorResult("STALE_REVISION", "The proposal base revision is stale", true, this.#active.baseRevision);
     } else if (input.proposalId !== undefined || input.proposalRevision !== undefined) {
       return errorResult("NO_PROPOSAL", "There is no open proposal to refine", true);
+    }
+
+    if (this.#active?.validation) {
+      try {
+        assertMerchantApprovedRepairBatch(this.#active.validation, input.operations);
+      } catch (error) {
+        if (error instanceof MerchantApprovedRepairError) {
+          return errorResult(
+            "INVALID_VALUE",
+            "The requested repair must exactly match one merchant-approved option returned by validation",
+            false,
+            this.#active.baseRevision,
+            undefined,
+            this.#active.validation,
+          );
+        }
+        throw error;
+      }
     }
 
     const refining = this.#active !== null;

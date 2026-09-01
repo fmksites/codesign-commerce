@@ -164,10 +164,10 @@
     {
       "id": "studio-tote-portability-brief",
       "category": "end-to-end",
-      "prompt": "Create 100 studio totes for North Form, split evenly across two variants, and use the supplied artwork. Name the first North Form Natural: natural 12 oz canvas, long handles, centered one-colour ink artwork at 105% scale. Name the second North Form Charcoal: charcoal 12 oz canvas, short handles, upper-left one-colour artwork at 82% scale and -6 degrees rotation. Show me both previews, check production readiness, and do not save.",
+      "prompt": "Create 100 North Form studio totes split evenly between a natural customer version and a charcoal staff version. Use this supplied mark on both: centered at 100% on Natural and upper-left at 72% on Charcoal. Show me both previews, check production readiness, and do not save anything.",
       "expectedCoDesignTools": ["codesign_read_workspace", "codesign_list_capabilities", "codesign_stage_asset", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal"],
       "forbiddenCoDesignTools": [],
-      "expectedOutcome": "Stage only an opaque temporary handle, create two visibly different named 50-tote variants through coherent temporary passes, return one current preview per variant, report production ready, and require page Keep or Revert."
+      "expectedOutcome": "As an advanced supplied-artwork proof, stage only an opaque temporary handle, create two visibly different named 50-tote variants, return one current renderer preview per variant, report production ready and persisted false, and require page Keep or Revert."
     },
     {
       "id": "studio-tote-two-colour-minimum",
@@ -204,10 +204,18 @@
     {
       "id": "studio-tote-natural-intent",
       "category": "end-to-end",
-      "prompt": "I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, use the studio name for the branding, show me both options, and tell me if they are ready to make. Do not save anything yet.",
-      "expectedCoDesignTools": ["codesign_read_workspace", "codesign_list_capabilities", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal"],
+      "prompt": "I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.",
+      "expectedCoDesignTools": ["codesign_read_workspace", "codesign_list_capabilities", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal"],
       "forbiddenCoDesignTools": ["codesign_stage_asset"],
-      "expectedOutcome": "Translate subjective shopper intent into two visibly different temporary 50-tote variants with studio-name typography, return both current previews, report production readiness and assumptions, and require page Keep or Revert."
+      "expectedOutcome": "Translate subjective shopper intent using the declared premium darker-staff direction: create two temporary 50-tote variants, keep Natural centered, begin Charcoal at 95 percent upper-left, return the visible configuration-valid but production-not-ready previews and ARTWORK_SAFE_ZONE issue, select only the declared 78 percent repair, invalidate the old Charcoal preview, rerender both current previews, revalidate production ready, remain persisted false, and require page Keep or Revert."
+    },
+    {
+      "id": "studio-tote-constraint-xray-repair",
+      "category": "end-to-end",
+      "prompt": "I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version. Keep the natural branding centered, but make the darker staff branding 95% and upper-left. If the shop says that placement conflicts with production, use only a repair it explicitly offers. Show me both current options, check whether they are ready to make, and do not save anything.",
+      "expectedCoDesignTools": ["codesign_read_workspace", "codesign_list_capabilities", "codesign_apply_proposal", "codesign_apply_proposal", "codesign_get_previews", "codesign_validate_proposal"],
+      "forbiddenCoDesignTools": ["codesign_stage_asset"],
+      "expectedOutcome": "Create two 50-tote variants in a temporary proposal: the first atomic result makes only Charcoal 95% and upper-left, leaves Natural centered, visibly flags ARTWORK_SAFE_ZONE and production ready false, then accepts only the merchant-declared 78% repair, invalidates the old charcoal preview, returns both current previews, revalidates production ready, and remains persisted false."
     }
   ]
 }

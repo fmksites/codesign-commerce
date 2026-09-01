@@ -73,10 +73,12 @@ class TestWorkspaceAdapter implements WorkspaceAdapter<TestSnapshot> {
       configurationValid,
       productionReady: configurationValid,
       issues: configurationValid ? [] : [{
+        issueId: "quantity-total-mismatch.workspace",
         code: "QUANTITY_TOTAL_MISMATCH",
         severity: "constraint-error",
         message: "Variant quantities must equal the workspace total",
         controlIds: ["order.total_quantity", "design.quantity"],
+        repairable: false,
       }],
       assumptions: [],
     };

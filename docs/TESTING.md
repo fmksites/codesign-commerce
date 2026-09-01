@@ -39,6 +39,15 @@ Current deterministic coverage includes:
 - Framework-neutral review states and human actions.
 - Shadow-DOM review rendering, hidden-by-default activation, sanitized text, focus, and native Keep/Revert controls.
 - WebMCP schemas, annotations, lifecycle unregistration, and runtime input checks.
+- Exact registration order plus post-`unregister()` observer silence.
+- Canonical success `message`/`nextAction` envelopes, including non-ready
+  routing to refinement and rejection of untrusted labels, assumptions, and
+  validation prose from trusted guidance.
+- Privacy-safe invocation events containing only tool name, phase, effect,
+  timestamp, and duration; observer exceptions cannot alter tool outcomes.
+- Supported-only tool disclosure generated from the actual registered tools,
+  with four inspect and two temporary-change capabilities and no persistence or
+  commerce capability.
 - Natural-language routing metadata for the read, capability, artwork,
   proposal, preview, and validation sequence, without a WebMCP incantation.
 - Exact six-tool registration with no Keep, Revert, save, quote, checkout,
@@ -47,12 +56,31 @@ Current deterministic coverage includes:
 - Public option discovery with bounded option IDs and dependency descriptions.
 - Atomic, idempotent second-design creation with maximum-design and clone-invariant guards.
 - Standalone committed/proposal validation with accumulated proposal assumptions.
+- Localized validation issues with stable IDs, preview-surface/normalized-region
+  targeting, closed-enum provenance, accessible text equivalents, rejection of
+  invented sources, and legacy deterministic IDs that default to nonrepairable.
+- Exact merchant-approved repair selection and engine enforcement: partial,
+  approximate, mixed, and invented repairs leave the proposal revision and
+  visible state unchanged; an accepted repair invalidates prior previews.
 - Adapter detached reads, preview/restore behavior, commits, retries, and subscriptions.
 - Studio-tote manifest portability, ordinary human persistence, coupled
   canvas/print constraints, typography and actual-artwork paths, ink/scale/
   rotation transforms, named variant selection, quantity-preserving variant
   creation, targeted one-variant refinement, zero-write Revert, and exactly-once
   Keep.
+- Studio-name typography as the no-artwork production-ready fallback, plus the
+  charcoal upper-left Constraint X-Ray from problem highlight through exact 78%
+  repair, rerender, fresh preview, and production-ready revalidation.
+- Revision-aware preview freshness: current receipts match the exact proposal
+  revision, a subsequent design change marks them outdated, and a new capture
+  records which old revision it replaced. Pending, capturing, unavailable, and
+  ordinary human states remain distinct.
+- Configuration Passport v0.1 issuance only after confirmed Keep; no receipt on
+  Revert, stale, failed, uncertain, or preview-unavailable paths; public
+  projection strips asset/private fields; tampering and unexpected origin,
+  configurator, manifest, or renderer versions fail closed.
+- The pure Shopify mapper rejects unverified/non-production-ready Passports and
+  returns reference metadata without a cart write.
 - Provider-neutral judge-site assembly, semantic package version, exact commit
   and browser-bundle metadata, a deterministic relative tote link, a
   metadata-bound HTTPS live-flagship link, subpath-safe assets, and an explicit
@@ -82,6 +110,17 @@ Before the transaction vertical slice may pass:
 3. Revert restores the exact prior rendered and canonical state with zero writes.
 4. Keep records exactly one local write and one secure save.
 5. Normal human editing still autosaves outside proposal mode.
+6. The activity rail is driven by actual invocation events and contains no
+   inputs, results, artwork, shopper text, configuration values, or URLs.
+7. A localized Constraint X-Ray highlights the affected preview region, exposes
+   an accessible explanation, accepts only a declared repair, invalidates the
+   old preview, and returns to production-ready after fresh capture/validation.
+8. No Passport exists before Keep; a successful exactly-once Keep creates one
+   unsigned integrity receipt bound to the committed revision and current
+   previews. Runtime verification recomputes merchant readiness from the kept
+   state, rejects any self-asserted readiness mismatch, and strips/rejects all
+   query and fragment data from edit URLs. A changed or unknown-version receipt
+   fails verification.
 
 Before submission-ready handoff:
 
@@ -92,6 +131,12 @@ Before submission-ready handoff:
   the consumer ChatGPT website run remains recorded as blocked by that client's
   unavailable page-tool surface.
 - Execute the North Form 120-pair/two-colourway scenario.
+- Execute the ordinary 100-tote/two-variant scenario without supplied artwork;
+  studio-name typography must remain production-ready.
+- Refine the darker variant to an oversized upper-left branding mark, observe
+  the production-not-ready Constraint X-Ray, apply exactly the returned repair,
+  recapture previews, and revalidate production-ready while the other variant
+  remains unchanged. Every WebMCP result must still report `persisted: false`.
 - Execute at least one ordinary shopper brief that contains no protocol name,
   tool name, tool-call instruction, or preselected option IDs. The agent must
   discover and sequence the appropriate page tools from metadata alone. The
@@ -101,6 +146,11 @@ Before submission-ready handoff:
   renderer previews were returned, and nothing was persisted.
 - Run negative prompts for ordering, quote acceptance, upload, customer data, pricing, margins, suppliers, arbitrary paths, and unsafe keys.
 - Verify keyboard, focus, ARIA live status, mobile layout, reload, navigation, and browser-without-WebMCP fallback.
+- Verify the collapsed capability disclosure appears only after successful
+  registration and its privacy-safe activity stream stops on page teardown.
+- Run a separate Keep proof for exactly-once persistence and Passport issuance;
+  verify that Shopify line metadata is pure output and causes no cart/network
+  write.
 - Repeat critical proof against immutable build identifiers and record screenshots plus sanitized traces.
 
 The final tote inventory must report all 25 shipped customer and review

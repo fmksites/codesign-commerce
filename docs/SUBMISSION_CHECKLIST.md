@@ -3,11 +3,40 @@
 Status meanings:
 
 - `PASS` — evidenced on the named current source or public surface.
+- `PENDING` — implemented or planned, but its named release/evidence gate has
+  not yet completed.
 - `HUMAN` — requires the participant's decision, recording, attestation, or
   external submission action.
 
 Last official Devpost and organizer-email recheck: 31 August 2026. Submission
 deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
+
+## Improved local candidate — 1 September 2026
+
+- `PASS` — exact six and registration order are unchanged; successful results
+  expose bounded canonical guidance and the privacy-safe observer records no
+  arguments, results, shopper content, artwork, configuration values, URLs, or
+  customer data.
+- `PASS` — one ordinary shopper brief creates Natural and the merchant-declared
+  95% upper-left Charcoal direction, localizes the Charcoal safe-zone issue,
+  accepts only the exact 78% repair, rerenders, and revalidates while every
+  agent result remains `persisted:false`.
+- `PASS` — local in-app-browser desktop and 390 px runs covered the X-Ray loop,
+  invented-repair rejection, fresh previews, production-ready resolution,
+  zero-write Revert, exactly-once Keep/Passport, receipt reload, receipt
+  invalidation after a human edit, and the complete no-WebMCP human fallback.
+- `PASS` — Passport verification is bound to freshly recomputed authoritative
+  merchant readiness; unsafe edit URLs, tampering, unknown versions, unverified
+  or non-production-ready mapping, and artwork/private-data leakage fail closed.
+- `PASS` — complete local verification passes 27 test files / 230 tests, strict
+  typecheck, production and Shopify-overlay builds, browser/judge/boundary/docs
+  checks, 27 eval cases, and 25/25 parity. Local bundle hashes are core
+  `454db66b8f01c70f90131b3bfbde38632380c2fff2026ea440f3269bdf1e1178`
+  and tote
+  `bad0ed05b8cdbc04d208793ebbdf3523118b835cf69de644c0feab4673d95c76`.
+- `PENDING` — this improved candidate has not been pushed or deployed. Exact
+  deployed ChatGPT desktop, native Chrome, ordinary Chrome, Shopify-hosted tote,
+  and separately bounded KORRHAUS repeats require explicit release approval.
 
 ## Product and WebMCP
 
@@ -23,13 +52,13 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 - `PASS` — ordinary desktop/mobile human experience remains functional without
   WebMCP.
 
-## Public repository
+## Prior public repository release
 
 - `PASS` — <https://github.com/fmksites/codesign-webmcp> is public.
 - `PASS` — GitHub detects the Apache-2.0 license.
 - `PASS` — source, public assets, tests, setup instructions, and reproducible
   tote example are included.
-- `PASS` — hosted CI is green on current `main`.
+- `PASS` — hosted CI is green on the prior deployed `main`.
 - `PASS` — fresh public clone passes 22 test files / 189 tests, strict
   typecheck, build, browser-bundle verification, judge-site verification,
   public-boundary scan, documentation check, eval structure, and 25/25 tote
@@ -37,7 +66,7 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 - `PASS` — pre-challenge KORRHAUS work and post-25-August WebMCP work are
   separated by documentation and timestamped Git history.
 
-## Public URL and browser evidence
+## Prior public URL and browser evidence
 
 - `PASS` — stable anonymous judge URL:
   <https://codesign-webmcp.pages.dev/tote/?reset=true>.
@@ -48,7 +77,7 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
   Shopify native catalog/cart tools.
 - `PASS` — stable and immutable release metadata identify public commit
   `a3b7c1fc38578b0a3a3bcb78f1c62242020b1f0b` and the same two bundle hashes.
-- `PASS` — the final deployed tote repeated exact-six discovery and the full
+- `PASS` — the 31 August deployed tote repeated exact-six discovery and the full
   temporary proposal, preview, validation, reread, and visible Revert journey
   in the Codex desktop in-app browser on 31 August 2026.
 - `PASS` — immutable release
@@ -59,6 +88,10 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 - `PASS` — unsupported consumer ChatGPT website behavior is documented without
   being mislabeled as a supported client.
 - `PASS` — Claude and other untested clients are not claimed.
+
+These rows are dated evidence for the 189-test release. They do not prove the
+new activity/X-Ray/Passport candidate until its exact commit is deployed and
+the client matrix is repeated.
 
 ## KORRHAUS and Shopify boundary
 

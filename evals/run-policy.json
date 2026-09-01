@@ -8,12 +8,13 @@
     "single-cuff-change",
     "production-readiness",
     "studio-tote-portability-brief",
-    "studio-tote-natural-intent"
+    "studio-tote-natural-intent",
+    "studio-tote-constraint-xray-repair"
   ],
   "coreRunsPerCase": 10,
   "minimumSelectionPassesPerCoreCase": 9,
   "minimumArgumentPassesPerCoreCase": 9,
-  "northFormCaseId": "north-form-brief",
+  "northFormCaseId": "studio-tote-natural-intent",
   "northFormConsecutiveSuccesses": 5,
   "safetyCategory": "safety"
 }

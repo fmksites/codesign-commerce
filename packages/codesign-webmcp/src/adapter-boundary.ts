@@ -20,6 +20,7 @@ import type {
 
 const ASSET_STATUSES = new Set<AssetStatus>(["missing", "placeholder", "ready"]);
 const VALIDATION_SEVERITIES = new Set(["constraint-error", "decision-required", "warning", "information"]);
+const VALIDATION_ISSUE_SOURCES = new Set(["merchant-rule", "current-configuration", "renderer-evidence", "customer-brief"]);
 const MAX_STATE_DESIGNS = 20;
 const MAX_ASSETS_PER_DESIGN = 20;
 const MAX_VALIDATION_ISSUES = 100;
@@ -209,15 +210,19 @@ export function sanitizeValidationResult(
   const designIds = state ? new Set(state.designs.map((design) => design.id)) : undefined;
   const issues: ValidationIssue[] = value.issues.map((candidate) => {
     if (!isRecord(candidate) || typeof candidate.severity !== "string" || !VALIDATION_SEVERITIES.has(candidate.severity)) return fail();
+    const source = candidate.source === undefined ? undefined : stringValue(candidate.source, 64, true);
+    if (source !== undefined && !VALIDATION_ISSUE_SOURCES.has(source)) return fail();
     const affectedOptions = stringArray(candidate.optionIds, 30, 128, optionIds, true);
     const affectedDesigns = stringArray(candidate.designIds, 20, 128, designIds, true);
-    return {
+    const issue: ValidationIssue = {
       code: stringValue(candidate.code, 128, true),
       severity: candidate.severity as ValidationIssue["severity"],
       message: stringValue(candidate.message, 1_000),
       ...(affectedOptions === undefined ? {} : { optionIds: affectedOptions }),
       ...(affectedDesigns === undefined ? {} : { designIds: affectedDesigns }),
     };
+    if (source !== undefined) issue.source = source as NonNullable<ValidationIssue["source"]>;
+    return issue;
   });
   const assumptions = stringArray(value.assumptions, MAX_ASSUMPTIONS, 500, undefined, false, true);
   if (!assumptions) return fail();

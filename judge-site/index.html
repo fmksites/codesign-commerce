@@ -9,8 +9,8 @@
     />
     <title>CoDesign WebMCP · WebMCP for Custom Products on Shopify</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css" />
-    <script type="module" src="./app.js?v=20260828-1"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260901-3" />
+    <script type="module" src="./app.js?v=20260901-2"></script>
   </head>
   <body>
     <header class="site-header">
@@ -19,6 +19,7 @@
         <span>CoDesign<br />WebMCP</span>
       </a>
       <nav aria-label="Primary navigation">
+        <a href="#xray">See it work</a>
         <a href="#workflow">How it works</a>
         <a href="#demos">Proofs</a>
         <a href="#boundary">Safety</a>
@@ -31,12 +32,13 @@
         <div class="hero-copy">
           <p class="eyebrow hero-step">WebMCP for Custom Products on Shopify</p>
           <h1 id="hero-title" class="hero-step">Make your Shopify product configurator <em>agent-ready.</em></h1>
+          <p class="hero-mantra hero-step">Agent designs. Human approves. Shopify completes the sale.</p>
           <p class="hero-summary hero-step">
-            CoDesign WebMCP connects AI agents to the product designer already on your Shopify store, allowing them to create and validate custom-product configurations inside the live customer experience.
+            Connect AI agents to the product designer already on your Shopify store—without replacing its visual experience or production rules.
           </p>
           <div class="hero-actions hero-step">
             <a class="button button-primary" href="./tote/?reset=true">Open the live tote demo <span aria-hidden="true">↗</span></a>
-            <a class="text-link" href="#workflow">See the transaction <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="#xray">See the proof <span aria-hidden="true">↓</span></a>
           </div>
           <div class="browser-status hero-step" data-webmcp-status role="status" aria-live="polite">
             Checking Site tools support…
@@ -66,10 +68,87 @@
       </section>
 
       <section class="proof-rail" aria-label="Project proof points">
-        <p><strong>6</strong><span>focused webpage tools</span></p>
+        <p><strong>6</strong><span>bounded webpage tools</span></p>
         <p><strong>0</strong><span>agent save or order tools</span></p>
         <p><strong>2</strong><span>materially different adapters</span></p>
-        <p><strong>186</strong><span>deterministic tests</span></p>
+        <p><strong>230</strong><span>local deterministic tests</span></p>
+      </section>
+
+      <section class="xray-story section" id="xray" aria-labelledby="xray-title">
+        <div class="xray-intro" data-reveal>
+          <div>
+            <p class="eyebrow">Constraint X-Ray · same merchant renderer</p>
+            <h2 id="xray-title">It does not just flag a problem.<br /><em>It proves the repair.</em></h2>
+          </div>
+          <div class="xray-prompt">
+            <span>Ordinary shopper brief</span>
+            <blockquote>
+              “I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.”
+            </blockquote>
+          </div>
+        </div>
+
+        <div class="xray-sequence" data-reveal aria-label="Before, production problem, and repaired tote preview">
+          <figure class="xray-frame xray-frame-before">
+            <figcaption><span>01 · Before</span><strong>Natural customer tote</strong><small>Valid first direction</small></figcaption>
+            <div class="xray-canvas">
+              <img class="xray-product" src="./tote/tote-natural-long.png" alt="Natural North Form tote preview before production checking" />
+              <span class="xray-mark xray-mark-natural" aria-hidden="true">North<br />Form</span>
+            </div>
+          </figure>
+
+          <figure class="xray-frame xray-frame-problem">
+            <figcaption><span>02 · Problem found</span><strong>Branding mark crosses safe zone</strong><small>Production ready: false</small></figcaption>
+            <div class="xray-canvas">
+              <img class="xray-product" src="./tote/tote-charcoal-long.png" alt="Charcoal North Form tote with a branding safe-zone conflict highlighted" />
+              <span class="safe-zone safe-zone-problem" aria-hidden="true"></span>
+              <span class="xray-mark xray-mark-problem" aria-hidden="true">North<br />Form</span>
+              <span class="xray-callout">ARTWORK_SAFE_ZONE</span>
+            </div>
+          </figure>
+
+          <figure class="xray-frame xray-frame-repaired">
+            <figcaption><span>03 · Merchant-approved repair</span><strong>Scale 95% → 78%</strong><small>Production ready: true</small></figcaption>
+            <div class="xray-canvas">
+              <img class="xray-product" src="./tote/tote-charcoal-long.png" alt="Repaired charcoal North Form tote, now inside the production safe zone" />
+              <span class="safe-zone safe-zone-repaired" aria-hidden="true"></span>
+              <span class="xray-mark xray-mark-repaired" aria-hidden="true">North<br />Form</span>
+              <span class="repair-proof">Revalidated ✓</span>
+            </div>
+          </figure>
+        </div>
+
+        <div class="agent-proof" data-reveal>
+          <div class="activity-trace">
+            <p class="eyebrow">Illustrative trace from the verified local flow</p>
+            <ol>
+              <li><span>Inspect</span><strong>Inspecting current design</strong><small>success</small></li>
+              <li><span>Inspect</span><strong>Reading available choices</strong><small>success</small></li>
+              <li><span>Temporary change</span><strong>Updating temporary proposal</strong><small>success</small></li>
+              <li><span>Inspect</span><strong>Capturing current previews</strong><small>success</small></li>
+              <li><span>Inspect</span><strong>Checking production readiness</strong><small>success</small></li>
+              <li><span>Temporary change</span><strong>Updating temporary proposal</strong><small>success</small></li>
+            </ol>
+          </div>
+          <div class="capability-disclosure">
+            <p class="eyebrow">Agent tools active in the tote tab</p>
+            <p class="capability-count"><strong>4</strong> inspect <i>·</i> <strong>2</strong> temporary design <i>·</i> <strong>0</strong> save / order / payment</p>
+            <p>The tote demo registers exactly six narrow WebMCP tools. Access belongs to that browser tab and ends when the page closes.</p>
+            <details>
+              <summary>See all six registered tools</summary>
+              <ul>
+                <li><code>codesign_read_workspace</code></li>
+                <li><code>codesign_list_capabilities</code></li>
+                <li><code>codesign_stage_asset</code></li>
+                <li><code>codesign_apply_proposal</code></li>
+                <li><code>codesign_get_previews</code></li>
+                <li><code>codesign_validate_proposal</code></li>
+              </ul>
+            </details>
+            <a class="button button-dark" href="./tote/?reset=true">Run this in the tote demo <span aria-hidden="true">↗</span></a>
+            <small class="landing-note">The tools register inside the configurator, not on this explanation page.</small>
+          </div>
+        </div>
       </section>
 
       <section class="workflow section" id="workflow" aria-labelledby="workflow-title">
@@ -80,10 +159,11 @@
         </div>
         <ol class="workflow-line" data-reveal>
           <li><span>01</span><strong>Read</strong><small>Allowlisted live state and revision</small></li>
-          <li><span>02</span><strong>Discover</strong><small>Public options and coupled rules</small></li>
-          <li><span>03</span><strong>Propose</strong><small>Atomic, visible, zero-write preview</small></li>
-          <li><span>04</span><strong>Validate</strong><small>Configuration and production readiness</small></li>
-          <li class="human-step"><span>05</span><strong>Human decides</strong><small>Keep or exact Revert in the page</small></li>
+          <li><span>02</span><strong>Propose</strong><small>Atomic, visible, zero-write preview</small></li>
+          <li><span>03</span><strong>Preview</strong><small>Genuine render per product variant</small></li>
+          <li><span>04</span><strong>Diagnose</strong><small>Targeted production issue and bounded repair</small></li>
+          <li><span>05</span><strong>Revalidate</strong><small>Fresh preview proves the repair</small></li>
+          <li class="human-step"><span>06</span><strong>Human decides</strong><small>Keep issues a verified configuration receipt; Revert writes nothing</small></li>
         </ol>
       </section>
 
@@ -117,16 +197,16 @@
             <p class="demo-kicker">Fictional studio tote</p>
             <h3>Different product.<br />Different rules.<br />Same safe transaction.</h3>
             <blockquote>
-              “Create 100 studio totes for North Form, split evenly across two variants, and use the supplied artwork. Natural with long handles; charcoal with short handles. Show both previews. Do not save.”
+              “I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.”
             </blockquote>
             <div class="demo-actions">
               <a class="button button-light" href="./tote/?reset=true">Open portability demo <span aria-hidden="true">↗</span></a>
-              <a class="text-link" href="./tote/north-form-supplied-mark.png" download>Download demo artwork</a>
+              <a class="text-link" href="./tote/north-form-supplied-mark.png" download aria-label="Advanced proof: Create 100 studio totes for North Form with supplied artwork">Download demo artwork</a>
             </div>
           </div>
           <div class="demo-visual">
             <img src="./tote/tote-natural-long.png" alt="Natural studio tote portability reference" />
-            <div class="demo-result"><span>Visible result</span><strong>2 named variants</strong><small>real artwork + preview per variant</small></div>
+            <div class="demo-result"><span>Visible result</span><strong>Issue → repair</strong><small>2 fresh previews · persisted: false</small></div>
           </div>
         </article>
       </section>
@@ -141,6 +221,25 @@
           <p><span>Visible to the agent</span><strong>Public configuration, options, dependencies, validation</strong></p>
           <p><span>Visible to the person</span><strong>Every preview change, missing decision, Keep and Revert</strong></p>
           <p><span>Never exposed as tools</span><strong>Save, upload, quote, order, checkout, payment, customer or private commercial data</strong></p>
+        </div>
+      </section>
+
+      <section class="passport section" aria-labelledby="passport-title">
+        <div class="passport-copy" data-reveal>
+          <p class="eyebrow">After the person chooses Keep</p>
+          <h2 id="passport-title">A verified configuration Shopify can safely reference.</h2>
+          <p>The Configuration Passport binds the committed revision, public-safe digest, renderer versions and exact preview receipts. It excludes artwork, shopper data, prices, prompts and private production rules.</p>
+        </div>
+        <div class="passport-receipt" data-reveal aria-label="Example Configuration Passport receipt">
+          <span class="passport-status">Verified configuration</span>
+          <strong>North Form · 2 variants</strong>
+          <dl>
+            <div><dt>Revision</dt><dd>tote-revision-2</dd></div>
+            <div><dt>Readiness</dt><dd>Production ready</dd></div>
+            <div><dt>Preview integrity</dt><dd>2 exact receipts</dd></div>
+            <div><dt>Shopify-safe reference</dt><dd>configuration-•••91b7</dd></div>
+          </dl>
+          <small>Public integrity receipt—not a signature. Created only after a successful page-owned Keep.</small>
         </div>
       </section>
 

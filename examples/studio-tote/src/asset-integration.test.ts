@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { AssetSandbox, PreviewBridge, ProposalEngine, ProposalReviewController } from "@codesign-webmcp/core";
+import {
+  AssetSandbox,
+  MerchantApprovedRepairError,
+  PreviewBridge,
+  ProposalEngine,
+  ProposalReviewController,
+  selectMerchantApprovedRepair,
+} from "@codesign-webmcp/core";
 import { StudioToteAssetProofStore } from "./asset-proof";
 import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
 
@@ -146,22 +153,131 @@ describe("studio tote supplied-artwork proposal lifecycle", () => {
         { type: "duplicate-variant", sourceVariantId: "tote-1", variantId: "tote-2", name: "North Form Charcoal", initialControls: { "design.quantity": 50, "bag.color": "charcoal", "handles.length": "short", "print.position": "upper-left", "branding.scale": .82, "branding.rotation": -6 } },
       ],
     });
-    expect(variants).toMatchObject({ ok: true, proposalRevision: 3, persisted: false, validation: { productionReady: true } });
+    expect(variants).toMatchObject({
+      ok: true,
+      proposalRevision: 3,
+      persisted: false,
+      validation: {
+        configurationValid: true,
+        productionReady: false,
+        issues: [expect.objectContaining({
+          issueId: "artwork-safe-zone.tote-2",
+          code: "ARTWORK_SAFE_ZONE",
+          repairable: true,
+        })],
+      },
+    });
     if (!variants.ok) return;
     const naturalBefore = structuredClone(variants.workspace.variants.find((variant) => variant.id === "tote-1"));
-    const initialPreviews = await engine.capturePreviews({
+    const safeZoneIssue = variants.validation.issues.find((issue) => issue.code === "ARTWORK_SAFE_ZONE");
+    expect(safeZoneIssue?.merchantApprovedRepairs).toEqual([{
+      id: "reduce-artwork-to-safe-scale",
+      label: "Reduce branding mark scale to 78%",
+      operations: [{
+        type: "set-control",
+        target: { scope: "variant", variantId: "tote-2" },
+        controlId: "branding.scale",
+        value: 0.78,
+      }],
+    }]);
+    if (!safeZoneIssue) throw new Error("expected the merchant safe-zone issue");
+    const approvedRepair = safeZoneIssue.merchantApprovedRepairs?.[0];
+    if (!approvedRepair) throw new Error("expected the merchant-approved safe-zone repair");
+    const preRepairPreviews = await engine.capturePreviews({
       baseRevision: variants.baseRevision,
       proposalId: variants.proposalId,
       proposalRevision: variants.proposalRevision,
       variantIds: ["tote-1", "tote-2"],
       surfaceIds: ["product-preview"],
     });
-    expect(initialPreviews).toMatchObject({ ok: true, persisted: false, artifacts: [{ variantId: "tote-1" }, { variantId: "tote-2" }] });
-
-    const refined = await engine.apply({
+    expect(preRepairPreviews).toMatchObject({ ok: true, previewStatus: "available", persisted: false });
+    const visibleBeforeInventedRepair = structuredClone(adapter.visibleState);
+    const inventedRepair = await engine.apply({
       baseRevision: variants.baseRevision,
       proposalId: variants.proposalId,
       proposalRevision: variants.proposalRevision,
+      operationId: "judge-invented-safe-zone-repair",
+      operations: [{
+        type: "set-control",
+        target: { scope: "variant", variantId: "tote-2" },
+        controlId: "branding.scale",
+        value: 0.77,
+      }],
+    });
+    expect(inventedRepair).toMatchObject({ ok: false, persisted: false, error: { code: "INVALID_VALUE", retryable: false } });
+    expect(adapter.visibleState).toEqual(visibleBeforeInventedRepair);
+    expect(engine.snapshot).toMatchObject({ proposalRevision: variants.proposalRevision, previewStatus: "available" });
+    expect(() => selectMerchantApprovedRepair(safeZoneIssue, approvedRepair.id, [{
+      type: "set-control",
+      target: { scope: "variant", variantId: "tote-2" },
+      controlId: "branding.scale",
+      value: 0.77,
+    }])).toThrow(MerchantApprovedRepairError);
+    const repairOperations = selectMerchantApprovedRepair(safeZoneIssue, approvedRepair.id, approvedRepair.operations);
+    const repaired = await engine.apply({
+      baseRevision: variants.baseRevision,
+      proposalId: variants.proposalId,
+      proposalRevision: variants.proposalRevision,
+      operationId: "judge-safe-zone-repair",
+      operations: repairOperations,
+      assumptions: ["Use the merchant-approved upper-left artwork safe area."],
+    });
+    expect(repaired).toMatchObject({
+      ok: true,
+      proposalRevision: 4,
+      persisted: false,
+      validation: { configurationValid: true, productionReady: true, issues: [] },
+    });
+    if (!repaired.ok) return;
+    expect(repaired.workspace.variants.find((variant) => variant.id === "tote-1")).toEqual(naturalBefore);
+    expect(repaired.workspace.variants.find((variant) => variant.id === "tote-2")?.controls["branding.scale"]).toBe(0.78);
+    expect(engine.snapshot.previewStatus).toBe("ready-for-capture");
+    expect(controller.state).toMatchObject({ kind: "temporary", previewReady: false, canKeep: false });
+    await expect(engine.capturePreviews({
+      baseRevision: variants.baseRevision,
+      proposalId: variants.proposalId,
+      proposalRevision: variants.proposalRevision,
+      variantIds: ["tote-1", "tote-2"],
+      surfaceIds: ["product-preview"],
+    })).resolves.toMatchObject({ ok: false, error: { code: "STALE_PROPOSAL_REVISION" } });
+
+    const beforeInvalidBatch = structuredClone(adapter.visibleState);
+    const invalidBatch = await engine.apply({
+      baseRevision: repaired.baseRevision,
+      proposalId: repaired.proposalId,
+      proposalRevision: repaired.proposalRevision,
+      operationId: "judge-invalid-repair-batch",
+      operations: [
+        { type: "set-control", target: { scope: "variant", variantId: "tote-2" }, controlId: "branding.scale", value: 0.7 },
+        { type: "set-control", target: { scope: "variant", variantId: "tote-2" }, controlId: "canvas.weight", value: "24oz" },
+      ],
+    });
+    expect(invalidBatch).toMatchObject({ ok: false, persisted: false, error: { code: "INVALID_VALUE" } });
+    expect(adapter.visibleState).toEqual(beforeInvalidBatch);
+    expect(engine.snapshot.proposalRevision).toBe(4);
+
+    const initialPreviews = await engine.capturePreviews({
+      baseRevision: repaired.baseRevision,
+      proposalId: repaired.proposalId,
+      proposalRevision: repaired.proposalRevision,
+      variantIds: ["tote-1", "tote-2"],
+      surfaceIds: ["product-preview"],
+    });
+    expect(initialPreviews).toMatchObject({ ok: true, persisted: false, artifacts: [{ variantId: "tote-1" }, { variantId: "tote-2" }] });
+    await expect(engine.validate({
+      proposalId: repaired.proposalId,
+      proposalRevision: repaired.proposalRevision,
+    })).resolves.toMatchObject({
+      ok: true,
+      persisted: false,
+      source: "proposal",
+      validation: { configurationValid: true, productionReady: true, issues: [] },
+    });
+
+    const refined = await engine.apply({
+      baseRevision: repaired.baseRevision,
+      proposalId: repaired.proposalId,
+      proposalRevision: repaired.proposalRevision,
       operationId: "judge-refine-charcoal",
       operations: [
         { type: "set-control", target: { scope: "variant", variantId: "tote-2" }, controlId: "design.name", value: "North Form Night" },
@@ -171,7 +287,7 @@ describe("studio tote supplied-artwork proposal lifecycle", () => {
       ],
       assumptions: ["Make only the charcoal direction quieter and more premium."],
     });
-    expect(refined).toMatchObject({ ok: true, proposalRevision: 4, persisted: false });
+    expect(refined).toMatchObject({ ok: true, proposalRevision: 5, persisted: false, validation: { productionReady: true } });
     if (!refined.ok) return;
     expect(refined.workspace.variants.find((variant) => variant.id === "tote-1")).toEqual(naturalBefore);
     expect(refined.workspace.variants.find((variant) => variant.id === "tote-2")).toMatchObject({
@@ -189,8 +305,8 @@ describe("studio tote supplied-artwork proposal lifecycle", () => {
         expect.objectContaining({ targetLabel: "North Form Night", label: "Body colour", before: "Not set", after: "Charcoal" }),
         expect.objectContaining({ targetLabel: "North Form Night", label: "Handles", before: "Not set", after: "Short tote · 33 cm" }),
         expect.objectContaining({ targetLabel: "North Form Night", label: "Print placement", before: "Not set", after: "Upper left" }),
-        expect.objectContaining({ targetLabel: "North Form Night", label: "Artwork scale", before: "Not set", after: "70%" }),
-        expect.objectContaining({ targetLabel: "North Form Night", label: "Artwork rotation", before: "Not set", after: "12°" }),
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Branding scale", before: "Not set", after: "70%" }),
+        expect.objectContaining({ targetLabel: "North Form Night", label: "Branding rotation", before: "Not set", after: "12°" }),
       ]));
     }
     await expect(controller.revert()).resolves.toEqual({ reverted: true, persisted: false });

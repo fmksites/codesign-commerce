@@ -321,8 +321,14 @@ export function registerStudioToteAssetProof(
   const controller = new AbortController();
   const tool = createStudioToteAssetProofTool(store);
   if (!document.modelContext?.registerTool) {
-    return { supported: false, toolNames: [], unregister: () => controller.abort(), ready: Promise.resolve() };
+    return { supported: false, toolNames: [], toolDisclosures: [], unregister: () => controller.abort(), ready: Promise.resolve() };
   }
   const ready = Promise.resolve(document.modelContext.registerTool(tool, { signal: controller.signal })).then(() => undefined);
-  return { supported: true, toolNames: [tool.name], unregister: () => controller.abort(), ready };
+  return {
+    supported: true,
+    toolNames: [tool.name],
+    toolDisclosures: [{ name: "codesign_stage_asset", title: tool.title, effect: "temporary-change" }],
+    unregister: () => controller.abort(),
+    ready,
+  };
 }

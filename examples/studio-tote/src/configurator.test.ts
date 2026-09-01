@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ProposalSession, validateManifest, type ConfigurationState } from "@codesign-webmcp/core";
 import { StudioToteAssetProofStore } from "./asset-proof";
-import { StudioToteAdapter, toteInitialState, toteManifest } from "./configurator";
+import { StudioToteAdapter, TOTE_ARTWORK_SAFE_ZONE, toteInitialState, toteManifest } from "./configurator";
 
 const clone = <T>(value: T): T => structuredClone(value);
 
@@ -20,14 +20,62 @@ describe("studio tote portability adapter", () => {
       "branding.rotation",
     ]));
     expect(toteManifest.controls.map((option) => option.id)).not.toContain("body.color");
+    expect(toteManifest.dependencyDescriptions).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: "premium-darker-staff-direction",
+        description: expect.stringMatching(/charcoal.*upper-left.*95 percent.*merchant validation/i),
+      }),
+    ]));
   });
 
-  it("keeps a coherent draft valid while final print artwork is missing", async () => {
+  it("treats merchant-rendered studio-name typography as final production branding", async () => {
     const result = await new StudioToteAdapter().validateState(clone(toteInitialState));
     expect(result).toMatchObject({
       configurationValid: true,
+      productionReady: true,
+      issues: [],
+    });
+  });
+
+  it("requires either non-empty studio-name typography or supplied final artwork", async () => {
+    const state = clone(toteInitialState);
+    state.designs[0]!.selections["branding.text"] = "   ";
+    const result = await new StudioToteAdapter().validateState(state);
+
+    expect(result).toMatchObject({
+      configurationValid: true,
       productionReady: false,
-      issues: [{ code: "FINAL_PRINT_ARTWORK_REQUIRED", severity: "decision-required" }],
+      issues: [{
+        code: "FINAL_PRINT_ARTWORK_REQUIRED",
+        severity: "decision-required",
+        message: "Final branding mark required: add a studio name or supplied print artwork",
+        optionIds: ["branding.text", "branding.artwork_status"],
+      }],
+    });
+  });
+
+  it("accepts ready supplied artwork without studio-name text and still applies the branding safe zone", async () => {
+    const state = clone(toteInitialState);
+    state.designs[0]!.selections["branding.text"] = "";
+    state.designs[0]!.assets = [{ slot: "print-artwork", status: "ready", agentWritable: false }];
+
+    await expect(new StudioToteAdapter().validateState(state)).resolves.toMatchObject({
+      configurationValid: true,
+      productionReady: true,
+      issues: [],
+    });
+
+    state.designs[0]!.selections["bag.color"] = "charcoal";
+    state.designs[0]!.selections["print.position"] = "upper-left";
+    state.designs[0]!.selections["branding.scale"] = 0.82;
+    const constrained = await new StudioToteAdapter().validateState(state);
+    expect(constrained).toMatchObject({
+      configurationValid: true,
+      productionReady: false,
+      issues: expect.arrayContaining([expect.objectContaining({
+        code: TOTE_ARTWORK_SAFE_ZONE.code,
+        message: "Branding mark exceeds the approved upper-left print safe area on charcoal canvas",
+      })]),
     });
   });
 
@@ -45,6 +93,49 @@ describe("studio tote portability adapter", () => {
     const result = await new StudioToteAdapter().validateState(state);
     expect(result.configurationValid).toBe(false);
     expect(result.issues).toEqual(expect.arrayContaining([expect.objectContaining({ code })]));
+  });
+
+  it("describes the deliberate charcoal upper-left safe-zone issue without invalidating the configuration", async () => {
+    const state = clone(toteInitialState);
+    state.designs[0]!.selections["bag.color"] = "charcoal";
+    state.designs[0]!.selections["print.position"] = "upper-left";
+    state.designs[0]!.selections["branding.scale"] = 0.82;
+    const result = await new StudioToteAdapter().validateState(state);
+
+    expect(result).toMatchObject({
+      configurationValid: true,
+      productionReady: false,
+      issues: expect.arrayContaining([expect.objectContaining({
+        issueId: "artwork-safe-zone.tote-1",
+        code: TOTE_ARTWORK_SAFE_ZONE.code,
+        severity: "decision-required",
+        source: "merchant-rule",
+        designIds: ["tote-1"],
+        optionIds: ["bag.color", "print.position", "branding.scale"],
+        surfaceId: "product-preview",
+        normalizedPreviewRegion: TOTE_ARTWORK_SAFE_ZONE.normalizedPreviewRegion,
+        repairable: true,
+        merchantApprovedRepairs: expect.arrayContaining([expect.objectContaining({
+          id: "reduce-artwork-to-safe-scale",
+          operations: expect.arrayContaining([expect.objectContaining({ controlId: "branding.scale", value: 0.78 })]),
+        })]),
+      })]),
+    });
+  });
+
+  it.each([
+    ["natural", "upper-left", 0.82],
+    ["charcoal", "front-center", 1.4],
+    ["charcoal", "upper-left", 0.78],
+  ])("does not flag ordinary valid geometry for %s / %s / %s", async (colour, position, scale) => {
+    const state = clone(toteInitialState);
+    state.designs[0]!.selections["bag.color"] = colour;
+    state.designs[0]!.selections["print.position"] = position;
+    state.designs[0]!.selections["branding.scale"] = scale;
+    const result = await new StudioToteAdapter().validateState(state);
+    expect(result.issues).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ code: TOTE_ARTWORK_SAFE_ZONE.code }),
+    ]));
   });
 
   it("exposes the current visible validation result for the human readiness panel", () => {

@@ -3,24 +3,45 @@
   "runType": "template",
   "runId": "replace-with-run-id",
   "model": "replace-with-exact-model-id",
-  "executedAt": "2026-08-27T00:00:00.000Z",
+  "executedAt": "replace-with-utc-timestamp",
   "buildCommit": "replace-with-40-character-commit-sha",
   "browserBundleSha256": "replace-with-64-character-sha256",
   "toolDefinitionsSha256": "replace-with-64-character-sha256",
-  "environment": "ChatGPT in-app browser or Chrome 149+ with WebMCP enabled",
+  "environment": "replace-with-one-exact-deployed-client-and-version; never combine ChatGPT desktop and Chrome evidence",
+  "deploymentUrl": "replace-with-exact-deployed-url",
   "results": [
     {
-      "caseId": "read-current-configuration",
+      "caseId": "studio-tote-natural-intent",
       "repetition": 1,
       "calls": [
         {
           "name": "codesign_read_workspace",
           "arguments": {},
           "argumentsValid": true
+        },
+        {
+          "name": "codesign_list_capabilities",
+          "arguments": {},
+          "argumentsValid": true
+        },
+        {
+          "name": "codesign_apply_proposal",
+          "arguments": {},
+          "argumentsValid": true
+        },
+        {
+          "name": "codesign_get_previews",
+          "arguments": {},
+          "argumentsValid": true
+        },
+        {
+          "name": "codesign_validate_proposal",
+          "arguments": {},
+          "argumentsValid": true
         }
       ],
       "outcomePassed": true,
-      "notes": "Replace this template row with observed model-run evidence."
+      "notes": "Template only. Replace empty arguments and this note with observed ordinary-language model-run evidence from the exact deployed commit. Record the dependent Constraint X-Ray case separately; record human Keep and Passport browser acceptance outside the model tool-call sequence."
     }
   ]
 }

@@ -13,3 +13,5 @@ export * from "./in-memory-adapter.js";
 export * from "./review-controller.js";
 export * from "./review-view.js";
 export * from "./webmcp.js";
+export * from "./configuration-passport.js";
+export * from "./shopify-handoff.js";

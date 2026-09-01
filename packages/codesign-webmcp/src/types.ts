@@ -182,6 +182,9 @@ export interface PreviewArtifact {
   transport: PreviewTransport;
 }
 
+/** Transport-free, alt-text-free evidence for a preview already verified by the bridge. */
+export type PreviewArtifactReceipt = Omit<PreviewArtifact, "altText" | "transport">;
+
 export interface PreviewCaptureAdapter<PrivateAsset = unknown> {
   capturePreviews(
     request: PreviewCaptureRequest,
@@ -393,12 +396,34 @@ export interface AvailabilityResult {
 }
 
 export interface WorkspaceValidationIssue {
+  /** Stable after the guarded boundary; legacy adapters may omit it and receive a deterministic non-repairable ID. */
+  issueId?: string;
   code: string;
   severity: ValidationSeverity;
+  /** Closed public provenance category; never free-form merchant text. */
+  source?: ValidationIssueSource;
   message: string;
   controlIds?: string[];
   variantIds?: string[];
   elementIds?: string[];
+  surfaceId?: string;
+  normalizedPreviewRegion?: NormalizedPreviewRegion;
+  /** Defaults to false for legacy adapters. Merchant-approved repairs always require an explicit true value. */
+  repairable?: boolean;
+  merchantApprovedRepairs?: MerchantApprovedRepair[];
+}
+
+export interface NormalizedPreviewRegion {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface MerchantApprovedRepair {
+  id: string;
+  label: string;
+  operations: SetControlOperation[];
 }
 
 export interface WorkspaceValidationResult {
@@ -555,12 +580,25 @@ export interface ListCapabilitiesInput extends AvailabilityRequest {
 
 export type ValidationSeverity = "constraint-error" | "decision-required" | "warning" | "information";
 
+export type ValidationIssueSource =
+  | "merchant-rule"
+  | "current-configuration"
+  | "renderer-evidence"
+  | "customer-brief";
+
 export interface ValidationIssue {
+  issueId?: string;
   code: string;
   severity: ValidationSeverity;
+  /** Closed public provenance category; never free-form merchant text. */
+  source?: ValidationIssueSource;
   message: string;
   optionIds?: string[];
   designIds?: string[];
+  surfaceId?: string;
+  normalizedPreviewRegion?: NormalizedPreviewRegion;
+  repairable?: boolean;
+  merchantApprovedRepairs?: MerchantApprovedRepair[];
 }
 
 export interface ValidationResult {

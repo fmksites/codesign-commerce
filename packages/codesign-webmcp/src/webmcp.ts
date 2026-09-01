@@ -29,6 +29,46 @@ export interface WebMcpTool<Input = unknown, Output = unknown> {
   execute(input: Input, options?: WebMcpExecuteOptions): Promise<Output>;
 }
 
+export const CODESIGN_TOOL_NAMES = [
+  "codesign_read_workspace",
+  "codesign_list_capabilities",
+  "codesign_stage_asset",
+  "codesign_apply_proposal",
+  "codesign_get_previews",
+  "codesign_validate_proposal",
+] as const;
+
+export type CoDesignToolName = (typeof CODESIGN_TOOL_NAMES)[number];
+export type WebMcpInvocationPhase = "start" | "success" | "error" | "cancelled";
+export type WebMcpInvocationEffect = "inspect" | "temporary-change";
+
+export interface WebMcpInvocationEvent {
+  toolName: CoDesignToolName;
+  phase: WebMcpInvocationPhase;
+  effect: WebMcpInvocationEffect;
+  timestamp: number;
+  duration: number;
+}
+
+export type WebMcpInvocationObserver = (event: Readonly<WebMcpInvocationEvent>) => void;
+
+export interface WebMcpToolDisclosure {
+  name: CoDesignToolName;
+  title: string;
+  effect: WebMcpInvocationEffect;
+}
+
+export const CODESIGN_NEXT_ACTIONS = [
+  "inspect-capabilities",
+  "apply-proposal",
+  "capture-previews",
+  "refine-proposal",
+  "human-review",
+  "none",
+] as const;
+
+export type CoDesignNextAction = (typeof CODESIGN_NEXT_ACTIONS)[number];
+
 export interface ModelContextLike {
   registerTool(tool: WebMcpTool, options?: { signal?: AbortSignal }): Promise<unknown> | unknown;
 }
@@ -40,6 +80,7 @@ export interface DocumentWithModelContext {
 export interface WebMcpRegistration {
   supported: boolean;
   toolNames: string[];
+  toolDisclosures: readonly WebMcpToolDisclosure[];
   reason?: "disabled" | "unsupported-host" | "invalid-manifest";
   unregister(): void;
   ready: Promise<void>;
@@ -48,16 +89,8 @@ export interface WebMcpRegistration {
 export interface CoDesignToolDependencies<Snapshot = unknown, PrivateAsset = unknown> {
   engine: ProposalEngine<Snapshot, PrivateAsset>;
   enabled?: boolean;
+  onInvocation?: WebMcpInvocationObserver;
 }
-
-export const CODESIGN_TOOL_NAMES = [
-  "codesign_read_workspace",
-  "codesign_list_capabilities",
-  "codesign_stage_asset",
-  "codesign_apply_proposal",
-  "codesign_get_previews",
-  "codesign_validate_proposal",
-] as const;
 
 const EMPTY_OBJECT_SCHEMA: JsonSchema = {
   type: "object",
@@ -337,6 +370,158 @@ function publicResult<T>(result: T): T {
   return { ...result, error: { ...result.error, code: PUBLIC_ERROR_CODES[result.error.code] ?? result.error.code } } as T;
 }
 
+interface SuccessGuidance {
+  message: string;
+  nextAction: CoDesignNextAction;
+}
+
+const SUCCESS_GUIDANCE = {
+  readWorkspace: {
+    message: "Workspace inspected. Nothing changed or was saved. Next: discover the bounded design capabilities before proposing changes.",
+    nextAction: "inspect-capabilities",
+  },
+  listCapabilities: {
+    message: "Design capabilities inspected. Nothing changed or was saved. Next: create or refine one temporary proposal using only the returned controls and values.",
+    nextAction: "apply-proposal",
+  },
+  stageAsset: {
+    message: "The supplied artwork was staged temporarily behind an opaque handle. It was not uploaded or saved. Next: attach the handle in a temporary proposal.",
+    nextAction: "apply-proposal",
+  },
+  applyProposal: {
+    message: "The temporary proposal is visible in the page. Nothing was saved. Next: capture the current merchant-rendered previews for review.",
+    nextAction: "capture-previews",
+  },
+  previewReview: {
+    message: "Current merchant-rendered previews are available and the configuration is valid. Nothing was saved. Next: ask the person to review the visible result and choose Keep or Revert in the page.",
+    nextAction: "human-review",
+  },
+  previewRefine: {
+    message: "Current merchant-rendered previews are available, but the configuration needs refinement. Nothing was saved. Next: revise the temporary proposal using the returned validation issues.",
+    nextAction: "refine-proposal",
+  },
+  validationPreview: {
+    message: "The temporary proposal is valid but still needs a current merchant-rendered preview. Nothing was saved. Next: capture the exact current proposal previews.",
+    nextAction: "capture-previews",
+  },
+  validationReview: {
+    message: "The temporary proposal is valid and has a current preview. Nothing was saved. Next: ask the person to review the visible result and choose Keep or Revert in the page.",
+    nextAction: "human-review",
+  },
+  validationRefine: {
+    message: "The configuration needs refinement. Nothing was saved. Next: revise the temporary proposal using the returned validation issues.",
+    nextAction: "refine-proposal",
+  },
+  validationCommittedRefine: {
+    message: "The committed configuration needs refinement. Nothing was changed or saved. Next: create a temporary proposal using the returned validation issues.",
+    nextAction: "apply-proposal",
+  },
+  validationCommitted: {
+    message: "The committed configuration was inspected without changing or saving anything. No temporary proposal action is required.",
+    nextAction: "none",
+  },
+} as const satisfies Record<string, SuccessGuidance>;
+
+function withSuccessGuidance<T>(result: T, guidance: SuccessGuidance): T {
+  const publicValue = publicResult(result);
+  if (!isRecord(publicValue) || publicValue.ok !== true) return publicValue;
+  if (guidance.message.length > 500 || !CODESIGN_NEXT_ACTIONS.includes(guidance.nextAction)) {
+    throw new RangeError("Invalid public WebMCP success guidance");
+  }
+  return { ...publicValue, message: guidance.message, nextAction: guidance.nextAction } as T;
+}
+
+function previewGuidance(result: unknown): SuccessGuidance {
+  if (isRecord(result)
+    && isRecord(result.validation)
+    && result.validation.configurationValid === true
+    && result.validation.productionReady === true) {
+    return SUCCESS_GUIDANCE.previewReview;
+  }
+  return SUCCESS_GUIDANCE.previewRefine;
+}
+
+function validationGuidance(result: unknown, previewAvailable: boolean): SuccessGuidance {
+  if (!isRecord(result) || result.ok !== true) return SUCCESS_GUIDANCE.validationRefine;
+  const configurationValid = isRecord(result.validation) && result.validation.configurationValid === true;
+  const productionReady = isRecord(result.validation) && result.validation.productionReady === true;
+  if (result.source === "committed") {
+    return configurationValid && productionReady ? SUCCESS_GUIDANCE.validationCommitted : SUCCESS_GUIDANCE.validationCommittedRefine;
+  }
+  if (!configurationValid || !productionReady) return SUCCESS_GUIDANCE.validationRefine;
+  return previewAvailable ? SUCCESS_GUIDANCE.validationReview : SUCCESS_GUIDANCE.validationPreview;
+}
+
+function toolEffect(tool: WebMcpTool): WebMcpInvocationEffect {
+  return tool.annotations.readOnlyHint ? "inspect" : "temporary-change";
+}
+
+function invocationPhase(result: unknown): Exclude<WebMcpInvocationPhase, "start"> {
+  if (isRecord(result) && result.ok === true) return "success";
+  if (isRecord(result) && isRecord(result.error) && result.error.code === "CANCELLED") return "cancelled";
+  return "error";
+}
+
+function thrownInvocationPhase(error: unknown, signal?: AbortSignal): Exclude<WebMcpInvocationPhase, "start"> {
+  if (signal?.aborted) return "cancelled";
+  return isRecord(error) && error.name === "AbortError" ? "cancelled" : "error";
+}
+
+function emitInvocation(
+  observer: WebMcpInvocationObserver,
+  toolName: CoDesignToolName,
+  phase: WebMcpInvocationPhase,
+  effect: WebMcpInvocationEffect,
+  timestamp: number,
+  duration: number,
+): void {
+  try {
+    const completion = observer(Object.freeze({ toolName, phase, effect, timestamp, duration })) as unknown;
+    if (completion !== null && typeof completion === "object" && "then" in completion && typeof completion.then === "function") {
+      void Promise.resolve(completion).catch(() => undefined);
+    }
+  } catch {
+    // Observability is optional and must never change tool behavior.
+  }
+}
+
+function observeTool(tool: WebMcpTool, observer?: WebMcpInvocationObserver): WebMcpTool {
+  if (!observer) return tool;
+  const toolName = tool.name as CoDesignToolName;
+  const effect = toolEffect(tool);
+  // Completion events intentionally contain no shopper or tool payload. Give
+  // concurrent invocations distinct start timestamps so consumers can match a
+  // completion through `timestamp - duration` without a tracking identifier.
+  const activeInvocationStarts = new Set<number>();
+  return {
+    ...tool,
+    async execute(input, options) {
+      let startedAt = Date.now();
+      while (activeInvocationStarts.has(startedAt)) startedAt -= 1;
+      activeInvocationStarts.add(startedAt);
+      emitInvocation(observer, toolName, "start", effect, startedAt, 0);
+      try {
+        const result = await tool.execute(input, options);
+        const finishedAt = Date.now();
+        emitInvocation(observer, toolName, invocationPhase(result), effect, finishedAt, Math.max(0, finishedAt - startedAt));
+        return result;
+      } catch (error) {
+        const finishedAt = Date.now();
+        emitInvocation(observer, toolName, thrownInvocationPhase(error, options?.signal), effect, finishedAt, Math.max(0, finishedAt - startedAt));
+        throw error;
+      } finally {
+        activeInvocationStarts.delete(startedAt);
+      }
+    },
+  };
+}
+
+function toolDisclosure(tool: WebMcpTool): WebMcpToolDisclosure {
+  return Object.freeze({ name: tool.name as CoDesignToolName, title: tool.title, effect: toolEffect(tool) });
+}
+
+const EMPTY_TOOL_DISCLOSURES: readonly WebMcpToolDisclosure[] = Object.freeze([]);
+
 function parseCapabilities(value: unknown, manifest: ConfiguratorManifest): ListCapabilitiesInput | null {
   if (!isRecord(value) || !hasOnlyKeys(value, ["variantId", "elementId", "controlIds", "categories"])) return null;
   if (value.variantId !== undefined && !safeId(value.variantId)) return null;
@@ -390,7 +575,7 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
         const workspace = await engine.adapter.readWorkspace();
         if (options?.signal?.aborted) return { ok: false, persisted: false, error: { code: "CANCELLED", message: "The workspace read was cancelled", retryable: true } };
         const snapshot = engine.snapshot;
-        return {
+        return withSuccessGuidance({
           ok: true, persisted: false,
           configurator: { id: manifest.id, version: manifest.version, displayName: manifest.displayName, productType: manifest.productType }, workspace,
           pendingProposal: snapshot.proposalId === null ? null : { proposalId: snapshot.proposalId, proposalRevision: snapshot.proposalRevision, baseRevision: snapshot.baseRevision, status: snapshot.status, previewStatus: snapshot.previewStatus, persisted: false },
@@ -400,7 +585,7 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
             previewSurfaces: manifest.previewSurfaces.map((surface) => surface.id),
             operationLimits: { perBatch: MAX_OPERATIONS_PER_BATCH, perProposal: MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL },
           },
-        };
+        }, SUCCESS_GUIDANCE.readWorkspace);
       } catch { return adapterFailure("The public workspace could not be read safely"); }
     },
   };
@@ -422,7 +607,7 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
           : { committedRevision: workspace.committedRevision, controls: [] };
         const availability = new Map(dynamic.controls.map((control) => [control.controlId, control]));
         const requested = parsed.controlIds ? new Set(parsed.controlIds) : null;
-        return {
+        return withSuccessGuidance({
           ok: true, persisted: false, committedRevision: dynamic.committedRevision,
           target: { variantId: parsed.variantId ?? null, elementId: parsed.elementId ?? null },
           operationLimits: { perBatch: MAX_OPERATIONS_PER_BATCH, perProposal: MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL },
@@ -431,7 +616,7 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
           ...(categories.has("assets") ? { assetSlots: structuredClone(manifest.assetSlots) } : {}),
           ...(categories.has("previews") ? { previewSurfaces: structuredClone(manifest.previewSurfaces) } : {}),
           ...(categories.has("dependencies") ? { dependencies: structuredClone(manifest.dependencyDescriptions) } : {}),
-        };
+        }, SUCCESS_GUIDANCE.listCapabilities);
       } catch { return adapterFailure("The public capabilities could not be listed safely"); }
     },
   };
@@ -440,14 +625,18 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
     name: "codesign_stage_asset", title: "Prepare supplied artwork temporarily",
     description: "Use only when a shopper has supplied a logo or artwork for this custom product. Stage it in a declared temporary slot before attaching it with codesign_apply_proposal. This creates no merchant upload and saves nothing.",
     inputSchema: stageAssetSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
-    async execute(input, options) { return publicResult(await engine.stageAsset(input, options?.signal ? { signal: options.signal } : {})); },
+    async execute(input, options) {
+      return withSuccessGuidance(await engine.stageAsset(input, options?.signal ? { signal: options.signal } : {}), SUCCESS_GUIDANCE.stageAsset);
+    },
   };
 
   const applyTool: WebMcpTool = {
     name: "codesign_apply_proposal", title: "Create or refine the visible product design",
     description: `Use after reading the workspace and relevant capabilities to create or refine the shopper's requested custom product in the current page's visible renderer. Applies one atomic batch of up to ${MAX_OPERATIONS_PER_BATCH} changes; the proposal supports up to ${MAX_SUCCESSFUL_OPERATIONS_PER_PROPOSAL} successful operations. It stays temporary until a person uses the visible Keep control. Do not use for catalog, cart, checkout, quote, order, or payment requests.`,
     inputSchema: applyProposalSchema(manifest), annotations: { readOnlyHint: false, untrustedContentHint: true },
-    async execute(input, options) { return publicResult(await engine.apply(input, options?.signal ? { signal: options.signal } : {})); },
+    async execute(input, options) {
+      return withSuccessGuidance(await engine.apply(input, options?.signal ? { signal: options.signal } : {}), SUCCESS_GUIDANCE.applyProposal);
+    },
   };
 
   const previewsTool: WebMcpTool = {
@@ -459,7 +648,8 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
       if (!result.ok) return publicResult(result);
       const validation = await engine.validate({ proposalId: result.proposalId, proposalRevision: result.proposalRevision }, options?.signal ? { signal: options.signal } : {});
       if (!validation.ok) return publicResult(validation);
-      return { ...result, validation: validation.validation };
+      const guidedResult = { ...result, validation: validation.validation };
+      return withSuccessGuidance(guidedResult, previewGuidance(guidedResult));
     },
   };
 
@@ -467,20 +657,29 @@ export function createCoDesignTools<Snapshot, PrivateAsset>(dependencies: CoDesi
     name: "codesign_validate_proposal", title: "Check design and production readiness",
     description: "Use after creating or refining a proposal, or whenever the shopper asks whether a custom design is possible or production-ready. Applies merchant-authoritative rules to committed state or one exact temporary proposal; never changes or saves the design.",
     inputSchema: VALIDATE_SCHEMA, annotations: { readOnlyHint: true, untrustedContentHint: true },
-    async execute(input, options) { return publicResult(await engine.validate(input, options?.signal ? { signal: options.signal } : {})); },
+    async execute(input, options) {
+      const result = await engine.validate(input, options?.signal ? { signal: options.signal } : {});
+      return withSuccessGuidance(result, validationGuidance(result, engine.snapshot.previewStatus === "available"));
+    },
   };
 
-  return [readTool, capabilitiesTool, stageTool, applyTool, previewsTool, validateTool];
+  return [readTool, capabilitiesTool, stageTool, applyTool, previewsTool, validateTool]
+    .map((tool) => observeTool(tool, dependencies.onInvocation));
 }
 
 export function registerCoDesignTools<Snapshot, PrivateAsset>(document: DocumentWithModelContext, dependencies: CoDesignToolDependencies<Snapshot, PrivateAsset>): WebMcpRegistration {
   const controller = new AbortController();
-  if (dependencies.enabled === false) return { supported: false, toolNames: [], reason: "disabled", unregister: () => controller.abort(), ready: Promise.resolve() };
+  if (dependencies.enabled === false) return { supported: false, toolNames: [], toolDisclosures: EMPTY_TOOL_DISCLOSURES, reason: "disabled", unregister: () => controller.abort(), ready: Promise.resolve() };
+  const registrationObserver = dependencies.onInvocation
+    ? (event: Readonly<WebMcpInvocationEvent>) => {
+        if (!controller.signal.aborted) dependencies.onInvocation?.(event);
+      }
+    : undefined;
   let tools: WebMcpTool[];
-  try { tools = createCoDesignTools(dependencies); } catch {
-    return { supported: false, toolNames: [], reason: "invalid-manifest", unregister: () => controller.abort(), ready: Promise.resolve() };
+  try { tools = createCoDesignTools({ ...dependencies, ...(registrationObserver ? { onInvocation: registrationObserver } : {}) }); } catch {
+    return { supported: false, toolNames: [], toolDisclosures: EMPTY_TOOL_DISCLOSURES, reason: "invalid-manifest", unregister: () => controller.abort(), ready: Promise.resolve() };
   }
-  if (!document.modelContext?.registerTool) return { supported: false, toolNames: [], reason: "unsupported-host", unregister: () => controller.abort(), ready: Promise.resolve() };
+  if (!document.modelContext?.registerTool) return { supported: false, toolNames: [], toolDisclosures: EMPTY_TOOL_DISCLOSURES, reason: "unsupported-host", unregister: () => controller.abort(), ready: Promise.resolve() };
   const ready = Promise.all(tools.map((tool) => Promise.resolve().then(() => document.modelContext!.registerTool(tool, { signal: controller.signal }))))
     .then(() => undefined)
     .catch(() => { controller.abort(); throw new Error("WebMCP tool registration failed"); });
@@ -488,6 +687,7 @@ export function registerCoDesignTools<Snapshot, PrivateAsset>(document: Document
   return {
     supported: true,
     toolNames: tools.map((tool) => tool.name),
+    toolDisclosures: Object.freeze(tools.map(toolDisclosure)),
     unregister() {
       if (unregistered) return;
       unregistered = true;

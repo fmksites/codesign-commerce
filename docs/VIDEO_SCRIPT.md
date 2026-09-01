@@ -1,51 +1,80 @@
 # Mandatory demonstration video script
 
-Target: 2 minutes 35 seconds. The official rules require a public YouTube video
+Target: 2 minutes 40 seconds. The official rules require a public YouTube video
 with audio, a clear functioning demo, and a duration under three minutes.
-Recording, voice, upload and publication are human-owned. Use only
+Recording, voice, upload, and publication are human-owned. Use only
 owned/authorized visual assets and no copyrighted music.
+
+## Do not record before this gate passes
+
+- Deploy one exact commit after owner approval.
+- Repeat the scored flow on that deployment in the intended WebMCP client.
+- Repeat the separate Keep/Passport flow on that same deployment.
+- Confirm the browser evidence record names the exact commit, bundle, client,
+  date, and outcome.
+- Keep ChatGPT desktop, native Chrome, and ordinary-Chrome claims separate; do
+  not broaden a result from one client to another.
+
+At the time of this edit, the improved exact-current ChatGPT desktop and native
+Chrome runs are pending. Do not record local or historical evidence as though
+it were the final deployed release.
 
 ## Recording setup
 
-- Record the exact deployed tote release, not a hot-reloading local build.
-- Use the anonymous English reset URL and supplied North Form demo artwork.
-- Keep the verified Codex agent conversation, background browser, public
-  landing, tote and repository ready before recording. Do not use the consumer
-  ChatGPT website path: the 28 August final-release test did not expose webpage
-  WebMCP tools there.
-- Rehearse the final natural-language run on the exact deployed build. Do not
-  call direct scripted tool calls an agent run.
-- Keep progress messages, the visible tote canvas, inline chat previews and
-  Keep/Revert decision readable in the YouTube player.
-- Include KORRHAUS only as the secondary real-business integration proof. Its
-  live evidence is scoped to the verified Codex-browser run; do not imply that
-  the current native-Chrome or consumer-ChatGPT route was used.
+- Record the anonymous English reset URL, not a hot-reloading local build.
+- Keep the agent conversation, tote page, public landing, KORRHAUS tab, and
+  repository ready.
+- Make the live activity trail, both product previews, Constraint X-Ray,
+  `persisted: false`, and Keep/Revert controls readable in the YouTube player.
+- Use the primary no-file prompt exactly as written below. Supplied artwork is a
+  short advanced proof in the separate Keep replay, not the first setup hurdle.
+- Do not call direct scripted tool invocations an agent run.
 
 ## Timed script and shot list
 
 | Time | Screen | Narration |
 | --- | --- | --- |
-| 0:00–0:10 | Chat brief beside empty tote customizer | “I want custom studio products without learning another complex designer. I describe the collection once and the agent works in the merchant's real visual page.” |
-| 0:10–0:22 | Agent discovers exact six tools | “CoDesign WebMCP gives the page six bounded WebMCP tools: read, capabilities, temporary assets, atomic proposals, renderer previews and validation.” |
-| 0:22–0:58 | Foundation and Branding passes update the tote live | “The agent reads the committed state, chooses only declared values, stages my real artwork without uploading it, and builds the first direction. The browser canvas changes while the work remains temporary.” |
-| 0:58–1:18 | Variants pass creates Natural and Charcoal | “It creates a second named variant, preserves the 100-tote total, and applies different material, handles, placement, scale and rotation through one merchant adapter.” |
-| 1:18–1:36 | Two inline chat previews plus validation | “Both renderer previews return to chat at the exact proposal revision. The merchant's coupled production rules say the collection is ready.” |
-| 1:36–1:51 | Conversational refinement | “I ask for only the charcoal tote to feel bolder. The natural design stays unchanged while the charcoal preview updates.” |
-| 1:51–2:05 | Human decision | “Nothing is saved yet. WebMCP has no save or order tool. After explicit confirmation, the page's own Keep control commits once; Revert would restore the exact baseline with zero writes.” |
-| 2:05–2:22 | KORRHAUS evidence and existing Sock Designer | “This is not just a tote. The same unchanged core is integrated into KORRHAUS's existing Shopify Sock Designer, mapping more than 50 real controls without replacing its renderer or autosave.” |
-| 2:22–2:31 | Public repository | “The Apache-2.0 repository contains the reusable TypeScript core, manifest and adapter contract, runnable tote, 189 tests, safety cases and clean-clone instructions.” |
-| 2:31–2:35 | Closing title | “CoDesign WebMCP: chat to custom products on Shopify.” |
+| 0:00–0:12 | Ordinary shopper brief beside the clean tote designer | “I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.” |
+| 0:12–0:27 | Registered-tool disclosure opens; real activity begins | “CoDesign adds six bounded page tools to the merchant's existing designer. This disclosure is generated from what registered in this tab: four inspect, two temporary design, and zero save, order, or payment tools. The activity shown here is what the agent is actually doing.” |
+| 0:27–0:55 | Natural and Charcoal variants appear; the declared darker-staff direction starts at 95% upper-left | “The agent reads declared choices, keeps the 100-tote total consistent, and creates the merchant's customer and staff directions using North Form typography. It never replaces the merchant renderer, and every change is still temporary.” |
+| 0:55–1:15 | Two genuine previews appear; X-Ray highlights the Charcoal safe-zone issue | “Both renderer previews return to chat. The collection is configuration-valid, but the darker staff direction is not ready to make: the merchant's safe-zone rule marks this exact region. Every result still reports persisted false.” |
+| 1:15–1:47 | Agent selects the declared 78% repair; Charcoal rerenders; validation turns ready | “The agent cannot invent a production fix. It selects the smallest repair offered by the merchant: 78 percent. The old preview is invalidated, Charcoal rerenders, Natural stays unchanged, and fresh validation proves the issue is resolved.” |
+| 1:47–1:58 | Human clicks Revert; baseline and zero-write state return | “Nothing was saved. Revert restores the exact baseline with zero writes. This is the repeatable judge flow.” |
+| 1:58–2:15 | Clearly labeled separate replay: supplied mark, human Keep once, Verified configuration receipt | “In a separate run, the same temporary path stages a person-supplied mark without uploading it. After I inspect the current previews, one human Keep creates one committed revision and one Configuration Passport.” |
+| 2:15–2:27 | Receipt detail and Shopify-safe metadata, then Shopify-hosted tote | “The receipt binds readiness and preview integrity to an opaque Shopify-safe reference. It is not a cart write or a seventh tool; Shopify still owns commerce.” |
+| 2:27–2:35 | KORRHAUS live Sock Designer | “The same public core also runs behind KORRHAUS's existing Shopify Sock Designer through a private adapter, without replacing its customer interface.” |
+| 2:35–2:40 | Repository and closing title | “CoDesign WebMCP. Agent designs. Human approves. Shopify completes the sale.” |
+
+## Primary prompt card
+
+Use this verbatim in the recording:
+
+> I need 100 premium branded studio totes for North Form. Give me a natural customer version and a darker staff version, show me both options, check whether they are ready to make, and do not save anything yet.
+
+The primary brief is sufficient to trigger the merchant-declared darker-staff
+direction and its repair loop. Do not add a protocol incantation or a second
+setup prompt.
+
+## Evidence that must be visible, not merely narrated
+
+- The registered-tool disclosure and tab-scoped explanation.
+- Real invocation activity with no inferred milestone steps.
+- Two visibly different renderer previews returned to chat.
+- `ARTWORK_SAFE_ZONE` expressed visually and accessibly.
+- Only the merchant-declared 78% repair accepted.
+- Refreshed preview and production-ready result after repair.
+- `persisted: false` before the human decision.
+- Revert with zero writes in the scored run.
+- Exactly one Keep and one Verified configuration receipt in the separate run.
+- Opaque Shopify-safe reference without any order or checkout claim.
 
 ## Contingencies
 
-- If a live Keep creates avoidable recording risk, use Revert in the main take
-  and insert a clearly labeled, exact-build Keep replay that shows the one
-  commit counter.
-- Keep the tote as the submitted working live URL. KORRHAUS may be shown as
-  secondary live-business proof, using the dated evidence and its precise client
-  qualification.
-- Record in a host that has already passed the exact deployed flow. Do not cut
-  from a failed consumer ChatGPT website attempt to a scripted page invocation
-  and present it as one successful agent run.
+- If the final supported client fails during recording, stop and fix or narrow
+  the claim. Do not splice a scripted call into an agent run.
+- If the Keep replay creates avoidable recording risk, rehearse it on the exact
+  deployment, reset, then record one clean click and the resulting receipt.
+- Keep the tote as the submitted working URL. KORRHAUS is secondary
+  real-business proof and must retain its precise client qualification.
 - The finished export must stay under three minutes; judges are not required to
   watch beyond that limit.

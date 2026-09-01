@@ -1,36 +1,58 @@
 # Evaluation report
 
-**Current evidence date:** 31 August 2026
+**Current evidence date:** 1 September 2026
 
 This report separates deterministic verification, actual browser/runtime
 evidence, and the optional model-evaluation corpus. None substitutes for the
 others.
 
-## Current release candidate
+## Improved local candidate
 
-The current local candidate passes:
+The 1 September candidate adds actual invocation visibility, the single-brief
+Constraint X-Ray repair loop, Configuration Passport v0.1, and the pure
+Shopify metadata mapper while preserving the exact six tools. The complete
+local verification passes 27 test files / 230 tests, strict typecheck,
+production and Shopify-overlay builds, browser-bundle and judge-site checks,
+public-boundary and documentation checks, the 27-case eval/scorer check, and
+25/25 tote surface parity.
 
-- `npm ci` with zero reported dependency vulnerabilities;
-- 22 Vitest files / 189 tests;
-- strict TypeScript checks for the core, tests, and studio tote;
-- standalone and Shopify-overlay builds;
-- browser-bundle and judge-site verification;
-- public-boundary and documentation-link checks;
-- 26-case eval-corpus validation and scorer self-test; and
-- 25/25 tote surface parity: 14 controls, four variant operations, one asset
-  slot, and six intentional human/non-configuration exclusions.
-
-The current local build produces:
+The rebuilt local candidate produces:
 
 - core browser bundle SHA-256:
-  `c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`;
+  `454db66b8f01c70f90131b3bfbde38632380c2fff2026ea440f3269bdf1e1178`;
 - tote application bundle SHA-256:
-  `4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`.
+  `bad0ed05b8cdbc04d208793ebbdf3523118b835cf69de644c0feab4673d95c76`.
 
-The deployed final release identifies commit
+These identify the local working-tree build, not a public commit or deployment.
+
+Current deterministic coverage includes:
+
+- exact-six count/order, canonical `message`/`nextAction`, privacy-safe observer
+  fields, teardown, error, cancellation, and malicious-label isolation;
+- the ordinary North Form brief mapping the darker-staff direction to 95%
+  upper-left, localized `ARTWORK_SAFE_ZONE`, exact-only 78% repair,
+  old-preview invalidation, rerender, readiness resolution, and untouched
+  Natural controls;
+- rejection of invented, partial, broadened, mixed, remove-variant,
+  duplicate-variant, asset, and workspace repair bypasses without a partial
+  preview;
+- zero-write Revert and exactly-once Keep;
+- no Passport before confirmed Keep, fail-closed tamper/version/origin/digest/
+  readiness checks, query/fragment stripping, and private/artwork-data
+  exclusion; and
+- runtime verification/production-readiness requirements for the pure Shopify
+  mapper, which performs no cart or network mutation.
+
+## Prior deployed release identity
+
+The last deployed public release identifies commit
 `a3b7c1fc38578b0a3a3bcb78f1c62242020b1f0b` and immutable deployment
-<https://a8e2b6b7.codesign-webmcp.pages.dev/>. Recheck both hashes after any
-later application-code change.
+<https://a8e2b6b7.codesign-webmcp.pages.dev/>. It passed 22 Vitest files / 189
+tests, 26 eval cases, and 25/25 parity with core bundle
+`c0fc462e099c380432d6d28971dba686d0f5f258ab7d5d368b1a6cd3110d1b56`
+and tote bundle
+`4058d70e3b7250c11edd51931ba21bc23d698d8cd58000a046915a07bc1d582e`.
+Those hashes and results are dated evidence, not the improved candidate.
 
 ## What deterministic tests establish
 
@@ -45,8 +67,33 @@ rules, review accessibility, reload recovery, and ordinary-browser fallback.
 These tests establish deterministic contracts. They do not prove that a named
 external agent client discovers or selects the tools on a deployed URL.
 
-The current local candidate passed both a direct page-scoped journey and an
-independent natural-language selection run. A separate Codex task received only
+## Improved-candidate local browser evidence
+
+The current local candidate completed a real page-scoped direct-tool desktop
+journey in the Codex in-app browser implementing the ordinary shopper brief.
+The manifest's declared darker-staff direction produced the deliberate 95%
+upper-left Charcoal
+revision; Constraint X-Ray localized it; an invented 77% repair was rejected;
+the exact 78% merchant repair was accepted; old preview receipts became stale;
+two fresh renderer previews returned; readiness changed to true; and every
+agent result remained `persisted:false`. Visible Revert restored the baseline
+with zero local/server writes.
+
+A separate local Keep run produced exactly one committed revision and one
+Configuration Passport, restored the receipt after reload with freshly
+recomputed merchant readiness, and invalidated the old receipt after a later
+human edit. A synthetic customer-like query/fragment was not admitted to the
+public edit-URL contract. The no-WebMCP desktop fallback and the complete 390 x
+844 flow also passed without horizontal overflow. These are local
+supported-browser results; they are not deployed ChatGPT desktop or native
+Chrome claims, and the direct calls do not prove independent model tool
+selection. That selection must be repeated after the exact candidate is
+deployed.
+
+## Dated selection and deployed browser evidence
+
+An earlier 28 August local candidate passed both a direct page-scoped journey
+and an independent natural-language selection run. A separate Codex task received only
 the local page URL and an ordinary subjective shopper brief containing no
 protocol name, tool name, option ID, or tool-call instruction. It independently
 selected read, capabilities, apply, previews, validate, and final reread;
@@ -122,15 +169,18 @@ does not depend on KORRHAUS authentication or availability.
 
 ## Optional model-evaluation tooling
 
-`evals/cases.json` defines 26 selection, end-to-end, ambiguity, safety,
+`evals/cases.json` defines 27 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery cases. `evals/run-policy.json` defines thresholds
 and `evals/RESULTS_FORMAT.md` defines evidence-bearing output.
 
 Every shopper prompt in the corpus is implementation-blind: validation rejects
 `WebMCP`, CoDesign tool names, and explicit tool-call wording. One core tote
 case intentionally supplies only subjective intent—natural customer version,
-darker staff version, studio-name branding, previews, and readiness—so routing
-cannot depend on copied option IDs or a protocol incantation.
+darker staff version, previews, readiness, and no-save intent. Merchant-authored
+capability guidance maps that direction to the 95% upper-left exploration; the
+agent must respond to the returned issue, select only the declared 78% repair,
+rerender, and revalidate without copied option IDs or a protocol incantation in
+the shopper prompt.
 
 `npm run check:evals` validates the corpus and scorer with synthetic fixtures.
 It does **not** execute a model and is not reported as model-selection evidence.
@@ -138,9 +188,9 @@ No paid model run or API key is required for the challenge submission.
 
 ## Remaining final-release gates
 
-1. Repeat release verification after any later runtime change; the current
-   deployed commit, immutable URL, hashes, clean-clone run, hosted CI, and
-   supported-agent judge flow have passed.
+1. Obtain explicit approval, push/deploy the improved commit, verify hosted CI
+   and stable/immutable metadata, then repeat the full client matrix on that
+   exact release.
 2. Record and upload the required public video with audio, under three minutes.
 3. Complete participant, eligibility, IP, and Devpost submission fields.
 

@@ -13,7 +13,13 @@ CoDesign WebMCP exposes one product-neutral tool surface for existing visual cus
 5. `codesign_get_previews`
 6. `codesign_validate_proposal`
 
-All six registrations share one `AbortController`. Page teardown aborts every tool and destroys the proposal engine, which restores an unsaved preview and releases temporary resources. A disabled page, unsupported browser, or invalid manifest registers no partial tool set and leaves the normal human customizer usable.
+All six registrations share one `AbortController`. Page teardown aborts every
+tool, stops invocation-observer delivery, and destroys the proposal engine,
+which restores an unsaved preview and releases temporary resources. The page
+waits for `registration.ready` before presenting the tools as active. A disabled
+page, unsupported browser, invalid manifest, or failed registration therefore
+registers no usable partial surface and leaves the normal human customizer
+available.
 
 There is deliberately no WebMCP Keep, Revert, save, retry, upload, quote, checkout, order, payment, customer, pricing, supplier, or administrative tool.
 
@@ -59,6 +65,12 @@ work inside the open designer.
 
 `codesign_apply_proposal` accepts one atomic batch of typed operations against an opaque committed revision. Refinements also require the exact proposal ID and revision. The reducer can set controls; attach or remove asset handles; and perform only manifest-declared create, duplicate, remove, reorder, or activate variant operations. A valid candidate is merchant-validated and rendered visibly with zero writes. The result contains a cumulative public diff, validation, current proposal identity, and an explicit page Keep/Revert requirement.
 
+When current validation marks an issue repairable, an operation batch touching
+that issue must exactly equal one complete `merchantApprovedRepairs` batch
+returned by the guarded adapter. The same proposal tool is used—there is no
+privileged repair tool—but approximate values, extra operations, and invented
+fixes fail atomically without changing the last reviewable preview.
+
 ### Get previews
 
 `codesign_get_previews` captures the merchant's existing renderer for the exact pending proposal revision. It returns a complete bounded variant/surface artifact matrix with integrity receipts and current validation. Old, missing, duplicate, malformed, or failed artifacts are unavailable; Keep remains disabled until a current capture succeeds.
@@ -66,6 +78,66 @@ work inside the open designer.
 ### Validate proposal
 
 `codesign_validate_proposal` validates either committed state or one exact proposal revision. It distinguishes configuration validity from production readiness and returns only public constraint errors, decisions required, warnings, information, and assumptions. It is read-only.
+
+Public issues carry a stable `issueId` and `code`, an optional closed-enum
+`source` (`merchant-rule`, `current-configuration`, `renderer-evidence`, or
+`customer-brief`), affected control/variant/element IDs, optional preview
+`surfaceId` and normalized preview region,
+`repairable`, and optional bounded merchant-approved repair batches. A legacy
+issue without these additions receives a deterministic legacy ID and remains
+nonrepairable. This compatibility default provides localization without
+silently allowing old adapters to authorize repairs.
+
+The tote renders the canonical source label beside the production result. It
+also tracks preview evidence by proposal revision. A design change visibly
+marks the prior receipt **Outdated preview**; Keep remains unavailable until a
+new capture returns **Current preview** for the exact revision. The label is a
+view of revision-bound receipts, not a timestamp or cosmetic loading state.
+
+## Canonical success envelope
+
+Every successful tool result retains its complete structured payload and adds:
+
+- `message`: fixed canonical guidance selected from trusted result state,
+  limited to 500 characters and never interpolated from shopper text, labels,
+  assumptions, validation prose, artwork, URLs, or adapter values;
+- `nextAction`: exactly `inspect-capabilities`, `apply-proposal`,
+  `capture-previews`, `refine-proposal`, `human-review`, or `none`.
+
+`human-review` is returned only when both configuration validity and production
+readiness are true and a current preview exists. A visible-but-not-ready
+proposal routes to `refine-proposal`; a non-ready committed state routes to
+`apply-proposal`. Agents must still inspect the complete structured result—the
+envelope is a deterministic routing aid, not a replacement for revisions,
+issues, receipts, or `persisted`.
+
+## Privacy-safe invocation observer
+
+`createCoDesignTools()` and `registerCoDesignTools()` accept an optional
+`onInvocation` callback. Each event contains only:
+
+```ts
+{
+  toolName,
+  phase: "start" | "success" | "error" | "cancelled",
+  effect: "inspect" | "temporary-change",
+  timestamp,
+  duration,
+}
+```
+
+Arguments, results, control values, shopper copy, validation messages, artwork,
+URLs, and customer data are never included. Observer failures are ignored and
+cannot change tool behavior. The registered lifecycle suppresses events after
+`unregister()`.
+
+The tote renders these real events as “Inspecting current design”, “Reading
+available choices”, “Preparing temporary artwork”, “Updating temporary
+proposal”, “Capturing current previews”, and “Checking production readiness”.
+Its collapsed disclosure is generated from `toolDisclosures` after successful
+registration and truthfully summarizes “4 inspect · 2 temporary design · 0
+save/order/payment”. The disclosure explains that access belongs to the current
+tab and ends when it closes.
 
 ## Schema and runtime boundary
 
@@ -98,6 +170,23 @@ Preview capture is marked read-only because it creates no merchant persistence; 
 The panel shows cumulative changes, created/removed variants, assumptions, public validation issues, and production readiness. Revert remains available while the proposal is reviewable. Keep is unavailable while applying, capturing, stale, preview-unavailable, reverting, or committing. When previews are configured, Keep becomes enabled only after the exact current preview receipts exist.
 
 Keep calls the proposal engine once with `trigger: "confirmed_page_keep"`. The engine rechecks the committed revision immediately before the adapter's compare-and-swap write. A retryable server failure cannot repeat the local write; an unknown outcome cannot retry or claim success. Revert restores the opaque merchant snapshot without invoking the commit adapter.
+
+An integration may create Configuration Passport v0.1 only after that
+successful Keep result. It receives the committed revision plus the exact
+current preview receipts and a manifest-aware public configuration projection.
+It issues nothing for Revert, stale, preview-unavailable, failed, or uncertain
+paths. Asset controls and private values are stripped from the projection.
+
+The Passport's configuration digest and passport-integrity hash are unsigned
+tamper-evidence receipts, not a signature or authentication claim. Verification
+requires the expected merchant origin, configurator ID, manifest version,
+renderer version, and current public-safe readiness recomputed from the
+committed state. Receipt readiness must match that merchant-authoritative
+result exactly. Re-edit URLs contain no query or fragment data. A separate pure
+`toShopifyLineMetadata()` helper accepts only a runtime-verified, current-
+readiness-bound, production-ready
+Passport. It creates reference metadata but never writes a cart or adds a
+seventh WebMCP tool.
 
 The page cannot cryptographically inspect a host conversation. Host confirmation behavior therefore remains an end-to-end release test, while the site security boundary stays concrete: no site tool can persist, and the only persistence path is the visible page controller.
 

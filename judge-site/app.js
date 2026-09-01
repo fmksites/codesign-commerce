@@ -4,8 +4,8 @@ const supportsWebMcp = typeof document.modelContext?.registerTool === "function"
 if (status) {
   status.classList.add(supportsWebMcp ? "is-supported" : "is-fallback");
   status.textContent = supportsWebMcp
-    ? "Site tools are available. Open the tote demo to discover CoDesign's six tools."
-    : "Site tools are not exposed in this browser. The tote keeps its complete normal human interface.";
+    ? "Judge page only · Open the tote configurator to activate its six bounded WebMCP tools."
+    : "Judge page only · The tote keeps its complete human interface here and exposes six tools in supported WebMCP clients.";
 }
 
 const safeHttpsUrl = (value) => {
@@ -91,7 +91,7 @@ if ("IntersectionObserver" in window) {
         observer.unobserve(entry.target);
       }
     },
-    { rootMargin: "0px 0px -10%", threshold: 0.1 },
+    { rootMargin: "0px 0px -8%", threshold: 0.04 },
   );
   revealNodes.forEach((node) => observer.observe(node));
 } else {

@@ -191,3 +191,81 @@
   Verify: Review every handoff statement against the repository, stable URL, official challenge requirements, dated evidence, and public-boundary scan; confirm all required links are public and functional; confirm the next command is `$prepare-submission` and that nothing has been submitted without explicit approval.
 
   Draft checkpoint (28 August 2026): Live Devpost requirements, judging criteria and dates were fetched while authenticated and registered. `devpost-submission.md` now contains the verified product story, runtime/AI/Codex explanation, exact test prompt and commands, public and immutable URLs, release commit and bundle hash, five-shot evidence plan, known limitations, Built With list, judging-criteria alignment, and every current official form field. The literal consumer ChatGPT website check was performed in ordinary Chrome and is recorded as blocked by that client's unavailable webpage-tool surface; it is not presented as a CoDesign pass. The packet is deliberately still a draft because the public narrated YouTube video, thumbnail choice, Felix's submitter/country/app-status confirmations, legal attestations and final Devpost approval remain open. Nothing was sent to Devpost.
+
+- [x] **13. Make WebMCP activity visible and model-legible**
+  Improvement-plan ref: `CoDesign WebMCP Submission Improvement Plan > 1. Make WebMCP Visible and Model-Legible`
+  What to build: Preserve the exact six tools while adding a privacy-safe invocation observer, canonical bounded `message` and `nextAction` fields on every successful result, an actual-activity UI, and a generated six-tool disclosure. Never record arguments, results, artwork, shopper text, configuration values, URLs, or customer data.
+  Acceptance: Registration order/count remain unchanged; every successful result has an allowlisted summary of no more than 500 characters and a supported next action; actual start/success/error/cancelled events drive the tote activity trail; the disclosure truthfully reports four inspect tools, two temporary-change tools, and zero persistence/commerce tools; page teardown clears the observer and performs no persistence.
+  Verify: Focused WebMCP schema/lifecycle/privacy tests, malicious-string fixtures, exact-six assertions, browser teardown coverage, typecheck, and the complete repository verification suite.
+
+  Local checkpoint (1 September 2026): The exact six/order remain unchanged.
+  Successful results now carry canonical bounded `message`/`nextAction`
+  guidance. The optional observer exposes only tool, phase, effect, timestamp,
+  and duration; observer failure cannot alter execution and teardown suppresses
+  later events. The tote activity rail and collapsed disclosure are driven by
+  the real registrations/events, not inferred design phases. Focused tests pass;
+  complete final verification and deployed-client evidence remain Item 16.
+
+- [x] **14. Deliver one deterministic Constraint X-Ray repair loop**
+  Improvement-plan ref: `CoDesign WebMCP Submission Improvement Plan > 2. Create the Submission's Visual Wow Moment`
+  What to build: Extend public-safe validation issues with stable identity, target/surface localization, optional normalized regions, repairability and bounded merchant-approved repairs. Add one tote rule in which oversized upper-left artwork is visible and configuration-valid but production-not-ready, highlight it accessibly, and resolve it through an allowed existing proposal operation without adding tools.
+  Acceptance: The affected Charcoal variant is localized; Natural remains byte-equivalent; only declared repairs are accepted; repair invalidates old previews, rerenders, captures a current preview, and changes production readiness to true; all proposal results remain `persisted: false`; truly invalid batches remain atomic.
+  Verify: Validation/runtime-guard tests, allowed/undeclared repair tests, revision/preview invalidation tests, accessible UI checks, Revert zero-write, Keep exactly-once regression, desktop/mobile browser QA, and the complete repository verification suite.
+
+  Local checkpoint (1 September 2026): The primary ordinary brief maps the
+  merchant-declared darker-staff direction to an exact 95% charcoal upper-left
+  branding exploration. It is visible and configuration-valid above the
+  safe-zone limit but not production-ready. The page localizes it on the preview and
+  exposes accessible text. Only the exact merchant-declared 78% set-control
+  batch is accepted; invented, partial, broader, or mixed repairs leave the current reviewable
+  proposal unchanged. The accepted repair advances the revision, invalidates
+  old previews, rerenders, and requires fresh preview/validation while Natural
+  remains untouched. Studio-name typography is now the valid no-artwork
+  branding fallback; its placement and scale remain production-rule inputs.
+
+- [x] **15. Add Configuration Passport v0.1 and Shopify-safe mapping**
+  Improvement-plan ref: `CoDesign WebMCP Submission Improvement Plan > 3. Add a Thin Shopify Integrity Proof`
+  What to build: Issue one strict public-safe passport only after successful page Keep, bind it to the committed revision, manifest/renderer versions, canonical safe configuration digest and exact preview receipts, and add a pure `toShopifyLineMetadata()` mapper. Do not add a tool, cart mutation, checkout, order, payment, customer, pricing, supplier, or private workflow.
+  Acceptance: Revert, stale/preview-unavailable states, failed/uncertain commits and pre-Keep state issue no passport; one successful Keep issues one verifiable passport; tampering, unknown versions/fields, unsafe URLs and private/artwork leakage fail closed; the Shopify mapper accepts only verified production-ready passports and returns only the opaque ID, digest, bounded safe summary and edit URL.
+  Verify: Deterministic canonicalization/tamper/leakage tests, Keep/retry/idempotency integration tests, reload/readback behavior, strict mapper tests, public-boundary scan, typecheck, and the complete repository verification suite.
+
+  Local checkpoint (1 September 2026): Passport v0.1 is created only after the
+  controller confirms Keep and binds the committed revision, safe configuration
+  digest, exact preview receipts, readiness, versions, bounded summary, and
+  same-origin edit URL. All non-success paths issue nothing. The projection
+  strips artwork/asset and private data; expected origin/configurator/manifest/
+  renderer, freshly recomputed merchant readiness, and both hashes fail closed.
+  Re-edit URLs contain no query or fragment data. The receipt is explicitly unsigned and
+  is not authentication or authorization. `toShopifyLineMetadata()` accepts
+  only a runtime-verified, current-readiness-bound, production-ready Passport and performs no cart or
+  network mutation.
+
+- [ ] **16. Reframe and verify the judge experience on the exact release candidate**
+  Improvement-plan ref: `CoDesign WebMCP Submission Improvement Plan > 4. Judge Experience and Submission Narrative` and `5. Verification and Release Gates`
+  What to build: Make the ordinary-language prompt primary, replace inferred progress and stale test counts, add genuine problem/repaired visuals and the line “Agent designs. Human approves. Shopify completes the sale.” Update current docs/evals only from verified behavior. Do not push, deploy, change Shopify/KORRHAUS, or submit without the existing separate approvals.
+  Acceptance: Local judge/tote surfaces tell one coherent story; current claims match the final local test/build output; desktop and 390px QA pass; exact six, X-Ray repair, `persisted:false`, Revert, Keep/passport, progressive enhancement and public/private boundaries are all verified locally. External supported-client verification remains explicitly gated until deployment approval.
+  Verify: `npm run verify`, focused Playwright/browser checks, desktop/mobile visual/accessibility review, `git diff --check`, public/private scan, and a claim-by-claim documentation review.
+
+  Local checkpoint (1 September 2026): The primary route now uses the exact
+  ordinary brief “I need 100 premium branded studio totes for North Form. Give
+  me a natural customer version and a darker staff version, show me both
+  options, check whether they are ready to make, and do not save anything yet.”
+  Complete local verification now passes 28 files / 235 tests, strict
+  typecheck, production and overlay builds, boundary/docs/eval checks, and
+  25/25 parity. Desktop and 390-pixel QA pass. Push/deployment and exact
+  deployed ChatGPT desktop/native-Chrome verification remain open. No release
+  action is authorized by this checkpoint.
+
+  Competitor-learning checkpoint (1 September 2026): Added a closed-enum,
+  adapter-sanitized source to public validation issues so the page can state
+  whether a finding comes from a merchant production rule, the current design,
+  renderer evidence, or the shopper brief without exposing internal rule text.
+  Added per-variant preview freshness derived from exact proposal receipts:
+  the previous revision becomes visibly outdated after a repair, Keep remains
+  gated, and a fresh capture identifies the revision it replaced. The local
+  integrity walkthrough is available only in development as
+  `?agent-preview=integrity`. Full verification passes 28 files / 235 tests;
+  desktop 1440 px, X-Ray 1280 px, and mobile 390 px rendered QA pass with no
+  overflow or browser warnings/errors. Revert restored one variant with zero
+  local/server/commit writes and released the temporary asset. Push,
+  deployment, Shopify changes, and Devpost submission remain separately gated.

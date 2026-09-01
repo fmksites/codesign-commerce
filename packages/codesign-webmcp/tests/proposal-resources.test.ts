@@ -67,7 +67,7 @@ class ResourceAdapter implements WorkspaceAdapter<Snapshot, PrivateAsset> {
     return {
       configurationValid: artworkValid,
       productionReady: artworkValid,
-      issues: artworkValid ? [] : [{ code: "ARTWORK_UNAVAILABLE", severity: "constraint-error", message: "Artwork is unavailable", controlIds: ["mark.artwork"] }],
+      issues: artworkValid ? [] : [{ issueId: "artwork-unavailable.variant-1", code: "ARTWORK_UNAVAILABLE", severity: "constraint-error", message: "Artwork is unavailable", controlIds: ["mark.artwork"], repairable: false }],
       assumptions: [],
     };
   }
@@ -169,6 +169,10 @@ describe("proposal asset and preview integration", () => {
     await expect(engine.keep()).resolves.toMatchObject({ ok: false, error: { code: "PREVIEW_REQUIRED" } });
     const captured = await engine.capturePreviews({ proposalId: proposal.proposalId, proposalRevision: 1, baseRevision: proposal.baseRevision });
     expect(captured).toMatchObject({ ok: true, persisted: false, previewStatus: "available" });
+    expect(engine.currentPreviewReceipts).toEqual(expect.arrayContaining([
+      expect.objectContaining({ proposalId: proposal.proposalId, proposalRevision: proposal.proposalRevision, integrity: expect.stringMatching(/^sha256:/) }),
+    ]));
+    expect(JSON.stringify(engine.currentPreviewReceipts)).not.toMatch(/data:image|altText|transport/);
     if (!captured.ok) throw new Error("expected previews");
     expect(captured.artifacts).toHaveLength(1);
     expect(adapter.counters.localWrites).toBe(0);

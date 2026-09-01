@@ -90,6 +90,15 @@ also implements `AssetStagingAdapter<PrivateAsset>` and
 only Keep may import the reviewed asset through the merchant's existing private
 path.
 
+Validation issues may optionally localize a problem with a stable `issueId`,
+affected control/variant/element IDs, a declared preview `surfaceId`, and a
+normalized preview region. Set `repairable: true` only when the adapter also
+returns one or more bounded `merchantApprovedRepairs`, each containing the
+exact `set-control` batch the merchant authorizes. A refinement touching that
+issue must equal one complete returned batch; the agent cannot invent or mix a
+repair. Existing issues without these fields receive a deterministic legacy ID
+and default to `repairable: false`.
+
 The complete, runnable implementation is
 [`examples/studio-tote/src/configurator.ts`](../examples/studio-tote/src/configurator.ts).
 The KORRHAUS integration follows the same interface while its raw state,
@@ -121,9 +130,15 @@ mountProposalReview(document.querySelector("#proposal-review")!, review);
 const registration = registerCoDesignTools(document, {
   engine,
   enabled: merchantFeatureFlag,
+  onInvocation(event) {
+    // Render or aggregate only these privacy-safe fields. Do not enrich this
+    // event with arguments, results, values, shopper copy, artwork, or URLs.
+    renderAgentActivity(event);
+  },
 });
 
 await registration.ready;
+renderRegisteredToolDisclosure(registration.toolDisclosures);
 window.addEventListener("pagehide", () => registration.unregister(), {
   once: true,
 });
@@ -135,6 +150,51 @@ activation must enter the same visible page Keep/Revert controller. Do not add
 a save, order, checkout, quote, payment, customer, pricing, supplier, or admin
 WebMCP tool.
 
+The observer receives only `toolName`, `phase`, `effect`, `timestamp`, and
+`duration`; callback failure cannot change a tool result, and registered
+observer delivery ends on `unregister()`. Build any customer-facing progress
+from these actual events. Build the collapsed capability disclosure from
+`registration.toolDisclosures` only after `registration.ready` succeeds, so it
+cannot drift from the exact six registrations or claim activity on an
+unsupported page.
+
+Every successful tool result adds fixed canonical `message` guidance and one
+bounded `nextAction` value while preserving its full structured result.
+Consumers should use the structured revisions, issues, preview receipts, and
+`persisted` value as authority. Do not interpolate merchant or shopper text
+into those trusted guidance fields.
+
+## 4a. Optionally issue a post-Keep Configuration Passport
+
+Configuration Passport v0.1 is useful when the merchant wants a public-safe
+reference that can later accompany Shopify commerce. It is not required for
+WebMCP registration and must not be created before Keep succeeds.
+
+Immediately before the page controller crosses the Keep boundary, retain only
+the exact review identity, readiness, and transport-free current preview
+receipts. After the controller confirms the new committed revision:
+
+1. reread/project the committed configuration through a manifest-aware public
+   allowlist;
+2. rerun merchant validation against that exact committed state and project
+   only its public-safe structured readiness (never adapter prose);
+3. strip asset-kind controls, opaque handles, raw artwork, temporary transport,
+   prices, customer/supplier data, prompts, tokens, and private endpoints;
+4. remove all query and fragment data from the public same-origin edit URL,
+   then call `createConfigurationPassport()` with the committed revision,
+   exact previews, versions, bounded safe summary, and authoritative readiness;
+5. call `verifyConfigurationPassport()` with an explicit expected merchant
+   origin, configurator ID, manifest version, renderer version, and the freshly
+   recomputed `authoritativeReadiness`; and
+6. optionally call `toShopifyLineMetadata()` only on the returned runtime-verified,
+   production-ready object.
+
+Discard pending evidence on Revert, stale state, unavailable previews, failed
+commit, or uncertain commit. The Passport hashes are unsigned integrity
+receipts—not signatures or merchant-authentication tokens. The Shopify helper
+is pure: it returns an opaque configuration ID, digest, canonical safe summary,
+and edit URL but never writes a cart, checkout, or order.
+
 ## 5. Verify the integration before enabling it
 
 At minimum, prove all of the following on the exact build:
@@ -142,13 +202,23 @@ At minimum, prove all of the following on the exact build:
 - every visible customer control passes inventory parity;
 - the exact six tools register only when WebMCP and the feature flag are both
   available;
+- the supported-only disclosure exactly reports four inspect and two temporary
+  design tools, and invocation events contain no inputs/results/private data;
 - one multi-control proposal changes the existing renderer without a write;
 - supplied artwork remains temporary and is released on Revert;
 - one current preview exists for every requested variant;
 - invalid batches leave the prior visible state byte-equivalent;
+- a localized production issue highlights both the intended preview region and
+  an accessible text equivalent;
+- only an exact merchant-approved repair batch is accepted, after which old
+  previews are stale and must be recaptured;
 - another-tab or backend change makes the proposal stale;
 - Revert restores the baseline with zero persistence;
 - visible Keep writes once and a duplicate activation remains idempotent;
+- no Passport is issued before successful Keep; a successful Keep receipt
+  fails closed when its digest or expected origin/configurator/manifest/
+  renderer policy changes; and
+- the Shopify reference mapper causes no storage, network, or cart write;
 - ordinary desktop and mobile use still works with WebMCP absent; and
 - tool results contain no private or commercial data.
 
@@ -183,6 +253,7 @@ open because WebMCP clients cannot discover tools from an unvisited origin.
 | Temporary asset and preview contracts | Artwork conversion and storage |
 | Six bounded WebMCP tools | Production and validation internals |
 | Review/Keep/Revert coordination | Final persistence implementation |
+| Optional unsigned Passport and pure Shopify reference mapper | Cart, checkout, order, and payment actions |
 
 For the full contracts and failure semantics, continue with
 [`MANIFEST_AND_ADAPTER.md`](./MANIFEST_AND_ADAPTER.md),

@@ -439,3 +439,110 @@
 - Full repository verification then passed 22 test files / 189 tests, strict typecheck, production and Shopify-overlay builds, browser-bundle and judge-site checks, a 198-candidate public-boundary scan, 77-file documentation validation, the 26-case eval corpus/scorer self-test, and 25/25 tote parity. The rebuilt core and tote hashes matched the deployed release.
 - This closes the final supported-client technical repeat. It does not create a consumer ChatGPT-web, current native-Chrome, Claude, video, Devpost, or submission claim. Item 12 remains intentionally open.
 - Dated evidence: `docs/evidence/CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md`.
+
+## 31 August 2026 — editable Devpost draft created
+
+- Created the editable Devpost project `CoDesign WebMCP` and associated its
+  draft with The WebMCP Challenge. No final submission was made.
+- Populated the project title, judge-facing tagline, full description, Built
+  With list, direct deterministic tote URL, and public GitHub repository URL.
+- Made the ordinary-language no-artwork journey the shortest judge path, while
+  retaining the supplied-artwork path as the complete six-tool demonstration.
+- Preserved the exact claim boundary: the final public flow is verified in the
+  Codex desktop in-app browser; historical native Chrome 151 evidence remains
+  dated; consumer ChatGPT web and current native Chrome are not claimed.
+- After Felix explicitly confirmed the personal values, saved Additional Info
+  as Individual, Netherlands, no organization, App Status New, the direct tote
+  URL, judge testing instructions, public repository, scoped client evidence,
+  Codex usage, Significant learning, and Yes for career AI value.
+- Browser readback verified every saved value and Devpost advanced the draft to
+  2/5 steps complete.
+- Left the required public YouTube video, thumbnail, legal attestations, and
+  final submission approval open.
+- Devpost project: <https://devpost.com/software/codesign-webmcp>.
+
+## 1 September 2026 — submission improvement release candidate implemented locally
+
+- Preserved the exact six WebMCP tools and registration order. Every successful
+  result now adds fixed canonical `message` guidance plus one bounded
+  `nextAction`, while the full structured result remains authoritative.
+- Added an optional privacy-safe observer whose events contain only tool name,
+  start/success/error/cancelled phase, inspect/temporary-change effect,
+  timestamp, and duration. The tote now renders truthful activity from those
+  events and generates its “4 inspect · 2 temporary design · 0
+  save/order/payment” disclosure from the actual registrations. Teardown stops
+  observer delivery.
+- Implemented a localized Constraint X-Ray issue contract with stable identity,
+  affected targets/surface, normalized preview region, accessibility copy, and
+  bounded merchant-approved repairs. The charcoal upper-left tote rule accepts
+  only the declared 78% scale batch; invented, partial, broadened, or mixed
+  repairs fail atomically. An accepted repair advances the proposal revision,
+  invalidates old previews, rerenders, captures fresh previews, and restores
+  production readiness without changing the natural variant.
+- Made non-empty studio-name typography a production-ready fallback. Supplied
+  artwork remains an optional advanced temporary-asset proof instead of a
+  primary-journey blocker.
+- Implemented Configuration Passport v0.1 only after confirmed page Keep. It
+  binds the committed revision, public-safe configuration digest, exact preview
+  receipts, readiness, manifest/renderer versions, bounded summary, and
+  same-origin re-edit URL. Revert, stale, unavailable-preview, failed-save, and
+  uncertain-commit paths issue nothing. The public projection strips asset
+  handles/artwork and private/commercial/customer data.
+- Passport verification fails closed against expected merchant origin,
+  configurator, manifest, and renderer versions plus both digests. Its hashes
+  are unsigned integrity receipts, not signatures, authentication, purchase
+  authorization, or production guarantees.
+- Added pure `toShopifyLineMetadata()` output for an already verified,
+  production-ready Passport. It returns only an opaque configuration ID,
+  digest, canonical safe summary, and edit URL and performs no Shopify cart,
+  checkout, order, payment, storage, or network mutation.
+- Updated the primary judge route to the exact ordinary-language brief: “I need
+  100 premium branded studio totes for North Form. Give me a natural customer
+  version and a darker staff version, show me both options, check whether they
+  are ready to make, and do not save anything yet.” The manifest's declared
+  darker-staff direction itself starts Charcoal at 95% upper-left, so the same
+  brief exposes the safe-zone issue and lets the agent select only the 78%
+  merchant repair without requiring a second shopper instruction.
+- Complete local verification passes 27 files / 230 tests, strict typecheck,
+  production and Shopify-overlay builds, browser/judge/boundary/docs checks,
+  27-case eval/scorer validation, and 25/25 parity. The rebuilt local hashes are
+  core `454db66b8f01c70f90131b3bfbde38632380c2fff2026ea440f3269bdf1e1178`
+  and tote `bad0ed05b8cdbc04d208793ebbdf3523118b835cf69de644c0feab4673d95c76`.
+  Desktop/390-pixel QA pass. Git push, public deployment, and exact deployed
+  ChatGPT desktop/native-Chrome repeats remain open.
+- No push, deployment, Shopify mutation, private KORRHAUS change, video work, or
+  Devpost submission occurred. The public tote remains the reproducible source;
+  KORRHAUS remains secondary live-business proof through its unchanged private
+  adapter.
+
+## 1 September 2026 — competitor-learning integrity delta completed locally
+
+- Added a closed, public-safe validation provenance contract. Merchant adapters
+  may report only merchant rule, current configuration, renderer evidence, or
+  customer brief; unknown sources fail at the adapter boundary.
+- The tote now labels the Constraint X-Ray as a merchant production rule so a
+  shopper or judge can distinguish authoritative merchant validation from an
+  agent suggestion without exposing private rule logic.
+- Added proposal-revision-aware status to every temporary variant preview. A
+  repair marks the previous receipt outdated; a new capture changes it to
+  current and records which old revision it replaced. Pending, capturing, and
+  unavailable states remain visibly distinct, and Keep keeps relying on the
+  core's exact current receipts.
+- Added focused provenance/freshness coverage and a development-only
+  `?agent-preview=integrity` walkthrough for the complete issue, repair, stale
+  evidence, and refreshed-evidence sequence.
+- Actual rendered QA passed at desktop 1440 px, X-Ray 1280 px, and mobile
+  390 by 844. The Charcoal canvas exposed the localized source and accessible
+  repair explanation; the repaired result showed two current revision-4
+  previews, each naming replaced revision 3. No horizontal overflow or browser
+  warnings/errors appeared. Mobile Revert restored one variant, released the
+  temporary asset, and left local/server/commit writes at zero.
+- Complete local verification passes 28 test files / 235 tests, strict
+  typecheck, production and Shopify-overlay builds, browser-bundle, judge-site,
+  public-boundary, documentation, 27-case eval/scorer, 25/25 parity, and
+  `git diff --check`. Local build hashes are core
+  `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
+  and tote
+  `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
+- No push, deployment, Shopify/KORRHAUS change, video work, Devpost form change,
+  or final submission occurred.

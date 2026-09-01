@@ -22,6 +22,16 @@ It complements Shopify's catalog, navigation, cart, checkout, and order tools.
 CoDesign handles the difficult work that happens *inside* a made-to-order
 configurator before a product is cart-ready.
 
+> **Agent designs. Human approves. Shopify completes the sale.**
+
+**Release-candidate status (1 September 2026):** the activity observer,
+Constraint X-Ray repair loop, and Configuration Passport described below are
+implemented in the current local candidate. The complete local verification
+passes 28 test files / 235 tests, strict typecheck, builds, boundary/docs/eval
+checks, and 25/25 parity. The improved build has not been pushed or deployed
+yet, and final ChatGPT desktop/native-Chrome acceptance on the exact deployed
+commit remains gated by explicit release approval.
+
 ## Try it in 60 seconds
 
 The shopper does not need to know the words WebMCP, tool, schema, or adapter.
@@ -32,29 +42,36 @@ WebMCP is page-scoped, so a client must visit the configurator before it can
 discover those tools; finding and opening the right merchant page remains a
 browser, search, catalog, or commerce-navigation responsibility.
 
-1. Open the [deterministic tote demo](https://codesign-webmcp.pages.dev/tote/?reset=true)
-   in ChatGPT's in-app browser or Chrome with WebMCP enabled.
-2. Download and attach the
-   [demo artwork](https://codesign-webmcp.pages.dev/tote/north-form-supplied-mark.png).
-3. Ask the agent:
+1. After the improved release is explicitly approved and deployed, open the
+   [deterministic tote demo](https://codesign-webmcp.pages.dev/tote/?reset=true)
+   in a supported WebMCP client.
+2. Ask the agent:
 
-   > Create 100 studio totes for North Form, split evenly across two variants,
-   > and use the supplied artwork. Name the first North Form Natural: natural
-   > 12 oz canvas, long handles, centered one-colour ink artwork at 105% scale.
-   > Name the second North Form Charcoal: charcoal 12 oz canvas, short handles,
-   > upper-left one-colour artwork at 82% scale and -6 degrees rotation. Show me
-   > both previews and check production readiness. Do not save either design.
+   > I need 100 premium branded studio totes for North Form. Give me a natural
+   > customer version and a darker staff version, show me both options, check
+   > whether they are ready to make, and do not save anything yet.
 
-Expected result: two named 50-tote variants, two distinct renderer previews,
-valid and production-ready status, and `persisted: false`. The ordinary design
-controls remain visible but lock while the proposal awaits the person's decision.
-Choose **Revert** to restore the deterministic baseline without a write.
+Expected result: the agent translates the declared “natural customer” and
+“darker staff” directions into two named 50-tote variants. Natural stays
+centered; Charcoal deliberately begins at 95% in the upper-left position. Both
+appear in the merchant renderer and every agent result remains
+`persisted: false`.
 
-A shorter, deliberately non-technical prompt is also part of the evaluation
-corpus: “I need 100 premium branded studio totes for North Form. Give me a
-natural customer version and a darker staff version, use the studio name for
-the branding, show me both options, and tell me if they are ready to make. Do
-not save anything yet.”
+That same ordinary brief therefore completes the whole Constraint X-Ray loop:
+the first Charcoal preview remains configuration-valid but is not
+production-ready; the page attributes the conflict to a **Merchant production
+rule**, localizes its preview region, and exposes an accessible explanation;
+the agent may select only the merchant-declared 78% repair. After the change,
+the old preview is visibly marked outdated until a revision-matched capture
+replaces it; fresh status and validation then prove production readiness while
+Natural remains untouched. The page shows the actual invocation trail rather
+than inferred design phases.
+Choose **Revert** to restore the deterministic baseline with zero writes.
+
+Supplied artwork is an optional advanced proof. Attach the
+[demo artwork](https://codesign-webmcp.pages.dev/tote/north-form-supplied-mark.png)
+and ask the agent to replace the text mark to exercise the temporary-asset tool
+without using the normal upload/save path.
 
 The complete prompts, negative tests, recovery steps, and expected tool order
 are in [docs/JUDGE_GUIDE.md](./docs/JUDGE_GUIDE.md).
@@ -76,8 +93,17 @@ The core provides:
   surfaces, and human-confirmation rules;
 - atomic, revision-aware proposals with idempotency and stale-state protection;
 - temporary asset staging and revision-bound raster previews;
-- merchant validation without exposing private application state; and
-- an accessible page-owned review controller with exact Keep/Revert behavior.
+- canonical success `message`/`nextAction` routing plus a privacy-safe
+  invocation observer that sees only tool, phase, effect, timestamp, and
+  duration;
+- localized merchant validation and an exact merchant-approved atomic repair
+  gate without exposing private application state;
+- an accessible page-owned review controller with exact Keep/Revert behavior;
+- optional Configuration Passport v0.1 after confirmed Keep, with a public-safe
+  configuration digest, exact preview receipts, and fail-closed version/origin
+  verification; and
+- a pure verified-Passport-to-Shopify metadata mapper that performs no cart
+  mutation.
 
 There is deliberately no WebMCP tool for Keep, Revert, save, upload, quote,
 checkout, order, payment, customer data, pricing, margins, suppliers, or
@@ -87,10 +113,12 @@ administration.
 
 ### Public studio-tote reference
 
-The tote is the submitted, anonymous, reproducible challenge demo. It uses the
+The tote is the submitted, anonymous, reproducible challenge demo. Its current
+local release candidate uses the
 same core package with its own manifest, adapter, renderer, artwork handling,
-variant logic, and coupled production rules. It proves portability without
-claiming a universal renderer.
+variant logic, coupled production rules, truthful activity trail, deterministic
+Constraint X-Ray, and post-Keep Passport. It proves portability without claiming
+a universal renderer.
 
 ### KORRHAUS real-business integration
 
@@ -101,6 +129,10 @@ is now live on KORRHAUS's existing Shopify storefront. Supported agents discover
 the same exact six CoDesign tools alongside Shopify's native storefront tools,
 while ordinary visitors retain the unchanged Designer. The adapter and all
 customer, pricing, persistence, and operational logic remain private.
+
+The submission improvement does not change or publish the private KORRHAUS
+adapter. KORRHAUS remains the real-business proof; the tote remains the complete
+public implementation judges can inspect and reproduce.
 
 [Open the live KORRHAUS Sock Designer](https://korrhaus.nl/en/apps/wholesale/sock-designer) ·
 [Read the bounded live evidence](./docs/evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md)
@@ -168,11 +200,17 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 ## Current evidence
 
 - Public GitHub repository with a detected [Apache-2.0 license](./LICENSE).
-- Hosted CI verifies a clean install, 22 test files / 189 tests, strict
-  typecheck, release build, exact-six bundle, public boundary, docs, eval
-  structure, and 25/25 tote surface parity.
-- The public tote has passed deployed page-scoped WebMCP proposal, real-artwork,
-  two-preview, validation, refinement, rejection, Revert, and Keep/reload tests.
+- The last deployed public release and hosted CI remain valid dated evidence;
+  they do not yet prove the new release candidate.
+- The improved local candidate passes 28 files / 235 tests covering exact-six
+  registration, privacy-safe activity, canonical result guidance, Constraint
+  X-Ray provenance/localization and exact repair, revision-aware preview
+  freshness, post-Keep Passport issuance/tamper rejection, and the pure
+  Shopify mapper. Deployment and exact deployed-client evidence remain pending.
+- Prior public tote evidence covers page-scoped proposals, real artwork, two
+  previews, validation, rejection, Revert, and Keep/reload. The new X-Ray and
+  Passport claims remain local until the approved release is deployed and
+  retested.
 - The Shopify development-store proof has run CoDesign's six tools alongside
   Shopify's native catalog and cart tools.
 - Browser/client claims are kept precise in
@@ -181,6 +219,7 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 ## Documentation
 
 - [START_HERE.md](./START_HERE.md) — fastest route for judges and reviewers.
+- [docs/PRODUCT_DIRECTION_AND_ROADMAP.md](./docs/PRODUCT_DIRECTION_AND_ROADMAP.md) — current product direction, locally implemented integrity layer, and gated release sequence.
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — runtime and trust boundaries.
 - [docs/WEBMCP_TOOLS.md](./docs/WEBMCP_TOOLS.md) — exact tool contracts.
 - [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md) — merchant integration path.
