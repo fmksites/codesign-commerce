@@ -47,8 +47,9 @@ production promotion.
    The builder fails if the working tree is dirty or the repository URL is not
    the expected HTTPS origin. It withholds the KORRHAUS link and does not claim
    a live flagship.
-3. Deploy `dist/judge-site/` over HTTPS. Its root is the English judge landing
-   and `/tote/` is the deterministic working demo.
+3. Deploy `dist/judge-site/` over HTTPS. Its root redirects directly to the
+   deterministic working demo at `/tote/?reset=true`; there is no separate
+   marketing or judge landing page.
 4. Do not add secrets, authentication, analytics, customer data or private APIs.
 5. Verify exact commit metadata, browser bundle and asset hashes, logged-out
    access, cache/security headers, subpath assets, responsive layout, normal
@@ -94,11 +95,12 @@ CODESIGN_FLAGSHIP_VERIFIED=true \
 npm run build:release
 ```
 
-Verify every KORRHAUS call to action and the new site hash before replacing the
-public artifact. Never set this attestation from local or zero-traffic evidence.
+Verify the exact KORRHAUS URL in release metadata and the new artifact hash
+before replacing the public artifact. Never set this attestation from local or
+zero-traffic evidence.
 
 ## 7. Availability window
 
-Keep the submitted repository, the public tote demo, the judge landing, and the
-live flagship URL free and accessible through the end of judging: 21 September
-2026 at 5:00 PM PT. Monitor without silently changing the judged build.
+Keep the submitted repository, the public tote demo, and the live flagship URL
+free and accessible through the end of judging: 21 September 2026 at 5:00 PM
+PT. Monitor without silently changing the judged build.

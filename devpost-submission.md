@@ -261,8 +261,6 @@ Primary judge URL: <https://codesign-webmcp.pages.dev/tote/?reset=true>
 
 Current status: this URL serves the verified 1 September integrity release.
 
-Project overview: <https://codesign-webmcp.pages.dev/>
-
 Release identity: open
 <https://codesign-webmcp.pages.dev/site-metadata.json> to verify the exact
 deployed commit and bundle digests. Cloudflare also returns a unique deployment

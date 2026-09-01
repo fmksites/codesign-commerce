@@ -25,17 +25,18 @@ The short version used across the submission is:
 
 ## Changed surfaces
 
-- judge landing page and responsive styling;
+- direct deployment-root redirect to the Studio Tote reference;
 - repository README and `START_HERE.md`;
 - judge guide and video script;
 - canonical Devpost submission copy;
 - editable Devpost project description; and
-- judge-site regression assertions.
+- static-release regression assertions.
 
-The judge page now shows a three-part proof map in the first scroll rather than
-relying on explanatory prose alone. The video script keeps persistent context
-labels on screen so the tote reference and KORRHAUS implementation cannot be
-mistaken for two submitted products.
+The separate judge homepage was removed after review because it added an
+unnecessary explanation step before the working product. The deployment root
+now redirects directly to `/tote/?reset=true`. The video script keeps
+persistent context labels on screen so the tote reference and KORRHAUS
+implementation cannot be mistaken for two submitted products.
 
 ## Verification
 
@@ -45,10 +46,8 @@ mistaken for two submitted products.
 - production, Shopify-overlay and browser builds: passed;
 - judge-site, public-boundary and documentation checks: passed;
 - 27 evaluation cases and 25/25 tote parity checks: passed;
-- desktop visual review at 1440 by 1000: passed;
-- mobile visual review at 390 by 844: passed;
-- mobile document width: 390 pixels with no horizontal overflow;
-- browser console warnings and errors: none.
+- root redirect target and fallback link: passed;
+- obsolete landing assets absent from the release artifact: passed.
 
 The editable Devpost project was updated with the same hierarchy. Its video URL
 and submission timestamp remain empty. No Git push, Cloudflare deployment,

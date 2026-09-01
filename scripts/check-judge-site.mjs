@@ -12,13 +12,11 @@ const verifiedFlagshipUrl =
 const requiredFiles = [
   "index.html",
   "404.html",
-  "styles.css",
-  "app.js",
   "favicon.svg",
   "_headers",
+  "_redirects",
   "site-metadata.json",
   "assets/codesign-webmcp.js",
-  "assets/korrhaus-sock-cream.svg",
   "tote/index.html",
   "tote/favicon.svg",
   "tote/tote-natural-long.png",
@@ -26,10 +24,10 @@ const requiredFiles = [
 ];
 await Promise.all(requiredFiles.map((file) => access(path.join(site, file))));
 
-const [landingHtml, notFoundHtml, landingJs, toteHtml, metadataText, headersText] = await Promise.all([
+const [rootHtml, notFoundHtml, redirectsText, toteHtml, metadataText, headersText] = await Promise.all([
   readFile(path.join(site, "index.html"), "utf8"),
   readFile(path.join(site, "404.html"), "utf8"),
-  readFile(path.join(site, "app.js"), "utf8"),
+  readFile(path.join(site, "_redirects"), "utf8"),
   readFile(path.join(site, "tote", "index.html"), "utf8"),
   readFile(path.join(site, "site-metadata.json"), "utf8"),
   readFile(path.join(site, "_headers"), "utf8"),
@@ -37,42 +35,25 @@ const [landingHtml, notFoundHtml, landingJs, toteHtml, metadataText, headersText
 const metadata = JSON.parse(metadataText);
 const legacyKorrhausPathExists = await access(path.join(site, "korrhaus")).then(() => true).catch(() => false);
 
-const requiredLandingText = [
-  "CoDesign WebMCP",
-  "WebMCP for Custom Products on Shopify",
-  "Make your Shopify product configurator",
-  "Open-source integration protocol built on WebMCP",
-  "The reusable integration protocol, runtime and merchant adapter contract",
-  "The anonymous Cloudflare demonstration judges can run",
-  "The same public core actively integrated into a live Shopify product configurator",
-  "Agent-Ready Configurator Pilot",
-  "Try the public reference",
-  "KORRHAUS · active merchant implementation",
-  "Studio Tote · reproducible reference implementation",
-  "The agent never gets the last click",
-  "We need 120 pairs for North Form",
-  "Create 100 studio totes for North Form",
-  "Download demo artwork",
-];
-for (const marker of requiredLandingText) {
-  if (!landingHtml.includes(marker)) throw new Error(`Judge landing is missing required text: ${marker}`);
+if (!rootHtml.includes('url=./tote/?reset=true')) {
+  throw new Error("Deployment root lacks its HTML fallback redirect to the tote");
 }
-if (!landingJs.includes("document.modelContext?.registerTool")) throw new Error("Judge landing lacks the WebMCP fallback check");
-if (!landingJs.includes('querySelectorAll(`[data-link="${name}"]`)')) {
-  throw new Error("Judge landing does not update every metadata-bound release link");
+if (!rootHtml.includes('href="./tote/?reset=true"')) {
+  throw new Error("Deployment root lacks an accessible fallback link to the tote");
 }
-for (const activeLabel of ["Open public repository", "Open judge guide"]) {
-  if (!landingJs.includes(activeLabel)) {
-    throw new Error(`Judge landing lacks its active release label: ${activeLabel}`);
+if (!redirectsText.split(/\r?\n/).some((line) => line.trim() === "/ /tote/?reset=true 302")) {
+  throw new Error("Deployment root lacks its Cloudflare redirect to the tote");
+}
+for (const removedAsset of ["styles.css", "app.js", "assets/korrhaus-sock-cream.svg"]) {
+  const exists = await access(path.join(site, removedAsset)).then(() => true).catch(() => false);
+  if (exists) throw new Error(`Obsolete judge-landing asset is still published: ${removedAsset}`);
+}
+for (const retiredCopy of ["Make your Shopify product configurator", "Agent-Ready Configurator Pilot", "KORRHAUS · active merchant implementation"]) {
+  if (rootHtml.includes(retiredCopy)) {
+    throw new Error(`Deployment root still contains retired judge-page copy: ${retiredCopy}`);
   }
 }
-if (!landingHtml.includes('./tote/?reset=true')) {
-  throw new Error("Judge landing lacks the deterministic tote demo link");
-}
-if (!landingHtml.includes('./tote/north-form-supplied-mark.png')) {
-  throw new Error("Judge landing lacks the reproducible tote artwork link");
-}
-if (legacyKorrhausPathExists || landingHtml.includes("./korrhaus/") || landingHtml.includes("KORRHAUS public reference")) {
+if (legacyKorrhausPathExists || rootHtml.includes("./korrhaus/") || rootHtml.includes("KORRHAUS public reference")) {
   throw new Error("Judge artifact still exposes the retired synthetic KORRHAUS configurator");
 }
 if (!notFoundHtml.includes("This route does not exist") || !notFoundHtml.includes("does not contain a second KORRHAUS Sock Designer")) {
@@ -88,10 +69,6 @@ for (const requiredHeader of [
   if (!headersText.includes(requiredHeader)) {
     throw new Error(`Judge artifact lacks required static security header: ${requiredHeader}`);
   }
-}
-const flagshipLinkCount = landingHtml.match(/data-link="flagship"/g)?.length ?? 0;
-if (flagshipLinkCount < 1) {
-  throw new Error("Judge landing lacks its release-gated KORRHAUS call to action");
 }
 if (/\b(?:src|href)="\/(?!\/)/.test(toteHtml)) {
   throw new Error("The tote build still contains a root-absolute HTML asset URL");

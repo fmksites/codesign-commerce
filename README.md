@@ -24,7 +24,6 @@ logic, customer data, pricing, suppliers, or internal endpoints.
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 
 [Try the live tote demo](https://codesign-webmcp.pages.dev/tote/?reset=true) ·
-[Open the judge landing](https://codesign-webmcp.pages.dev/) ·
 [Follow the 60-second judge guide](./START_HERE.md) ·
 [View passing CI](https://github.com/fmksites/codesign-webmcp/actions)
 
@@ -207,7 +206,7 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 | `packages/codesign-webmcp/` | Reusable Manifest 2 core and WebMCP registration |
 | `examples/studio-tote/` | Complete public portability example |
 | `shopify-demo/` | Minimal Shopify Liquid/CDN deployment overlay |
-| `judge-site/` | Source for the public challenge landing |
+| `judge-site/` | Root redirect, security headers, and static release shell for the public tote |
 | `docs/` | Current architecture, integration, testing, and judge documentation |
 | `docs/evidence/` | Dated verification records, with current/historical status indexed |
 | `evals/` | Optional tool-selection and safety evaluation corpus |
