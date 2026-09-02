@@ -4,9 +4,9 @@ WebMCP is experimental and page-scoped. CoDesign WebMCP therefore separates
 ordinary configurator support from agent-client claims and records the exact
 build used for every actual-browser check.
 
-The current 1 September public release is commit
-`1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`, immutable deployment
-<https://0b0603b6.codesign-webmcp.pages.dev/>, core bundle
+The current 2 September public release is commit
+`14cbe14410195774285180255189282e0c2b054d`, immutable deployment
+<https://80f00a8d.codesign-webmcp.pages.dev/>, core bundle
 `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`,
 and tote bundle
 `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
@@ -16,7 +16,7 @@ Stable and immutable metadata plus downloaded bundles matched these values.
 
 | Surface | Current state | What is evidenced | Release requirement |
 | --- | --- | --- | --- |
-| Codex desktop in-app browser, current public release | Verified on commit `1f422d6` on 1 September 2026 | Exact-six direct page-tool flow created Natural and 95% upper-left Charcoal, returned two 640 x 640 previews, exposed the merchant-rule X-Ray, accepted only the returned 78% repair, marked old receipts outdated, returned two fresh revision-2 previews, revalidated ready with `persisted:false`, and Revert restored the baseline. A separate Keep issued one Passport and survived reload | Current direct supported-client evidence; do not relabel as independent model selection, consumer ChatGPT web, or native Chrome |
+| Codex desktop in-app browser, current public release | Verified on commit `14cbe14` on 2 September 2026 | Exact-six direct page-tool flow created Natural and 95% upper-left Charcoal, returned two 640 x 640 previews, exposed the merchant-rule X-Ray, accepted only the returned 78% repair, returned two fresh revision-2 previews, revalidated ready with `persisted:false`, and Revert restored the baseline | Current direct supported-client evidence; do not relabel as independent model selection, consumer ChatGPT web, or native Chrome |
 | Ordinary Chrome/Chromium, current public tote and live KORRHAUS | Current tote fallback verified; KORRHAUS remains dated evidence | The public tote rendered its complete human UI and generated disclosure with no overflow or browser warnings/errors. A human colour click produced a Charcoal renderer preview and Reset restored baseline. The current Chrome connection exposed no `document.modelContext` or WebMCP capability | Complete as ordinary-browser fallback; native WebMCP remains a separate unclaimed gate |
 | Ordinary 390 px mobile browser | Verified on current public tote | `scrollWidth === clientWidth === 390`, complete heading/disclosure, and no browser warnings/errors | Repeat for any later runtime release |
 | Codex desktop in-app browser, prior public release | Verified on public commit `a3b7c1f` on 31 August 2026 | Exact-six discovery; temporary two-variant proposal; two distinct 640 x 640 renderer previews; honest missing-artwork production decision; current reread; visible zero-save Revert; no browser warnings/errors. Earlier independent ordinary-language selection also passed on the same tote application bundle | Dated evidence only; repeat the improved flow after approved deployment and do not relabel as consumer ChatGPT web |
@@ -53,11 +53,11 @@ The dated proof is
 
 ## Current public-release checkpoint
 
-Commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61` and immutable deployment
-<https://0b0603b6.codesign-webmcp.pages.dev/> completed the deployed X-Ray,
-preview-freshness, Revert, Keep/Passport, mobile, and ordinary-Chrome checks
-described above. The evidence is
-[`CODESIGN_INTEGRITY_RELEASE_2026-09-01.md`](./evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md).
+Commit `14cbe14410195774285180255189282e0c2b054d` and immutable deployment
+<https://80f00a8d.codesign-webmcp.pages.dev/> completed the deployed direct-root
+redirect and exact-six X-Ray, preview-freshness, production-readiness, and
+zero-write Revert checks described above. The evidence is
+[`DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md`](./evidence/DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md).
 
 ## Claim discipline
 

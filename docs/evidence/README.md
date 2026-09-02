@@ -8,6 +8,10 @@ which files describe the shipped six-tool product.
 
 - [Pre-challenge baseline](./PRE_CHALLENGE_BASELINE.md) — identifies the
   KORRHAUS Sock Designer work that predates 25 August 2026.
+- [Current direct-tote public release](./DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md)
+  — public commit `14cbe14`, direct root redirect, exact release metadata and
+  bundle hashes, hosted CI, deployed WebMCP X-Ray/repair/fresh-preview flow,
+  and zero-write Revert.
 - [Manifest 2 studio-tote completion](./CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md)
   — complete public control inventory, renderer, artwork, and review behavior.
 - [Private KORRHAUS integration](./CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md)
@@ -20,7 +24,7 @@ which files describe the shipped six-tool product.
 - [Final supported-client release proof](./CODESIGN_FINAL_SUPPORTED_CLIENT_RELEASE_2026-08-31.md)
   — exact final commit and immutable release identity, six-tool discovery, two
   current previews, honest validation, and visible zero-write Revert.
-- [Current integrity release](./CODESIGN_INTEGRITY_RELEASE_2026-09-01.md) —
+- [Prior integrity release](./CODESIGN_INTEGRITY_RELEASE_2026-09-01.md) —
   public commit `1f422d6`, exact bundle digests, deployed Constraint X-Ray,
   preview freshness, zero-write Revert, Keep/Passport reload, responsive QA,
   and current Chrome claim boundary.

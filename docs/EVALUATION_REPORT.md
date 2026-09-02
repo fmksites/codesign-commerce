@@ -1,6 +1,6 @@
 # Evaluation report
 
-**Current evidence date:** 1 September 2026
+**Current evidence date:** 2 September 2026
 
 This report separates deterministic verification, actual browser/runtime
 evidence, and the optional model-evaluation corpus. None substitutes for the
@@ -8,7 +8,7 @@ others.
 
 ## Current public release
 
-The 1 September public release adds actual invocation visibility, the single-brief
+The 2 September public release carries forward actual invocation visibility, the single-brief
 Constraint X-Ray repair loop, Configuration Passport v0.1, and the pure
 Shopify metadata mapper while preserving the exact six tools. The complete
 verification passes 28 test files / 235 tests, strict typecheck,
@@ -16,8 +16,8 @@ production and Shopify-overlay builds, browser-bundle and judge-site checks,
 public-boundary and documentation checks, the 27-case eval/scorer check, and
 25/25 tote surface parity.
 
-Public commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61` and immutable
-deployment <https://0b0603b6.codesign-webmcp.pages.dev/> produce:
+Public commit `14cbe14410195774285180255189282e0c2b054d` and immutable
+deployment <https://80f00a8d.codesign-webmcp.pages.dev/> produce:
 
 - core browser bundle SHA-256:
   `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`;

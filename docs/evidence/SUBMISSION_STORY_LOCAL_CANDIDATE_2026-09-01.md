@@ -2,7 +2,12 @@
 
 **Date:** 1 September 2026  
 **Scope:** public CoDesign WebMCP repository and editable Devpost project only  
-**Release status:** locally verified; not pushed or deployed
+**Release status:** superseded by the public release on 2 September 2026
+
+This candidate was subsequently released as public source commit `14cbe14`.
+See [DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md](./DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md)
+for the deployed URL, immutable release identity, hosted CI, and exact deployed
+WebMCP acceptance evidence.
 
 ## Purpose
 
@@ -50,6 +55,7 @@ implementation cannot be mistaken for two submitted products.
 - obsolete landing assets absent from the release artifact: passed.
 
 The editable Devpost project was updated with the same hierarchy. Its video URL
-and submission timestamp remain empty. No Git push, Cloudflare deployment,
-Shopify change, video publication or final Devpost submission was performed as
-part of this candidate.
+and submission timestamp remain empty. This dated candidate itself performed no
+Git push, Cloudflare deployment, Shopify change, video publication, or final
+Devpost submission; the later public GitHub and Cloudflare release is evidenced
+separately above.

@@ -39,7 +39,7 @@ configurator before a product is cart-ready.
 
 > **Agent designs. Human approves. Shopify completes the sale.**
 
-**Current public release (1 September 2026):** commit `1f422d6` ships the
+**Current public release (2 September 2026):** commit `14cbe14` ships the
 activity observer, Constraint X-Ray repair loop, revision-aware preview
 freshness, and Configuration Passport described below. The complete release
 verification passes 28 test files / 235 tests, strict typecheck, builds,
@@ -206,7 +206,7 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 | `packages/codesign-webmcp/` | Reusable Manifest 2 core and WebMCP registration |
 | `examples/studio-tote/` | Complete public portability example |
 | `shopify-demo/` | Minimal Shopify Liquid/CDN deployment overlay |
-| `judge-site/` | Root redirect, security headers, and static release shell for the public tote |
+| `judge-site/` | Internal release-assembly folder (legacy name): root redirect, security headers, and the public tote build. It is not a separate judge webpage. |
 | `docs/` | Current architecture, integration, testing, and judge documentation |
 | `docs/evidence/` | Dated verification records, with current/historical status indexed |
 | `evals/` | Optional tool-selection and safety evaluation corpus |
@@ -215,9 +215,10 @@ Start with [docs/INTEGRATION_QUICKSTART.md](./docs/INTEGRATION_QUICKSTART.md).
 ## Current evidence
 
 - Public GitHub repository with a detected [Apache-2.0 license](./LICENSE).
-- Public commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`, hosted
+- Public commit `14cbe14410195774285180255189282e0c2b054d`, hosted
   CI, stable release metadata, and immutable deployment
-  `0b0603b6.codesign-webmcp.pages.dev` identify the current release.
+  `80f00a8d.codesign-webmcp.pages.dev` identify the current release. The root
+  URL redirects directly to the deterministic tote reference.
 - The release passes 28 files / 235 tests covering exact-six
   registration, privacy-safe activity, canonical result guidance, Constraint
   X-Ray provenance/localization and exact repair, revision-aware preview

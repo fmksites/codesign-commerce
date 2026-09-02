@@ -125,7 +125,7 @@ Before the transaction vertical slice may pass:
 Before submission-ready handoff:
 
 - Discover exactly the intended six tools in every client named as supported.
-  Public commit `1f422d6` passes the direct page-tool flow in the Codex desktop
+  Public commit `14cbe14` passes the direct page-tool flow in the Codex desktop
   in-app browser and has historical native Chrome evidence. Current native
   Chrome remains unclaimed because the connected instance exposed no
   `document.modelContext` or WebMCP capability; consumer ChatGPT web remains

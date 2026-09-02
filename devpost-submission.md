@@ -186,7 +186,7 @@ proposal stale instead of being silently overwritten.
 ### Fast judge path
 
 No login or credentials are required. These instructions use public release
-`1f422d6`.
+`14cbe14`.
 
 1. Open <https://codesign-webmcp.pages.dev/tote/?reset=true> in a WebMCP-capable
    ChatGPT in-app browser.
@@ -251,9 +251,9 @@ The rebuilt local hashes are core
 `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
 and tote
 `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
-Public commit `1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`, stable
+Public commit `14cbe14410195774285180255189282e0c2b054d`, stable
 release metadata, and immutable deployment
-<https://0b0603b6.codesign-webmcp.pages.dev/> identify this exact build.
+<https://80f00a8d.codesign-webmcp.pages.dev/> identify this exact build.
 
 ## Public Demo Link
 
@@ -272,7 +272,7 @@ hard-coding a self-referential deployment into source.
 <https://github.com/fmksites/codesign-webmcp>
 
 Current verified release source: public `main` at
-`1f422d634cf07d8c4d8cf01165e3eeff89a5ab61`. Hosted CI passed and deployed
+`14cbe14410195774285180255189282e0c2b054d`. Hosted CI passed and deployed
 `site-metadata.json` reports that exact commit and both expected bundle hashes.
 
 License: Apache-2.0
@@ -305,7 +305,7 @@ Existing public-repository captures:
 
 ## Submission Readiness Notes
 
-- Public repository and stable demo: current release `1f422d6` is anonymously
+- Public repository and stable demo: current release `14cbe14` is anonymously
   accessible; hosted CI, stable metadata, immutable metadata, and downloaded
   bundle bytes agree on its identity.
 - Current release: exact six, canonical result envelopes,
@@ -324,7 +324,7 @@ Existing public-repository captures:
   no current native-Chrome execution claim is made.
 - Release integrity: independently fetched stable/immutable core and tote
   bundles match their separately labelled metadata digests for commit
-  `1f422d6`.
+  `14cbe14`.
 - KORRHAUS: the real private integration is live on the existing Shopify
   storefront and is used as secondary real-business proof. Its current evidence
   is scoped to the tested Codex browser, not consumer ChatGPT or native Chrome.

@@ -3,7 +3,7 @@
 **Decision date:** 1 September 2026
 **Status:** Current strategic and implementation source of truth. The activity
 observer, Constraint X-Ray, preview freshness, and Configuration Passport v0.1
-are public in commit `1f422d6` and have exact deployed direct-client evidence.
+are public in commit `14cbe14` and have exact deployed direct-client evidence.
 This document does not authorize a Shopify theme change, private KORRHAUS
 change, production promotion, video, or final Devpost submission.
 
@@ -537,7 +537,7 @@ Acceptance:
 **Goal:** Prove the complete deployed experience before changing submission
 claims.
 
-**Status:** Current public release gate passed on commit `1f422d6`: 28 test
+**Status:** Current public release gate passed on commit `14cbe14`: 28 test
 files / 235 tests, strict typecheck, builds, boundary/docs/eval checks, 25/25
 parity, exact stable/immutable bundle identity, deployed direct WebMCP
 X-Ray/Revert, separate Keep/Passport reload, 390 px QA, and ordinary Chrome

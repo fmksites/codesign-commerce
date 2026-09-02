@@ -65,7 +65,7 @@ The complete expected behavior and recovery checks are in
 
 ### Current release evidence
 
-Public commit `1f422d6` is deployed and passes 28 test files / 235 tests plus
+Public commit `14cbe14` is deployed and passes 28 test files / 235 tests plus
 desktop and 390 px browser QA. The exact stable URL completed the X-Ray repair,
 two fresh previews, production-ready revalidation, `persisted:false`, and
 visible Revert flow. A separate Keep run issued one Configuration Passport and
@@ -73,7 +73,7 @@ survived reload. The current Chrome connection rendered the complete human
 fallback but exposed no native WebMCP capability, so current native-Chrome and
 consumer ChatGPT-web execution remain unclaimed. See
 [docs/BROWSER_SUPPORT.md](./docs/BROWSER_SUPPORT.md) and the
-[release evidence](./docs/evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md).
+[release evidence](./docs/evidence/DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md).
 
 ## Merchant or integrator: understand the reusable layer
 

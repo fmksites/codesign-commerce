@@ -25,7 +25,7 @@ exact baseline. Neither action is a WebMCP tool.
 
 ## Release status before scoring
 
-These instructions describe public commit `1f422d6`. Stable and immutable
+These instructions describe public commit `14cbe14`. Stable and immutable
 release metadata identify the exact core and tote bundles; hosted CI is green;
 28 test files / 235 tests and desktop/390 px QA pass. The stable tote completed
 the full X-Ray/repair/Revert flow and a separate Keep/Passport reload proof in

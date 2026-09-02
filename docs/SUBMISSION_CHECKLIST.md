@@ -8,11 +8,11 @@ Status meanings:
 - `HUMAN` — requires the participant's decision, recording, attestation, or
   external submission action.
 
-Last official Devpost requirements, judging, and dates recheck: 1 September
+Last official Devpost requirements, judging, and dates recheck: 2 September
 2026. Submission
 deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
 
-## Current public release — 1 September 2026
+## Current public release — 2 September 2026
 
 - `PASS` — exact six and registration order are unchanged; successful results
   expose bounded canonical guidance and the privacy-safe observer records no
@@ -35,10 +35,11 @@ deadline: **3 September 2026, 1:00 PM PT / 22:00 CEST**.
   `460aa40ade9b4cb42491a3028032ba970d8db4ce35febd7d646962890c13880b`
   and tote
   `edc44d53d107fed84a01fd78f3a027549c56f81c452ffbc457b2402d446f85d4`.
-- `PASS` — public commit `1f422d6`, hosted CI, stable release metadata, and
-  immutable deployment `0b0603b6.codesign-webmcp.pages.dev` identify the
-  exact release. The deployed direct WebMCP X-Ray/Revert path, separate
-  Keep/Passport reload, 390 px mobile, and ordinary Chrome fallback passed.
+- `PASS` — public commit `14cbe14`, hosted CI run `33608572523`, stable release
+  metadata, and immutable deployment `80f00a8d.codesign-webmcp.pages.dev`
+  identify the exact release. The root redirects directly to the tote; the
+  deployed exact-six WebMCP X-Ray, repair, fresh-preview, production-readiness,
+  and zero-write Revert path passed.
 - `PENDING` — independent model selection on this exact commit, current native
   Chrome WebMCP, consumer ChatGPT web, and a refreshed Shopify development-store
   overlay remain unclaimed. They are not required to call the product build
@@ -113,13 +114,13 @@ release record; do not mix their commits or bundle hashes.
 
 ## Submission materials
 
-- `PENDING` — the locally verified submission-story candidate now makes the
+- `PASS` — the released submission story makes the
   boundary explicit in the README, start guide, judge guide, Devpost copy, and
   video script: CoDesign WebMCP is the submitted protocol; Studio Tote is its
   public reference implementation; KORRHAUS is the live Shopify proof. The
   separate judge homepage has been removed and the deployment root redirects
-  to the tote. This is not a public release claim until the candidate is pushed
-  and deployed.
+  to the tote. Public GitHub `main`, stable Cloudflare metadata, and the
+  immutable deployment now identify the same release commit.
 - `PASS` — English Devpost project copy and exact judge instructions were
   refreshed from the current release evidence; the live project remains not
   entered for judging (`submitted_at:null`).
