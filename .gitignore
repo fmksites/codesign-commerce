@@ -12,8 +12,16 @@ test-results/
 output/
 *.log
 
+# Rendered challenge-video exports and local recording experiments are large
+# review artifacts. Keep the reproducible Remotion source and evidence inputs.
+video/out/
+video/public/live-capture-viewport-test*.jpg
+
 # Private registration correspondence is evidence for the owner, not public source.
 reference/
+
+# Devpost plugin state is local workflow metadata, not project source.
+.devpost-hackathon-state.json
 
 # Local market research is maintained separately from the challenge source.
 research/

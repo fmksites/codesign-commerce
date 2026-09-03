@@ -2,17 +2,17 @@
 
 Snapshot rechecked against the official Devpost rules, overview, submission
 requirements, announcements, Chrome guidance, and Shopify WebMCP documentation
-on 28 August 2026. Recheck again immediately before final
+on 3 September 2026. Devpost's latest announcement extended the deadline; the
+live Devpost page remains the final source of truth.
 submission because the standard and challenge pages can change.
 
 ## Deadline
 
-- 3 September 2026 at 1:00 PM PDT.
-- Equivalent local target: 3 September 2026 at 22:00 CEST.
-- Internal target should be 1 September to preserve a two-day buffer.
-- The OpenAI marketing page currently shows a later 5:00 PM PT deadline. The
-  Devpost overview and binding official rules both show 1:00 PM PT, so this
-  project uses the earlier deadline.
+- 4 September 2026 at 1:00 AM PT.
+- Equivalent local target: 4 September 2026 at 10:00 CEST.
+- Devpost announced a 12-hour extension because of an ongoing OpenAI outage.
+- The live Devpost announcement and official event page prevail if the timing
+  changes again.
 
 ## Required Submission Materials
 
