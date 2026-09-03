@@ -243,10 +243,10 @@ describe("production-safe temporary asset sandbox", () => {
 
   test("rejects unknown fields and never echoes them through an error", async () => {
     const sandbox = new AssetSandbox(workspaceTestManifest, new TestAssetAdapter());
-    const secret = "/private/customer/logo.png";
+    const fixturePath = "/private/customer/logo.png";
     let caught: unknown;
-    try { await sandbox.stage({ ...input(), privatePath: secret }); } catch (error) { caught = error; }
+    try { await sandbox.stage({ ...input(), privatePath: fixturePath }); } catch (error) { caught = error; }
     expect(caught).toBeInstanceOf(AssetSandboxError);
-    expect(JSON.stringify(caught)).not.toContain(secret);
+    expect(JSON.stringify(caught)).not.toContain(fixturePath);
   });
 });

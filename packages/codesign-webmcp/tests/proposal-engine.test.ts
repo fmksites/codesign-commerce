@@ -325,14 +325,14 @@ describe("Manifest 2 proposal transaction engine", () => {
   test("does not expose raw rejected identifiers in public errors", async () => {
     const adapter = new TestWorkspaceAdapter();
     const engine = new ProposalEngine(workspaceTestManifest, adapter);
-    const secret = "private.customer_record_8821";
+    const fixtureIdentifier = "private.customer_record_8821";
     const result = await engine.apply({
       baseRevision: "workspace-revision-1",
       operationId: "safe-error",
-      operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: secret, value: "x" }],
+      operations: [{ type: "set-control", target: { scope: "variant", variantId: "variant-1" }, controlId: fixtureIdentifier, value: "x" }],
     });
     expect(result).toMatchObject({ ok: false, error: { code: "UNKNOWN_CONTROL" } });
-    expect(JSON.stringify(result)).not.toContain(secret);
+    expect(JSON.stringify(result)).not.toContain(fixtureIdentifier);
   });
 
   test("allows only one mutating operation in flight", async () => {
