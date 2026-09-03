@@ -22,6 +22,7 @@ reference/
 
 # Devpost plugin state is local workflow metadata, not project source.
 .devpost-hackathon-state.json
+devpost-submission.md
 
 # Local market research is maintained separately from the challenge source.
 research/
