@@ -177,8 +177,7 @@ workspace package through its unbuilt `dist/`. That run failed and is not
 counted. Commit `13a168d` adds a root Vitest source alias so tests execute the
 public TypeScript source from an empty build state.
 
-A second `git clone --no-local` into
-`/private/tmp/codesign-tote-clean-final.9zavVo/repo` then passed:
+A second `git clone --no-local` into a fresh temporary directory then passed:
 
 | Gate | Outcome |
 |---|---|

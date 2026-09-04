@@ -75,9 +75,8 @@ the adapter commit boundary.
 
 ## Clean-clone verification
 
-A `git clone --no-local` of remediation commit `2f7235b` at
-`/private/tmp/codesign-security-clean.h0S6SB/repo` passed from an empty build
-state:
+A `git clone --no-local` of remediation commit `2f7235b` in a fresh temporary
+directory passed from an empty build state:
 
 | Gate | Result |
 |---|---|

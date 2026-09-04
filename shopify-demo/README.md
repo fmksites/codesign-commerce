@@ -19,11 +19,10 @@ The generated files are written to `dist/shopify-theme-demo/`:
 
 The Liquid template includes `content_for_header`, so Shopify can keep supplying its native storefront capabilities. It also maps the reference renderer's public images to Shopify CDN URLs before the CoDesign bundle starts.
 
-Create a normal Online Store page, assign the `codesign-tote` template, and open its handle. The current password-protected development-store proof is:
-
-```text
-https://korrhaus-development.myshopify.com/pages/codesign-webmcp-tote-demo
-```
+Create a normal Online Store page in an authorized development or unpublished
+theme, assign the `codesign-tote` template, and open that page's handle. Exact
+merchant store, theme, and deployment coordinates are intentionally not
+published in this repository.
 
 No product, cart, checkout, order, customer or price data is created by this demo.
 

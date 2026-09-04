@@ -22,13 +22,17 @@ hosting deployment, KORRHAUS deployment, production traffic, DNS, or submission.
 5. Follow the README from a fresh, logged-out clone.
 6. Record the public URL and final commit.
 
-## 3. Build the private flagship release candidate
+## 3. Verify a merchant integration separately
 
-1. Pin the exact public browser bundle and cache key into the private adapter.
-2. Keep `CUSTOM_SOCK_WEBMCP_PROPOSALS_ENABLED` disabled by default.
-3. Run focused tests, typecheck, build, the complete Designer regression suite,
-   and actual-browser North Form/Revert/Keep checks against the exact build.
-4. Record private file hashes without publishing private source.
+1. Pin the intended public package release inside the merchant's private
+   integration process.
+2. Run the merchant's focused tests, typecheck, build, complete configurator
+   regression, and actual-browser proposal/Revert/Keep checks.
+3. Keep private source paths, configuration controls, artifact identities,
+   service coordinates, logs, and rollback details in the private operational
+   record rather than this repository.
+4. Treat merchant release and traffic decisions as separate approvals from the
+   public challenge release.
 
 ## 4. Deploy the public judge app — approval and provider choice required
 
@@ -61,28 +65,27 @@ production promotion.
    The consumer ChatGPT website path is not supported in the tested session.
 7. Retain the provider URL as a fallback even if a branded domain is added.
 
-## 5. Optional no-traffic KORRHAUS deployment — separate approval required
+## 5. Optional merchant release verification — separate approval required
 
-1. Build one tagged QA revision with zero traffic, WebMCP enabled, and synthetic
-   acceptance fixtures enabled.
-2. Verify revision identity, image digest, configuration, health, HTTP behavior,
-   logs, script cache key, bundle hash, tool discovery, full flagship fixture
-   flow, and normal no-WebMCP fallback on the tagged revision URL.
-3. Deploy the exact immutable QA image digest as a second tagged zero-traffic
-   production candidate with acceptance fixtures disabled and WebMCP enabled.
-4. Verify the production candidate's identity, configuration, health, logs, and
-   asset hash. Confirm ordinary production traffic still targets the recorded
-   rollback revision at 100%.
-5. Stop and present the evidence before requesting traffic approval.
+1. Follow the merchant's private release process without exposing operational
+   endpoints or infrastructure identifiers in public evidence.
+2. Verify the exact approved artifact, configuration, health, logs, tool
+   discovery, complete fixture flow, and ordinary no-WebMCP fallback inside the
+   merchant environment.
+3. Confirm the release procedure does not move ordinary customer traffic before
+   that separate decision is authorized.
+4. Publish only sanitized behavioral evidence, then stop before requesting any
+   traffic change.
 
-## 6. Optional KORRHAUS production promotion — explicit approval required
+## 6. Optional merchant production promotion — explicit approval required
 
-1. Promote only the verified revision and only after written approval.
-2. Verify the actual anonymous English KORRHAUS route in the in-app browser and
-   supported Chrome.
+1. Promote only the privately verified artifact and only after written owner
+   approval.
+2. Verify the actual anonymous merchant route in each client named as supported.
 3. Confirm no regression in normal human editing, autosave, project restore,
    quote/application/upload flows, or browsers without WebMCP.
-4. Keep an immediate rollback revision and document the rollback trigger.
+4. Keep rollback coordinates and triggers in the merchant's private operational
+   record.
 
 After the actual public English KORRHAUS route passes the separately approved
 production verification, rebuild the same public site with the optional

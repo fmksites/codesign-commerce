@@ -111,10 +111,9 @@ only the opaque handle, and captures the exact merchant renderer through
 `PreviewBridge`. Its complete Manifest 2.0 adapter supports artwork, typography,
 placement, scale, rotation, multiple variants and page-owned Keep/Revert.
 
-The private KORRHAUS adapter uses the same public runtime with the existing sock,
-grip and packaging proof board. It prepares supplied artwork temporarily through
-the existing client pipeline, returns only an opaque handle, captures bounded
-WebP previews per colourway, and imports the asset only after visible page Keep.
-That adapter remains private; only the generic lifecycle and sanitized evidence
-belong in this repository. See the current local integration evidence in
-[`evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md`](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).
+The private KORRHAUS adapter uses the same public runtime with its existing
+merchant renderer. It returns only allowlisted configuration data and bounded
+preview results; private artwork processing, storage, source, and persistence
+remain merchant-owned. Only the generic lifecycle and sanitized behavioral
+evidence belong in this repository. See the public-safe
+[`KORRHAUS live verification`](./evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md).

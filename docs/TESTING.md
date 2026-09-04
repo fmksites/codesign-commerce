@@ -158,27 +158,23 @@ surfaces accounted for: 14 manifest-control mappings, four variant-operation
 mappings, one asset-slot mapping, and six explicit non-configurational or
 human-confirmation exclusions.
 
-The current public tote evidence is recorded in
-[evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md](./evidence/CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md).
-The exact final public release regression is recorded in
-[evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md](./evidence/TOTE_FINAL_PUBLIC_RELEASE_2026-08-28.md).
-The current local exact-six KORRHAUS integration is recorded in
-[evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md](./evidence/CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md).
-All earlier five-tool KORRHAUS local, tagged-QA and zero-traffic documents are
-historical only; none identifies a current deployable candidate.
-The deployable landing-plus-tote artifact is verified in
-[evidence/JUDGE_SITE_RELEASE_CANDIDATE.md](./evidence/JUDGE_SITE_RELEASE_CANDIDATE.md).
-The older public-reference browser documents remain dated synthetic-harness
-history, not an active submission surface.
+The current public tote release and complete regression are recorded in
+[evidence/DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md](./evidence/DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md).
+The current qualified KORRHAUS claim is recorded separately in
+[evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md](./evidence/KORRHAUS_LIVE_WEBMCP_2026-08-31.md).
+Earlier local, tagged-QA, no-traffic, development-store, five-tool, and
+synthetic-harness records are historical only. Private operational details in
+those records have been redacted, and none is a current instruction or
+deployable-candidate claim.
 
 The exact client/browser claim matrix and final-release repeats are tracked in
 [BROWSER_SUPPORT.md](./BROWSER_SUPPORT.md).
 The current public release record is
-[evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md](./evidence/CODESIGN_INTEGRITY_RELEASE_2026-09-01.md).
+[evidence/DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md](./evidence/DIRECT_TOTE_PUBLIC_RELEASE_2026-09-02.md).
 
 ## Optional agent evaluation corpus
 
-`evals/cases.json` fixes 26 selection, end-to-end, ambiguity, safety,
+`evals/cases.json` fixes 27 selection, end-to-end, ambiguity, safety,
 adversarial-data, and recovery expectations across the live sock integration
 and public tote example.
 The validator rejects shopper prompts containing `WebMCP`, CoDesign tool names,

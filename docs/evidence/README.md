@@ -14,8 +14,6 @@ which files describe the shipped six-tool product.
   and zero-write Revert.
 - [Manifest 2 studio-tote completion](./CODESIGN_V2_ITEM9_STUDIO_TOTE_2026-08-27.md)
   — complete public control inventory, renderer, artwork, and review behavior.
-- [Private KORRHAUS integration](./CODESIGN_V2_ITEM10_KORRHAUS_PRIVATE_INTEGRATION_2026-08-28.md)
-  — dated local exact-six adapter and safety boundary before activation.
 - [Live KORRHAUS WebMCP verification](./KORRHAUS_LIVE_WEBMCP_2026-08-31.md)
   — current production-route tool discovery, temporary proposal, previews,
   validation, ordinary-visitor isolation, and zero-write Revert evidence.
@@ -30,8 +28,6 @@ which files describe the shipped six-tool product.
   and current Chrome claim boundary.
 - [CoDesign WebMCP rebrand](./CODESIGN_WEBMCP_REBRAND_2026-08-28.md) — naming
   and current-brand verification.
-- [Shopify-hosted interoperability proof](./CODESIGN_SHOPIFY_HOSTED_DEMO_2026-08-28.md)
-  — CoDesign and Shopify native WebMCP tools on one development-store page.
 
 Current browser support and remaining final-release repeats are authoritative in
 [docs/BROWSER_SUPPORT.md](../BROWSER_SUPPORT.md). Current deterministic commands
@@ -43,6 +39,11 @@ All other evidence files record earlier implementation milestones, experiments,
 guarded KORRHAUS candidates, five-tool prototypes, or superseded releases. They
 remain useful for timestamped history but must not be presented as the current
 architecture, deployment, browser matrix, or test count.
+
+Historical files that previously contained merchant environment coordinates,
+private artifact identities, development-store targets, feature controls, or
+deployment topology have been reduced to public-safe tombstones. Their paths
+remain only so older links resolve; the tombstones are not submission evidence.
 
 Screenshot filenames also span multiple milestones. Images containing the old
 CoDesign Commerce name or five-tool UI are historical and should not be used as

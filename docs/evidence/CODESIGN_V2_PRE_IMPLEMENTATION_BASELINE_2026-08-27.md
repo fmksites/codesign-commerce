@@ -6,7 +6,7 @@ change.
 
 ## Authority and isolation
 
-- Public working repository: `/Users/felixkramer/Desktop/KORRHAUS WebMCP Challenge`
+- Public working repository: <https://github.com/fmksites/codesign-webmcp>
 - Guarded branch: `codex/codesign-commerce-v2`
 - Starting branch/revision: `main` at
   `e986e12b9448491c2e34b302c1c4ddcf12320047`

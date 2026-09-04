@@ -15,9 +15,8 @@ retired from the package and artifact.
 
 The corrected topology is committed as
 `e137a3be4333aaded523626df493a6e38dd24a72` (`feat: use live KORRHAUS as sole
-flagship`). It was cloned without local-object shortcuts into
-`/private/tmp/codesign-topology.mseDWn/repo` and verified from an empty
-dependency and build state.
+flagship`). It was cloned without local-object shortcuts into a fresh temporary
+directory and verified from an empty dependency and build state.
 
 | Gate | Result |
 |---|---|
@@ -107,9 +106,8 @@ synthetic URL is retained in the final local artifact.
 
 ## Clean-clone result
 
-The implementation commit was cloned without local-object shortcuts into
-`/private/tmp/codesign-judge-site.ZaeCJC/repo`. From an empty dependency and
-build state:
+The implementation commit was cloned without local-object shortcuts into a
+fresh temporary directory. From an empty dependency and build state:
 
 | Gate | Result |
 |---|---|

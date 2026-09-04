@@ -49,9 +49,9 @@ The separate Codex browser task passed all requested black-box scenarios:
 7. Empty browser console log collection.
 
 The final fixture was reset to `tote-revision-1`, one natural `Canvas tote`,
-`pendingProposal: null`, and `persisted: false`. The temporary evidence package
-is retained at `/private/tmp/codesign-repair-regression-2026-08-28/`, including
-`report.md`, `results.json` and 16 screenshots.
+`pendingProposal: null`, and `persisted: false`. A temporary local evidence
+package contained the report, structured results, and 16 screenshots; it is not
+part of the public release.
 
 ## Deterministic release gates
 
@@ -79,8 +79,8 @@ After the final rebuild, the independent Codex browser task repeated a short
 smoke on the exact bundle above: all six tools were discovered, review details
 and Keep/Revert rendered, a second-tab human change advanced revision 1 to 2,
 the first tab showed the red stale status and Restore latest, reset returned the
-fixture to revision 1, and both console logs were empty. Its temporary evidence
-is retained at `/private/tmp/codesign-final-smoke-2026-08-28/`.
+fixture to revision 1, and both console logs were empty. Its temporary local
+evidence package is not part of the public release.
 
 No source was pushed and no public deployment, KORRHAUS change, traffic change,
 commerce action or Devpost action occurred in this repair round. The deployed
